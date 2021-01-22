@@ -36,7 +36,7 @@ Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
     Route::post('update/{id}', 'ClientController@update')->name('client.update');
     Route::get('show/{id}', 'ClientController@show')->name('client.show');
     Route::get('newCall/{id}', 'ClientController@newCall')->name('client.newCall');
-    
+
     // ajax
     Route::get('aj_history_id/{id}', 'ClientController@aj_history_id')->name('client.aj_history_id');
     Route::get('aj_contactList/{id}', 'ClientController@aj_contactList')->name('client.aj_contactList');
@@ -58,4 +58,6 @@ Route::group(['prefix'=>'history', 'middleware'=>'auth'], function(){
 });
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/home', 'HomeController@index')->name('home');
+});
