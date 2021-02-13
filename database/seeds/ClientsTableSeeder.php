@@ -11,7 +11,7 @@ class ClientsTableSeeder extends Seeder
      * @return void
      */
     public function run(){
-        factory(Client::class, 100)->create();
+        factory(Client::class, 50)->create();
         // DB::table('clients')->insert([
         //     [
         //         'name' => '株式会社テスト',

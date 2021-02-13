@@ -17,9 +17,9 @@
                         </div>
                     @endif
 
-                    <a href="{{route('user.create')}}">新規社員を追加する</a>
+                    <a href="{{route('user.create')}}">新しいインストラクターを追加する</a>
                     <br>
-                    <a href="{{route('client.search')}}">検索する</a>
+                    <a href="{{route('client.search')}}">インストラクターを検索する</a>
                     <br>
                     <br>
                     <table class="">

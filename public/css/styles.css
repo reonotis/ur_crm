@@ -10,7 +10,7 @@
   --nav-height: 60px;
 }
 
-nav {
+navi{
 	display: flex;
 	padding: 0 50px;
 	align-items: center;
@@ -27,21 +27,22 @@ nav {
 	color :#fff;
 }
 
-.nav-links {
+.navi-links {
 	display: flex;
 	height: var(--nav-height);
 	align-items: center;
 	margin :0;
 	margin-left: auto;
+	z-index:100;
 }
-.nav-links li {
+.navi-links li {
 	list-style: none;
 	margin: 0 5px;
 	height: var(--nav-height);
 	line-height: var(--nav-height);
 	text-align: center;
 }
-.nav-links li a {
+.navi-links li a {
 	text-decoration: none;
 	color: var(--white);
 	position: relative;
@@ -50,7 +51,7 @@ nav {
 	transition :0.3s;
 }
 
-.nav-links li a:hover{
+.navi-links li a:hover{
 	color: var(--maincolor);
 	background: var(--white);
 	font-weight: 800;
@@ -106,30 +107,307 @@ nav {
 /* responsive */
 
 @media screen and (max-width: 1000px) {
-	.nav-links {
-			 flex-direction: column;
-			 position: fixed;
-			 top: 0;
-			 left: 100%;
-			 width: 300px;
-			 height: 100%;
-			 background: var(--maincolor);
-			 margin-top: var(--nav-height);
-			 transition: 0.5s ease-out;
+	.navi-links {
+		flex-direction: column;
+		position: fixed;
+		top: 0;
+		left: 100%;
+		width: 300px;
+		height: 100%;
+		background: var(--maincolor);
+		margin-top: var(--nav-height);
+		transition: 0.5s ease-out;
 	}
-	.nav-links li {
-			 height: var(--nav-height);
-			 line-height: var(--nav-height);
-			 text-align: center;
-			 width: 100%;
-			 display: block;
+	.navi-links li {
+		height: var(--nav-height);
+		line-height: var(--nav-height);
+		text-align: center;
+		width: 100%;
+		display: block;
 	}
 	.menu {
-			 display: block;
-			 margin-left: auto;
+		display: block;
+		margin-left: auto;
 	}
 
-	.menu.toggle + .nav-links {
-			 transform: translateX(-100%);
+	.menu.toggle + .navi-links {
+		transform: translateX(-100%);
 	}
 }
+
+
+
+
+.LeftBOX{
+  display       : flex ;
+  flex-flow     : wrap ;
+}
+
+.CenterBOX{
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-around;
+}
+.BOXin{
+  float         : left ;
+  /* position      : relative; */
+}
+
+
+
+/* form関連 */
+.formInput{
+	display: block;
+	width: 100%;
+	height: calc(1.6em + 0.75rem + 2px);
+	padding: 5px 10px;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.formInput:focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #a1cbef;
+	outline: 0;
+	box-shadow: 0 0 0 0.2rem rgb(52 144 220 / 25%);
+}
+.formInput::placeholder {
+  color: #ddd;
+}
+.inputBirthday{
+	min-width :300px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputYear{
+	width :100px;
+}
+.inputMonth, .inputDay{
+	width :70px;
+}
+.inputZips{
+	width : 180px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputZip{
+	width :80px;
+}
+.inputAddrs{
+	width : 250px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputAddr{
+	width : 120px;
+}
+.inputStrt{
+	width : 100%;
+}
+
+
+
+
+
+
+/* 顧客関係 */
+table.customerSearchTable{
+	width:600px;
+	border-collapse: separate;
+	border-spacing: 0 10px;
+}
+
+.customerSearchTable th{
+	height:40px;
+	padding : 3px 10px ;
+	text-align :center;
+	color :#fff;
+	background: var(--info);
+}
+.customerSearchTable td{
+	padding : 3px 10px ;
+}
+
+.customerListTable{
+	width :95%;
+	max-width: 1000px;
+	margin :0 auto;
+}
+.customerListTable th{
+	background: var(--info);
+	font-size: 1.2em;
+	color :#fff;
+	padding :20px 10px ;
+}
+.customerListTable td{
+	padding :20px 10px 10px ;
+	border-bottom :solid 1px var(--primary);
+}
+.customerListTable td:nth-child(1) {
+	color:  var(--secondary);
+	font-size: 0.8em;
+}
+.customerListTable tr:nth-child(odd) td {
+	background: #ecf5fb;
+}
+.nameRead{
+	font-size: 0.8em;
+}
+
+
+
+
+.customerDetail{
+	padding :0 10px;
+}
+
+
+
+.customerBasicInformation{
+	width :150px;
+	min-height: 500px;
+	border :solid 1px var(--maincolor);
+}
+.tabsContentsArea{
+	width:calc(100% - 170px);
+	max-width :800px;
+	margin :0 10px;
+	position: relative;
+}
+.customerNam{
+	margin :10px 0 0;
+	padding-left :5px;
+}
+.customerNmae{
+	margin :5px 0 0;
+	padding-left :5px;
+	font-size:1.2EM;
+	font-weight: 700;
+}
+.customerRead{
+	padding-left :10px;
+	font-size:11px;
+}
+.customerIMG{
+	width :140px;
+	height:140px;
+	margin :10px auto;
+	background :#eee;
+}
+
+
+
+
+
+
+.tabArea{
+	display: flex;
+  flex-flow     : wrap ;
+	width :100%;
+	position: relative;
+	z-index:10;
+}
+.tab {
+	background    :  var(--maincolor);
+	color         : #fff   ;
+	border :solid 1px  var(--maincolor);
+	border-radius: 10px 10px 0 0;
+	text-align: center;
+	padding :8px 20px;
+	margin :0 0 0 10px;
+	cursor: pointer;
+	transition:.2s;
+}
+.tab:hover{
+	background-color:var(--info);
+	font-weight:700;
+}
+.tab.active {
+	background-color: #fff;
+	color:  var(--maincolor);
+	border :solid 1px  var(--maincolor);
+	border-bottom:none;
+	font-weight:700;
+}
+
+.tabsContents{
+	width :100%;
+	min-height: 500px;
+	padding :10px;
+	border :solid 1px  var(--maincolor);
+	border-radius:4px;
+	position: relative;
+	top :-1px;
+	z-index:5;
+}
+.tabscontent {
+	display: none;
+}
+.tabscontent.show {
+	display: block;
+}
+
+.cusInfoRow{
+  display       : flex ;
+  flex-flow     : wrap ;
+	margin :5px 0;
+}
+
+.cusInfoTitle{
+  float         : left ;
+	width :140px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--info);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+.cusInfoContent{
+	float         : left ;
+	width :calc(100% - 140px);
+	padding :5px;
+	border-bottom:solid 1px var(--info);
+	font-size: .9em;
+}
+
+
+
+.courseHistoryTable{
+	width :100%;
+	margin :10px auto;
+}
+.courseHistoryTable th{
+	background: var(--info);
+	font-size: 1.0em;
+	color :#fff;
+	padding :8px 10px ;
+}
+.courseHistoryTable td{
+	padding :10px ;
+	border-bottom :solid 1px var(--primary);
+}
+.courseHistoryTable tr:nth-child(odd) td {
+	background: #ecf5fb;
+}
+
+
+
+
+
+
+
+
+

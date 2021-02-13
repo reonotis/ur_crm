@@ -31,6 +31,7 @@
     <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
 
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -57,7 +58,7 @@
 @guest
 
 @else
-    <nav>
+    <navi>
         <div class="logo">
             <h1><a href="/home">Home</a></h1>
         </div>
@@ -68,14 +69,14 @@
             <div class="bar bar3"></div>
         </div>
 
-        <ul class="nav-links">
+        <ul class="navi-links">
             <li><a href="{{route('client.index')}}">日報</a></li>
-            <li><a href="{{route('client.index')}}">顧客</a></li>
-            <li><a href="{{route('client.index')}}">社員一覧</a></li>
-            <li><a href="{{route('client.index')}}">所有企業</a></li>
-            <li><a href="{{route('client.index')}}">受注履歴</a></li>
-            <li><a href="{{route('client.index')}}">行動履歴</a></li>
-            <li><a href="{{route('client.index')}}">設定</a></li>
+            <li><a href="{{route('customer.index')}}">顧客</a></li>
+            <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
+            <li><a href="">所有企業</a></li>
+            <li><a href="">受注履歴</a></li>
+            <li><a href="">行動履歴</a></li>
+            <li><a href="">設定</a></li>
             <li>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -84,8 +85,8 @@
             </li>
         </ul>
 
-    </nav>
-    
+    </navi>
+
 
 @endguest
     <main id="main">
