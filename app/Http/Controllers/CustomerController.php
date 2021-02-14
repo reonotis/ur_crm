@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\customer;
+use App\Models\CustomerSchedule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -102,12 +103,19 @@ class CustomerController extends Controller
     public function display($client_id){
         // 渡されたIDの顧客情報を取得する
         $query = DB::table('customers');
-        $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
+            $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
         $query -> select('customers.*', 'users.name as intrName');
         $query -> where('customers.id','=',$client_id);
         $customer = $query -> first();
 
-        return view('customer.display', compact('customer'));
+        // 顧客のスケジュールを取得する
+        $CSQuery = DB::table('Customer_schedules');
+            $CSQuery -> leftJoin('users', 'users.id', '=', 'Customer_schedules.instructor_id');
+            $CSQuery -> leftJoin('courses', 'courses.id', '=', 'Customer_schedules.course_id');
+        $query   -> select('Customer_schedules.*', 'users.name as intrName', 'courses.course_name' );
+        $CSQuery -> where('Customer_schedules.customer_id','=',$client_id);
+        $CustomerSchedules = $CSQuery -> get();
+        return view('customer.display', compact('customer','CustomerSchedules'));
     }
 
 }

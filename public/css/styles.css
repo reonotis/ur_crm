@@ -397,6 +397,7 @@ table.customerSearchTable{
 }
 .courseHistoryTable td{
 	padding :10px ;
+	font-size:.8em;
 	border-bottom :solid 1px var(--primary);
 }
 .courseHistoryTable tr:nth-child(odd) td {

@@ -19,17 +19,17 @@
   </div>
   <div class="BOXin tabsContentsArea">
       <div class="tabArea">
-        <div class="tab active">基本情報</div>
-        <div class="tab">受講履歴</div>
+        <div class="tab active">受講履歴</div>
+        <div class="tab">基本情報</div>
+        <div class="tab">受講項目一覧</div>
         <div class="tab">支払い情報</div>
-        <div class="tab">タブ４</div>
       </div>
       <div class="tabsContents">
         <div class="tabscontent show">
-          @include('customer.includeCustomerInfomation')
+          @include('customer.includeCustomerHistory')
         </div>
         <div class="tabscontent">
-          @include('customer.includeCustomerHistory')
+          @include('customer.includeCustomerInfomation')
         </div>
         <div class="tabscontent">
           タブ３の中身です
