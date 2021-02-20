@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->comment('パスワード');
             $table->tinyInteger('authority')->comment('権限');
-            $table->tinyInteger('enrollment')->nullable()->comment('在籍');
+            $table->tinyInteger('enrolled')->nullable()->comment('在籍');
             $table->rememberToken();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

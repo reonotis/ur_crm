@@ -53,23 +53,30 @@ Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('index', 'customerController@index')->name('customer.index');
+    Route::get('edit/{id}', 'customerController@edit')->name('customer.edit');
+    Route::post('update/{id}', 'customerController@update')->name('customer.update');
     Route::get('search', 'customerController@search')->name('customer.search');
     Route::get('searching', 'customerController@searching')->name('customer.searching');
     Route::get('display/{id}', 'customerController@display')->name('customer.display');
-    // Route::get('list', 'customerController@list')->name('customer.list');
-    // Route::get('display', 'customerController@display')->name('customer.display');
-    // Route::get('create', 'customerController@create')->name('customer.create');
-    // Route::post('store', 'customerController@store')->name('customer.store');
-    // Route::post('update/{id}', 'customerController@update')->name('customer.update');
-    // Route::get('show/{id}', 'customerController@show')->name('customer.show');
-    // Route::get('newCall/{id}', 'customerController@newCall')->name('customer.newCall');
-    // // ajax
-    // Route::get('aj_history_id/{id}', 'customerController@aj_history_id')->name('customer.aj_history_id');
-    // Route::get('aj_contactList/{id}', 'customerController@aj_contactList')->name('customer.aj_contactList');
-    // Route::get('aj_orderList/{id}', 'customerController@aj_orderList')->name('customer.aj_orderList');
-    // Route::get('aj_history_detail/{id}', 'customerController@aj_history_detail')->name('customer.aj_history_detail');
-    // Route::post('aj_contact_update/{id}', 'customerController@aj_contact_update')->name('customer.aj_contact_update');
 });
+
+
+
+
+
+
+
+// コース申し込み関係
+Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
+    Route::get('apply/{id}', 'CoursePurchaseDetailsController@apply')->name('courseDetails.apply');
+    Route::post('applySecond', 'CoursePurchaseDetailsController@applySecond')->name('courseDetails.applySecond');
+    Route::post('courseApply', 'CoursePurchaseDetailsController@courseApply')->name('courseDetails.courseApply');
+    Route::get('scheduleEdit/{id}', 'CoursePurchaseDetailsController@scheduleEdit')->name('courseDetails.scheduleEdit');
+});
+
+
+
+
 
 
 // ユーザー

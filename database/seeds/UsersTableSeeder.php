@@ -17,13 +17,25 @@ class UsersTableSeeder extends Seeder
                 'email' => 'test@test.jp',
                 'password' => Hash::make('reonotis'),
                 'authority' => '1',
-                'enrollment' => '1',
+                'enrolled' => '1',
             ],[
-                'name' => '営業さん１',
+                'name' => '穐里 明美',
                 'email' => 'test1@test.jp',
                 'password' => Hash::make('reonotis'),
                 'authority' => '1',
-                'enrollment' => '1',
+                'enrolled' => '1',
+            ],[
+                'name' => 'インストラクターAさん',
+                'email' => 'test2@test.jp',
+                'password' => Hash::make('reonotis'),
+                'authority' => '3',
+                'enrolled' => '5',
+            ],[
+                'name' => 'インストラクターBさん',
+                'email' => 'test3@test.jp',
+                'password' => Hash::make('reonotis'),
+                'authority' => '3',
+                'enrolled' => '9',
             ]
         ]);
     }

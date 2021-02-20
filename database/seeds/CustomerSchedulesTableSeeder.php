@@ -12,7 +12,7 @@ class CustomerSchedulesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(CustomerSchedule::class, 100)->create();
+        factory(CustomerSchedule::class, 10)->create();
         //
     }
 }

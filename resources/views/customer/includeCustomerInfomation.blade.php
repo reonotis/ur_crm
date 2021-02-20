@@ -31,12 +31,13 @@
 </div>
 <div class="cusInfoRow" >
   <div class="cusInfoTitle" >表示ステータス</div>
-  <div class="cusInfoContent" >
-    <?= getHiddenDisplay($customer->hidden_flag); ?>
+  <div class="cusInfoContent" ><?= $customer->hiddenStatus ?></div>
 </div>
+<div class="LeftBOX">
+  <a href="{{route('customer.edit', ['id' => $customer->id ] )}}">
+    <div class="button BOXin">編集する</div>
+  </a>
 </div>
-
-
 
 
 
@@ -74,13 +75,6 @@
     return $stringBirthday;
   }
 
-  /**
-  * ヒッドゥンフラグから「表示」「非表示」を返す
-  */
-  function getHiddenDisplay($hidden_flag){
-    $hiddenStatus =  ($hidden_flag === 1 ) ?  "非表示" : "表示する";
-    return $hiddenStatus;
-  }
 
 
 ?>

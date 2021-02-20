@@ -16,10 +16,11 @@ class CreateCoursesTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->bigIncrements('id')->comment('ID');
 
-            $table->string('course_name')->comment('コース名');
-            $table->integer('parent_id')->nullable()->comment('親コースがあればコースID');
-            $table->integer('how_many_times')->comment('何回に分けるか');
-            $table->integer('price')->nullable()->comment('料金');
+            $table->string('course_name')             ->comment('コース名');
+            $table->integer('parent_id')->nullable()  ->comment('親コースがあればコースID');
+            $table->integer('hierarchy')->default('1')->comment('階層');
+            $table->integer('how_many_times')         ->comment('何回に分けるか');
+            $table->integer('price')    ->nullable()  ->comment('料金');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

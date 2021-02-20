@@ -17,22 +17,18 @@
         <?= $CustomerSchedule->course_name  ?> の　
         <?= $CustomerSchedule->howMany  ?>回目
       </td>
-      <td><?= getAttendanceStatus($CustomerSchedule->status) ; ?></td>
-      <td><?= $CustomerSchedule->name ?></td>
-      <td><a href="" >詳細を見る</a></td>
+      <td><?= $CustomerSchedule->status?></td>
+      <td><?= $CustomerSchedule->intrName ?></td>
+      <td><a href="{{route('courseDetails.scheduleEdit', ['id' => $CustomerSchedule->id ] )}}" >詳細を見る</a></td>
     </tr>
   <?php  } ?>
 
 </table>
 
 
-<?php
-  /**
-   * 受講ステータスを表示する
-   */
-  function getAttendanceStatus($date){
-    return ($date) ? "受講済み" : "未受講" ;
-  }
 
 
-?>
+
+
+
+

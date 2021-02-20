@@ -13,29 +13,25 @@
 <div class="customerDetail LeftBOX">
   <div class="BOXin customerBasicInformation">
     <div class="customerNam"><?= $customer->menberNumber ?></div>
-    <div class=""><span class="customerNmae" ><?= $customer->name ?> </span>様 <?= $customer->sex ?> </div>
+    <div class=""><span class="customerNmae" ><?= $customer->name ?> </span>様 <?= $customer->sexName ?> </div>
     <div class="customerRead">( <?= $customer->read ?>　サマ )</div>
     <div class="customerIMG"></div>
   </div>
   <div class="BOXin tabsContentsArea">
       <div class="tabArea">
-        <div class="tab active">受講履歴</div>
-        <div class="tab">基本情報</div>
-        <div class="tab">受講項目一覧</div>
-        <div class="tab">支払い情報</div>
+        <div class="tab active">基本情報</div>
+        <div class="tab">受講履歴</div>
+        <div class="tab">申し込み講座一覧</div>
       </div>
       <div class="tabsContents">
         <div class="tabscontent show">
-          @include('customer.includeCustomerHistory')
-        </div>
-        <div class="tabscontent">
           @include('customer.includeCustomerInfomation')
         </div>
         <div class="tabscontent">
-          タブ３の中身です
+          @include('customer.includeCustomerHistory')
         </div>
         <div class="tabscontent">
-          タブ４の中身です
+          @include('customer.includeCustomerCourseList')
         </div>
       </div>
   </div>

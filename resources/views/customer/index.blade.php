@@ -17,10 +17,14 @@
                         </div>
                     @endif
 
-
-                    <a href="{{route('client.create')}}">顧客を追加する</a>
-                    <br>
-                    <a href="{{route('customer.search')}}">顧客を検索する</a>
+                        <div class="CenterBOX">
+                            <a href="{{route('customer.search')}}">
+                                <div class="button BOXin">顧客を検索する</div>
+                            </a>
+                            <a href="{{route('client.create')}}">
+                                <div class="button BOXin">顧客を追加する</div>
+                            </a>
+                        </div>
 
                 </div>
             </div>

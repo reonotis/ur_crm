@@ -60,8 +60,9 @@ navi{
 
 
 
-/* menu */
 
+
+/* menu */
 .menu {
 	cursor: pointer;
 	background: var(--maincolor);
@@ -69,7 +70,6 @@ navi{
 	outline: none;
 	display: none;
 }
-
 .menu .bar {
 	width: 20px;
 	height: 2px;
@@ -80,25 +80,20 @@ navi{
 	transition: 0.5s ease;
 	transform-origin: left;
 }
-
 .menu .bar1 {
 	margin-bottom: 5px;
 }
-
 .menu .bar3 {
 	margin-top: 5px;
 }
-
 .menu.toggle .bar1 {
 	transform-origin: left;
 	transform: rotate(45deg);
 }
-
 .menu.toggle .bar2 {
 	opacity: 0;
 	visibility: hidden;
 }
-
 .menu.toggle .bar3 {
 	transform-origin: left;
 	transform: rotate(-45deg);
@@ -136,7 +131,9 @@ navi{
 }
 
 
-
+label {
+	margin-bottom: 0rem;
+}
 
 .LeftBOX{
   display       : flex ;
@@ -152,6 +149,53 @@ navi{
   float         : left ;
   /* position      : relative; */
 }
+
+
+
+.button{
+	padding :5px 10px;
+	border : solid 1px var(--green);
+	border-radius :6px;
+	background : #fff;
+	color :var(--green);
+	font-weight: 500;
+	transition:0.2s;
+}
+.button:hover{
+	background :var(--green);
+	color : #fff;
+}
+.button.cancel{
+	border : solid 1px var(--orange);
+	color :var(--orange);
+}
+.button.cancel:hover{
+	background :var(--orange);
+	color : #fff;
+}
+.button.delete{
+	border : solid 1px var(--red);
+	color :var(--red);
+}
+.button.delete:hover{
+	background :var(--red);
+	color : #fff;
+}
+
+
+/* comment関連 */
+.support{
+	color :var(--secondary);
+	padding :0 2px;
+	font-size :0.9em;
+}
+
+
+
+
+
+
+
 
 
 
@@ -178,8 +222,20 @@ navi{
 .formInput::placeholder {
   color: #ddd;
 }
+
+.inputUnits{
+	width : 150px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputUnit{
+	width :120px;
+}
 .inputBirthday{
 	min-width :300px;
+	max-width :300px;
   display       : flex;
   flex-flow     : wrap;
   justify-content: space-between;
@@ -192,6 +248,7 @@ navi{
 	width :70px;
 }
 .inputZips{
+	margin-bottom :5px;
 	width : 180px;
   display       : flex;
   flex-flow     : wrap;
@@ -202,6 +259,7 @@ navi{
 	width :80px;
 }
 .inputAddrs{
+	margin-bottom :5px;
 	width : 250px;
   display       : flex;
   flex-flow     : wrap;
@@ -215,6 +273,30 @@ navi{
 	width : 100%;
 }
 
+textarea.formInput{
+	height :150px;
+	padding :5px;
+}
+
+
+
+select{
+	padding :10px 15px;
+	width :100%;
+}
+select.parent,
+select.children
+{
+	margin :10px 20px;
+	width :calc(100% - 40px);
+}
+
+
+
+
+
+
+
 
 
 
@@ -222,7 +304,7 @@ navi{
 
 /* 顧客関係 */
 table.customerSearchTable{
-	width:600px;
+	width:100%;
 	border-collapse: separate;
 	border-spacing: 0 10px;
 }
@@ -269,19 +351,20 @@ table.customerSearchTable{
 
 .customerDetail{
 	padding :0 10px;
+	margin :0 0 50px;
 }
 
 
 
 .customerBasicInformation{
-	width :150px;
+	width : var(--customer-sidebar);
 	min-height: 500px;
 	border :solid 1px var(--maincolor);
 }
 .tabsContentsArea{
-	width:calc(100% - 170px);
-	max-width :800px;
-	margin :0 10px;
+	width:calc(100% - (var(--customer-sidebar) + 10px));
+	max-width :1000px;
+	margin :0 0 0 10px ;
 	position: relative;
 }
 .customerNam{
@@ -340,11 +423,44 @@ table.customerSearchTable{
 	font-weight:700;
 }
 
+.editTab{
+	background    :  var(--green);
+	color         : #fff   ;
+	border :solid 1px  var(--green);
+	border-radius: 10px 10px 0 0;
+	text-align: center;
+	padding :8px 20px;
+	margin :0 0 0 10px;
+	cursor: pointer;
+	transition:.2s;
+
+}
+.editTab.active {
+	background-color: #f8fafc;
+	color:  var(--green);
+	border :solid 1px  var(--green);
+	border-bottom:none;
+	font-weight:700;
+}
+
+
+
+
 .tabsContents{
 	width :100%;
 	min-height: 500px;
 	padding :10px;
 	border :solid 1px  var(--maincolor);
+	border-radius:4px;
+	position: relative;
+	top :-1px;
+	z-index:5;
+}
+.editTabsContents{
+	width :100%;
+	min-height: 500px;
+	padding :10px 10px 30px;
+	border :solid 1px  var(--green);
 	border-radius:4px;
 	position: relative;
 	top :-1px;
@@ -360,7 +476,7 @@ table.customerSearchTable{
 .cusInfoRow{
   display       : flex ;
   flex-flow     : wrap ;
-	margin :5px 0;
+	margin :8px 0;
 }
 
 .cusInfoTitle{
@@ -382,8 +498,25 @@ table.customerSearchTable{
 	border-bottom:solid 1px var(--info);
 	font-size: .9em;
 }
-
-
+.editCusInfoTitle{
+  float         : left ;
+	width :140px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--green);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+.editCusInfoContent{
+	float         : left ;
+	width :calc(100% - 140px);
+	padding :5px;
+	border-bottom:solid 1px var(--green);
+	font-size: .9em;
+}
 
 .courseHistoryTable{
 	width :100%;
@@ -407,8 +540,26 @@ table.customerSearchTable{
 
 
 
+.courseAppTitle{
+	border-left :solid 5px var(--maincolor);
+  color: var(--maincolor);
+  background: #f1f8ff;
+	padding : 10px 20px ;
+	margin :10px 0;
 
+}
+.courseAppContent{
+	padding :5px 5px 5px 20px ;
+	margin : 5px 0 30px;
+}
 
-
-
-
+.PurchaseCourseName{
+  background: #f1f8ff;
+	border :solid 1px  var(--maincolor);
+  border-radius :8px;
+  box-shadow :0px 0px 30px rgba(222, 222, 223, 0.445);
+	padding :10px 10px 10px 35px ;
+}
+.PurchaseCourseName li, .PurchaseCourseName li {
+  padding: 2px 0;
+}

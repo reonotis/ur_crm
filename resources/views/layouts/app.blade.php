@@ -12,7 +12,7 @@
         echo '</script>';
     }
     $auths = Auth::user();
-    console_log( $session_all );
+    // console_log( $session_all );
 ?>
 
 <!doctype html>
@@ -73,7 +73,7 @@
             <li><a href="{{route('client.index')}}">日報</a></li>
             <li><a href="{{route('customer.index')}}">顧客</a></li>
             <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
-            <li><a href="">所有企業</a></li>
+            <!-- <li><a href="">所有企業</a></li> -->
             <li><a href="">受注履歴</a></li>
             <li><a href="">行動履歴</a></li>
             <li><a href="">設定</a></li>

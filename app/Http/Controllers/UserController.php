@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\CheckUsers;
 
 
 class UserController extends Controller
@@ -18,6 +19,7 @@ class UserController extends Controller
         $auths = Auth::user();
         $query = DB::table('users');
         $users = $query -> get();
+        $users = CheckUsers::checkEnrolled($users);
         // if($auths->authority === 1){
             // return view('user.index');
             return view('user.index', compact('users'));

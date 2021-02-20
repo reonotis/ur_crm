@@ -37,7 +37,7 @@
                                     <td><a href="{{route('user.display', ['id' => $user-> id ])}}">{{ $user-> name }}</a></td>
                                     <td></td>
                                     <td>{{ $user-> authority }}</td>
-                                    <td>{{ $user-> enrollment }}</td>
+                                    <td>{{ $user-> enrolled }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

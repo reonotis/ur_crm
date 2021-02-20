@@ -16,13 +16,13 @@ class CoursePurchaseDetailsTableSeeder extends Seeder
             [
                 'customer_id' => '1',
                 'date' => '2020-12-22',
-                'purchase_ID' => '6',
+                'purchase_id' => '6',
                 'price' => '360000',
                 'pay_confirm' => '0'
             ],[
                 'customer_id' => '2',
                 'date' => '2020-12-25',
-                'purchase_ID' => '6',
+                'purchase_id' => '6',
                 'price' => '360000',
                 'pay_confirm' => '0'
             ]

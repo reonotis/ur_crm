@@ -12,7 +12,7 @@ class ContactsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Contact::class, 100)->create();
+        factory(Contact::class, 10)->create();
         //
     }
 }
