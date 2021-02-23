@@ -23,6 +23,8 @@ class CreateCustomerSchedulesTable extends Migration
             $table->integer('instructor_id')->nullable()->comment('イントラID');
 
             $table->tinyInteger('status')->default('0')->comment('受講状態');
+            $table->string('comment','1000')->nullable()->comment('コメント');
+            $table->string('memo','1000')->nullable()->comment('メモ');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

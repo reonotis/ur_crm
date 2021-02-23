@@ -24,7 +24,7 @@
         <div class="editTabsContents">
           <div class="tabscontent show">
 
-            <form action="{{route('customer.update', ['id'=>$customer->id ])}}" method="post" >
+            <form action="{{route('courseDetails.update', ['id'=>$customerSchedule->id ])}}" method="post" >
               @csrf
 
               <div class="cusInfoRow" >
@@ -40,35 +40,36 @@
                 <div class="editCusInfoContent" >
                   <label><input type="radio" name="status" value="0" class="" <?php if( $customerSchedule->status === 0) echo " checked='checked'"; ?> >未受講</label> 　
                   <label><input type="radio" name="status" value="1" class="" <?php if( $customerSchedule->status === 1) echo " checked='checked'"; ?> >受講済み</label>
-                  <div><span class="support">※受講済みで更新すると編集できなくなります。</span></div>
+                  <div><span class="support">※受講済みに更新すると編集できなくなります。</span></div>
                 </div>
               </div>
               <div class="cusInfoRow" >
                 <div class="editCusInfoTitle" >担当インストラクター</div>
                 <div class="editCusInfoContent" >
-                  <select name="" >
+                  <select name="instructor" required>
                     <option value="0">--選択してください--</option>
                     <?php foreach( $instructors as $instructor ){ ?>
-                      <option value="<?= $instructor->id ?>"><?= $instructor->name ?></option>
+                      <option value="<?= $instructor->id ?>" <?php if($customerSchedule->instructor_id ===  $instructor->id ) echo " selected"; ?> ><?= $instructor->name ?></option>
                     <?php } ?>
                   </select>
                 </div>
               </div>
               <div class="cusInfoRow" >
                 <div class="editCusInfoTitle" >顧客へのコメント</div>
-                <div class="editCusInfoContent" >
-                  <textarea class="formInput" ></textarea>
+                <div class="editCusInfoContent">
+                  <textarea class="formInput" name="comment" placeholder="メール機能が出来た場合や、顧客のログイン機能が出来たら、ここに記入し奈多内容が閲覧されるようになります。" ><?=  $customerSchedule->comment ?></textarea>
                 </div>
               </div>
               <div class="cusInfoRow" >
                 <div class="editCusInfoTitle" >メモ</div>
                 <div class="editCusInfoContent" >
-                  <textarea class="formInput" placeholder="この内容は顧客には見られません"></textarea>
+                  <textarea class="formInput" name="memo" placeholder="この内容は顧客には見られません"><?=  $customerSchedule->memo ?></textarea>
                 </div>
               </div>
               <div class="cusInfoRow" >
+                <input type="hidden" name="id" value="<?= $customerSchedule->id ?>" >
                 <input type="submit" name="" value="更新" class="button" >
-                <input type="submit" name="" value="削除" class="button delete" >
+                <input type="submit" name="delete" value="削除" class="button delete" >
                 
               </div>
             </form>

@@ -22,6 +22,9 @@ class CheckCustomerData
         $query -> select('customers.*', 'users.name as intrName');
         $query -> where('customers.id','=',$id);
         $customer = $query -> first();
+        if(empty($customer)){
+            return NULL;
+        }
         $customer = self::checkSex($customer);
         $customer = self::hiddenStatus($customer);
         return $customer ;

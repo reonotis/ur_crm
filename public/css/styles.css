@@ -190,7 +190,10 @@ label {
 	font-size :0.9em;
 }
 
-
+.textRight{
+	text-align: right;
+	float: right;
+}
 
 
 
@@ -321,9 +324,9 @@ table.customerSearchTable{
 }
 
 .customerListTable{
-	width :95%;
+	width :100%;
 	max-width: 1000px;
-	margin :0 auto;
+	margin : 0 0 20px;
 }
 .customerListTable th{
 	background: var(--info);
@@ -416,7 +419,7 @@ table.customerSearchTable{
 	font-weight:700;
 }
 .tab.active {
-	background-color: #fff;
+	background-color: #f8fafc;
 	color:  var(--maincolor);
 	border :solid 1px  var(--maincolor);
 	border-bottom:none;
@@ -562,4 +565,44 @@ table.customerSearchTable{
 }
 .PurchaseCourseName li, .PurchaseCourseName li {
   padding: 2px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* setting */
+.userSettingRow{
+  display       : flex ;
+  flex-flow     : wrap ;
+	margin :8px 0;
+
+}
+.userSettingTitle{
+  float         : left ;
+	width :140px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--info);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+
+}
+.userSettingContent{
+	float         : left ;
+	width :calc(100% - 140px);
+	padding :5px;
+	border-bottom:solid 1px var(--info);
+	font-size: .9em;
+	
 }

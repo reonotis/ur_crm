@@ -21,7 +21,7 @@
                             <a href="{{route('customer.search')}}">
                                 <div class="button BOXin">顧客を検索する</div>
                             </a>
-                            <a href="{{route('client.create')}}">
+                            <a href="{{route('customer.create')}}">
                                 <div class="button BOXin">顧客を追加する</div>
                             </a>
                         </div>

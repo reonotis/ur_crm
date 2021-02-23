@@ -3,12 +3,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{route('user.index')}}">社員一覧</a>
+                    <a href="{{route('user.index')}}">インストラクター一覧</a>
                 </div>
-
 
                 <div class="card-body">
                     @if (session('status'))
@@ -16,28 +15,30 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <div class="LeftBOX">
+                        <a href="{{route('user.create')}}">
+                            <div class="button BOXin">新しいインストラクターを追加する</div>
+                        </a>
+                    </div>
 
-                    <a href="{{route('user.create')}}">新しいインストラクターを追加する</a>
-                    <br>
-                    <a href="{{route('client.search')}}">インストラクターを検索する</a>
-                    <br>
-                    <br>
-                    <table class="">
+                    <table class="customerListTable">
                         <thead>
                             <tr>
-                                <th>社員名</th>
-                                <th>チーム</th>
+                                <th>ID</th>
+                                <th>インストラクター名</th>
                                 <th>権限</th>
                                 <th>在籍</th>
+                                <th>確認</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td><a href="{{route('user.display', ['id' => $user-> id ])}}">{{ $user-> name }}</a></td>
-                                    <td></td>
+                                    <td>{{ $user-> id }}</td>
+                                    <td>{{ $user-> name }}</td>
                                     <td>{{ $user-> authority }}</td>
                                     <td>{{ $user-> enrolled }}</td>
+                                    <td><a href="" >確認する</a></td>
                                 </tr>
                             @endforeach
                         </tbody>

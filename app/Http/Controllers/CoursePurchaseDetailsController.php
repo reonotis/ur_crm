@@ -144,12 +144,36 @@ class CoursePurchaseDetailsController extends Controller
         $customer_id = $customerSchedule -> customer_id;
         $customer = CheckCustomerData::getCustomer($customer_id);
 
-        
         $intrQuery = DB::table('users');
         $instructors = $intrQuery -> get();
 
 
-        return view('customer.scheduleEdit',compact('customer', 'customerSchedule', 'instructors'));
+        return view('customer.editSchedule',compact('customer', 'customerSchedule', 'instructors'));
+    }
+
+
+
+    public function scheduleUpdate(Request $request){
+        $id         = $request->input('id');
+        $date       = $request->input('date');
+        $time       = $request->input('time');
+        $status     = $request->input('status');
+        $instructor = $request->input('instructor');
+        $comment    = $request->input('comment');
+        $memo       = $request->input('memo');
+
+        $cShe = CustomerSchedule::find($id);
+        $cShe->date          = $date ;
+        $cShe->time          = $time ;
+        $cShe->status        = $status ;
+        $cShe->instructor_id = $instructor ;
+        $cShe->comment       = $comment ;
+        $cShe->memo          = $memo ;
+        $cShe->save();
+
+        $customer_id = $cShe->customer_id;
+
+        return redirect()->action('customerController@display', ['id' => $customer_id]);
     }
 
 }

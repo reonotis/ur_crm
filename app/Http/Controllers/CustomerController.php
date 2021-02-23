@@ -18,8 +18,6 @@ use App\Http\Controllers\Controller,
 class CustomerController extends Controller
 {
 
-    private $_zip21;
-
 
     /**
      * Display a listing of the resource.
@@ -33,6 +31,26 @@ class CustomerController extends Controller
             return view('customer.index');
         // }
     }
+
+
+
+
+    /**
+     * k顧客の登録画面に遷移します。
+     *
+     */
+    public function create(){
+        $auths = Auth::user();
+        // dd($auths->id);
+        // if($auths->authority === 1){
+            return view('customer.create');
+        // }
+    }
+
+
+
+
+
 
     public function search(){
         return view('customer.search');
@@ -76,7 +94,14 @@ class CustomerController extends Controller
 
         // ユーザーのステータスが__以下だったら自分の顧客だけ選択する
 
-
+        $auth = Auth::user();
+        if($auth->enrolled >= 9){
+            echo "退職";
+            exit;
+        }
+        if($auth->enrolled >= 5){
+            $query -> where('customers.instructor' ,'=', $auth->id);
+        }
 
 
 
@@ -99,22 +124,17 @@ class CustomerController extends Controller
         }
     }
 
-    public function display($client_id){
+    public function display($customer_id){
         // 渡されたIDの顧客情報を取得する
-        $query = DB::table('customers');
-            $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
-        $query -> select('customers.*', 'users.name as intrName');
-        $query -> where('customers.id','=',$client_id);
-        $customer = $query -> first();
-        $customer = CheckCustomerData::checkSex($customer);
-        $customer = CheckCustomerData::hiddenStatus($customer);
+        $customer = CheckCustomerData::getCustomer($customer_id);
+        if(empty($customer))return redirect()->back();
 
         // 顧客のスケジュールを取得する
         $CSQuery = DB::table('customer_schedules');
             $CSQuery -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id');
             $CSQuery -> leftJoin('courses', 'courses.id', '=', 'customer_schedules.course_id');
         $CSQuery   -> select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' );
-        $CSQuery -> where('customer_schedules.customer_id','=',$client_id);
+        $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
         $CSQuery -> orderByRaw('customer_schedules.date DESC , customer_schedules.time DESC , customer_schedules.howMany DESC ');
         $CustomerSchedules = $CSQuery -> get();
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
@@ -124,7 +144,7 @@ class CustomerController extends Controller
         $CPDQuery = DB::table('course_purchase_details');
         $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'course_purchase_details.purchase_id');
         $CPDQuery -> select('course_purchase_details.*', 'courses.course_name' );
-        $CPDQuery -> where('course_purchase_details.customer_id','=',$client_id);
+        $CPDQuery -> where('course_purchase_details.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
 
         return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails'));
@@ -143,7 +163,7 @@ class CustomerController extends Controller
 
         // 選択できるインストラクターを取得する
         $query = DB::table('users');
-        $query -> where ('enrolled', '<', '5');
+        $query -> where ('enrolled_id', '<', '5');
         $query -> orWhere ('id', '=', $customer->instructor);
         $users = $query -> get();
 
@@ -173,7 +193,7 @@ class CustomerController extends Controller
         $instructor    = $request->input('instructor');
         $memo          = $request->input('memo');
         $hidden_flag   = ($request->input('hidden_flag')) ?  "1": "0" ;
-
+        return back()->withInput();
         // return redirect()->back();    // 前の画面へ戻る
 
         $customer = Customer::find($id);

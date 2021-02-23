@@ -30,19 +30,21 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
 
     <!-- <link rel="shortcut icon" href="../../../../img/logo/Reonotis01-150x150.png"> -->
-
 </head>
 
 
@@ -70,13 +72,13 @@
         </div>
 
         <ul class="navi-links">
-            <li><a href="{{route('client.index')}}">日報</a></li>
-            <li><a href="{{route('customer.index')}}">顧客</a></li>
+            <li><a href="{{route('report.index')}}">日報</a></li>
+            <li><a href="{{route('customer.search')}}">顧客検索</a></li>
             <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
             <!-- <li><a href="">所有企業</a></li> -->
             <li><a href="">受注履歴</a></li>
             <li><a href="">行動履歴</a></li>
-            <li><a href="">設定</a></li>
+            <li><a href="{{route('setting.index')}}">設定</a></li>
             <li>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -89,6 +91,28 @@
 
 
 @endguest
+
+
+
+<script type="text/javascript">
+    // {{--成功時--}}
+    @if (session('msg_success'))
+        $(function () {
+            toastr.success('{{ session('msg_success') }}');
+        });
+    @endif
+
+    // {{--失敗時--}}
+    @if (session('msg_danger'))
+        $(function () {
+            toastr.warning('{{ session('msg_danger') }}');
+        });
+    @endif
+</script>
+
+
+
+
     <main id="main">
         <div id="main-in">
             <div id="header">

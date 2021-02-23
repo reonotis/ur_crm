@@ -27,6 +27,18 @@ Auth::routes([
 ]);
 
 
+
+
+
+// インストラクター関係
+Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
+    Route::get('index', 'ReportController@index')->name('report.index');
+});
+
+
+
+
+
 // Client関係
 Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
     Route::get('index', 'ClientController@index')->name('client.index');
@@ -53,6 +65,7 @@ Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('index', 'customerController@index')->name('customer.index');
+    Route::get('create', 'customerController@create')->name('customer.create');
     Route::get('edit/{id}', 'customerController@edit')->name('customer.edit');
     Route::post('update/{id}', 'customerController@update')->name('customer.update');
     Route::get('search', 'customerController@search')->name('customer.search');
@@ -60,19 +73,62 @@ Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'customerController@display')->name('customer.display');
 });
 
-
-
-
-
-
-
 // コース申し込み関係
 Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
     Route::get('apply/{id}', 'CoursePurchaseDetailsController@apply')->name('courseDetails.apply');
     Route::post('applySecond', 'CoursePurchaseDetailsController@applySecond')->name('courseDetails.applySecond');
     Route::post('courseApply', 'CoursePurchaseDetailsController@courseApply')->name('courseDetails.courseApply');
     Route::get('scheduleEdit/{id}', 'CoursePurchaseDetailsController@scheduleEdit')->name('courseDetails.scheduleEdit');
+    Route::post('update/{id}', 'CoursePurchaseDetailsController@scheduleUpdate')->name('courseDetails.update');
 });
+
+
+
+
+
+
+// インストラクター関係
+Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
+    Route::get('index', 'userController@index')->name('customer.index');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// setting関係
+Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
+    Route::get('index', 'settingController@index')->name('setting.index');
+    Route::get('editPassword', 'settingController@editPassword')->name('setting.editPassword');
+    Route::get('editTell', 'settingController@editTell')->name('setting.editTell');
+    Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
+    Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

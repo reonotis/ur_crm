@@ -9,7 +9,7 @@
                 @yield('content')
 
 <div class="">
-  <h2>顧客情報</h2>
+  <h3>顧客情報</h3>
 <div class="customerDetail LeftBOX">
   <div class="BOXin customerBasicInformation">
     <div class="customerNam"><?= $customer->menberNumber ?></div>

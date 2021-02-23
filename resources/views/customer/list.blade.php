@@ -1,15 +1,17 @@
-
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">顧客一覧</div>
+                <div class="card-body">
 
 
 
 
 
-<div class="">
-    <h2>顧客一覧</h2>
-    <div class="basicData">
         <table class="customerListTable">
             <tr>
                 <th>会員番号</th>
@@ -36,9 +38,17 @@
         </table>
         {{ $customers->links() }}
 
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 @endsection
 
 

@@ -16,10 +16,7 @@ class UserController extends Controller
 {
     //
     public function index(){
-        $auths = Auth::user();
-        $query = DB::table('users');
-        $users = $query -> get();
-        $users = CheckUsers::checkEnrolled($users);
+        $users = CheckUsers::getUser();
         // if($auths->authority === 1){
             // return view('user.index');
             return view('user.index', compact('users'));
@@ -55,9 +52,6 @@ class UserController extends Controller
         $query -> where('id','=',$id);
         $user = $query -> get();
         dd($user);
-
-
-        dd();
         // return view('client.display', compact('clients','Contacts'));
 
     }
