@@ -31,7 +31,7 @@
                             <?= $auth->zip21 ." - ". $auth->zip22 ?><br>
                             <?= $auth->pref21 ?>　<?= $auth->addr21 ?><br>
                             <?= $auth->strt21 ?>
-                            <a href="" class="textRight">変更する</a>
+                            <a href="{{route('setting.editAddress')}}" class="textRight">変更する</a>
                         </div>
                     </div>
                     <div class="userSettingRow">

@@ -16,8 +16,6 @@ class SettingController extends Controller
     public function index(){
         $auths = Auth::user();
         $myId = $auths->id;
-        $hashPass = $auths->password;
-
         $query = DB::table('users')
                 -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
         $auth = $query->first();
@@ -40,7 +38,27 @@ class SettingController extends Controller
     */
     public function editTell(){
         $auth = Auth::user();
+        $myId = $auth->id;
+
+        $query = DB::table('users')
+                -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
+        $auth = $query->first();
         return view('setting.editTell', compact('auth'));
+    }
+
+
+
+    /**
+    * 住所の編集画面を表示します。
+    */
+    public function editAddress(){
+        $auth = Auth::user();
+        $myId = $auth->id;
+
+        $query = DB::table('users')
+                -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
+        $auth = $query->first();
+        return view('setting.editAddress', compact('auth'));
     }
 
 
@@ -72,19 +90,27 @@ class SettingController extends Controller
     * 電話番号の更新を行います。
     */
     public function updateTell(request $request){
-        $auths = Auth::user();
-        $hashPass = $auths->password;
+        $newTell = $request->input('tell');
 
-        //
-
-        // dd( $request->input('new_pass1'), $request->input('new_pass2') );
-        // $auths->password = Hash::make($request->input('new_pass1'));
-        // $auths->save();
-        session()->flash('msg_success', '電話番号の更新プログラム作成中');
-        return redirect()->action('settingController@index');
-
+        //バリデーションcheck
+        if(empty($newTell)){
+            session()->flash('msg_danger', '電話番号を入力してください');
+            return back();
+        }
+        if (preg_match('/\A\d{2,4}+-\d{2,4}+-\d{4}\z/', $newTell)) {
+            $auths = Auth::user();
+            $myId = $auths->id;
+            DB::table('users_info')->updateOrInsert(
+                ['id' => $myId],
+                ['tel' =>  $newTell]
+            );
+            session()->flash('msg_success', '電話番号を更新しました');
+            return redirect()->action('settingController@index');
+        }else{
+            session()->flash('msg_danger', '入力規則に一致していません。');
+            return back();
+        }
     }
-
 
 
 

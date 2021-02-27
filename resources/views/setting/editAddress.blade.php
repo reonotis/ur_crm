@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">電話番号変更<a href="" class="textRight">戻る</a></div>
+                <div class="card-header">住所変更<a href="" class="textRight">戻る</a></div>
                 <div class="card-body">
                   @if($errors->any())
                     <div class="alert alert-danger" >
@@ -19,10 +19,25 @@
                   <form action="{{route('setting.updateTell')}}" method="post" >
                     @csrf
                     <div class="cusInfoRow" >
-                      <div class="editCusInfoTitle" >電話番号</div>
+                      <div class="editCusInfoTitle" >住所</div>
                       <div class="editCusInfoContent" >
                         <div class="inputBirthday">
-                            <input class="formInput"  type="text" name="tell" value="<?= $auth-> tel?>" placeholder="新しいパスワード" >
+
+
+                        <div class="inputZips">
+                            <input class="formInput inputZip" type="text" name="zip21" placeholder="150" >-
+                            <input class="formInput inputZip" type="text" name="zip22" placeholder="0022" >
+                        </div>
+                        <div class="inputAddrs">
+                            <input class="formInput inputAddr" type="text" name="pref21" placeholder="東京都" >
+                            <input class="formInput inputAddr" type="text" name="addr21" placeholder="渋谷区" >
+                        </div>
+                        <input class="formInput inputStrt" type="text" name="strt21" value="<?= $auth-> tel?>" placeholder="恵比寿南1丁目マンション名1101号室" >
+                        <!-- この機能まだ -->
+
+
+
+
                         </div>
                       </div>
                     </div>

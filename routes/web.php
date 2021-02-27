@@ -110,7 +110,9 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('index', 'settingController@index')->name('setting.index');
     Route::get('editPassword', 'settingController@editPassword')->name('setting.editPassword');
     Route::get('editTell', 'settingController@editTell')->name('setting.editTell');
+    Route::get('editAddress', 'settingController@editAddress')->name('setting.editAddress');
     Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
+    Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
     Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
 });
 
