@@ -113,7 +113,7 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('editAddress', 'settingController@editAddress')->name('setting.editAddress');
     Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
     Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
-    Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
+    Route::post('updateAddress', 'settingController@updateAddress')->name('setting.updateAddress');
 });
 
 

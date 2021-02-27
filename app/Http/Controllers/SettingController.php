@@ -114,6 +114,43 @@ class SettingController extends Controller
 
 
 
+    /**
+    * 電話番号の更新を行います。
+    */
+    public function updateAddress(request $request){
+        $zip21 = $request->input('zip21');
+        $zip22 = $request->input('zip22');
+        $pref21 = $request->input('pref21');
+        $addr21 = $request->input('addr21');
+        $strt21 = $request->input('strt21');
+
+        //バリデーションcheck
+        if( strlen($zip21) <> 3 || strlen($zip22) <> 4 ){
+            session()->flash('msg_danger', '郵便番号は3桁-4桁で入力してください');
+            return back();
+        }
+        if( empty($pref21) || empty($addr21) || empty($strt21) ){
+            session()->flash('msg_danger', '住所は全て入力してください');
+            return back();
+        }
+
+        $auths = Auth::user();
+        $myId = $auths->id;
+        DB::table('users_info')->updateOrInsert(
+            ['id' => $myId],
+            [   'zip21'  =>  $zip21,
+                'zip22'  =>  $zip22,
+                'pref21' =>  $pref21,
+                'addr21' =>  $addr21,
+                'strt21' =>  $strt21,
+            ]
+        );
+        session()->flash('msg_success', '住所を更新しました');
+        return redirect()->action('settingController@index');
+    }
+
+
+
 
 
 }
