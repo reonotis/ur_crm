@@ -11,7 +11,7 @@
 
                     <div class="userSettingRow">
                         <div class="userSettingTitle">インストラクター番号</div>
-                        <div class="userSettingContent"><?= $auth->id ?></div>
+                        <div class="userSettingContent"><?= $auth->intr_No ?></div>
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">名前</div>
@@ -49,7 +49,9 @@
                     <div class="userSettingRow">
                         <div class="userSettingTitle">写真</div>
                         <div class="userSettingContent">
-                            <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                            <?php if($auth->img_path) { ?>
+                                <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                            <?php } ?>
                             <a href="{{route('setting.editImage')}}" class="textRight">変更する</a>
                         </div>
                     </div>

@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CheckUsers;
 use App\Http\Requests\updatePass;
+use \InterventionImage;
 
 class SettingController extends Controller
 {
     // 定数の設定
     private $_fileExtntion = ['jpg', 'jpeg', 'png'];
+    private $_resize = '300';
 
 
 
@@ -177,21 +179,21 @@ class SettingController extends Controller
     public function updateImage(request $request){
         $auth = Auth::user();
         $myId = $auth->id;
-
+        $file = $request->img;
         try {
             // 登録可能な拡張子か確認して取得する
-            $extension = $this->checkFileExtntion($request);
+            $extension = $this->checkFileExtntion($file);
 
-            // ファイル名は、 {日時} _ {ユーザーID(7桁に0埋め)} _ 'mainImg' . {拡張子}
+            // ファイル名の作成 => {日時} _ {ユーザーID(7桁に0埋め)} _ 'mainImg' . {拡張子}
             $BaseFileName =  date("ymd_His") . '_' . str_pad($myId, 7, 0, STR_PAD_LEFT) . '_' . 'mainImg' . $extension;
 
-            $path = $request->img->storeAs('public/images', $BaseFileName);  //画像をリネームして保存する
-            $filename = basename($path); // パスから、最後の「ファイル名.拡張子」の部分だけ取得します 例)sample.jpg
-            $filename = basename($path); // パスから、最後の「ファイル名.拡張子」の部分だけ取得します 例)sample.jpg
+            // 画像サイズを横幅500の比率にして保存する。
+            $this->makeImgFile($file, $BaseFileName);
 
+            // DB更新
             DB::table('users_info')->updateOrInsert(
                 ['id' => $myId],
-                ['img_path'  =>  $filename,]
+                ['img_path'  =>  $BaseFileName,]
             );
             session()->flash('msg_success', '画像を更新しました');
             return redirect()->action('settingController@index');
@@ -204,16 +206,43 @@ class SettingController extends Controller
 
 
     /**
-    * 登録可能な拡張子か確認するしてOKなら拡張子を返す
-    */
-    public function checkFileExtntion($request){
+     * 渡されたファイルが登録可能な拡張子か確認するしてOKなら拡張子を返す
+     */
+    public function checkFileExtntion($file){
         // 渡された拡張子を取得
-        $extension =  $request->img->extension();
+        $extension =  $file->extension();
         if(! in_array($extension, $this->_fileExtntion)){
             $fileExtntion = json_encode($this->_fileExtntion);
             throw new \Exception("登録できる画像の拡張子は". $fileExtntion ."のみです。");
         }
-        return '.' . $request->img->extension();
+        return '.' . $file->extension();
+    }
+
+    /**
+     * 渡された画像ファイルをリサイズして保存する
+     */
+    public function makeImgFile($file, $BaseFileName){
+        if(empty($file)) throw new \Exception("ファイルがありません。");
+        if(empty($BaseFileName)) throw new \Exception("ファイル名が決まっていません。");
+
+        $image = InterventionImage::make($file)->exif();
+        $width  = $image['COMPUTED']['Width'];
+        $height = $image['COMPUTED']['Height'];
+        if($width < $height){
+            $length = $width;
+        }else{
+            $length = $height;
+        }
+
+        // 正方形の画像を作成
+        $square_image = InterventionImage::make($file)
+                        ->crop($length, $length);
+
+        // リサイズして保存
+        $image = InterventionImage::make($square_image)
+                        ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
+                        ->save(public_path('/storage/images/' . $BaseFileName ) );
+
     }
 
 

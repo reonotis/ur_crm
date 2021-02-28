@@ -22,7 +22,9 @@
                 <div class="editCusInfoTitle" >画像</div>
                 <div class="editCusInfoContent" >
                   <div class="">
-                    <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                    <?php if($auth->img_path) { ?>
+                        <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                    <?php } ?>
                   </div>
                   <div class="">
                     <label>画像を選択する
