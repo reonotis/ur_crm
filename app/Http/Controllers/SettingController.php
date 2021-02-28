@@ -12,10 +12,16 @@ use App\Http\Requests\updatePass;
 
 class SettingController extends Controller
 {
+    // 定数の設定
+    private $_fileExtntion = ['jpg', 'jpeg', 'png'];
+
+
+
+
     //
     public function index(){
-        $auths = Auth::user();
-        $myId = $auths->id;
+        $auth = Auth::user();
+        $myId = $auth->id;
         $query = DB::table('users')
                 -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
         $auth = $query->first();
@@ -46,8 +52,6 @@ class SettingController extends Controller
         return view('setting.editTell', compact('auth'));
     }
 
-
-
     /**
     * 住所の編集画面を表示します。
     */
@@ -61,13 +65,30 @@ class SettingController extends Controller
         return view('setting.editAddress', compact('auth'));
     }
 
+    /**
+    * 画像の更新画面を表示します。
+    */
+    public function editImage(){
+        $auth = Auth::user();
+        $myId = $auth->id;
+
+        $query = DB::table('users')
+                -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
+        $auth = $query->first();
+        return view('setting.editImg', compact('auth'));
+    }
+
+
+
+
+
 
     /**
     * パスワードの更新を行います。
     */
     public function updatePassword(updatePass $request){
-        $auths = Auth::user();
-        $hashPass = $auths->password;
+        $auth = Auth::user();
+        $hashPass = $auth->password;
 
         // ハッシュ化済みパスワードのソルトを使って、受け取ったパスワードをハッシュ化後に比較
         if(!Hash::check($request->input('old_pass'), $hashPass)){
@@ -79,8 +100,8 @@ class SettingController extends Controller
         }
 
         // dd( $request->input('new_pass1'), $request->input('new_pass2') );
-        $auths->password = Hash::make($request->input('new_pass1'));
-        $auths->save();
+        $auth->password = Hash::make($request->input('new_pass1'));
+        $auth->save();
         session()->flash('msg_success', 'パスワードを更新しました');
         return redirect()->action('settingController@index');
     }
@@ -115,7 +136,7 @@ class SettingController extends Controller
 
 
     /**
-    * 電話番号の更新を行います。
+    * 住所の更新を行います。
     */
     public function updateAddress(request $request){
         $zip21 = $request->input('zip21');
@@ -134,8 +155,8 @@ class SettingController extends Controller
             return back();
         }
 
-        $auths = Auth::user();
-        $myId = $auths->id;
+        $auth = Auth::user();
+        $myId = $auth->id;
         DB::table('users_info')->updateOrInsert(
             ['id' => $myId],
             [   'zip21'  =>  $zip21,
@@ -148,6 +169,53 @@ class SettingController extends Controller
         session()->flash('msg_success', '住所を更新しました');
         return redirect()->action('settingController@index');
     }
+
+
+    /**
+    * 画像の更新を行います。
+    */
+    public function updateImage(request $request){
+        $auth = Auth::user();
+        $myId = $auth->id;
+
+        try {
+            // 登録可能な拡張子か確認して取得する
+            $extension = $this->checkFileExtntion($request);
+
+            // ファイル名は、 {日時} _ {ユーザーID(7桁に0埋め)} _ 'mainImg' . {拡張子}
+            $BaseFileName =  date("ymd_His") . '_' . str_pad($myId, 7, 0, STR_PAD_LEFT) . '_' . 'mainImg' . $extension;
+
+            $path = $request->img->storeAs('public/images', $BaseFileName);  //画像をリネームして保存する
+            $filename = basename($path); // パスから、最後の「ファイル名.拡張子」の部分だけ取得します 例)sample.jpg
+            $filename = basename($path); // パスから、最後の「ファイル名.拡張子」の部分だけ取得します 例)sample.jpg
+
+            DB::table('users_info')->updateOrInsert(
+                ['id' => $myId],
+                ['img_path'  =>  $filename,]
+            );
+            session()->flash('msg_success', '画像を更新しました');
+            return redirect()->action('settingController@index');
+
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+            //throw $th;
+        }
+    }
+
+
+    /**
+    * 登録可能な拡張子か確認するしてOKなら拡張子を返す
+    */
+    public function checkFileExtntion($request){
+        // 渡された拡張子を取得
+        $extension =  $request->img->extension();
+        if(! in_array($extension, $this->_fileExtntion)){
+            $fileExtntion = json_encode($this->_fileExtntion);
+            throw new \Exception("登録できる画像の拡張子は". $fileExtntion ."のみです。");
+        }
+        return '.' . $request->img->extension();
+    }
+
 
 
 

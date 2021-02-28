@@ -48,7 +48,10 @@
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">写真</div>
-                        <div class="userSettingContent"><?= $auth->img_path ?><a href="" class="textRight">変更する</a></div>
+                        <div class="userSettingContent">
+                            <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                            <a href="{{route('setting.editImage')}}" class="textRight">変更する</a>
+                        </div>
                     </div>
 
                 </div>

@@ -18,7 +18,7 @@ class CreateUsersInfoTable extends Migration
             $table->string('intr_No')     ->nullable() ->comment('イントラ番号');
             $table->string('tel')         ->nullable() ->comment('電話番号');
 
-            $table->string('img_path')    ->nullable() ->comment('画像');
+            $table->string('img_path')    ->nullable() ->comment('画像パス');
             $table->string('birthdayYear')->nullable() ->comment('誕生日年');
             $table->string('birthdayMonth')->nullable()->comment('誕生日月');
             $table->string('birthdayDay') ->nullable() ->comment('誕生日日');

@@ -111,9 +111,11 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('editPassword', 'settingController@editPassword')->name('setting.editPassword');
     Route::get('editTell', 'settingController@editTell')->name('setting.editTell');
     Route::get('editAddress', 'settingController@editAddress')->name('setting.editAddress');
+    Route::get('editImage', 'settingController@editImage')->name('setting.editImage');
     Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
     Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
     Route::post('updateAddress', 'settingController@updateAddress')->name('setting.updateAddress');
+    Route::post('updateImage', 'settingController@updateImage')->name('setting.updateImage');
 });
 
 
