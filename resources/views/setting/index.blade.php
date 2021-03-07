@@ -23,7 +23,7 @@
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">メールアドレス</div>
-                        <div class="userSettingContent"><?= $auth->email ?><a href="" class="textRight">変更する</a></div>
+                        <div class="userSettingContent"><?= $auth->email ?><a href="" class="textRight">変更出来るようにしたい</a></div>
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">住所</div>
@@ -50,7 +50,7 @@
                         <div class="userSettingTitle">写真</div>
                         <div class="userSettingContent">
                             <?php if($auth->img_path) { ?>
-                                <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                                <img src="{{ asset('storage/mainImages/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
                             <?php } ?>
                             <a href="{{route('setting.editImage')}}" class="textRight">変更する</a>
                         </div>

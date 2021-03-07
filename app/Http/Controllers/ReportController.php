@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Customer;
+use \Illuminate\Support\Facades\Artisan;
+use \SplFileObject;
 
 class ReportController extends Controller
 {
+    private $_csvData = [];
+
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        dd(Hash::make('reonotis'));
-        //
+
+        // アーティサンコマンドでWordpressからの申し込みファイルをインポートする
+        Artisan::call('command:courseApplicationImport');
         return view('report.index');
     }
 
@@ -85,4 +89,5 @@ class ReportController extends Controller
     {
         //
     }
+
 }

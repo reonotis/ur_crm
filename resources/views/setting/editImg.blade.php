@@ -16,26 +16,27 @@
                 </ul>
               </div>
             @endif
+
+              <div class="userSettingRow" >
+                <div class="userSettingTitle" >現在の画像</div>
+                <div class="userSettingContent" >
+                        <img src="{{ asset('storage/mainImages/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                </div>
+              </div>
+
             <form action="{{route('setting.updateImage')}}" method="post" method="post" enctype="multipart/form-data">
               @csrf
               <div class="cusInfoRow" >
-                <div class="editCusInfoTitle" >画像</div>
+                <div class="editCusInfoTitle" >新しい画像に更新</div>
                 <div class="editCusInfoContent" >
-                  <div class="">
-                    <?php if($auth->img_path) { ?>
-                        <img src="{{ asset('storage/images/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
-                    <?php } ?>
-                  </div>
-                  <div class="">
-                    <label>画像を選択する
-                  </div>
-                  <div class="">
-                    <input type="file" name="img" accept=".png, .jpg, .jpeg, image/png, image/jpg"></label>
-                  </div>
+                    <input type="file" name="img" accept=".png, .jpg, .jpeg, image/png, image/jpg">
                 </div>
               </div>
               <input type="submit" name="" value="更新する" class="button">
             </form>
+
+
+
           </div>
         </div>
       </div>

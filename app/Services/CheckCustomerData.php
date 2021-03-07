@@ -11,11 +11,12 @@ class CheckCustomerData
 {
     /**
     * 顧客の基本情報を取得する
+    * @input int $id
+    * @return $customer
     */
     public static function getCustomer($id){
-        if(empty($id)){
-            return false;
-        }
+        if(empty($id)) return false;
+
         // 渡されたIDの顧客情報を取得する
         $query = DB::table('customers');
         $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
@@ -39,12 +40,12 @@ class CheckCustomerData
     public static function checkSex($customer){
         if($customer->sex === 1){
             $customer->sexName =  "男性" ;
-        }
-        if($customer->sex === 2){
+        }else if($customer->sex === 2){
             $customer->sexName = "女性" ;
-        }
-        if($customer->sex === 3){
+        }else if($customer->sex === 3){
             $customer->sexName = "その他" ;
+        }else{
+            $customer->sexName = "" ;
         }
         return $customer;
     }
@@ -55,8 +56,7 @@ class CheckCustomerData
     public static function hiddenStatus($customer){
         if($customer->hidden_flag === 0){
             $customer->hiddenStatus =  "表示中" ;
-        }
-        if($customer->hidden_flag === 1){
+        }else if($customer->hidden_flag === 1){
             $customer->hiddenStatus = "非表示" ;
         }
         return $customer;

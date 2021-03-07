@@ -241,7 +241,7 @@ class SettingController extends Controller
         // リサイズして保存
         $image = InterventionImage::make($square_image)
                         ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
-                        ->save(public_path('/storage/images/' . $BaseFileName ) );
+                        ->save(public_path('/storage/mainImages/' . $BaseFileName ) );
 
     }
 
