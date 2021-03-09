@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerSchedule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\CheckCustomerData;
 
@@ -53,6 +54,8 @@ class CustomerController extends Controller
 
 
     public function search(){
+        // アーティサンコマンドでWordpressからの申し込みファイルをインポートする
+        Artisan::call('command:courseApplicationImport');
         return view('customer.search');
     }
 
