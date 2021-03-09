@@ -9,15 +9,14 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\CheckUsers;
 
 
 class UserController extends Controller
 {
     //
     public function index(){
-        $auths = Auth::user();
-        $query = DB::table('users');
-        $users = $query -> get();
+        $users = CheckUsers::getUser();
         // if($auths->authority === 1){
             // return view('user.index');
             return view('user.index', compact('users'));
@@ -53,9 +52,6 @@ class UserController extends Controller
         $query -> where('id','=',$id);
         $user = $query -> get();
         dd($user);
-
-
-        dd();
         // return view('client.display', compact('clients','Contacts'));
 
     }

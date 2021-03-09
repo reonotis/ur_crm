@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Contact;
+use App\Models\CustomerSchedule;
 
-class ContactsTableSeeder extends Seeder
+class CustomerSchedulesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class ContactsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Contact::class, 10)->create();
+        factory(CustomerSchedule::class, 10)->create();
         //
     }
 }

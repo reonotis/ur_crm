@@ -12,7 +12,7 @@
         echo '</script>';
     }
     $auths = Auth::user();
-    console_log( $session_all );
+    // console_log( $session_all );
 ?>
 
 <!doctype html>
@@ -30,18 +30,23 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>	<!-- 住所入力 -->
+
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
 
     <!-- <link rel="shortcut icon" href="../../../../img/logo/Reonotis01-150x150.png"> -->
-
 </head>
 
 
@@ -57,7 +62,7 @@
 @guest
 
 @else
-    <nav>
+    <navi>
         <div class="logo">
             <h1><a href="/home">Home</a></h1>
         </div>
@@ -68,14 +73,14 @@
             <div class="bar bar3"></div>
         </div>
 
-        <ul class="nav-links">
-            <li><a href="{{route('client.index')}}">日報</a></li>
-            <li><a href="{{route('client.index')}}">顧客</a></li>
-            <li><a href="{{route('client.index')}}">社員一覧</a></li>
-            <li><a href="{{route('client.index')}}">所有企業</a></li>
-            <li><a href="{{route('client.index')}}">受注履歴</a></li>
-            <li><a href="{{route('client.index')}}">行動履歴</a></li>
-            <li><a href="{{route('client.index')}}">設定</a></li>
+        <ul class="navi-links">
+            <li><a href="{{route('report.index')}}">日報</a></li>
+            <li><a href="{{route('customer.search')}}">顧客検索</a></li>
+            <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
+            <!-- <li><a href="">所有企業</a></li> -->
+            <li><a href="">受注履歴</a></li>
+            <li><a href="">行動履歴</a></li>
+            <li><a href="{{route('setting.index')}}">設定</a></li>
             <li>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -84,10 +89,32 @@
             </li>
         </ul>
 
-    </nav>
-    
+    </navi>
+
 
 @endguest
+
+
+
+<script type="text/javascript">
+    // {{--成功時--}}
+    @if (session('msg_success'))
+        $(function () {
+            toastr.success('{{ session('msg_success') }}');
+        });
+    @endif
+
+    // {{--失敗時--}}
+    @if (session('msg_danger'))
+        $(function () {
+            toastr.warning('{{ session('msg_danger') }}');
+        });
+    @endif
+</script>
+
+
+
+
     <main id="main">
         <div id="main-in">
             <div id="header">

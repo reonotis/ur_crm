@@ -16,11 +16,12 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->comment('名前');
+            $table->string('read')->nullable()->comment('ヨミ');
             $table->string('email')->unique()->comment('メールアドレス');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->comment('パスワード');
-            $table->tinyInteger('authority')->comment('権限');
-            $table->tinyInteger('enrollment')->nullable()->comment('在籍');
+            $table->tinyInteger('authority_id')->comment('権限');
+            $table->tinyInteger('enrolled_id')->nullable()->comment('在籍');
             $table->rememberToken();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

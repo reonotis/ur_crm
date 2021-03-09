@@ -17,10 +17,14 @@ class DatabaseSeeder extends Seeder
         $this->call(SexsTableSeeder::class);
         $this->call(MeansTableSeeder::class);
         $this->call(ResultsTableSeeder::class);
-        $this->call(ClientsTableSeeder::class);
-        $this->call(ContactsTableSeeder::class);
+        // $this->call(ClientsTableSeeder::class);
+        // $this->call(ContactsTableSeeder::class);
         $this->call(AnglesTableSeeder::class);
         $this->call(OrdersTableSeeder::class);
         $this->call(AuthoritysTableSeeder::class);
+        $this->call(CustomersTableSeeder::class);
+        $this->call(CustomerSchedulesTableSeeder::class);
+        $this->call(CoursesTableSeeder::class);
+        $this->call(CoursePurchaseDetailsTableSeeder::class);
     }
 }
