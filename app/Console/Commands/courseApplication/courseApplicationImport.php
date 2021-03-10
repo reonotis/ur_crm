@@ -43,7 +43,7 @@ class courseApplicationImport extends Command
         Log::info('--------------------------------------------');
         Log::info('courseApplicationImport : batch開始');
         try {
-            $path = base_path()."\inport_file" ;
+            $path = base_path()."/inport_file" ;
             $files = \File::files($path);
             // ファイル毎にデータの取り込みを行う
             if(!empty($files)){
