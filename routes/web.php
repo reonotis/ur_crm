@@ -30,7 +30,7 @@ Auth::routes([
 
 
 
-// インストラクター関係
+//
 Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
     Route::get('index', 'ReportController@index')->name('report.index');
 });
@@ -64,13 +64,13 @@ Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
 
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
-    Route::get('index', 'customerController@index')->name('customer.index');
-    Route::get('create', 'customerController@create')->name('customer.create');
-    Route::get('edit/{id}', 'customerController@edit')->name('customer.edit');
-    Route::post('update/{id}', 'customerController@update')->name('customer.update');
-    Route::get('search', 'customerController@search')->name('customer.search');
-    Route::get('searching', 'customerController@searching')->name('customer.searching');
-    Route::get('display/{id}', 'customerController@display')->name('customer.display');
+    Route::get('index', 'CustomerController@index')->name('customer.index');
+    Route::get('create', 'CustomerController@create')->name('customer.create');
+    Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
+    Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
+    Route::get('search', 'CustomerController@search')->name('customer.search');
+    Route::get('searching', 'CustomerController@searching')->name('customer.searching');
+    Route::get('display/{id}', 'CustomerController@display')->name('customer.display');
 });
 
 // コース申し込み関係
