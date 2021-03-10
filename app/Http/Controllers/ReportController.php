@@ -18,7 +18,6 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return view('customer.search');
         return view('report.index');
     }
 

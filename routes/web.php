@@ -107,15 +107,15 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 
 // setting関係
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
-    Route::get('index', 'settingController@index')->name('setting.index');
-    Route::get('editPassword', 'settingController@editPassword')->name('setting.editPassword');
-    Route::get('editTell', 'settingController@editTell')->name('setting.editTell');
-    Route::get('editAddress', 'settingController@editAddress')->name('setting.editAddress');
-    Route::get('editImage', 'settingController@editImage')->name('setting.editImage');
-    Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
-    Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
-    Route::post('updateAddress', 'settingController@updateAddress')->name('setting.updateAddress');
-    Route::post('updateImage', 'settingController@updateImage')->name('setting.updateImage');
+    Route::get('index', 'SettingController@index')->name('setting.index');
+    Route::get('editPassword', 'SettingController@editPassword')->name('setting.editPassword');
+    Route::get('editTell', 'SettingController@editTell')->name('setting.editTell');
+    Route::get('editAddress', 'SettingController@editAddress')->name('setting.editAddress');
+    Route::get('editImage', 'SettingController@editImage')->name('setting.editImage');
+    Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
+    Route::post('updateTell', 'SettingController@updateTell')->name('setting.updateTell');
+    Route::post('updateAddress', 'SettingController@updateAddress')->name('setting.updateAddress');
+    Route::post('updateImage', 'SettingController@updateImage')->name('setting.updateImage');
 });
 
 
