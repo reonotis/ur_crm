@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
-use \Illuminate\Support\Facades\Artisan;
 use \SplFileObject;
 
 class ReportController extends Controller
@@ -18,9 +18,6 @@ class ReportController extends Controller
      */
     public function index()
     {
-
-        // アーティサンコマンドでWordpressからの申し込みファイルをインポートする
-        Artisan::call('command:courseApplicationImport');
         return view('report.index');
     }
 

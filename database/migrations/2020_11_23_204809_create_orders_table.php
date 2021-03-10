@@ -17,7 +17,8 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id')->comment('ID');
             $table->unsignedBigInteger('client_id')->comment('顧客ID');
             $table->tinyInteger('user')->comment('担当営業');
-            $table->date('date')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('日付');
+            // $table->date('date')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('日付');
+            $table->date('date')->comment('日付');
             $table->integer('fee')->comment('金額');
             $table->integer('product')->nullable()->comment('商品');
             $table->tinyInteger('status')->nullable()->comment('ステータス');

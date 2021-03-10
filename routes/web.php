@@ -30,7 +30,7 @@ Auth::routes([
 
 
 
-// インストラクター関係
+//
 Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
     Route::get('index', 'ReportController@index')->name('report.index');
 });
@@ -64,13 +64,13 @@ Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
 
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
-    Route::get('index', 'customerController@index')->name('customer.index');
-    Route::get('create', 'customerController@create')->name('customer.create');
-    Route::get('edit/{id}', 'customerController@edit')->name('customer.edit');
-    Route::post('update/{id}', 'customerController@update')->name('customer.update');
-    Route::get('search', 'customerController@search')->name('customer.search');
-    Route::get('searching', 'customerController@searching')->name('customer.searching');
-    Route::get('display/{id}', 'customerController@display')->name('customer.display');
+    Route::get('index', 'CustomerController@index')->name('customer.index');
+    Route::get('create', 'CustomerController@create')->name('customer.create');
+    Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
+    Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
+    Route::get('search', 'CustomerController@search')->name('customer.search');
+    Route::get('searching', 'CustomerController@searching')->name('customer.searching');
+    Route::get('display/{id}', 'CustomerController@display')->name('customer.display');
 });
 
 // コース申し込み関係
@@ -107,15 +107,15 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 
 // setting関係
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
-    Route::get('index', 'settingController@index')->name('setting.index');
-    Route::get('editPassword', 'settingController@editPassword')->name('setting.editPassword');
-    Route::get('editTell', 'settingController@editTell')->name('setting.editTell');
-    Route::get('editAddress', 'settingController@editAddress')->name('setting.editAddress');
-    Route::get('editImage', 'settingController@editImage')->name('setting.editImage');
-    Route::post('updatePassword', 'settingController@updatePassword')->name('setting.updatePassword');
-    Route::post('updateTell', 'settingController@updateTell')->name('setting.updateTell');
-    Route::post('updateAddress', 'settingController@updateAddress')->name('setting.updateAddress');
-    Route::post('updateImage', 'settingController@updateImage')->name('setting.updateImage');
+    Route::get('index', 'SettingController@index')->name('setting.index');
+    Route::get('editPassword', 'SettingController@editPassword')->name('setting.editPassword');
+    Route::get('editTell', 'SettingController@editTell')->name('setting.editTell');
+    Route::get('editAddress', 'SettingController@editAddress')->name('setting.editAddress');
+    Route::get('editImage', 'SettingController@editImage')->name('setting.editImage');
+    Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
+    Route::post('updateTell', 'SettingController@updateTell')->name('setting.updateTell');
+    Route::post('updateAddress', 'SettingController@updateAddress')->name('setting.updateAddress');
+    Route::post('updateImage', 'SettingController@updateImage')->name('setting.updateImage');
 });
 
 

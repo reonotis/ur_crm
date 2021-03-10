@@ -11,7 +11,7 @@ class AuthoritysTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('Authoritys')->insert([
+        DB::table('authoritys')->insert([
             [
                 'id' => '1',
                 'authority_name' => '管理者',

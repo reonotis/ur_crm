@@ -1,0 +1,2 @@
+id,schedule_id,course_id,instructor_id,f_name,l_name,f_read,l_read,email,tel,zip21,zip22,pref21,addr21,strt21,course_schedule,LearningMethod
+60,6,64,2,高橋,千恵,タカハシ,チエ,chie.quince14@gmail.com,090-1118-4329,262,0024,千葉県,千葉市花見川区,浪花町948-18,1,3

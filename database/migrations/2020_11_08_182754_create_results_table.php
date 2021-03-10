@@ -17,6 +17,9 @@ class CreateResultsTable extends Migration
             $table->bigIncrements('id');
             $table->string('result_name')->comment('結果名');
             $table->boolean('delete_flag')->default('0')->comment('削除フラグ');
+
+
+            
         });
     }
 

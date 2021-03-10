@@ -4,6 +4,7 @@ namespace App\Console\Commands\courseApplication;
 
 use Illuminate\Console\Command;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Log;
 use \SplFileObject;
 
 class courseApplicationImport extends Command
@@ -20,7 +21,7 @@ class courseApplicationImport extends Command
      *
      * @var string
      */
-    protected $description = 'Wordpressのコースに申し込まれた顧客情報をインポートします。';
+    protected $description = 'Wordpressのコースに申し込まれた顧客情報をインポートします';
 
     /**
      * Create a new command instance.
@@ -39,9 +40,10 @@ class courseApplicationImport extends Command
      */
     public function handle()
     {
+        Log::info('--------------------------------------------');
+        Log::info('courseApplicationImport : batch開始');
         try {
-
-            $path = base_path()."\inport_file" ;
+            $path = base_path()."/inport_file" ;
             $files = \File::files($path);
             // ファイル毎にデータの取り込みを行う
             if(!empty($files)){
@@ -51,11 +53,14 @@ class courseApplicationImport extends Command
                 }
             }else{
                 $this->info('There are no files that can be imported.');
+                Log::info('courseApplicationImport : 取り込みファイルはありませんでした。');
             }
             $this->info('finish.');
         } catch(\Exception $e) {
             $this->error($e->getMessage());
+            Log::alert('courseApplicationImport', ['memo' => $e->getMessage()]);
         }
+        Log::info('courseApplicationImport : batch終了');
     }
 
 
@@ -69,6 +74,7 @@ class courseApplicationImport extends Command
      */
     function csvImport($csvfile, $mode='utf8')
     {
+        Log::info('courseApplicationImport : ファイル取り込み開始', ['file_Name' => $csvfile]);
         // ファイル存在確認
         if(!file_exists($csvfile)) throw new \Exception("ファイルがありません");
         setLocale(LC_ALL, 'English_United States.1252');
@@ -93,6 +99,7 @@ class courseApplicationImport extends Command
             $this->insertCourse($line, $cusID);
         }
         // 顧客情報を登録
+        Log::info('courseApplicationImport : ファイル取り込み終了');
 
 
         // ファイルをcompletedディレクトリに移動する
@@ -108,6 +115,7 @@ class courseApplicationImport extends Command
      * 顧客情報をcustomersテーブルに登録します。
      */
     public function insertCustomer($line){
+        Log::info('courseApplicationImport : 顧客情報登録開始');
         // 登録作業
         $Customer = new Customer;
         $Customer->name = $line['f_name'] ." ".$line['l_name'] ;
@@ -121,14 +129,17 @@ class courseApplicationImport extends Command
         $Customer->addr21  = $line['addr21'] ;
         $Customer->strt21  = $line['strt21'] ;
         $Customer->save();
+        Log::info('courseApplicationImport : 顧客情報登録完了 ', ['customers.id' => $Customer->id]);
         return $Customer->id; ;
     }
-
+    
     /**
      *
      */
     public function insertCourse($file, $cusID){
-        dd($file, $cusID);
+        Log::info('courseApplicationImport : コース情報登録開始');
+        // dd($file, $cusID);
+        Log::info('courseApplicationImport : コース情報登録完了 ', ['作成中' => '作成中']);
 
     }
 

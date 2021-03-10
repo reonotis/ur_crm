@@ -20,7 +20,11 @@
               <div class="userSettingRow" >
                 <div class="userSettingTitle" >現在の画像</div>
                 <div class="userSettingContent" >
-                        <img src="{{ asset('storage/mainImages/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                  <?php if($auth->img_path) {?>
+                    <img src="{{ asset('storage/mainImages/' . $auth->img_path) }}" alt="avatar" width="150px" height="150px" />
+                  <?php }else{ ?>
+                    画像はありません。
+                  <?php } ?>
                 </div>
               </div>
 
