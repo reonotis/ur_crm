@@ -105,7 +105,7 @@ class SettingController extends Controller
         $auth->password = Hash::make($request->input('new_pass1'));
         $auth->save();
         session()->flash('msg_success', 'パスワードを更新しました');
-        return redirect()->action('settingController@index');
+        return redirect()->action('SettingController@index');
     }
 
 
@@ -128,7 +128,7 @@ class SettingController extends Controller
                 ['tel' =>  $newTell]
             );
             session()->flash('msg_success', '電話番号を更新しました');
-            return redirect()->action('settingController@index');
+            return redirect()->action('SettingController@index');
         }else{
             session()->flash('msg_danger', '入力規則に一致していません。');
             return back();
@@ -169,7 +169,7 @@ class SettingController extends Controller
             ]
         );
         session()->flash('msg_success', '住所を更新しました');
-        return redirect()->action('settingController@index');
+        return redirect()->action('SettingController@index');
     }
 
 
@@ -196,7 +196,7 @@ class SettingController extends Controller
                 ['img_path'  =>  $BaseFileName,]
             );
             session()->flash('msg_success', '画像を更新しました');
-            return redirect()->action('settingController@index');
+            return redirect()->action('SettingController@index');
 
         } catch (\Throwable $e) {
             dd($e->getMessage());
