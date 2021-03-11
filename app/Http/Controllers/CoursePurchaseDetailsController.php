@@ -54,7 +54,7 @@ class CoursePurchaseDetailsController extends Controller
 
         // キャンセルをした場合は戻る
         if($request->input('cancel')){
-            return redirect()->action('customerController@display', ['id' => $customer_id]);
+            return redirect()->action('CustomerController@display', ['id' => $customer_id]);
         }
         // POSTでデータが渡ってきているか確認する
         if(!$course_id || !$customer_id  ){
@@ -102,7 +102,7 @@ class CoursePurchaseDetailsController extends Controller
 
         // キャンセルをした場合は戻る
         if($request->input('cancel')){
-            return redirect()->action('customerController@display', ['id' => $customer_id]);
+            return redirect()->action('CustomerController@display', ['id' => $customer_id]);
         }
 
         $auths = Auth::user();
@@ -129,7 +129,7 @@ class CoursePurchaseDetailsController extends Controller
             $cSch -> save();
         }
 
-        return redirect()->action('customerController@display', ['id' => $customer_id]);
+        return redirect()->action('CustomerController@display', ['id' => $customer_id]);
     }
 
 
@@ -173,7 +173,7 @@ class CoursePurchaseDetailsController extends Controller
 
         $customer_id = $cShe->customer_id;
 
-        return redirect()->action('customerController@display', ['id' => $customer_id]);
+        return redirect()->action('CustomerController@display', ['id' => $customer_id]);
     }
 
 }

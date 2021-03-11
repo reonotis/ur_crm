@@ -216,7 +216,7 @@ class CustomerController extends Controller
         $customer->save();
 
 
-        return redirect()->action('customerController@display', ['id' => $id]);
+        return redirect()->action('CustomerController@display', ['id' => $id]);
     }
 
 
