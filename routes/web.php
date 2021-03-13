@@ -87,9 +87,9 @@ Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
 
 
 
-// インストラクター関係
-Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
-    Route::get('index', 'userController@index')->name('customer.index');
+// スケジュール関係
+Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
+    Route::get('list', 'scheduleController@list')->name('schedule.list');
 });
 
 
@@ -97,6 +97,16 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 
 
 
+
+
+
+// ユーザー（インストラクター関係）
+Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
+    Route::get('index', 'UserController@index')->name('user.index');
+    Route::get('create', 'UserController@create')->name('user.create');
+    Route::post('store', 'UserController@store')->name('user.store');
+    Route::get('display/{id}', 'UserController@display')->name('user.display');
+});
 
 
 
@@ -136,16 +146,6 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
-// ユーザー
-Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
-    Route::get('index', 'UserController@index')->name('user.index');
-    Route::get('create', 'UserController@create')->name('user.create');
-    Route::post('store', 'UserController@store')->name('user.store');
-    Route::get('display/{id}', 'UserController@display')->name('user.display');
-});
 
 Route::group(['prefix'=>'history', 'middleware'=>'auth'], function(){
     Route::get('index', 'HistoryController@index')->name('history.index');
