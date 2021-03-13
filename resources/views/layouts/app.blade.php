@@ -64,7 +64,7 @@
 @else
     <navi>
         <div class="logo">
-            <h1><a href="{{ url('/home') }}">{{ config('app.name', 'Laravel') }}</a></h1>
+            <h1><a href="{{ url('/home') }}">{{ config('app.name', 'CRM') }}</a></h1>
         </div>
 
         <div class="menu">
