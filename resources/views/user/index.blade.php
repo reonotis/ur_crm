@@ -15,11 +15,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div class="LeftBOX">
+                    <!-- <div class="LeftBOX">
                         <a href="{{route('user.create')}}">
                             <div class="button BOXin">新しいインストラクターを追加する</div>
                         </a>
-                    </div>
+                    </div> -->
 
                     <table class="customerListTable">
                         <thead>

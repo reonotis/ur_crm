@@ -89,7 +89,7 @@ Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
 
 // スケジュール関係
 Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
-    Route::get('list', 'scheduleController@list')->name('schedule.list');
+    Route::get('list', 'ScheduleController@list')->name('schedule.list');
 });
 
 
