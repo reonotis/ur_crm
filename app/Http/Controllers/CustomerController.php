@@ -88,15 +88,15 @@ class CustomerController extends Controller
         // 非表示の顧客を表示するか設定する
         if( !$request->input('hidden_flag')) $query -> where('customers.hidden_flag','=','0');
 
-        // ユーザーのステータスが__以下だったら自分の顧客だけ選択する
-
+        // ユーザーの権限がエージェント以下だったら自分の顧客だけ選択する
+        $auth = Auth::user();
+        if($auth->authority_id >= 7){
+            $query -> where('customers.instructor' ,'=', $auth->id);
+        }
         $auth = Auth::user();
         if($auth->enrolled >= 9){
             echo "退職";
             exit;
-        }
-        if($auth->enrolled >= 5){
-            $query -> where('customers.instructor' ,'=', $auth->id);
         }
 
 

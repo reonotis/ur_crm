@@ -1,0 +1,3 @@
+id,schedule_id,course_id,instructor_id,f_name,l_name,f_read,l_read,email,tel,zip21,zip22,pref21,addr21,strt21,course_schedule,LearningMethod
+61,6,64,2,二瓶,由衣,ニヘイ,ユイ,yuinihei.1208@gmail.com,080-5116-7628,411,0020,静岡県,三島市,旭ケ丘4-20,1,3
+62,6,64,2,久保田,千草,クボタ,チグサ,chigusaru.k-chopin@ezweb.ne.jp,090-9373-4671,194,0015,東京都,町田市,金森東1-3-49,1,3

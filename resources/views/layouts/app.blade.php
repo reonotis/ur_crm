@@ -64,7 +64,7 @@
 @else
     <navi>
         <div class="logo">
-            <h1><a href="{{route('home')}}">Home</a></h1>
+            <h1><a href="{{ url('/home') }}">{{ config('app.name', 'CRM') }}</a></h1>
         </div>
 
         <div class="menu">
@@ -80,7 +80,7 @@
                     <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
                 <?php
             }?>
-            <li><a href="">スケジュール</a></li>
+            <li><a href="{{route('schedule.list')}}">スケジュール</a></li>
             <!-- <li><a href="">行動履歴</a></li> -->
             <li><a href="{{route('setting.index')}}">設定</a></li>
             <li>
@@ -120,10 +120,8 @@
     <main id="main">
         <div id="main-in">
             <div id="header">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url('/home') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
+                <div class="welcomeSpace">
+
                     @guest
                     @else
                     ようこそ【{{$auths->name}}】さん
