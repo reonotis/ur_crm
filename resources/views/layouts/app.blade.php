@@ -64,7 +64,7 @@
 @else
     <navi>
         <div class="logo">
-            <h1><a href="{{route('/home')}}">Home</a></h1>
+            <h1><a href="{{route('home')}}">Home</a></h1>
         </div>
 
         <div class="menu">
