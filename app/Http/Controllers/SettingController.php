@@ -181,6 +181,7 @@ class SettingController extends Controller
         $myId = $auth->id;
         $file = $request->img;
         try {
+            if(empty($file)) throw new \Exception("ファイルが指定されていません");
             // 登録可能な拡張子か確認して取得する
             $extension = $this->checkFileExtntion($file);
 
@@ -199,8 +200,8 @@ class SettingController extends Controller
             return redirect()->action('SettingController@index');
 
         } catch (\Throwable $e) {
-            dd($e->getMessage());
-            //throw $th;
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
         }
     }
 
@@ -241,13 +242,8 @@ class SettingController extends Controller
         // リサイズして保存
         $image = InterventionImage::make($square_image)
                         ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
-                        ->save(public_path('/storage/mainImages/' . $BaseFileName ) );
-
+                        ->save(public_path('../storage/app/public/mainImages/' . $BaseFileName ) );
     }
-
-
-
-
 
 
 }
