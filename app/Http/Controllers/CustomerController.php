@@ -23,29 +23,22 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index(){
         $auths = Auth::user();
-        // dd($auths->id);
-        // if($auths->authority === 1){
-            return view('customer.index');
-        // }
+        return view('customer.index');
     }
 
 
 
 
     /**
-     * k顧客の登録画面に遷移します。
+     * 顧客の登録画面に遷移します。
      *
      */
     public function create(){
         $auths = Auth::user();
-        // dd($auths->id);
-        // if($auths->authority === 1){
-            return view('customer.create');
-        // }
+        return view('customer.create');
     }
 
 
@@ -131,6 +124,11 @@ class CustomerController extends Controller
         // 渡されたIDの顧客情報を取得する
         $customer = CheckCustomerData::getCustomer($customer_id);
         if(empty($customer))return redirect()->back();
+        
+        $auth = Auth::user();
+        if($auth->authority_id >= 7){
+            $customer = $this->maskCustomerData($customer);
+        }
 
         // 顧客のスケジュールを取得する
         $CSQuery = DB::table('customer_schedules');
@@ -238,19 +236,12 @@ class CustomerController extends Controller
     }
 
     /**
-    * 電話番号のバリデーションチェックを行います。
+    * 顧客情報にmaskをかけます
     */
-    function zip2($date){}
-
-
-
-
-
-
-
-
-
-
+    function maskCustomerData($customer){
+        $customer->strt21 = str_repeat("*",  mb_strlen($customer->strt21));
+        return $customer;
+    }
 
 
 

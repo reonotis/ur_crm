@@ -80,8 +80,8 @@
                     <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
                 <?php
             }?>
-            <!-- <li><a href="">所有企業</a></li> -->
-            <li><a href="">行動履歴</a></li>
+            <li><a href="">スケジュール</a></li>
+            <!-- <li><a href="">行動履歴</a></li> -->
             <li><a href="{{route('setting.index')}}">設定</a></li>
             <li>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
