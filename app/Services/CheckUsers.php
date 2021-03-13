@@ -110,7 +110,7 @@ class CheckUsers
             $user->authority = "経理" ;
         }
         if($user->authority_id === 7){
-            $user->authority = "---" ;
+            $user->authority = "エージェント" ;
         }
         if($user->authority_id === 8){
             $user->authority = "---" ;

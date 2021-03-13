@@ -200,8 +200,8 @@ class SettingController extends Controller
             return redirect()->action('SettingController@index');
 
         } catch (\Throwable $e) {
-            dd($e->getMessage());
-            //throw $th;
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
         }
     }
 

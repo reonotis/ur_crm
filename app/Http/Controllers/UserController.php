@@ -16,11 +16,14 @@ class UserController extends Controller
 {
     //
     public function index(){
+        $auth = Auth::user();
+
+        // ユーザーの権限がエージェント以下だったら
+        if($auth->authority_id >= 7){
+            return redirect()->back();    // 前の画面へ戻る
+        }
         $users = CheckUsers::getUser();
-        // if($auths->authority === 1){
-            // return view('user.index');
-            return view('user.index', compact('users'));
-        // }
+        return view('user.index', compact('users'));
     }
 
 

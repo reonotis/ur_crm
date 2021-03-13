@@ -72,11 +72,14 @@
             <div class="bar bar2"></div>
             <div class="bar bar3"></div>
         </div>
-
         <ul class="navi-links">
             <li><a href="{{route('report.index')}}">日報</a></li>
             <li><a href="{{route('customer.search')}}">顧客検索</a></li>
-            <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
+            <?php if(Auth::user()->authority_id < 7 ) {
+                ?>
+                    <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
+                <?php
+            }?>
             <!-- <li><a href="">所有企業</a></li> -->
             <li><a href="">受注履歴</a></li>
             <li><a href="">行動履歴</a></li>
