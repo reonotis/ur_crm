@@ -106,6 +106,7 @@ class courseApplicationImport extends Command
         $filepath = pathinfo($csvfile);
         $filename =  $filepath['basename'];
         $newname =  $filepath['dirname']."/completed/". $filename;
+        dd($newname);
         rename (  $csvfile ,  $newname );
 
         return true;
