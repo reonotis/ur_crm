@@ -105,7 +105,7 @@ class courseApplicationImport extends Command
         // ファイルをcompletedディレクトリに移動する
         $filepath = pathinfo($csvfile);
         $filename =  $filepath['basename'];
-        $newname = public_path('..\storage\app\public\linked_file/'.$filename );
+        $newname = public_path('/storage/app/public/linked_file/'.$filename );
         rename (  $csvfile ,  $newname );
 
         return true;
