@@ -14,7 +14,6 @@ use App\Services\CheckUsers;
 
 class UserController extends Controller
 {
-    //
     public function index(){
         $auth = Auth::user();
 

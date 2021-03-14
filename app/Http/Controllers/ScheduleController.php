@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CustomerSchedule;
 
 class ScheduleController extends Controller
 {
@@ -90,23 +91,32 @@ class ScheduleController extends Controller
      */
     public function list()
     {
-        $auths = Auth::user();
-        $query = DB::table('customer_schedules')
-                -> leftJoin('customers', 'customer_schedules.customer_id', '=', 'customers.id')
-                -> leftJoin('courses', 'customer_schedules.course_id', '=', 'courses.id')
-                -> select('customer_schedules.*', 'customers.name as customerName', 'courses.course_name' );
-        $query  -> orderByRaw('customer_schedules.date desc, customer_schedules.time desc, customer_schedules.howMany desc');
+        $auth = Auth::user();
 
+        $query = CustomerSchedule::select('customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
+            -> leftJoin('customers', 'customer_schedules.customer_id', '=', 'customers.id')
+            -> leftJoin('courses', 'customer_schedules.course_id', '=', 'courses.id')
+            -> orderByRaw('customer_schedules.date desc, customer_schedules.time desc, customer_schedules.howMany desc');
 
-        if($auths->authority_id >= 7){
-            $query -> where('customer_schedules.instructor_id','=', $auths->id  );
+        if($auth->authority_id >= 7){
+            $query -> where('customer_schedules.instructor_id','=', $auth->id  );
         }
+        $schedules = $query->get();
+        // $schedules = $this->changeTypes($schedules);
+        // dd($schedules);
 
-        $schedules = $query -> get();
         return view('schedule.list', ['schedules' => $schedules]);
     }
 
 
+    public function changeTypes($schedules){
+        foreach($schedules as $schedule){
+            // $schedule->date = $schedule->date->format('y年m月d');
+            // $schedule->date = "sss";
+            // dd($schedule->date->format('ymd'));
+        }
+        return $schedules;
+    }
 
 
 
