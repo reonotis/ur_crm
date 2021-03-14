@@ -574,8 +574,26 @@ table.customerSearchTable{
 
 
 
+/* スケジュール */
 
-
+.scheduleListTable{
+	width :100%;
+	max-width: 1000px;
+	margin : 0 0 20px;
+}
+.scheduleListTable th{
+	background: var(--info);
+	font-size: 1.1em;
+	color :#fff;
+	padding : 10px ;
+}
+.scheduleListTable td{
+	padding :10px 10px 5px ;
+	border-bottom :solid 1px var(--primary);
+}
+.scheduleListTable tr:nth-child(odd) td {
+	background: #ecf5fb;
+}
 
 
 

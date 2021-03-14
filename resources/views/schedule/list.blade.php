@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">スケジュール</div>
                 <div class="card-body">
-                    <table class="customerListTable">
+                    <table class="scheduleListTable">
                         <thead>
                             <tr>
                                 <th>日時</th>
@@ -17,12 +17,14 @@
                         </thead>
                         <tbody>
                             @foreach ($schedules as $schedule)
+                            <!-- <?php var_dump( $schedule->date ) ?> -->
                                 <tr>
                                     <td>
-                                        {{ $schedule->date }} {{ $schedule->time }}
+                                        {{ $schedule->date->format('Y年m月d日') }}
+                                        {{ date('H:i', strtotime($schedule->time)) }}～
                                     </td>
                                     <td>
-                                        <a href="{{route('customer.display', $schedule->customer_id  )}}">{{ $schedule->customerName }}</a>
+                                        <a href="{{route('customer.display', $schedule->customer_id  )}}">{{ $schedule->customerName }}様</a>
                                     </td>
                                     <td>
                                         {{ $schedule->course_name }}
