@@ -131,10 +131,18 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
-
+// 実施講座関係
+Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
+    Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
+    Route::get('create', 'CourseScheduleController@create')->name('courseSchedule.create');
+    Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
+    Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
+    Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
+    Route::post('create2', 'CourseScheduleController@create2')->name('courseSchedule.create2');
+    Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
+    Route::GET('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
+    Route::get('register', 'CourseScheduleController@register')->name('courseSchedule.register');
+});
 
 
 

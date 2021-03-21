@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
                 'name' => '穐里 明美',
                 'read' => 'アキサト アケミ',
                 'email' => 'test1@test.jp',
-                'password' => Hash::make('akemi'),
+                'password' => Hash::make('reonotis'),
                 'authority_id' => '2',
                 'enrolled_id' => '1',
             ],[

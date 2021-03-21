@@ -80,6 +80,7 @@
                     <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
                 <?php
             }?>
+            <li><a href="{{route('courseSchedule.index')}}">実施講座一覧</a></li>
             <li><a href="{{route('schedule.list')}}">スケジュール</a></li>
             <!-- <li><a href="">行動履歴</a></li> -->
             <li><a href="{{route('setting.index')}}">設定</a></li>
