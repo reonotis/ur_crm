@@ -200,7 +200,9 @@ label {
 }
 
 
-
+.fullWidth{
+	width :100%;
+}
 
 
 
@@ -593,7 +595,7 @@ table.customerSearchTable{
 .coursesErea{
 	width :100%;
 	padding : 20px;
-	margin :20px;
+	margin :10px 20px 40px;
 	background :#fff;
 	border:solid 1px #ccc;
 	border-radius :10px;

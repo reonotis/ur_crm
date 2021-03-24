@@ -48,9 +48,10 @@
                             <tr>
                                 <td colspan="2">
                                     <span class="support" id="support" >上記の内容で申請しても宜しいでしょうか？</span><br>
+                                    <span class="support" id="support" >承認されたコースは変更する事が出来ません</span><br>
                                     <form method="GET" action="{{route('courseSchedule.intrRegister')}}"class=”form-inline”>
                                         <button class="btn btn-outline-secondary" type="button" onClick="history.back()">戻る</button>
-                                        <button class="btn btn-outline-success" >申請する</button>
+                                        <button class="btn btn-outline-success" onClick="return confilmRegister()" >申請する</button>
                                     </form>
                                 </td>
                             </tr>
@@ -66,6 +67,14 @@
 ?>
 
 <script>
+function confilmRegister(){
+    var result = window.confirm('このスケジュールで申請を行いますか？\n協会に承認されると変更する事は出来ません。');
+    if( result ) {
+        return true;
+    } else {
+        return false;
+    }
+}
 </script>
 <style>
     th{

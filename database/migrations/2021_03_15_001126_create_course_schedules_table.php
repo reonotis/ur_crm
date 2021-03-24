@@ -25,7 +25,7 @@ class CreateCourseSchedulesTable extends Migration
             $table->string('notices','1000')->nullable()->comment('特記事項');
             $table->string('comment','1000')->nullable()->comment('詳細');
 
-            $table->integer('approval_flg')->default('0')->comment('承認状態 0:未承認 1:差し戻し 2:申請中 5:承認済み');
+            $table->integer('approval_flg')->default('2')->comment('承認状態 0:未承認 1:差し戻し 2:申請中 5:承認済み');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

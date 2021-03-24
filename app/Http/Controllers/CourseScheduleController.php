@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApprovalComments;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\CourseScheduleTransactions;
@@ -13,21 +14,43 @@ use Illuminate\Support\Facades\Auth;
 
 class CourseScheduleController extends Controller
 {
+
+    private $_user;
+    private $_auth_id ;
+    private $_auth_authority_id ;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 8){
+                dd("権限がありません。");
+            }
+            return $next($request);
+        });
+    }
+
+
+
+
+
     /**
      *一覧表示(Read)
      */
     public function index(){
         $auth_id = Auth::user()->id;
         // パラリンコースを取得
-        $para_course_schedules = CourseSchedule::select('course_schedules.*','courses.course_name')
-        ->where('instructor_id','=', $auth_id )
-        ->leftJoin('courses','courses.id','=','course_schedules.course_id')
-        ->where('course_id', '<>', '6' )
-        ->where('course_schedules.delete_flag', '0' )
-        ->get();
-        if($para_course_schedules){
-            $para_course_schedules = $this->getApprovalNames($para_course_schedules);
-        }
+        $para_course_schedules = $this->getParaCourses();
+        // $para_course_schedules = CourseSchedule::select('course_schedules.*','courses.course_name')
+        // ->where('instructor_id','=', $auth_id )
+        // ->leftJoin('courses','courses.id','=','course_schedules.course_id')
+        // ->where('course_id', '<>', '6' )
+        // ->where('course_schedules.delete_flag', '0' )
+        // ->get();
+        // if($para_course_schedules){
+        //     $para_course_schedules = $this->getApprovalNames($para_course_schedules);
+        // }
 
         // 養成コースを取得course_name
         $intr_course_schedules = CourseSchedule::where('instructor_id', '=', $auth_id )
@@ -42,8 +65,8 @@ class CourseScheduleController extends Controller
     }
 
     /**
-    *承認状態を確認して承認名を付与する
-    */
+     *承認状態を確認して承認名を付与する
+     */
     public function getApprovalNames($datas){
         if(empty($datas))throw new \Exception("コースが取得できていません。");
         foreach($datas as $data ){
@@ -52,10 +75,9 @@ class CourseScheduleController extends Controller
         return $datas;
     }
 
-
     /**
-    *承認状態を確認して承認名を付与する
-    */
+     *承認状態を確認して承認名を付与する
+     */
     public function getApprovalName($data){
         if(empty($data))throw new \Exception("コースが取得できていません。");
             switch ($data->approval_flg) {
@@ -64,6 +86,12 @@ class CourseScheduleController extends Controller
                     break;
                 case '1':
                     $data->approval_name = '差し戻し';
+                    break;
+                case '2':
+                    $data->approval_name = '申請中';
+                    break;
+                case '5':
+                    $data->approval_name = '受理済み';
                     break;
                 default:
                     $data->approval_name = '--';
@@ -130,7 +158,6 @@ class CourseScheduleController extends Controller
             return redirect()->action('CourseScheduleController@index');
         }
     }
-
 
     /**
      *トランザクションから、渡されたユーザーidで登録されているレコードを削除する
@@ -226,10 +253,11 @@ class CourseScheduleController extends Controller
             }else{
 
             }
-                // トランザクションを削除する
-                CourseScheduleTransactions::where('id', $CST_id)->delete();
-                CourseScheduleListTransactions::where('id', $CST_id)->delete();
+            // トランザクションを削除する
+            CourseScheduleTransactions::where('id', $CST_id)->delete();
+            CourseScheduleListTransactions::where('id', $CST_id)->delete();
 
+            session()->flash('msg_success', '申請が完了しました');
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -292,7 +320,6 @@ class CourseScheduleController extends Controller
 
     }
 
-
     /**
      * パラリンビクス講座を登録する
      */
@@ -325,29 +352,149 @@ class CourseScheduleController extends Controller
         return redirect()->action('CourseScheduleController@index');
     }
 
-
-    /**
-     * show	養成コース1件の詳細表示(Read)
-     */
-    public function intrShow($id){
-        // 養成コースを取得
-        $intr_course = CourseSchedule::find($id);
-        if($intr_course->course_id <> 6 ){
-            return redirect()->back();    // 前の画面へ戻る
-        }
-        $intr_schedule = CourseScheduleList::find($id);
-        $intr_course = $this->getApprovalName($intr_course);
-        return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
-    }
-
-
     /**
      * show	パラリンコース1件の詳細表示(Read)
      */
     public function paraShow($id){
-        // パラリンコースを取得
-        dd($id);
+        try {
+            // パラリンコースを取得
+            $intr_course = CourseSchedule::select('course_schedules.*','courses.course_name')
+            ->join('courses','courses.id','=','course_schedules.course_id')
+            ->where('course_schedules.id', '=', $id)
+            ->first($id);
+            // dd($intr_course);
+            $auth_id = Auth::user()->id;
+            // ユーザーのScheduleじゃなければ前の画面へ戻る
+            if($intr_course->instructor_id <> $auth_id )throw new \Exception("あなたのスケジュールではありません");
+            if($intr_course->course_id == 6 )throw new \Exception("表示しようとしているスケジュールはパラリンビクス講座ではありません");
+
+            $intr_course = $this->getApprovalName($intr_course);
+            $ApprovalComments = ApprovalComments::where('course_schedules_id', $id )->get();
+            return view('course_schedule.paraShow', ['intr_course' => $intr_course, 'ApprovalComments'=> $ApprovalComments]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
+
+    /**
+     * show	養成コース1件の詳細表示
+     */
+    public function intrShow($id){
+        try {
+            // 養成コースを取得
+            $intr_course = CourseSchedule::find($id);
+            $auth_id = Auth::user()->id;
+            // ユーザーのScheduleじゃなければ前の画面へ戻る
+            if($intr_course->instructor_id <> $auth_id )throw new \Exception("あなたのスケジュールではありません");
+            if($intr_course->course_id <> 6 )throw new \Exception("表示しようとしているスケジュールは養成講座ではありません");
+
+            $intr_schedule = CourseScheduleList::find($id);
+            $intr_course = $this->getApprovalName($intr_course);
+            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * show	パラリンビクスコースの編集画面表示
+     */
+    public function paraEdit($id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            // 受理済みかの確認
+            if($intr_course->approval_flg == 5 )throw new \Exception("既に受領済みの為編集できません");
+            if($intr_course->instructor_id <> $auth_id )throw new \Exception("あなたのスケジュールではありません");
+            $courses = Course::where('parent_id',1)->get();
+            return view('course_schedule.paraEdit', ['intr_course' => $intr_course, 'courses' => $courses]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * show	養成コースの編集画面表示
+     */
+    public function intrEdit($id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            $intr_schedule = CourseScheduleList::find($id);
+            // 受理済みかの確認
+            if($intr_course->approval_flg == 5 )throw new \Exception("既に受領済みの為編集できません");
+
+            return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * update	パラリンビクスコースの更新
+     */
+    public function paraUpdate(Request $request, $id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            // 自分のスケジュールを更新しようとしているか確認
+            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            // 受理済みか削除されたデータじゃないか確認
+            if($intr_course->approval_flg > 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
+
+
+            $intr_course->course_id= $request->course_id ;
+            $intr_course->price= $request->price ;
+            $intr_course->erea= $request->erea ;
+            $intr_course->venue= $request->venue ;
+            $intr_course->notices= $request->notices ;
+            $intr_course->comment= $request->comment ;
+            $intr_course->approval_flg= 2 ;
+            $intr_course->save();
+
+            session()->flash('msg_success', '更新が完了しました');
+            return redirect()->action('CourseScheduleController@index');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * update	養成コースの更新
+     */
+    public function intrUpdate(Request $request, $id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            $intr_schedule = CourseScheduleList::find($id);
+            // 自分のスケジュールを更新しようとしているか確認
+            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            // 受理済みか削除されたデータじゃないか確認
+            if($intr_course->approval_flg > 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
+
+            $intr_course->price= $request->price ;
+            $intr_course->erea= $request->erea ;
+            $intr_course->venue= $request->venue ;
+            $intr_course->notices= $request->notices ;
+            $intr_course->comment= $request->comment ;
+            $intr_course->save();
+
+            $intr_schedule->course_title = $request->course_title ;
+            $intr_schedule->save();
+
+            session()->flash('msg_success', '更新が完了しました');
+            return redirect()->action('CourseScheduleController@index');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
 
 
     /**
@@ -382,11 +529,25 @@ class CourseScheduleController extends Controller
         return redirect()->action('CourseScheduleController@index');
     }
 
-
     // store	新規作成のためのデータ保存(Create)
-    // edit	既存レコードの変更のためのフォーム表示(Update)
-    // update	既存レコードの変更のためのデータ保存(Update)
     // destroy	既存レコードの削除(Delete)
 
+    public function getParaCourses(){
+
+        $PCS = CourseSchedule::select('course_schedules.*','courses.course_name');
+        // if($this->_auth_authority_id >= 7){
+            $PCS = $PCS->where('instructor_id','=', $this->_auth_id );
+        // }
+        $PCS = $PCS->where('course_id', '<>', '6' );
+        $PCS = $PCS->where('course_schedules.delete_flag', '0' );
+        $PCS = $PCS->leftJoin('courses','courses.id','=','course_schedules.course_id');
+        $PCS = $PCS->get();
+        if($PCS){
+            $PCS = $this->getApprovalNames($PCS);
+        }
+
+        return $PCS;
+
+    }
 
 }

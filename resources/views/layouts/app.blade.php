@@ -78,6 +78,7 @@
             <?php if(Auth::user()->authority_id < 7 ) {
                 ?>
                     <li><a href="{{route('user.index')}}">イントラ一覧</a></li>
+                    <li><a href="{{route('approval.index')}}">申請一覧</a></li>
                 <?php
             }?>
             <li><a href="{{route('courseSchedule.index')}}">実施講座一覧</a></li>
