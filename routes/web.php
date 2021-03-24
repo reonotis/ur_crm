@@ -100,6 +100,41 @@ Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
 
 
 
+
+
+
+
+
+
+
+
+// 申請関係
+Route::group(['prefix'=>'approval', 'middleware'=>'auth'], function(){
+    Route::get('index', 'ApprovalController@index')->name('approval.index');
+    Route::get('confilm/{id}', 'ApprovalController@confilm')->name('approval.confilm');
+    Route::get('confilmParaCourse/{id}', 'ApprovalController@confilmParaCourse')->name('approval.confilmParaCourse');
+    Route::get('confilmIntrCourse/{id}', 'ApprovalController@confilmIntrCourse')->name('approval.confilmIntrCourse');
+    Route::post('update/{id}', 'ApprovalController@update')->name('approval.update');
+});
+
+
+// 実施講座関係
+Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
+    Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
+    Route::get('create', 'CourseScheduleController@create')->name('courseSchedule.create');
+    Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
+    Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
+    Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
+    Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
+    Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');
+    Route::post('paraUpdate/{id}', 'CourseScheduleController@paraUpdate')->name('courseSchedule.paraUpdate');
+    Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
+    Route::post('create2', 'CourseScheduleController@create2')->name('courseSchedule.create2');
+    Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
+    Route::GET('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
+    Route::get('register', 'CourseScheduleController@register')->name('courseSchedule.register');
+});
+
 // ユーザー（インストラクター関係）
 Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('index', 'UserController@index')->name('user.index');
@@ -107,13 +142,6 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::post('store', 'UserController@store')->name('user.store');
     Route::get('display/{id}', 'UserController@display')->name('user.display');
 });
-
-
-
-
-
-
-
 
 // setting関係
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
@@ -127,12 +155,6 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::post('updateAddress', 'SettingController@updateAddress')->name('setting.updateAddress');
     Route::post('updateImage', 'SettingController@updateImage')->name('setting.updateImage');
 });
-
-
-
-
-
-
 
 
 

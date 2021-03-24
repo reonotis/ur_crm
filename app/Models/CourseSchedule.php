@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class CourseSchedule extends Model
 {
     //
+    protected $dates = ['date'];
 }

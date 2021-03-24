@@ -1,3 +1,0 @@
-id,schedule_id,course_id,instructor_id,f_name,l_name,f_read,l_read,email,tel,zip21,zip22,pref21,addr21,strt21,course_schedule,LearningMethod
-54,6,64,2,藤澤,怜臣,フジサワ,レオン,reon10251986@gmail.com,090-1234-5678,106,0031,東京都,港区,西麻布test,1,1
-55,6,64,2,西川,テスト,ニシカワ,テスト,nishi_kao2007@yahoo.co.jp,080-4065-1874,104,1040,東京都,中央区築地,3,1,1

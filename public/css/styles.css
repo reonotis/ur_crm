@@ -191,6 +191,7 @@ label {
 	color :var(--secondary);
 	padding :0 2px;
 	font-size :0.9em;
+	display:inline-block;
 }
 
 .textRight{
@@ -199,7 +200,9 @@ label {
 }
 
 
-
+.fullWidth{
+	width :100%;
+}
 
 
 
@@ -278,6 +281,17 @@ label {
 .inputStrt{
 	width : 100%;
 }
+.inputDateTime{
+	margin-bottom :5px;
+	width : 330px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+
+
+
 
 textarea.formInput{
 	height :150px;
@@ -296,7 +310,9 @@ select.children
 	margin :10px 20px;
 	width :calc(100% - 40px);
 }
-
+input:disabled {
+  background: #ccc;
+}
 
 
 
@@ -575,6 +591,15 @@ table.customerSearchTable{
 
 
 /* スケジュール */
+
+.coursesErea{
+	width :100%;
+	padding : 20px;
+	margin :10px 20px 40px;
+	background :#fff;
+	border:solid 1px #ccc;
+	border-radius :10px;
+}
 
 .scheduleListTable{
 	width :100%;
