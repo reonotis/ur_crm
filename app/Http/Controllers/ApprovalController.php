@@ -246,8 +246,8 @@ class ApprovalController extends Controller
      *
      */
     public function register_WP_courseSchedules($id,$course_schedules){
-
-        dd("111111111111");
+        $select = DB::connection('mysql_2')->table('my_schedule')->select('*')->get();
+        dd($select);
         $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
             'date' => $course_schedules->date,
             'open_time' => $course_schedules->time,
