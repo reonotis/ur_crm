@@ -6,6 +6,7 @@ use App\Models\ApprovalComments;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\CourseScheduleList;
+use App\Models\WPMySchedule;
 use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ class ApprovalController extends Controller
     private $_user;
     protected $_auth_id ;
     protected $_auth_authority_id ;
+    public $_backslash = '\\';
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -147,12 +149,11 @@ class ApprovalController extends Controller
         return $courseSchedules ;
     }
 
-
     /**
      * 養成講座申請画面を表示します。
      */
     public function confilmIntrCourse($id){
-        dd('作成ページ未着手');
+        dd('ページ未作成');
     }
 
     /**
@@ -214,13 +215,16 @@ class ApprovalController extends Controller
             if($request->NG){
                 session()->flash('msg_success', '申請を差し戻しました');
                 $course_schedules->approval_flg = 1 ;
+                $course_schedules->save() ;
             }
-            
+
             if($request->OK){
-                session()->flash('msg_success', '承認しました');
+
+                $this->register_WP_courseSchedules($id,$course_schedules);
                 $course_schedules->approval_flg = 5 ;
+                $course_schedules->save() ;
+                session()->flash('msg_success', '承認しました');
             }
-            $course_schedules->save() ;
             return redirect()->action('ApprovalController@index');
         } catch (\Throwable $e) {
             // session()->flash('msg_danger',$e->getMessage() );
@@ -238,4 +242,19 @@ class ApprovalController extends Controller
         //
     }
 
+    /**
+     *
+     */
+    public function register_WP_courseSchedules($id,$course_schedules){
+        $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
+            'date' => $course_schedules->date,
+            'open_time' => $course_schedules->time,
+            'course_id' => $course_schedules->course_id,
+            'price' => $course_schedules->price,
+            'instructor_id' => $course_schedules->instructor_id,
+            'open_flg' => 0
+        ]);
+        dd( $lastID);
+
+    }
 }
