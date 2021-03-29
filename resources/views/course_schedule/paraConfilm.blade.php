@@ -42,9 +42,13 @@
                             <td>{{$CST -> comment }}</td>
                         </tr>
                         <tr>
+                            <th>公開期間</th>
+                            <td>{{$CST->open_start_day->format('Y/m/d H:i') }}　～　{{$CST->open_finish_day->format('Y/m/d H:i') }}</td>
+                        </tr>
+                        <tr>
                             <td colspan="2">
                                 <span class="support" id="support" >上記の内容で申請しても宜しいでしょうか？</span>
-                                <form method="GET" action="{{route('courseSchedule.register')}}" class="form-inline my-2 my-lg-0">
+                                <form method="GET" action="{{route('courseSchedule.paraStore')}}" class="form-inline my-2 my-lg-0">
                                     <button class="btn btn-outline-secondary" type="button" onClick="history.back()">戻る</button>
                                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >申請する</button>
                                 </form>

@@ -9,10 +9,9 @@ $courses_json = json_encode($courses);
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">開催講座一覧</div>
+                <div class="card-header">パラリンビクス講座 申請画面</div>
                 <div class="card-body">
-                    
-                    <form method="POST" action="{{route('courseSchedule.create2')}}" class="form-inline my-2 my-lg-0" onSubmit="return check()">
+                    <form method="POST" action="{{route('courseSchedule.paraConfilm')}}" class="form-inline my-2 my-lg-0" onSubmit="return check()">
                         @csrf
                         <table class="customerSearchTable">
                             <tr>
@@ -62,6 +61,17 @@ $courses_json = json_encode($courses);
                                 <th>詳細</th>
                                 <td>
                                     <textarea name="comment" placeholder="詳細" class="formInput" ></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>公開日</th>
+                                <td>
+                                    <div class="inputDateTime">
+                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" >から
+                                    </div>
+                                    <div class="inputDateTime">
+                                        公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" >まで
+                                    </div>
                                 </td>
                             </tr>
                             <tr>

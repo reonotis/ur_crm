@@ -25,6 +25,9 @@ class CreateCourseScheduleTransactionsTable extends Migration
             $table->string('notices','1000')->nullable()->comment('特記事項');
             $table->string('comment','1000')->nullable()->comment('詳細');
 
+            $table->timestamp('open_start_day')->nullable()->comment('公開開始日');
+            $table->timestamp('open_finish_day')->nullable()->comment('公開終了日');
+
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
             $table->boolean('delete_flag')->default('0')->comment('削除フラグ');

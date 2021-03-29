@@ -9,15 +9,17 @@ use App\Models\CourseScheduleTransactions;
 use App\Models\CourseScheduleListTransactions;
 use App\Models\CourseSchedule;
 use App\Models\CourseScheduleList;
+use App\Models\WPMySchedule;
+use App\Models\WPMyScheduleIntrCourse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class CourseScheduleController extends Controller
 {
 
-    private $_user;
-    private $_auth_id ;
-    private $_auth_authority_id ;
+    private $_user;                 //Auth::user()
+    private $_auth_id ;             //Auth::user()->id;
+    private $_auth_authority_id ;   //権限
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -31,33 +33,37 @@ class CourseScheduleController extends Controller
         });
     }
 
-
-
-
-
     /**
      *一覧表示(Read)
      */
     public function index(){
-        $auth_id = Auth::user()->id;
         // パラリンコースを取得
-        $para_course_schedules = $this->getParaCourses();
-        // $para_course_schedules = CourseSchedule::select('course_schedules.*','courses.course_name')
-        // ->where('instructor_id','=', $auth_id )
-        // ->leftJoin('courses','courses.id','=','course_schedules.course_id')
-        // ->where('course_id', '<>', '6' )
-        // ->where('course_schedules.delete_flag', '0' )
-        // ->get();
-        // if($para_course_schedules){
-        //     $para_course_schedules = $this->getApprovalNames($para_course_schedules);
-        // }
+        $para_course_schedules = WPMySchedule::select('my_schedule.*','my_instructor.f_name','my_instructor.l_name','my_courses.short_name')
+            ->where('my_schedule.delete_wp', NULL)
+            ->where('my_schedule.course_id', '<>' , 6)
+            ->join('my_instructor', 'my_instructor.id', '=', 'my_schedule.instructor_id')
+            ->join('my_courses', 'my_courses.id', '=', 'my_schedule.course_id')
+            ->get();
 
         // 養成コースを取得course_name
-        $intr_course_schedules = CourseSchedule::where('instructor_id', '=', $auth_id )
-        ->where('course_id', '6' )
-        ->where('course_schedules.delete_flag', '0' )
-        ->leftJoin('course_schedule_lists','course_schedule_lists.id','=','course_schedules.id')
-        ->get();
+        if($para_course_schedules){
+            $para_course_schedules = $this->getApprovalNames($para_course_schedules);
+        }
+        // 養成コースを取得
+        $intr_course_schedules = WPMySchedule::select(
+                'my_schedule.*',
+                'my_instructor.f_name',
+                'my_instructor.l_name',
+                'my_schedule_intr_courses.course_title'
+            )
+            ->where('my_schedule.delete_wp', NULL)
+            ->where('my_schedule.course_id' , 6)
+            ->join('my_instructor', 'my_instructor.id', '=', 'my_schedule.instructor_id')
+            ->join('my_courses', 'my_courses.id', '=', 'my_schedule.course_id')
+            ->join('my_schedule_intr_courses', 'my_schedule_intr_courses.id', '=', 'my_schedule.id')
+            ->get();
+
+        // 養成コースを取得course_name
         if($intr_course_schedules){
             $intr_course_schedules = $this->getApprovalNames($intr_course_schedules);
         }
@@ -82,7 +88,7 @@ class CourseScheduleController extends Controller
         if(empty($data))throw new \Exception("コースが取得できていません。");
             switch ($data->approval_flg) {
                 case '0':
-                    $data->approval_name = '申請中';
+                    $data->approval_name = '未申請';
                     break;
                 case '1':
                     $data->approval_name = '差し戻し';
@@ -101,30 +107,178 @@ class CourseScheduleController extends Controller
     }
 
     /**
-     *新規作成のためのフォーム表示(Create)
+     *パラリンビクス講座申請画面のフォーム表示(Create)
      */
-    public function create(){
-
+    public function paraCreate (){
         // コース一覧を取得する
         $coursesQuery = Course::query();
         $coursesQuery -> where('courses.delete_flag','=','0');
-        $coursesQuery -> where('courses.hierarchy','=','2');
+        $coursesQuery -> where('courses.parent_id','=','1');
         $courses = $coursesQuery -> get();
-        // $auths = Auth::user();
-
-        return view('course_schedule.create', compact( 'courses'));
+        return view('course_schedule.paraCreate', compact( 'courses'));
     }
 
     /**
-     *新規作成のためのフォーム表示2
-     *
+     *新規作成のためのフォーム表示(Create)
      */
-    public function create2(Request $request){
+    public function intrCreate(){
+        return view('course_schedule.intrCreate');
+    }
+
+    /**
+     *イントラ養成コースの登録確認画面
+     */
+    public function intrConfilm(Request $request){
         try{
             $auth = Auth::user();
             $instructor_id = $auth->id;
+            // トランザクションに残っている自分のレコードをを物理削除する
+            $this->deleteTransactions();
+
+            // リクエストをトランザクションに登録
+            list($CST , $last_insert_id) = $this->insert_CourseScheduleTransactions(6, $request);
+            $CSLT = $this->insert_CourseScheduleListTransactions($last_insert_id, $request);
+
+            return view('course_schedule.intrConfilm', ['CST' => $CST, 'CSLT' => $CSLT ]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return view('course_schedule.intrCreate');
+        }
+    }
+
+    /**
+     * リクエストをトランザクションに登録
+     * return トランザクション
+     * return トランID
+     */
+    public function insert_CourseScheduleTransactions($course_id, $request){
+        $CST = new CourseScheduleTransactions;
+        $CST -> instructor_id = $this->_auth_id ;
+        $CST -> course_id     = 6;
+        $CST -> date          = date("Y-m-d", strtotime($request->date1));
+        $CST -> time          = date("H:i:00", strtotime($request->date1));
+        $CST -> price         = $request->input('price');
+        $CST -> erea          = $request->input('erea');
+        $CST -> venue         = $request->input('venue');
+        $CST -> notices       = $request->input('notices');
+        $CST -> comment       = $request->input('comment');
+        if($request->open_start_day){
+            $CST -> open_start_day  = date("Y-m-d H:i:00", strtotime($request->open_start_day));
+        }
+        if($request->open_finish_day){
+            $CST -> open_finish_day = date("Y-m-d H:i:00", strtotime($request->open_finish_day));
+        }
+        $CST -> save();
+        $last_insert_id = $CST->id;
+        return [$CST , $last_insert_id];
+
+
+    }
+
+    /**
+     * リクエストをイントラスケジュールトランザクションに登録
+     * return トランザクション
+     */
+    public function insert_CourseScheduleListTransactions($last_insert_id, $request){
+        $CSLT = new CourseScheduleListTransactions;
+        $CSLT->id   = $last_insert_id;
+        $CSLT->course_title=$request->course_title ;
+        $CSLT->date1  = date("Y-m-d H:i:00", strtotime($request->date1));
+        $CSLT->date2  = date("Y-m-d H:i:00", strtotime($request->date2));
+        $CSLT->date3  = date("Y-m-d H:i:00", strtotime($request->date3));
+        $CSLT->date4  = date("Y-m-d H:i:00", strtotime($request->date4));
+        $CSLT->date5  = date("Y-m-d H:i:00", strtotime($request->date5));
+        if($request->date6){
+            $CSLT->date6  = date("Y-m-d H:i:00", strtotime($request->date6));
+        }
+        if($request->date7){
+            $CSLT->date7  = date("Y-m-d H:i:00", strtotime($request->date7));
+        }
+        if($request->date8){
+            $CSLT->date8  = date("Y-m-d H:i:00", strtotime($request->date8));
+        }
+        if($request->date9){
+            $CSLT->date9  = date("Y-m-d H:i:00", strtotime($request->date9));
+        }
+        if($request->date10){
+            $CSLT->date10  = date("Y-m-d H:i:00", strtotime($request->date10));
+        }
+        $CSLT->save();
+
+        return $CSLT;
+
+    }
+
+    /**
+     *イントラ養成コースの登録
+     */
+    public function intrStore($id){
+        try{
+            // イントラスケジュールリストを取得
+            list($CST, $CSLT) = $this->getIntrCourseScheduleListTransactions();
+            // WPDBのコーステーブルに登録
+            $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
+                'date'      => $CST->date,
+                'open_time' => $CST->time,
+                'course_id' => $CST->course_id,
+                'price'     => $CST->price,
+                'instructor_id' => $CST->instructor_id,
+                'erea'      => $CST->erea,
+                'venue'     => $CST->venue,
+                'notices'   => $CST->notices,
+                'comment'   => $CST->comment,
+                'approval_flg'  => 2,
+                'AcceptedStartDateTime' => $CST->open_start_day,
+                'AcceptedEndDateTime' => $CST->open_finish_day
+                ]);
+
+            // WPDBのイントラコーステーブルに登録
+            DB::connection('mysql_2')->table('my_schedule_intr_courses')->insertGetId([
+                'id'     => $lastID,
+                'course_title' => $CSLT->course_title,
+                'date1'     => $CSLT->date1,
+                'date2'     => $CSLT->date2,
+                'date3'     => $CSLT->date3,
+                'date4'     => $CSLT->date4,
+                'date5'     => $CSLT->date5,
+                'date6'     => $CSLT->date6,
+                'date7'     => $CSLT->date7,
+                'date8'     => $CSLT->date8,
+                'date9'     => $CSLT->date9,
+                'date10'     => $CSLT->date10,
+            ]);
+
+            // トランザクションを削除
+            $this->deleteTransactions();
+
+            session()->flash('msg_success', '申請が完了しました');
+            return redirect()->action('CourseScheduleController@index');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->action('CourseScheduleController@index');
+        }
+    }
+
+    /**
+     * ログインユーザーの[イントラコーススケジュールリスト]トランザクションを返す
+     */
+    public function getIntrCourseScheduleListTransactions(){
+        $CST = CourseScheduleTransactions::where('instructor_id', '=', $this->_auth_id )->first();
+        if(empty($CST))throw new \Exception("この操作は禁止されています");
+        $CSLT = CourseScheduleListTransactions::find($CST ->id );
+        if(empty($CSLT))throw new \Exception("この操作は禁止されています");
+        return [$CST, $CSLT];
+    }
+
+    /**
+     *パラリンビクス講座スケジュール申請確認画面
+     *
+     */
+    public function paraConfilm(Request $request){
+        try{
+            $instructor_id = $this->_auth_id;
             // 一度、トランザクションテーブルを物理削除する
-            $this->deleteTransactions($instructor_id);
+            $this->deleteTransactions();
 
             // リクエストをトランザクションに登録
             $CSTran = new CourseScheduleTransactions;
@@ -137,22 +291,16 @@ class CourseScheduleController extends Controller
             $CSTran -> venue         = $request->input('venue');
             $CSTran -> notices       = $request->input('notices');
             $CSTran -> comment       = $request->input('comment');
+            $CSTran -> open_start_day  = date("Y-m-d H:i:00", strtotime($request->open_start_day));
+            $CSTran -> open_finish_day = date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $CSTran -> save();
 
             $CSTQuery = CourseScheduleTransactions::select('course_schedule_transactions.*','courses.course_name')
             ->where('instructor_id', '=', $instructor_id )
             ->join('courses','courses.id','=','course_schedule_transactions.course_id');
             $CST = $CSTQuery -> first();
-            // dd($CST);
+            return view('course_schedule.paraConfilm', ['CST' => $CST]);
 
-            // イントラ養成コースだったら
-            if($request->course_id == 6){
-
-                return view('course_schedule.create2', ['CST' => $CST]);
-            }else{
-                // イントラ養成コースじゃなければ確認画面を表示
-                return view('course_schedule.register_confirm', ['CST' => $CST]);
-            }
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->action('CourseScheduleController@index');
@@ -163,65 +311,13 @@ class CourseScheduleController extends Controller
      *トランザクションから、渡されたユーザーidで登録されているレコードを削除する
      *
      */
-    public function deleteTransactions($instructor_id){
-        $data = DB::table('course_schedule_transactions')->where('instructor_id', '=',$instructor_id )->first();
+    public function deleteTransactions(){
+        $data = DB::table('course_schedule_transactions')->where('instructor_id', '=', $this->_auth_id )->first();
         if(!empty($data)){
             $tran_id = $data->id;
             DB::table('course_schedule_transactions')->where('id', $tran_id )->delete();
             DB::table('course_schedule_list_transactions')->where('id', $tran_id )->delete();
         }
-    }
-
-    /**
-     *入力されたスケジュールをトランザクションに登録して確認画面を表示する
-     *
-     */
-    public function create3(Request $request){
-        try{
-            $auth = Auth::user();
-            $instructor_id = $auth->id;
-            // 紐づける為のコーススケジュールトランザクションのIDを取得
-            $CST = CourseScheduleTransactions::select('course_schedule_transactions.*','courses.course_name')
-                    ->where('instructor_id', '=', $instructor_id )
-                    ->join('courses','courses.id','=','course_schedule_transactions.course_id')-> first();
-            if(empty($CST))throw new \Exception("この操作は禁止されています");
-            $tranCourse_id = $CST ->id;
-
-            // リクエストをスケジュールリストトランザクションに登録
-            DB::table('course_schedule_list_transactions')
-            ->updateOrInsert(
-                ['id' => $tranCourse_id],
-                [
-                    'course_title' => $request->input('course_title'),
-                    'date1'   => $request->input('date1'),
-                    'date2'   => $request->input('date2'),
-                    'date3'   => $request->input('date3'),
-                    'date4'   => $request->input('date4'),
-                    'date5'   => $request->input('date5'),
-                    'date6'   => $request->input('date6'),
-                    'date7'   => $request->input('date7'),
-                    'date8'   => $request->input('date8'),
-                    'date9'   => $request->input('date9'),
-                    'date10'  => $request->input('date10'),
-                    'time1'   => $request->input('time1'),
-                    'time2'   => $request->input('time2'),
-                    'time3'   => $request->input('time3'),
-                    'time4'   => $request->input('time4'),
-                    'time5'   => $request->input('time5'),
-                    'time6'   => $request->input('time6'),
-                    'time7'   => $request->input('time7'),
-                    'time8'   => $request->input('time8'),
-                    'time9'   => $request->input('time9'),
-                    'time10'  => $request->input('time10')
-                ]
-            );
-            list($CST, $CSTL) = $this->showTransaction($tranCourse_id);
-        } catch (\Throwable $e) {
-            session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->action('CourseScheduleController@index');
-        }
-        //  養成講座Schedule登録確認画面を表示
-        return view('course_schedule.register_training_course_confirm', ['CST' => $CST, 'CSTL' => $CSTL]);
     }
 
     /**
@@ -323,28 +419,30 @@ class CourseScheduleController extends Controller
     /**
      * パラリンビクス講座を登録する
      */
-    public function register(){
+    public function paraStore(){
         try {
-            // dd($request);
-            $auth_id = Auth::user()->id;
-            $CST = CourseScheduleTransactions::where('instructor_id', '=', $auth_id )->first();
+            $CST = CourseScheduleTransactions::where('instructor_id', '=', $this->_auth_id )->first();
             if(empty($CST))throw new \Exception("不正なaccessです");
+            // WPDBのコーステーブルに登録
+            $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
+                'date'      => $CST->date,
+                'open_time' => $CST->time,
+                'course_id' => $CST->course_id,
+                'price'     => $CST->price,
+                'instructor_id' => $CST->instructor_id,
+                'erea'      => $CST->erea,
+                'venue'     => $CST->venue,
+                'notices'   => $CST->notices,
+                'comment'   => $CST->comment,
+                'approval_flg'  => 2,
+                'AcceptedStartDateTime'  => $CST->open_start_day,
+                'AcceptedEndDateTime'  => $CST->open_finish_day
+            ]);
 
-            // dd( $CST->date);
-            $CourseSchedule = new CourseSchedule;
-            $CourseSchedule->date = $CST->date;
-            $CourseSchedule->time = $CST->time;
-            $CourseSchedule->instructor_id = $CST->instructor_id ;
-            $CourseSchedule->course_id = $CST->course_id ;
-            $CourseSchedule->erea = $CST->erea ;
-            $CourseSchedule->venue = $CST->venue ;
-            $CourseSchedule->price = $CST->price ;
-            $CourseSchedule->notices = $CST->notices ;
-            $CourseSchedule->comment = $CST->comment ;
-            $CourseSchedule->save();
+
+            session()->flash('msg_success', '申請が完了しました');
 
 
-            // throw new \Exception("強制終了");
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -383,15 +481,13 @@ class CourseScheduleController extends Controller
     public function intrShow($id){
         try {
             // 養成コースを取得
-            $intr_course = CourseSchedule::find($id);
-            $auth_id = Auth::user()->id;
+            $intr_course = WPMySchedule::join('my_schedule_intr_courses','my_schedule_intr_courses.id','=','my_schedule.id')->find($id);
             // ユーザーのScheduleじゃなければ前の画面へ戻る
-            if($intr_course->instructor_id <> $auth_id )throw new \Exception("あなたのスケジュールではありません");
+            if($intr_course->instructor_id <> $this->_auth_id )throw new \Exception("あなたのスケジュールではありません");
             if($intr_course->course_id <> 6 )throw new \Exception("表示しようとしているスケジュールは養成講座ではありません");
-
-            $intr_schedule = CourseScheduleList::find($id);
+            $WPMyScheduleIntrCourses = WPMyScheduleIntrCourse::find($id);
             $intr_course = $this->getApprovalName($intr_course);
-            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'WPMyScheduleIntrCourses' => $WPMyScheduleIntrCourses ]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -494,8 +590,6 @@ class CourseScheduleController extends Controller
             return redirect()->back();    // 前の画面へ戻る
         }
     }
-
-
 
     /**
      * delete 申請済みのイントラコースを削除

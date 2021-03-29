@@ -27,6 +27,9 @@ class CreateCourseSchedulesTable extends Migration
 
             $table->integer('approval_flg')->default('2')->comment('承認状態 0:未承認 1:差し戻し 2:申請中 5:承認済み');
 
+            $table->timestamp('open_start_day')->nullable()->comment('公開開始日');
+            $table->timestamp('open_finish_day')->nullable()->comment('公開終了日');
+
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
             $table->boolean('delete_flag')->default('0')->comment('削除フラグ');

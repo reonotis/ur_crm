@@ -14,11 +14,11 @@
                     <table class="customerSearchTable">
                         <tr>
                             <th>講師</th>
-                            <td>{{$courseSchedules->name}}</td>
+                            <td>{{$courseSchedules->f_name ." ". $courseSchedules->l_name}}</td>
                         </tr>
                         <tr>
                             <th>講座</th>
-                            <td>{{$courseSchedules->course_name}}</td>
+                            <td>{{$courseSchedules->name}}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
@@ -26,7 +26,7 @@
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>{{ $courseSchedules->date->format('Y年m月d日') . "　" . date('H:i', strtotime($courseSchedules->time)) }}～</td>
+                            <td>{{ $courseSchedules->date->format('Y/m/d'). "　" . date('H:i', strtotime($courseSchedules->open_time)) }}～</td>
                         </tr>
                         <tr>
                             <th>エリア</th>
@@ -50,17 +50,6 @@
                             <th>状態</th>
                             <td>{{$courseSchedules->approval_name}}</td>
                         </tr>
-                        @if($ApprovalComments)
-                            <tr>
-                                <th>コメント</th>
-                                <td>
-                                    @foreach($ApprovalComments as $ApprovalComment)
-                                        {{ $ApprovalComment->created_at->format('Y/m/d H:i ') }} 　
-                                        {{ $ApprovalComment->comment }}<br>
-                                    @endforeach
-                                </td>
-                            </tr>
-                        @endif
                         @if($courseSchedules->approval_flg == 2 )
                             <tr>
                                 <th>承認 / 取下</th>
@@ -82,7 +71,7 @@
 </div>
 
 <?php
-// dd($ApprovalComments);
+// dd($courseSchedules);
 ?>
 
 <script>

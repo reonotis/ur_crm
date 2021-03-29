@@ -418,6 +418,13 @@ h4,
   border-left: solid 5px var(--maincolor);
 }
 
+h4>a {
+  font-size: .9rem;
+  padding :4px 10px;
+  float: right;
+}
+
+
 h5,
 .h5 {
   font-size: 1.125rem;

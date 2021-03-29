@@ -14,7 +14,7 @@
                     <table class="customerSearchTable">
                         <tr>
                             <th>実施コース</th>
-                            <td>{{ $intr_schedule->course_title }}</td>
+                            <td>{{ $intr_course->course_title }}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
@@ -22,7 +22,28 @@
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>調整中です</td>
+                            <td>
+                                1回目　{{$WPMyScheduleIntrCourses->date1->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time1}}<br>
+                                2回目　{{$WPMyScheduleIntrCourses->date2->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time2}}<br>
+                                3回目　{{$WPMyScheduleIntrCourses->date3->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time3}}<br>
+                                4回目　{{$WPMyScheduleIntrCourses->date4->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time4}}<br>
+                                5回目　{{$WPMyScheduleIntrCourses->date5->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time5}}<br>
+                                @if($WPMyScheduleIntrCourses->date6)
+                                    6回目　{{$WPMyScheduleIntrCourses->date6->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time6}}<br>
+                                @endif
+                                @if($WPMyScheduleIntrCourses->date7)
+                                    7回目　{{$WPMyScheduleIntrCourses->date7->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time7}}<br>
+                                @endif
+                                @if($WPMyScheduleIntrCourses->date8)
+                                    8回目　{{$WPMyScheduleIntrCourses->date8->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time8}}<br>
+                                @endif
+                                @if($WPMyScheduleIntrCourses->date9)
+                                    9回目　{{$WPMyScheduleIntrCourses->date9->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time9}}<br>
+                                @endif
+                                @if($WPMyScheduleIntrCourses->date10)
+                                    10回目　{{$WPMyScheduleIntrCourses->date10->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time10}}<br>
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <th>エリア</th>
@@ -47,7 +68,6 @@
                         <tr>
                             <th>協会からのコメント</th>
                             <td>
-                            {{ $intr_course->approval_name }}
                             </td>
                         </tr>
                         @if($intr_course->approval_name == 0 || $intr_course->approval_name == 1 )

@@ -38,18 +38,14 @@ class ApprovalController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $courseSchedules = CourseSchedule::select('course_schedules.*','courses.course_name','users.name','course_schedule_lists.date1','course_schedule_lists.time1')
-        ->where('course_schedules.approval_flg', '<', '5' )
-        ->where('course_schedules.delete_flag', '0' )
-        ->join('courses','courses.id','=','course_schedules.course_id')
-        ->join('users','users.id','=','course_schedules.instructor_id')
-        ->leftJoin('course_schedule_lists','course_schedule_lists.id','=','course_schedules.id')
-        ->orderBy('course_schedules.date', 'asc')
+        $WPMySchedule = WPMySchedule::select('my_schedule.*', 'my_courses.name', 'my_instructor.f_name', 'my_instructor.l_name')
+        ->join('my_courses','my_courses.id','=','my_schedule.course_id')
+        ->join('my_instructor','my_instructor.id','=','my_schedule.instructor_id')
         ->get();
-        $courseSchedules = $this->getApprovalNames($courseSchedules);
-        $courseSchedules = $this->setStartDate($courseSchedules);
 
-        return view('approval.index', ['courseSchedules' => $courseSchedules]);
+        $WPMySchedule = CheckCouses::setApprovalNames($WPMySchedule);
+        // $WPMySchedule = $this->getApprovalNames($WPMySchedule);
+        return view('approval.index', ['courseSchedules' => $WPMySchedule]);
     }
 
     /**
@@ -70,7 +66,7 @@ class ApprovalController extends Controller
         if(empty($data))throw new \Exception("コースが取得できていません。");
             switch ($data->approval_flg) {
                 case '0':
-                    $data->approval_name = '申請中';
+                    $data->approval_name = '未申請';
                     break;
                 case '1':
                     $data->approval_name = '差し戻し';
@@ -106,7 +102,7 @@ class ApprovalController extends Controller
      */
     public function confilm($id){
         try {
-            $PCS = CourseSchedule::find($id);
+            $PCS = WPMySchedule::find($id);
             if(empty($PCS))throw new \Exception("対象のデータがありません");
             if($PCS->course_id == 6){
                 return redirect()->action('ApprovalController@confilmIntrCourse', ['id' => $id ]);
@@ -125,9 +121,10 @@ class ApprovalController extends Controller
     public function confilmParaCourse($id){
         try {
             $PCS = $this->getParaCouse($id);
-            $ApprovalComments = ApprovalComments::where('course_schedules_id', $id )->get();
             if(empty($PCS))throw new \Exception("対象のデータがありません");
-            return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments]);
+            // $ApprovalComments = ApprovalComments::find($id);
+            return view('approval.paraShow', ['courseSchedules' => $PCS]);
+            // return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -138,15 +135,16 @@ class ApprovalController extends Controller
      * パラリンコースの詳細を取得
      */
     public function getParaCouse($id){
-        $courseSchedules = CourseSchedule::select('course_schedules.*','courses.course_name','users.name')
-        ->where('course_schedules.delete_flag', '0' )
-        ->where('course_schedules.id', $id )
-        ->join('courses','courses.id','=','course_schedules.course_id')
-        ->join('users','users.id','=','course_schedules.instructor_id')
+        $select = DB::connection('mysql_2')->table('my_schedule')
+        ->select('my_schedule.*','my_courses.name','my_instructor.f_name','my_instructor.l_name')
+        ->where('my_schedule.id', $id )
+        ->join('my_courses','my_courses.id','=','my_schedule.course_id')
+        ->join('my_instructor','my_instructor.id','=','my_schedule.instructor_id')
         ->first();
-
-        $courseSchedules = CheckCouses::setApprovalName($courseSchedules);
-        return $courseSchedules ;
+        $select->date = date_create_from_format('Y-m-d', $select->date);
+        // $select->date = date("Y-m-d",strtotime($select->date));
+        $select = CheckCouses::setApprovalName($select);
+        return $select ;
     }
 
     /**

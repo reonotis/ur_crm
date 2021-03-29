@@ -6,16 +6,12 @@
 
     <h3>実施講座一覧</h3>
 
-        <div class="LeftBOX" style="width:100%;">
-            <a href="{{route('courseSchedule.create')}}">
-                新しく開催講座のスケジュールを協会に申請する
-            </a>
-            <!-- <button class="btn btn-outline-success my-2 my-sm-0 BOXin" type="submit">申請する</button> -->
-        </div>
 
 
         <div class="coursesErea" >
-            <h4>パラリンビクス講座</h4>
+            <h4>パラリンビクス講座
+                <a href="{{route('courseSchedule.paraCreate')}}">新しくパラリンビクス講座を申請する</a>
+            </h4>
             <table class="scheduleListTable">
                 <thead>
                     <tr>
@@ -31,8 +27,8 @@
                 <tbody>
                     @foreach ($para_course_schedules as $course_schedule)
                         <tr>
-                            <td>{{ $course_schedule->course_name }}</td>
-                            <td>{{ $course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($course_schedule->time)) }}</td>
+                            <td>{{ $course_schedule->short_name }}</td>
+                            <td>{{ $course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($course_schedule->open_time)) }}</td>
                             <td>{{ $course_schedule->erea }}</td>
                             <td>{{ $course_schedule->venue }}</td>
                             <td>{{ number_format($course_schedule->price) }}円</td>
@@ -46,7 +42,9 @@
             </table>
         </div>
         <div class="coursesErea" >
-            <h4>インストラクター養成講座</h4>
+            <h4>インストラクター養成講座
+                <a href="{{route('courseSchedule.intrCreate')}}">新しく養成講座を申請する</a>
+            </h4>
             <table class="scheduleListTable">
                 <thead>
                     <tr>
@@ -76,7 +74,9 @@
                 </tbody>
             </table>
         </div>
-
+<?php
+// dd($para_course_schedules);
+?>
 
 
     </div>

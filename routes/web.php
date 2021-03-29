@@ -121,18 +121,21 @@ Route::group(['prefix'=>'approval', 'middleware'=>'auth'], function(){
 // 実施講座関係
 Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
-    Route::get('create', 'CourseScheduleController@create')->name('courseSchedule.create');
+    Route::get('intrCreate', 'CourseScheduleController@intrCreate')->name('courseSchedule.intrCreate');
+    Route::post('intrConfilm', 'CourseScheduleController@intrConfilm')->name('courseSchedule.intrConfilm');
+    Route::get('intrStore/{id}', 'CourseScheduleController@intrStore')->name('courseSchedule.intrStore');
     Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
+    Route::get('paraCreate', 'CourseScheduleController@paraCreate')->name('courseSchedule.paraCreate');
+    Route::post('paraConfilm', 'CourseScheduleController@paraConfilm')->name('courseSchedule.paraConfilm');
     Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
+    Route::get('paraStore', 'CourseScheduleController@paraStore')->name('courseSchedule.paraStore');
     Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
     Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
     Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');
     Route::post('paraUpdate/{id}', 'CourseScheduleController@paraUpdate')->name('courseSchedule.paraUpdate');
     Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
-    Route::post('create2', 'CourseScheduleController@create2')->name('courseSchedule.create2');
     Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
-    Route::GET('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
-    Route::get('register', 'CourseScheduleController@register')->name('courseSchedule.register');
+    Route::get('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
 });
 
 // ユーザー（インストラクター関係）

@@ -232,16 +232,24 @@ label {
   color: #ddd;
 }
 
+
+
+
 .inputUnits{
-	width : 150px;
+	width : 200px;
   display       : flex;
   flex-flow     : wrap;
   justify-content: space-between;
 	align-items: center;
 }
 .inputUnit{
-	width :120px;
+	width :180px;
 }
+.inputDatatimeLocal{
+	width :220px;
+
+}
+
 .inputBirthday{
 	min-width :300px;
 	max-width :300px;
@@ -283,7 +291,16 @@ label {
 }
 .inputDateTime{
 	margin-bottom :5px;
-	width : 330px;
+	width : 300px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+
+.inputOpenDateTime{
+	margin-bottom :5px;
+	width : 350px;
   display       : flex;
   flex-flow     : wrap;
   justify-content: space-between;
