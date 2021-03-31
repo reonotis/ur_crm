@@ -66,10 +66,10 @@ $courses_json = json_encode($courses);
                             <tr>
                                 <th>公開日</th>
                                 <td>
-                                    <div class="inputDateTime">
+                                    <div class="inputOpenDateTime">
                                         公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" >から
                                     </div>
-                                    <div class="inputDateTime">
+                                    <div class="inputOpenDateTime">
                                         公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" >まで
                                     </div>
                                 </td>

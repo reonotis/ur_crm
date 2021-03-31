@@ -39,7 +39,7 @@
                         </tr>
                         <tr>
                             <th>詳細</th>
-                            <td>{{$CST -> comment }}</td>
+                            <td>{!! nl2br(e($CST -> comment)) !!}</td>
                         </tr>
                         <tr>
                             <th>公開期間</th>

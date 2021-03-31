@@ -21,7 +21,7 @@
                 <thead>
                     <tr>
                         <th>コース名</th>
-                        <th>実施日時</th>
+                        <th>開講日</th>
                         <th>インストラクター</th>
                         <th>料金</th>
                         <th>状態</th>
@@ -31,9 +31,9 @@
                 <tbody>
                     @foreach($courseSchedules as $courseSchedule)
                         <tr>
-                            <td>{{ $courseSchedule->name}}</td>
-                            <td>{{ $courseSchedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($courseSchedule->open_time)) }}</td>
-                            <td>{{ $courseSchedule->f_name.$courseSchedule->l_name }}</td>
+                            <td>{{ $courseSchedule->course_name}}</td>
+                            <td>{{ $courseSchedule->date->format('Y年m月d日') . "　" . date('H:i', strtotime($courseSchedule->open_time)) }}</td>
+                            <td>{{ $courseSchedule->name }}</td>
                             <td>{{ number_format($courseSchedule->price) }}円</td>
                             <td>{{ $courseSchedule->approval_name }}</td>
                             <td>

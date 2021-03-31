@@ -16,27 +16,16 @@ class CreateCourseScheduleListsTable extends Migration
         Schema::create('course_schedule_lists', function (Blueprint $table) {
             $table->bigIncrements('id')                    ->comment('course_schedules.id');
             $table->string('course_title','200')           ->comment('コースタイトル');
-            $table->date('date1')                          ->comment('日付1');
-            $table->time('time1')                          ->comment('時間1');
-            $table->date('date2')                          ->comment('日付2');
-            $table->time('time2')                          ->comment('時間2');
-            $table->date('date3')                          ->comment('日付3');
-            $table->time('time3')                          ->comment('時間3');
-            $table->date('date4')                          ->comment('日付4');
-            $table->time('time4')                          ->comment('時間4');
-            $table->date('date5')                          ->comment('日付5');
-            $table->time('time5')                          ->comment('時間5');
-            $table->date('date6')              ->nullable()->comment('日付6');
-            $table->time('time6')              ->nullable()->comment('時間6');
-            $table->date('date7')              ->nullable()->comment('日付7');
-            $table->time('time7')              ->nullable()->comment('時間7');
-            $table->date('date8')              ->nullable()->comment('日付8');
-            $table->time('time8')              ->nullable()->comment('時間8');
-            $table->date('date9')              ->nullable()->comment('日付9');
-            $table->time('time9')              ->nullable()->comment('時間9');
-            $table->date('date10')             ->nullable()->comment('日付10');
-            $table->time('time10')             ->nullable()->comment('時間10');
-
+            $table->timestamp('date1')         ->nullable()->comment('日程1');
+            $table->timestamp('date2')         ->nullable()->comment('日程2');
+            $table->timestamp('date3')         ->nullable()->comment('日程3');
+            $table->timestamp('date4')         ->nullable()->comment('日程4');
+            $table->timestamp('date5')         ->nullable()->comment('日程5');
+            $table->timestamp('date6')         ->nullable()->comment('日程6');
+            $table->timestamp('date7')         ->nullable()->comment('日程7');
+            $table->timestamp('date8')         ->nullable()->comment('日程8');
+            $table->timestamp('date9')         ->nullable()->comment('日程9');
+            $table->timestamp('date10')        ->nullable()->comment('日程10');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

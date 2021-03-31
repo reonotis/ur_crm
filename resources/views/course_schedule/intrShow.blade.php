@@ -13,8 +13,8 @@
                 <div class="card-body">
                     <table class="customerSearchTable">
                         <tr>
-                            <th>実施コース</th>
-                            <td>{{ $intr_course->course_title }}</td>
+                            <th>コース名</th>
+                            <td>{{ $CourseScheduleList->course_title }}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
@@ -23,25 +23,25 @@
                         <tr>
                             <th>実施日時</th>
                             <td>
-                                1回目　{{$WPMyScheduleIntrCourses->date1->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time1}}<br>
-                                2回目　{{$WPMyScheduleIntrCourses->date2->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time2}}<br>
-                                3回目　{{$WPMyScheduleIntrCourses->date3->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time3}}<br>
-                                4回目　{{$WPMyScheduleIntrCourses->date4->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time4}}<br>
-                                5回目　{{$WPMyScheduleIntrCourses->date5->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time5}}<br>
-                                @if($WPMyScheduleIntrCourses->date6)
-                                    6回目　{{$WPMyScheduleIntrCourses->date6->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time6}}<br>
+                                1回目　{{$CourseScheduleList->date1->format('Y/m/d')}}　{{$CourseScheduleList->time1}}<br>
+                                2回目　{{$CourseScheduleList->date2->format('Y/m/d')}}　{{$CourseScheduleList->time2}}<br>
+                                3回目　{{$CourseScheduleList->date3->format('Y/m/d')}}　{{$CourseScheduleList->time3}}<br>
+                                4回目　{{$CourseScheduleList->date4->format('Y/m/d')}}　{{$CourseScheduleList->time4}}<br>
+                                5回目　{{$CourseScheduleList->date5->format('Y/m/d')}}　{{$CourseScheduleList->time5}}<br>
+                                @if($CourseScheduleList->date6)
+                                    6回目　{{$CourseScheduleList->date6->format('Y/m/d')}}　{{$CourseScheduleList->time6}}<br>
                                 @endif
-                                @if($WPMyScheduleIntrCourses->date7)
-                                    7回目　{{$WPMyScheduleIntrCourses->date7->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time7}}<br>
+                                @if($CourseScheduleList->date7)
+                                    7回目　{{$CourseScheduleList->date7->format('Y/m/d')}}　{{$CourseScheduleList->time7}}<br>
                                 @endif
-                                @if($WPMyScheduleIntrCourses->date8)
-                                    8回目　{{$WPMyScheduleIntrCourses->date8->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time8}}<br>
+                                @if($CourseScheduleList->date8)
+                                    8回目　{{$CourseScheduleList->date8->format('Y/m/d')}}　{{$CourseScheduleList->time8}}<br>
                                 @endif
-                                @if($WPMyScheduleIntrCourses->date9)
-                                    9回目　{{$WPMyScheduleIntrCourses->date9->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time9}}<br>
+                                @if($CourseScheduleList->date9)
+                                    9回目　{{$CourseScheduleList->date9->format('Y/m/d')}}　{{$CourseScheduleList->time9}}<br>
                                 @endif
-                                @if($WPMyScheduleIntrCourses->date10)
-                                    10回目　{{$WPMyScheduleIntrCourses->date10->format('Y/m/d')}}　{{$WPMyScheduleIntrCourses->time10}}<br>
+                                @if($CourseScheduleList->date10)
+                                    10回目　{{$CourseScheduleList->date10->format('Y/m/d')}}　{{$CourseScheduleList->time10}}<br>
                                 @endif
                             </td>
                         </tr>
@@ -66,10 +66,19 @@
                             <td>{{ $intr_course->approval_name }}</td>
                         </tr>
                         <tr>
-                            <th>協会からのコメント</th>
-                            <td>
-                            </td>
+                            <th>公開期間</th>
+                            <td>{{$intr_course->open_start_day->format('Y/m/d H:i') }}　～　{{$intr_course->open_finish_day->format('Y/m/d H:i') }}</td>
                         </tr>
+                        @if( count($ApprovalComments) >= 1)
+                            <tr>
+                                <th>協会からのコメント</th>
+                                <td>
+                                    @foreach($ApprovalComments as $ApprovalComment)
+                                        {{$ApprovalComment -> created_at -> format('Y-m-d') . "　=>　" . $ApprovalComment -> comment}}<br>
+                                    @endforeach
+                                </td>
+                            </tr>
+                        @endif
                         @if($intr_course->approval_name == 0 || $intr_course->approval_name == 1 )
                         <tr>
                             <td colspan="2">

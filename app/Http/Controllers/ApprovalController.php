@@ -6,7 +6,6 @@ use App\Models\ApprovalComments;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\CourseScheduleList;
-use App\Models\WPMySchedule;
 use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,71 +37,24 @@ class ApprovalController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $WPMySchedule = WPMySchedule::select('my_schedule.*', 'my_courses.name', 'my_instructor.f_name', 'my_instructor.l_name')
-        ->join('my_courses','my_courses.id','=','my_schedule.course_id')
-        ->join('my_instructor','my_instructor.id','=','my_schedule.instructor_id')
+        $CourseSchedule = CourseSchedule::select('course_schedules.*', 'courses.course_name', 'users.name')
+        ->join('courses','courses.id','=','course_schedules.course_id')
+        ->join('users','users.id','=','course_schedules.instructor_id')
+        ->where('course_schedules.delete_flag',NULL)
+        ->where('course_schedules.approval_flg', '>=', 2 )
         ->get();
 
-        $WPMySchedule = CheckCouses::setApprovalNames($WPMySchedule);
-        // $WPMySchedule = $this->getApprovalNames($WPMySchedule);
-        return view('approval.index', ['courseSchedules' => $WPMySchedule]);
+        $CourseSchedule = CheckCouses::setApprovalNames($CourseSchedule);
+        return view('approval.index', ['courseSchedules' => $CourseSchedule]);
     }
 
-    /**
-     *承認状態を確認して承認名を付与する
-     */
-    public function getApprovalNames($datas){
-        if(empty($datas))throw new \Exception("コースが取得できていません。");
-        foreach($datas as $data ){
-            $this->getApprovalName($data);
-        }
-        return $datas;
-    }
-
-    /**
-     *承認状態を確認して承認名を付与する
-     */
-    public function getApprovalName($data){
-        if(empty($data))throw new \Exception("コースが取得できていません。");
-            switch ($data->approval_flg) {
-                case '0':
-                    $data->approval_name = '未申請';
-                    break;
-                case '1':
-                    $data->approval_name = '差し戻し';
-                    break;
-                case '2':
-                    $data->approval_name = '申請中';
-                    break;
-                case '5':
-                    $data->approval_name = '受理済み';
-                    break;
-                default:
-                    $data->approval_name = '--';
-                    break;
-            }
-        return $data;
-    }
-
-    /**
-     * 養成講座の開講日を初日に設定する
-     */
-    public function setStartDate($courseSchedules){
-        foreach($courseSchedules as $courseSchedule){
-            if($courseSchedule->course_id==6){
-                $courseSchedule->date=$courseSchedule->date1;
-                $courseSchedule->time=$courseSchedule->time1;
-            }
-        }
-        return $courseSchedules;
-    }
 
     /**
      *渡されたIDのスケジュールを確認し、パラコースか、養成コースの確認画面を表示する
      */
     public function confilm($id){
         try {
-            $PCS = WPMySchedule::find($id);
+            $PCS = CourseSchedule::find($id);
             if(empty($PCS))throw new \Exception("対象のデータがありません");
             if($PCS->course_id == 6){
                 return redirect()->action('ApprovalController@confilmIntrCourse', ['id' => $id ]);
@@ -122,9 +74,8 @@ class ApprovalController extends Controller
         try {
             $PCS = $this->getParaCouse($id);
             if(empty($PCS))throw new \Exception("対象のデータがありません");
-            // $ApprovalComments = ApprovalComments::find($id);
-            return view('approval.paraShow', ['courseSchedules' => $PCS]);
-            // return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments]);
+            $ApprovalComments = ApprovalComments::where('course_schedules_id', $id)->get();
+            return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -135,14 +86,10 @@ class ApprovalController extends Controller
      * パラリンコースの詳細を取得
      */
     public function getParaCouse($id){
-        $select = DB::connection('mysql_2')->table('my_schedule')
-        ->select('my_schedule.*','my_courses.name','my_instructor.f_name','my_instructor.l_name')
-        ->where('my_schedule.id', $id )
-        ->join('my_courses','my_courses.id','=','my_schedule.course_id')
-        ->join('my_instructor','my_instructor.id','=','my_schedule.instructor_id')
-        ->first();
-        $select->date = date_create_from_format('Y-m-d', $select->date);
-        // $select->date = date("Y-m-d",strtotime($select->date));
+        $select = CourseSchedule::select('course_schedules.*','courses.course_name','users.name')
+        ->join('courses','courses.id','=','course_schedules.course_id')
+        ->join('users','users.id','=','course_schedules.instructor_id')
+        ->find($id);
         $select = CheckCouses::setApprovalName($select);
         return $select ;
     }
@@ -151,7 +98,24 @@ class ApprovalController extends Controller
      * 養成講座申請画面を表示します。
      */
     public function confilmIntrCourse($id){
-        dd('ページ未作成');
+        list($select, $CSL) = $this->getIntrCouse($id);
+        $ApprovalComments = ApprovalComments::where('course_schedules_id', $id)->get();
+        if(empty($CSL))throw new \Exception("対象のデータがありません");
+        return view('approval.intrShow', ['courseSchedule' => $select,'courseScheduleList' => $CSL, 'ApprovalComments'=> $ApprovalComments]);
+    }
+
+    /**
+     * 養成コースの詳細を取得
+     */
+    public function getIntrCouse($id){
+        $select = CourseSchedule::select('course_schedules.*','courses.course_name','users.name')
+        ->join('courses','courses.id','=','course_schedules.course_id')
+        ->join('users','users.id','=','course_schedules.instructor_id')
+        ->find($id);
+        $select = CheckCouses::setApprovalName($select);
+
+        $CSL = CourseScheduleList::find($id);
+        return [$select, $CSL] ;
     }
 
     /**
@@ -211,22 +175,20 @@ class ApprovalController extends Controller
             $course_schedules = CourseSchedule::find($id );
 
             if($request->NG){
-                session()->flash('msg_success', '申請を差し戻しました');
                 $course_schedules->approval_flg = 1 ;
                 $course_schedules->save() ;
+                session()->flash('msg_success', '申請を差し戻しました');
             }
 
             if($request->OK){
-
-                $this->register_WP_courseSchedules($id,$course_schedules);
                 $course_schedules->approval_flg = 5 ;
                 $course_schedules->save() ;
                 session()->flash('msg_success', '承認しました');
             }
             return redirect()->action('ApprovalController@index');
         } catch (\Throwable $e) {
-            // session()->flash('msg_danger',$e->getMessage() );
-            // return redirect()->back();    // 前の画面へ戻る
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
         }
     }
 
@@ -257,4 +219,5 @@ class ApprovalController extends Controller
         dd( $lastID);
 
     }
+
 }
