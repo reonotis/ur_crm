@@ -25,7 +25,8 @@ class SettingController extends Controller
         $auth = Auth::user();
         $myId = $auth->id;
         $query = DB::table('users')
-                -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
+                -> leftJoin('users_info', 'users.id', '=', 'users_info.id')
+                ->where('users.id', $myId);
         $auth = $query->first();
 
         return view('setting.index', compact('auth'));

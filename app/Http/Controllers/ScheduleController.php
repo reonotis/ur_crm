@@ -6,17 +6,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerSchedule;
+use DateTime;
+
 
 class ScheduleController extends Controller
 {
+
+    private $_user;                 //Auth::user()
+    private $_auth_id ;             //Auth::user()->id;
+    private $_auth_authority_id ;   //権限
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 8){
+                dd("権限がありません。");
+            }
+            return $next($request);
+        });
+    }
+
     /**
-     * Display a listing of the resource.
+     * リストメソッドに現在の年月を渡す
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+        $DATE = date('Y-m-d');
+        return redirect()->action('ScheduleController@list', ['DATE' => $DATE ] );
     }
 
     /**
@@ -89,8 +108,9 @@ class ScheduleController extends Controller
      * スケジュールのリストを表示します
      *
      */
-    public function list()
+    public function list($DATE)
     {
+        dd($DATE);
         $auth = Auth::user();
 
         $query = CustomerSchedule::select('customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoursePurchaseDetailsTable extends Migration
+class CreateCustomerCourseMappingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCoursePurchaseDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_purchase_details', function (Blueprint $table) {
+        Schema::create('customer_course_mapping', function (Blueprint $table) {
             $table->bigIncrements('id')                  ->comment('ID');
             $table->integer('customer_id')               ->comment('顧客ID');
             $table->date('date')                         ->comment('購入日');
@@ -38,6 +38,6 @@ class CreateCoursePurchaseDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_purchase_details');
+        Schema::dropIfExists('customer_course_mapping');
     }
 }

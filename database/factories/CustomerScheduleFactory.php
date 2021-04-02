@@ -24,7 +24,7 @@ $factory->define(CustomerSchedule::class, function (Faker $faker) {
         'date'          => $faker->date(),
         'time'          => $faker->time('H:i'),
 
-        'course_id'     => $faker->numberBetween($min = 1, $max = 4),
+        'course_schedules_id'=> $faker->numberBetween($min = 1, $max = 4),
         'howMany'       => $faker->numberBetween($min = 1, $max = 5),
         'instructor_id' => $faker->numberBetween($min = 1, $max = 2),
 

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
 
-    <h3>実施講座一覧</h3>
+    <h3>申請コース一覧</h3>
 
 
 

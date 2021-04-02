@@ -18,7 +18,7 @@ class CreateCustomerSchedulesTable extends Migration
             $table->integer('customer_id')->comment('顧客ID');
             $table->date('date')->nullable()->comment('受講日時');
             $table->time('time','0')->default('12:00:00')->comment('受講時間');
-            $table->integer('course_id')->comment('コースID');
+            $table->integer('course_schedules_id')->comment('コーススケジュールID');
             $table->tinyInteger('howMany')->nullable()->comment('何回目の受講か');
             $table->integer('instructor_id')->nullable()->comment('イントラID');
 
