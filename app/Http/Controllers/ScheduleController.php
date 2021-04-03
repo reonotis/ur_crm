@@ -110,16 +110,17 @@ class ScheduleController extends Controller
      */
     public function list($DATE)
     {
-        dd($DATE);
-        $auth = Auth::user();
+        $month = substr($DATE, 0, 7);
 
         $query = CustomerSchedule::select('customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
-            -> leftJoin('customers', 'customer_schedules.customer_id', '=', 'customers.id')
-            -> leftJoin('courses', 'customer_schedules.course_id', '=', 'courses.id')
-            -> orderByRaw('customer_schedules.date desc, customer_schedules.time desc, customer_schedules.howMany desc');
+            ->leftJoin('customers', 'customer_schedules.customer_id', '=', 'customers.id')
+            ->leftJoin('courses', 'customer_schedules.course_schedules_id', '=', 'courses.id')
+            ->where('customer_schedules.date', 'LIKE', '$month%' )
+            ->orderByRaw('customer_schedules.date desc, customer_schedules.time desc, customer_schedules.howMany desc');
 
-        if($auth->authority_id >= 7){
-            $query -> where('customer_schedules.instructor_id','=', $auth->id  );
+            // dd($query);
+        if( $this->_auth_authority_id >= 7){
+            $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
         }
         $schedules = $query->get();
         // $schedules = $this->changeTypes($schedules);

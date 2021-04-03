@@ -399,6 +399,7 @@ table.customerSearchTable{
 	width : var(--customer-sidebar);
 	min-height: 500px;
 	border :solid 1px var(--maincolor);
+	border-radius: 5px;
 }
 .tabsContentsArea{
 	width:calc(100% - (var(--customer-sidebar) + 10px));

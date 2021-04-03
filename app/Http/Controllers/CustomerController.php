@@ -156,8 +156,8 @@ class CustomerController extends Controller
     }
 
     /**
-    * 顧客情報を編集します
-    */
+     * 顧客情報を編集します
+     */
     public function edit($client_id){
         // 渡されたIDの顧客情報を取得する
         $query = DB::table('customers');
@@ -175,15 +175,9 @@ class CustomerController extends Controller
         return view('customer.edit', compact('customer', 'users'));
     }
 
-
-
-
-
-
-
     /**
-    * 顧客情報を更新します。
-    */
+     * 顧客情報を更新します。
+     */
     public function update(Request $request, $id){
         $birthdayYear  = $request->input('birthdayYear');
         $birthdayMonth = $request->input('birthdayMonth');
@@ -221,15 +215,11 @@ class CustomerController extends Controller
         return redirect()->action('CustomerController@display', ['id' => $id]);
     }
 
-
-
-
-
     /**
-    * 郵便番号3桁のバリデーションチェックを行います。
-    * input $date
-    */
-    function checkValidationZip1($date){
+     * 郵便番号3桁のバリデーションチェックを行います。
+     * input $date
+     */
+    public function checkValidationZip1($date){
         $this->_zip21 = NULL;
         if(strlen($date) <> 3 ){
             dd("郵便番号3桁が不正な値です。");
@@ -240,16 +230,11 @@ class CustomerController extends Controller
     }
 
     /**
-    * 顧客情報にmaskをかけます
-    */
-    function maskCustomerData($customer){
+     * 顧客情報にmaskをかけます
+     */
+    public function maskCustomerData($customer){
         $customer->strt21 = str_repeat("*",  mb_strlen($customer->strt21));
         return $customer;
     }
-
-
-
-
-
 
 }
