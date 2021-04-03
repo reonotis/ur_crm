@@ -51,6 +51,7 @@ class CourseScheduleController extends Controller
         $intr_course_schedules = CourseSchedule::select('course_schedules.*','users.name','courses.course_name','course_schedule_lists.course_title')
         ->where('course_schedules.delete_flag', NULL)
         ->where('course_schedules.course_id', 6)
+        ->where('course_schedules.instructor_id', $this->_auth_id )
         ->join('users', 'users.id', '=', 'course_schedules.instructor_id')
         ->join('courses', 'courses.id', '=', 'course_schedules.course_id')
         ->join('course_schedule_lists', 'course_schedule_lists.id', '=', 'course_schedules.id')
