@@ -27,7 +27,9 @@
 </div>
 <div class="cusInfoRow" >
   <div class="cusInfoTitle" >メモ</div>
-  <div class="cusInfoContent" ><?= $customer->memo ?></div>
+  <div class="cusInfoContent" >
+    {!! nl2br(e($customer->memo)) !!}
+  </div>
 </div>
 <div class="cusInfoRow" >
   <div class="cusInfoTitle" >表示ステータス</div>
