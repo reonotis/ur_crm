@@ -37,14 +37,14 @@ class UsersTableSeeder extends Seeder
                 'name' => 'インストラクターA',
                 'read' => 'インストラクターエー',
                 'email' => 'test1@test.jp',
-                'password' => Hash::make('reonotis'),
+                'password' => Hash::make('test'),
                 'authority_id' => '7',
                 'enrolled_id' => '5',
             ],[
                 'name' => 'インストラクターB',
                 'read' => 'インストラクタービー',
                 'email' => 'test2@test.jp',
-                'password' => Hash::make('reonotis'),
+                'password' => Hash::make('test'),
                 'authority_id' => '9',
                 'enrolled_id' => '9',
             ]
