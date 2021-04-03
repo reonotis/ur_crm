@@ -146,7 +146,8 @@ class CustomerController extends Controller
         
         // 購入コース明細を取得する
         $CPDQuery = DB::table('customer_course_mapping');
-        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'customer_course_mapping.purchase_id');
+        $CPDQuery -> leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_course_mapping.course_schedule_id');
+        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id');
         $CPDQuery -> select('customer_course_mapping.*', 'courses.course_name' );
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
