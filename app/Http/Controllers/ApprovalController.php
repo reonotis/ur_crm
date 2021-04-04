@@ -208,7 +208,7 @@ class ApprovalController extends Controller
             }
             if($request->OK){
                 $course_schedules->approval_flg = 5 ;
-                // $course_schedules->save() ;
+                $course_schedules->save() ;
                 session()->flash('msg_success', '承認しました');
                 $data = [
                     "instructor"  => $intr->name,

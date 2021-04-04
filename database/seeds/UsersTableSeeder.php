@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => '藤澤怜臣',
                 'read' => 'フジサワ レオン',
-                'email' => 'test@test.jp',
+                'email' => 'fujisawa@reonotis.jp',
                 'password' => Hash::make('reonotis'),
                 'authority_id' => '1',
                 'enrolled_id' => '1',
