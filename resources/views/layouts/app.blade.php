@@ -73,7 +73,7 @@
             <div class="bar bar3"></div>
         </div>
         <ul class="navi-links">
-            <li><a href="{{route('report.index')}}">日報</a></li>
+            <li><a href="{{route('report.index')}}">売上実績</a></li>
             <li><a href="{{route('customer.search')}}">顧客検索</a></li>
             <?php if(Auth::user()->authority_id < 7 ) {
                 ?>

@@ -401,9 +401,11 @@ class CourseScheduleController extends Controller
         try {
             $intr_course = CourseSchedule::find($id);
             // 受理済みかの確認
-            if($intr_course->approval_flg == 5 )throw new \Exception("既に受領済みの為編集できません");
             if($intr_course->instructor_id <> $this->_auth_id )throw new \Exception("あなたのスケジュールではありません");
             $courses = Course::where('parent_id',1)->get();
+            if($intr_course->approval_flg == 5 ){
+                return view('course_schedule.paraEditReleaseSchedule', ['intr_course' => $intr_course, 'courses' => $courses]);
+            }
             return view('course_schedule.paraEdit', ['intr_course' => $intr_course, 'courses' => $courses]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
@@ -420,7 +422,10 @@ class CourseScheduleController extends Controller
             $intr_course = CourseSchedule::find($id);
             $intr_schedule = CourseScheduleList::find($id);
             // 受理済みかの確認
-            if($intr_course->approval_flg == 5 )throw new \Exception("既に受領済みの為編集できません");
+            if($intr_course->approval_flg == 5 ){
+                
+                return view('course_schedule.intrEditReleaseSchedule', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+            }
 
             return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
         } catch (\Throwable $e) {
@@ -439,8 +444,7 @@ class CourseScheduleController extends Controller
             // 自分のスケジュールを更新しようとしているか確認
             if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
             // 受理済みか削除されたデータじゃないか確認
-            if($intr_course->approval_flg > 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
-
+            if($intr_course->approval_flg >= 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
 
             $intr_course->course_id= $request->course_id ;
             $intr_course->price= $request->price ;
@@ -449,6 +453,32 @@ class CourseScheduleController extends Controller
             $intr_course->notices= $request->notices ;
             $intr_course->comment= $request->comment ;
             $intr_course->approval_flg= 2 ;
+            $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
+            $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
+            $intr_course->save();
+
+            session()->flash('msg_success', '更新が完了しました');
+            return redirect()->action('CourseScheduleController@index');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * update	パラリンビクスコースの公開期間更新
+     */
+    public function paraUpdateOpenDay(Request $request, $id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            // 自分のスケジュールを更新しようとしているか確認
+            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            // 削除されたデータじゃないか確認
+            if( $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
+
+            $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
+            $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
 
             session()->flash('msg_success', '更新が完了しました');
@@ -478,10 +508,37 @@ class CourseScheduleController extends Controller
             $intr_course->notices= $request->notices ;
             $intr_course->comment= $request->comment ;
             $intr_course->approval_flg = 2 ;
+            $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
+            $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
 
             $intr_schedule->course_title = $request->course_title ;
             $intr_schedule->save();
+
+            session()->flash('msg_success', '更新が完了しました');
+            return redirect()->action('CourseScheduleController@index');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * update	養成コースの更新
+     */
+    public function intrUpdateOpenDay(Request $request, $id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            // 自分のスケジュールを更新しようとしているか確認
+            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            // 受理済みか削除されたデータじゃないか確認
+            if($intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
+
+            $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
+            $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
+            $intr_course->save();
+
 
             session()->flash('msg_success', '更新が完了しました');
             return redirect()->action('CourseScheduleController@index');
@@ -526,7 +583,6 @@ class CourseScheduleController extends Controller
     // destroy	既存レコードの削除(Delete)
 
     public function getParaCourses(){
-
         $PCS = CourseSchedule::select('course_schedules.*','courses.course_name');
         // if($this->_auth_authority_id >= 7){
             $PCS = $PCS->where('instructor_id','=', $this->_auth_id );

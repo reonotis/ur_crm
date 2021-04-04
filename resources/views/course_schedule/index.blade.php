@@ -28,7 +28,7 @@
                     @foreach ($para_course_schedules as $course_schedule)
                         <tr>
                             <td>{{ $course_schedule->course_name }}</td>
-                            <td>{{ $course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($course_schedule->open_time)) }}</td>
+                            <td>{{ $course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($course_schedule->time)) }}</td>
                             <td>{{ $course_schedule->erea }}</td>
                             <td>{{ $course_schedule->venue }}</td>
                             <td>{{ number_format($course_schedule->price) }}円</td>
@@ -61,7 +61,7 @@
                     @foreach ($intr_course_schedules as $intr_course_schedule)
                         <tr>
                             <td>{{ $intr_course_schedule->course_title }}</td>
-                            <td>-</td>
+                            <td>{{ $intr_course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($intr_course_schedule->time)) }}</td>
                             <td>{{ $intr_course_schedule->erea }}</td>
                             <td>{{ $intr_course_schedule->venue }}</td>
                             <td>{{ number_format($intr_course_schedule->price) }}円</td>

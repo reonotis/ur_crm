@@ -17,29 +17,29 @@
                             </tr>
                             <tr>
                                 <th>コース名</th>
-                                <td><input type="text" name="course_title" value="" class="formInput" placeholder="火曜日日中コース" ></td>
+                                <td><input type="text" name="course_title" value="" class="formInput" placeholder="火曜日日中コース" required ></td>
                             </tr>
                             <tr>
                                 <th>料金</th>
                                 <td>
                                     <div class="inputUnits">
-                                        <input class="formInput inputUnit" type="number" name="price" value="" placeholder="360000" step="100" >円
+                                        <input class="formInput inputUnit" type="number" name="price" value="360000" placeholder="360000" step="100" required >円
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                    <div class="inputDateTime">1回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date1" value="" required ></div>
-                                    <div class="inputDateTime">2回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date2" value="" required ></div>
-                                    <div class="inputDateTime">3回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date3" value="" required ></div>
-                                    <div class="inputDateTime">4回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date4" value="" required ></div>
-                                    <div class="inputDateTime">5回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date5" value="" required ></div>
-                                    <div class="inputDateTime">6回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date6" value="" ></div>
-                                    <div class="inputDateTime">7回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date7" value="" ></div>
-                                    <div class="inputDateTime">8回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date8" value="" ></div>
-                                    <div class="inputDateTime">9回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date9" value="" ></div>
-                                    <div class="inputDateTime">10回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date10" value="" ></div>
+                                    <div class="inputDateTime">1回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date1" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" required ></div>
+                                    <div class="inputDateTime">2回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date2" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" required ></div>
+                                    <div class="inputDateTime">3回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date3" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" required ></div>
+                                    <div class="inputDateTime">4回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date4" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" required ></div>
+                                    <div class="inputDateTime">5回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date5" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" required ></div>
+                                    <div class="inputDateTime">6回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date6" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" ></div>
+                                    <div class="inputDateTime">7回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date7" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" ></div>
+                                    <div class="inputDateTime">8回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date8" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" ></div>
+                                    <div class="inputDateTime">9回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date9" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" ></div>
+                                    <div class="inputDateTime">10回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date10" value="" min="<?= date('Y-m-d',strtotime("+3 day"));?>T08:00" ></div>
                                 </td>
                             </tr>
                             <tr>
@@ -68,10 +68,10 @@
                                 <th>公開日</th>
                                 <td>
                                     <div class="inputOpenDateTime">
-                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" >から
+                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" required>から
                                     </div>
                                     <div class="inputOpenDateTime">
-                                        公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" >まで
+                                        公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" required>まで
                                     </div>
                                 </td>
                             </tr>

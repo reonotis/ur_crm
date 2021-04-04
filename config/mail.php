@@ -55,11 +55,11 @@ return [
     |
     */
 
-    'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
-    ],
-
+    // 'from' => [
+    //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+    //     'name' => env('MAIL_FROM_NAME', 'Example'),
+    // ],
+    'from' => ['address' => "reonotis@larvel.com", 'name' => "laravel_CRM_system"],
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

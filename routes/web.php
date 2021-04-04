@@ -133,7 +133,9 @@ Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
     Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
     Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');
+    Route::post('intrUpdateOpenDay/{id}', 'CourseScheduleController@intrUpdateOpenDay')->name('courseSchedule.intrUpdateOpenDay');
     Route::post('paraUpdate/{id}', 'CourseScheduleController@paraUpdate')->name('courseSchedule.paraUpdate');
+    Route::post('paraUpdateOpenDay/{id}', 'CourseScheduleController@paraUpdateOpenDay')->name('courseSchedule.paraUpdateOpenDay');
     Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
     Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
     Route::get('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
@@ -163,6 +165,8 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
+
+Route::get( '/mailsend' , 'MailSendController@index');
 
 
 

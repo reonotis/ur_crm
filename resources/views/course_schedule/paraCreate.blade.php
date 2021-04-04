@@ -29,7 +29,7 @@ $courses_json = json_encode($courses);
                                 <th>料金</th>
                                 <td>
                                     <div class="inputUnits">
-                                        <input class="formInput inputUnit" type="number" name="price" id="price" placeholder="360000" step="100" >円
+                                        <input class="formInput inputUnit" type="number" name="price" id="price" placeholder="19800" step="100" >円
                                     </div>
                                 </td>
                             </tr>
@@ -37,7 +37,7 @@ $courses_json = json_encode($courses);
                                 <th>実施日時</th>
                                 <td>
                                     <input class="formInput" type="date" name="date" id="date" min="<?php echo date('Y-m-d',strtotime("+5 day"));?>">
-                                    <input class="formInput" type="time" name="time" id="time" >
+                                    <input class="formInput" type="time" name="time" id="time" step="300" >
                                     <span class="support" id="support" style="display:none;"></span>
                                 </td>
                             </tr>
@@ -67,10 +67,11 @@ $courses_json = json_encode($courses);
                                 <th>公開日</th>
                                 <td>
                                     <div class="inputOpenDateTime">
-                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" >から
+                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" min="<?php echo date('Y-m-d',strtotime("-1 day"));?>T00:00" >から
                                     </div>
                                     <div class="inputOpenDateTime">
                                         公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" >まで
+                                        
                                     </div>
                                 </td>
                             </tr>

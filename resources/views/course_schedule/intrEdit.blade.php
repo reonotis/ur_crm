@@ -17,7 +17,11 @@
                             </tr>
                             <tr>
                                 <th>料金</th>
-                                <td><input type="text" class="formInput" name="price" value="{{ $intr_course->price }}"></td>
+                                <td>
+                                    <div class="inputUnits">
+                                    <input class="formInput inputUnit" type="number" name="price" value="{{ $intr_course->price }}" placeholder="360000" step="100" required >円
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>実施日時</th>
@@ -49,6 +53,18 @@
                             <tr>
                                 <th>詳細</th>
                                 <td><textarea name="comment" placeholder="詳細" class="formInput" >{{ $intr_course -> comment }}</textarea></td>
+                            </tr>
+                            <tr>
+                                <th>公開期間</th>
+                                <td>
+                                    <div class="inputOpenDateTime">
+                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" value="{{ $intr_course->open_start_day->format('Y-m-d').'T'.$intr_course->open_start_day->format('H:i') }}" min="<?php echo date('Y-m-d',strtotime("-1 day"));?>T00:00" >から
+                                    </div>
+                                    <div class="inputOpenDateTime">
+                                        公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" value="{{ $intr_course->open_finish_day->format('Y-m-d').'T'.$intr_course->open_finish_day->format('H:i') }}" >まで
+                                        
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">

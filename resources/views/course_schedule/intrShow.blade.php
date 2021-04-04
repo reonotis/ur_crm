@@ -23,25 +23,25 @@
                         <tr>
                             <th>実施日時</th>
                             <td>
-                                1回目　{{$CourseScheduleList->date1->format('Y/m/d')}}　{{$CourseScheduleList->time1}}<br>
-                                2回目　{{$CourseScheduleList->date2->format('Y/m/d')}}　{{$CourseScheduleList->time2}}<br>
-                                3回目　{{$CourseScheduleList->date3->format('Y/m/d')}}　{{$CourseScheduleList->time3}}<br>
-                                4回目　{{$CourseScheduleList->date4->format('Y/m/d')}}　{{$CourseScheduleList->time4}}<br>
-                                5回目　{{$CourseScheduleList->date5->format('Y/m/d')}}　{{$CourseScheduleList->time5}}<br>
+                                <div class="inputDateTime">1回目　{{$CourseScheduleList->date1->format('Y/m/d H:i')}}~</div>
+                                <div class="inputDateTime">2回目　{{$CourseScheduleList->date2->format('Y/m/d H:i')}}~</div>
+                                <div class="inputDateTime">3回目　{{$CourseScheduleList->date3->format('Y/m/d H:i')}}~</div>
+                                <div class="inputDateTime">4回目　{{$CourseScheduleList->date4->format('Y/m/d H:i')}}~</div>
+                                <div class="inputDateTime">5回目　{{$CourseScheduleList->date5->format('Y/m/d H:i')}}~</div>
                                 @if($CourseScheduleList->date6)
-                                    6回目　{{$CourseScheduleList->date6->format('Y/m/d')}}　{{$CourseScheduleList->time6}}<br>
+                                    <div class="inputDateTime">6回目　{{$CourseScheduleList->date6->format('Y/m/d H:i')}}~</div>
                                 @endif
                                 @if($CourseScheduleList->date7)
-                                    7回目　{{$CourseScheduleList->date7->format('Y/m/d')}}　{{$CourseScheduleList->time7}}<br>
+                                    <div class="inputDateTime">7回目　{{$CourseScheduleList->date7->format('Y/m/d H:i')}}~</div>
                                 @endif
                                 @if($CourseScheduleList->date8)
-                                    8回目　{{$CourseScheduleList->date8->format('Y/m/d')}}　{{$CourseScheduleList->time8}}<br>
+                                    <div class="inputDateTime">8回目　{{$CourseScheduleList->date8->format('Y/m/d H:i')}}~</div>
                                 @endif
                                 @if($CourseScheduleList->date9)
-                                    9回目　{{$CourseScheduleList->date9->format('Y/m/d')}}　{{$CourseScheduleList->time9}}<br>
+                                    <div class="inputDateTime">9回目　{{$CourseScheduleList->date9->format('Y/m/d H:i')}}~</div>
                                 @endif
                                 @if($CourseScheduleList->date10)
-                                    10回目　{{$CourseScheduleList->date10->format('Y/m/d')}}　{{$CourseScheduleList->time10}}<br>
+                                    <div class="inputDateTime">10回目　{{$CourseScheduleList->date10->format('Y/m/d H:i')}}~</div>
                                 @endif
                             </td>
                         </tr>
@@ -62,10 +62,6 @@
                             <td>{!! nl2br(e($intr_course -> comment)) !!}</td>
                         </tr>
                         <tr>
-                            <th>状態</th>
-                            <td>{{ $intr_course->approval_name }}</td>
-                        </tr>
-                        <tr>
                             <th>公開期間</th>
                             <td>{{$intr_course->open_start_day->format('Y/m/d H:i') }}　～　{{$intr_course->open_finish_day->format('Y/m/d H:i') }}</td>
                         </tr>
@@ -79,20 +75,22 @@
                                 </td>
                             </tr>
                         @endif
-                        @if($intr_course->approval_name == 0 || $intr_course->approval_name == 1 )
+                        <tr>
+                            <th>状態</th>
+                            <td>{{ $intr_course->approval_name }}</td>
+                        </tr>
                         <tr>
                             <td colspan="2">
-                                @if($intr_course->approval_flg < 5)
+                                @if($intr_course->approval_flg <= 2)
                                     <a href="{{route('courseSchedule.intrDelete', ['id' => $intr_course->id ])}}">
                                         <button class="btn btn-outline-danger" onClick="return confilmDelete()">申請を中止して削除する</button>
                                     </a>
+                                @endif
                                     <a href="{{route('courseSchedule.intrEdit', ['id' => $intr_course->id ])}}">
                                         <button class="btn btn-outline-success" >申請内容を修正する</button>
                                     </a>
-                                @endif
                             </td>
                         </tr>
-                        @endif
                     </table>
                 </div>
             </div>

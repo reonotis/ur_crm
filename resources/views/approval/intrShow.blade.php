@@ -27,11 +27,11 @@
                         <tr>
                             <th>開催日程</th>
                             <td>
-                                1回目{{ $courseScheduleList->date1->format('Y/m/d') }}～<br>
-                                2回目{{ $courseScheduleList->date2->format('Y/m/d') }}～<br>
-                                3回目{{ $courseScheduleList->date3->format('Y/m/d') }}～<br>
-                                4回目{{ $courseScheduleList->date4->format('Y/m/d') }}～<br>
-                                5回目{{ $courseScheduleList->date5->format('Y/m/d') }}～<br>
+                                1回目　{{ $courseScheduleList->date1->format('Y/m/d') }}～<br>
+                                2回目　{{ $courseScheduleList->date2->format('Y/m/d') }}～<br>
+                                3回目　{{ $courseScheduleList->date3->format('Y/m/d') }}～<br>
+                                4回目　{{ $courseScheduleList->date4->format('Y/m/d') }}～<br>
+                                5回目　{{ $courseScheduleList->date5->format('Y/m/d') }}～<br>
                                 @if($courseScheduleList->date6)
                                     6回目　{{$courseScheduleList->date6->format('Y/m/d')}}<br>
                                 @endif
@@ -69,7 +69,7 @@
                         </tr>
                         <tr>
                             <th>公開期間</th>
-                            <td>{{$para_course->open_start_day->format('Y/m/d H:i') }}　～　{{$para_course->open_finish_day->format('Y/m/d H:i') }}</td>
+                            <td>{{$courseSchedule->open_start_day->format('Y/m/d H:i') }}　～　{{$courseSchedule->open_finish_day->format('Y/m/d H:i') }}</td>
                         </tr>
                         @if( count($ApprovalComments) >= 1)
                             <tr>
