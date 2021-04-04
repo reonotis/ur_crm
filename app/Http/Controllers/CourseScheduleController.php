@@ -270,7 +270,7 @@ class CourseScheduleController extends Controller
             $CS->open_start_day  = $CST->open_start_day ;
             $CS->open_finish_day = $CST->open_finish_day ;
             $CS->save();
-
+            
             $course = Course::find($CST->course_id);
             $data = [
                 "instructor" => $this->_user->name,
@@ -297,7 +297,7 @@ class CourseScheduleController extends Controller
     /**
      *イントラ養成コースの登録
      */
-    public function intrStore($id){
+    public function intrStore(){
         try{
             // イントラスケジュールリストを取得
             list($CST, $CSLT) = $this->getIntrCourseScheduleListTransactions();
@@ -331,6 +331,19 @@ class CourseScheduleController extends Controller
             $CSL->date9   = $CSLT->date9 ;
             $CSL->date10  = $CSLT->date10 ;
             $CSL->save();
+
+            $course = Course::find($CST->course_id);
+            $data = [
+                "instructor" => $this->_user->name,
+                "course"     => $course->course_name,
+                "url"        => url('').'/approval/index'
+            ];
+            Mail::send('emails.applicationAccepted', $data, function($message){
+                $message->to($this->_toInfo, 'Test')
+                ->cc($this->_toAkemi)
+                ->bcc($this->_toReon)
+                ->subject('事務局にスケジュールの申請がありました');
+            });
 
             // トランザクションを削除
             $this->deleteTransactions();
