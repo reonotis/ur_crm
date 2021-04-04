@@ -9,7 +9,6 @@ use App\Models\CourseScheduleList;
 use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
 class ApprovalController extends Controller
@@ -46,7 +45,6 @@ class ApprovalController extends Controller
         ->get();
 
         $CourseSchedule = CheckCouses::setApprovalNames($CourseSchedule);
-        // Mail::to('fujisawareon@yahoo.co.jp')->send(new OrderShipped());
 
         return view('approval.index', ['courseSchedules' => $CourseSchedule]);
         

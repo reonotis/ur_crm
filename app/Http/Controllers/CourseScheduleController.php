@@ -11,6 +11,7 @@ use App\Models\CourseSchedule;
 use App\Models\CourseScheduleList;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class CourseScheduleController extends Controller
 {
@@ -18,6 +19,8 @@ class CourseScheduleController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
+    private $_toAkemi ;
+    private $_toInfo ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -27,6 +30,8 @@ class CourseScheduleController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
+            $this->_toAkemi = config('mail.toAkemi');
+            $this->_toInfo = config('mail.toInfo');
             return $next($request);
         });
     }
@@ -245,6 +250,7 @@ class CourseScheduleController extends Controller
      */
     public function paraStore(){
         try {
+
             $CST = CourseScheduleTransactions::where('instructor_id', '=', $this->_auth_id )->first();
             if(empty($CST))throw new \Exception("不正なaccessです");
 
@@ -261,7 +267,20 @@ class CourseScheduleController extends Controller
             $CS->approval_flg    = 2 ;
             $CS->open_start_day  = $CST->open_start_day ;
             $CS->open_finish_day = $CST->open_finish_day ;
-            $CS->save();
+            // $CS->save();
+            
+            $course = Course::find($CST->course_id);
+            $data = [
+                "instructor" => $this->_user->name,
+                "course"     => $course->course_name,
+                "url"        => url('').'/approval/index'
+
+            ];
+            Mail::send('emails.applicationAccepted', $data, function($message){
+                $message->to($this->_toInfo, 'Test')
+                ->cc($this->_toAkemi)
+                ->subject('申請がありました');
+            });
 
             $this->deleteTransactions();
             session()->flash('msg_success', '申請が完了しました');
