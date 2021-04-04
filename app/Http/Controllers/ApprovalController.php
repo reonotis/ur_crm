@@ -10,6 +10,7 @@ use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mail;
 
 class ApprovalController extends Controller
 {
@@ -18,6 +19,9 @@ class ApprovalController extends Controller
     protected $_auth_id ;
     protected $_auth_authority_id ;
     public $_backslash = '\\';
+    private $_toAkemi ;
+    private $_toInfo ;
+    private $_toReon ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -27,6 +31,9 @@ class ApprovalController extends Controller
             if($this->_auth_authority_id >= 7){
                 dd("権限がありません。");
             }
+            $this->_toAkemi = config('mail.toAkemi');
+            $this->_toInfo = config('mail.toInfo');
+            $this->_toReon = config('mail.toReon');
             return $next($request);
         });
     }
@@ -54,7 +61,7 @@ class ApprovalController extends Controller
 
     /**
      *渡されたIDのスケジュールを確認し、パラコースか、養成コースの確認画面を表示する
-     */
+    */
     public function confilm($id){
         try {
             $PCS = CourseSchedule::find($id);
@@ -175,18 +182,48 @@ class ApprovalController extends Controller
             $IAC->course_schedules_id = $id;
             $IAC->comment = $request->appComment;
             $IAC->save();
+
             $course_schedules = CourseSchedule::find($id );
+            $course = Course::find($course_schedules->course_id);
+            $intr = DB::table('users')->find($course_schedules->instructor_id);
 
             if($request->NG){
                 $course_schedules->approval_flg = 1 ;
                 $course_schedules->save() ;
                 session()->flash('msg_success', '申請を差し戻しました');
+                $data = [
+                    "instructor"  => $intr->name,
+                    "result"      => '差し戻されました',
+                    "result2"     => 'システムにログインした後、削除・もしくは再申請を行ってください。',
+                    "course"      => $course->course_name,
+                    "comment"     => $request->appComment,
+                    "url"         => url('').'/courseSchedule/index'
+                ];
+                Mail::send('emails.scheduleApplicationResult', $data, function($message){
+                    $message->to($this->_toReon)
+                    ->cc($this->_toInfo)
+                    ->bcc($this->_toReon)
+                    ->subject('スケジュールが差し戻されました');
+                });
             }
-
             if($request->OK){
                 $course_schedules->approval_flg = 5 ;
-                $course_schedules->save() ;
+                // $course_schedules->save() ;
                 session()->flash('msg_success', '承認しました');
+                $data = [
+                    "instructor"  => $intr->name,
+                    "result"      => '承認されました',
+                    "result2"     => 'パラリンビクスHPの開催日程一覧に、あなたのスケジュールが掲載されました'."\n".'引き続き集客にご尽力ください',
+                    "course"      => $course->course_name,
+                    "comment"     => $request->appComment,
+                    "url"         => 'https://paralymbics.jp/schedules/'
+                ];
+                Mail::send('emails.scheduleApplicationResult', $data, function($message){
+                    $message->to($this->_toReon)
+                    ->cc($this->_toInfo)
+                    ->bcc($this->_toReon)
+                    ->subject('スケジュールが承認されました');
+                });
             }
             return redirect()->action('ApprovalController@index');
         } catch (\Throwable $e) {

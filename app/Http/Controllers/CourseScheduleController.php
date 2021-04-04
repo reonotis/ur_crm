@@ -21,6 +21,7 @@ class CourseScheduleController extends Controller
     private $_auth_authority_id ;   //権限
     private $_toAkemi ;
     private $_toInfo ;
+    private $_toReon ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -32,6 +33,7 @@ class CourseScheduleController extends Controller
             }
             $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
+            $this->_toReon = config('mail.toReon');
             return $next($request);
         });
     }
@@ -267,19 +269,19 @@ class CourseScheduleController extends Controller
             $CS->approval_flg    = 2 ;
             $CS->open_start_day  = $CST->open_start_day ;
             $CS->open_finish_day = $CST->open_finish_day ;
-            // $CS->save();
-            
+            $CS->save();
+
             $course = Course::find($CST->course_id);
             $data = [
                 "instructor" => $this->_user->name,
                 "course"     => $course->course_name,
                 "url"        => url('').'/approval/index'
-
             ];
             Mail::send('emails.applicationAccepted', $data, function($message){
                 $message->to($this->_toInfo, 'Test')
                 ->cc($this->_toAkemi)
-                ->subject('申請がありました');
+                ->bcc($this->_toReon)
+                ->subject('事務局にスケジュールの申請がありました');
             });
 
             $this->deleteTransactions();

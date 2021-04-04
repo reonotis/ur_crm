@@ -135,5 +135,6 @@ return [
 
     'toAkemi' => 'fujisawareon@yahoo.co.jp',
     'toInfo' => 'fujisawareon@yahoo.co.jp',
+    'toReon' => 'fujisawareon@yahoo.co.jp',
 
 ];
