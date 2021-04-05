@@ -114,7 +114,7 @@ class ScheduleController extends Controller
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
 
-        dd($DATE);
+        dd($month);
         $NISSUU = (date('t', strtotime($DATE)));
         $query = CustomerSchedule::select(DB::raw('count(*) as customer_count'), 'customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
             ->leftJoin('customers', 'customers.id', '=', 'customer_schedules.customer_id')
