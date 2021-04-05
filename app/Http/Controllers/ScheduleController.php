@@ -110,6 +110,7 @@ class ScheduleController extends Controller
      */
     public function list()
     {
+        dd("2");
         $DATE = date('Y-m-d');
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
