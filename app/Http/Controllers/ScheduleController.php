@@ -119,8 +119,8 @@ class ScheduleController extends Controller
             ->leftJoin('customers', 'customers.id', '=', 'customer_schedules.customer_id')
             ->leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_schedules.course_schedules_id')
             ->leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id')
-            ->where('customer_schedules.date', 'LIKE', $month.'%' )
-            ->groupBy(['customer_schedules.date','customer_schedules.course_schedules_id'])
+            // ->where('customer_schedules.date', 'LIKE', $month.'%' )
+            // ->groupBy(['customer_schedules.date','customer_schedules.course_schedules_id'])
             ->orderByRaw('customer_schedules.date asc, customer_schedules.time asc, customer_schedules.howMany asc');
         if( $this->_auth_authority_id >= 7){
             $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
