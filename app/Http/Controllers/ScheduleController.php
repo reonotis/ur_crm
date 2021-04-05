@@ -126,7 +126,6 @@ class ScheduleController extends Controller
             $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
         }
 
-        dd($query);
         $schedules = $query->get();
         $monthData = [];
         $day = 1;
