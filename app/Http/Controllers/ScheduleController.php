@@ -114,6 +114,7 @@ class ScheduleController extends Controller
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
 
+        dd($DATE);
         $NISSUU = (date('t', strtotime($DATE)));
         $query = CustomerSchedule::select(DB::raw('count(*) as customer_count'), 'customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
             ->leftJoin('customers', 'customers.id', '=', 'customer_schedules.customer_id')
@@ -126,7 +127,6 @@ class ScheduleController extends Controller
             $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
         }
         $schedules = $query->get();
-        dd($schedules);
         $monthData = [];
         $day = 1;
         for($i = 0; $i < $NISSUU; $i++){
