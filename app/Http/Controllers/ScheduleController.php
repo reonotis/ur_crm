@@ -35,7 +35,7 @@ class ScheduleController extends Controller
      */
     public function index(){
         $DATE = date('Y-m-d');
-        return redirect()->action('ScheduleController@list', ['DATE' => $DATE ] );
+        return redirect()->action('ScheduleController@list' );
     }
 
     /**
@@ -108,25 +108,41 @@ class ScheduleController extends Controller
      * スケジュールのリストを表示します
      *
      */
-    public function list($DATE)
+    public function list()
     {
+        $DATE = date('Y-m-d');
         $month = substr($DATE, 0, 7);
+        if(isset($_GET['month']))$month = $_GET['month'];
 
-        $query = CustomerSchedule::select('customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
-            ->leftJoin('customers', 'customer_schedules.customer_id', '=', 'customers.id')
-            ->leftJoin('courses', 'customer_schedules.course_schedules_id', '=', 'courses.id')
-            ->where('customer_schedules.date', 'LIKE', '$month%' )
-            ->orderByRaw('customer_schedules.date desc, customer_schedules.time desc, customer_schedules.howMany desc');
-
-            // dd($query);
+        $NISSUU = (date('t', strtotime($DATE)));
+        $query = CustomerSchedule::select(DB::raw('count(*) as customer_count'), 'customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
+            ->leftJoin('customers', 'customers.id', '=', 'customer_schedules.customer_id')
+            ->leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_schedules.course_schedules_id')
+            ->leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id')
+            ->where('customer_schedules.date', 'LIKE', $month.'%' )
+            ->GroupBy(['customer_schedules.date','customer_schedules.course_schedules_id'])
+            ->orderByRaw('customer_schedules.date asc, customer_schedules.time asc, customer_schedules.howMany asc');
         if( $this->_auth_authority_id >= 7){
             $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
         }
         $schedules = $query->get();
-        // $schedules = $this->changeTypes($schedules);
-        // dd($schedules);
+        $monthData = [];
+        $day = 1;
+        for($i = 0; $i < $NISSUU; $i++){
+            $monthData[$i]['date'] = date('Y年m月d日', strtotime( $month ."-" . sprintf('%02d', $day)));
+            $monthData[$i]['week'] = date('D', strtotime( $month ."-" . sprintf('%02d', $day)));
 
-        return view('schedule.list', ['schedules' => $schedules]);
+            foreach( $schedules as $schedule){
+                if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
+                    $monthData[$i]['schedules'][] = $schedule;
+                    // echo "<pre>";
+                    // var_dump($monthData[$i]['date'] );
+                    // echo "</pre>";
+                }
+            }
+            $day ++;
+        }
+        return view('schedule.list', [ 'month' => $month, 'monthData' => $monthData]);
     }
 
 

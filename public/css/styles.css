@@ -264,6 +264,18 @@ label {
 .inputMonth, .inputDay{
 	width :70px;
 }
+
+.inputYearMonths{
+	margin-bottom :5px;
+	width : 250px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputYearMonth{
+	width :170px;
+}
 .inputZips{
 	margin-bottom :5px;
 	width : 180px;
@@ -639,6 +651,40 @@ table.customerSearchTable{
 }
 
 
+.calendarTable{
+	width :100%;
+	max-width: 1200px;
+	margin : 0 0 20px;
+}
+.calendarTable th{
+	background: var(--info);
+	font-size: 1.1em;
+	color :#fff;
+	padding : 10px ;
+	border-right : solid 1px #fff;
+}
+.calendarTable th:nth-of-type(1) {
+	border-left : solid 1px var(--info);
+}
+.calendarTable th:nth-of-type(3) {
+	border-right : solid 1px var(--info);
+}
+.calendarTable tr.SatRows{
+	background:#eaf0ff;
+}
+.calendarTable tr.SunRows{
+	background:#fde2e2;
+}
+.calendarTable td{
+	padding :10px 10px 5px ;
+	border-bottom :solid 1px var(--primary);
+}
+.calendarTable td{
+	border-right : solid 1px var(--info);
+}
+.calendarTable td:nth-of-type(1) {
+	border-left : solid 1px var(--info);
+}
 
 
 

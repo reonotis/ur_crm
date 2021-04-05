@@ -3,40 +3,46 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">スケジュール</div>
-                <div class="card-body">
-                    <table class="scheduleListTable">
-                        <thead>
-                            <tr>
-                                <th>日時</th>
-                                <th>お客様名</th>
-                                <th>開催コース</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($schedules as $schedule)
-                            <!-- <?php var_dump( $schedule->date ) ?> -->
-                                <tr>
-                                    <td>
-                                        {{ $schedule->date->format('Y年m月d日') }}
-                                        {{ date('H:i', strtotime($schedule->time)) }}～
-                                    </td>
-                                    <td>
-                                        <a href="{{route('customer.display', $schedule->customer_id  )}}">{{ $schedule->customerName }}様</a>
-                                    </td>
-                                    <td>
-                                        {{ $schedule->course_name }}
-                                        {{ $schedule->howMany}}回目
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+<div class="coursesErea" >
+        <h4>スケジュール</h4>
+        <form action="" method="{{route('schedule.list')}}">
+            <div class="inputYearMonths">
+                <input type="month" name="month" class="formInput inputYearMonth" value="<?= $month ?>" >
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">更新</button>
             </div>
-        </div>
+        </form>
+
+        <table class="calendarTable">
+            <tr>
+                <th>日付</th>
+                <th>曜日</th>
+                <th>スケジュール (申し込み人数)</th>
+            </tr>
+            @foreach ($monthData as $dayData)
+                <tr <?php if($dayData['week'] == 'Sun'){
+                    echo " class='SunRows' " ;
+                }else if($dayData['week'] == 'Sat'){
+                    echo " class='SatRows' " ;
+
+                } 
+
+                ?> >
+                    <td>{{ $dayData['date'] }}</td>
+                    <td>{{ $dayData['week'] }}</td>
+                    <td>
+                        <?php
+                            if(isset($dayData['schedules'])){
+                                foreach($dayData['schedules'] as $schedule){
+                                    echo $schedule->course_name ."　(". $schedule->customer_count . "名)<br>";
+                                }
+                            }
+                        ?>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+</div>
+
     </div>
 </div>
 @endsection
