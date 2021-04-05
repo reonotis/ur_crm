@@ -110,7 +110,6 @@ class ScheduleController extends Controller
      */
     public function list()
     {
-        dd("2");
         $DATE = date('Y-m-d');
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
@@ -127,6 +126,7 @@ class ScheduleController extends Controller
             $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
         }
         $schedules = $query->get();
+        dd($schedules);
         $monthData = [];
         $day = 1;
         for($i = 0; $i < $NISSUU; $i++){
@@ -136,9 +136,6 @@ class ScheduleController extends Controller
             foreach( $schedules as $schedule){
                 if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
                     $monthData[$i]['schedules'][] = $schedule;
-                    // echo "<pre>";
-                    // var_dump($monthData[$i]['date'] );
-                    // echo "</pre>";
                 }
             }
             $day ++;
