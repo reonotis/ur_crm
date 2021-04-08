@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApprovalComments;
-use Illuminate\Http\Request;
 use App\Models\Course;
-use App\Models\CourseScheduleTransactions;
-use App\Models\CourseScheduleListTransactions;
 use App\Models\CourseSchedule;
-use App\Models\CourseScheduleList;
+use App\Models\CourseScheduleWhens;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Mail;
@@ -43,25 +41,31 @@ class CourseScheduleController extends Controller
      */
     public function index(){
         // パラリンコースを取得
-        $para_course_schedules = CourseSchedule::select('course_schedules.*','users.name','courses.course_name')
+        $para_course_schedules = CourseSchedule::select('course_schedules.*','users.name','courses.course_name','course_schedule_whens.date as dataTime')
             ->where('course_schedules.delete_flag', NULL)
             ->where('course_schedules.course_id', '<>' , 6)
             ->where('course_schedules.instructor_id', $this->_auth_id )
             ->join('users', 'users.id', '=', 'course_schedules.instructor_id')
             ->join('courses', 'courses.id', '=', 'course_schedules.course_id')
+            ->join('course_schedule_whens', 'course_schedule_whens.course_schedules_id', '=', 'course_schedules.id')
             ->get();
         if($para_course_schedules){
             $para_course_schedules = $this->getApprovalNames($para_course_schedules);
         }
 
         // 養成コースを取得
-        $intr_course_schedules = CourseSchedule::select('course_schedules.*','users.name','courses.course_name','course_schedule_lists.course_title')
-        ->where('course_schedules.delete_flag', NULL)
+        $subQuery = CourseScheduleWhens::whereIn('date', function($query) {
+            $query->select(DB::raw('min(date) As date'))->from('course_schedule_whens')->groupBy('course_schedules_id')->where( 'course_schedule_whens.date', '>=' ,date('Y-m-d H:i:s'));
+        });
+        // サブクエリをJOINします
+        $intr_course_schedules = CourseSchedule::select('course_schedules.*', 'course_schedule_whens.date', 'course_schedule_whens.howMany' )
+        ->joinSub($subQuery, 'course_schedule_whens', function ($join) {
+            $join->on('course_schedule_whens.course_schedules_id', '=', 'course_schedules.id');
+        })
         ->where('course_schedules.course_id', 6)
+        ->where('course_schedules.delete_flag', NULL)
         ->where('course_schedules.instructor_id', $this->_auth_id )
-        ->join('users', 'users.id', '=', 'course_schedules.instructor_id')
-        ->join('courses', 'courses.id', '=', 'course_schedules.course_id')
-        ->join('course_schedule_lists', 'course_schedule_lists.id', '=', 'course_schedules.id')
+        ->orderBy('course_schedule_whens.date','asc')
         ->get();
 
         // 養成コースを取得course_name
@@ -112,9 +116,9 @@ class CourseScheduleController extends Controller
      */
     public function paraCreate (){
         // コース一覧を取得する
-        $coursesQuery = Course::query();
-        $coursesQuery -> where('courses.delete_flag','=','0');
-        $coursesQuery -> where('courses.parent_id','=','1');
+        $coursesQuery = Course::query()
+            -> where('courses.delete_flag','=','0')
+            -> where('courses.parent_id','=','1');
         $courses = $coursesQuery -> get();
         return view('course_schedule.paraCreate', compact( 'courses'));
     }
@@ -132,31 +136,8 @@ class CourseScheduleController extends Controller
      */
     public function paraConfilm(Request $request){
         try{
-            $instructor_id = $this->_auth_id;
-            // 一度、トランザクションテーブルを物理削除する
-            $this->deleteTransactions();
-
-            // リクエストをトランザクションに登録
-            $CSTran = new CourseScheduleTransactions;
-            $CSTran -> instructor_id = $instructor_id ;
-            $CSTran -> course_id     = $request->input('course_id');
-            $CSTran -> date          = $request->input('date');
-            $CSTran -> time          = $request->input('time');
-            $CSTran -> price         = $request->input('price');
-            $CSTran -> erea          = $request->input('erea');
-            $CSTran -> venue         = $request->input('venue');
-            $CSTran -> notices       = $request->input('notices');
-            $CSTran -> comment       = $request->input('comment');
-            $CSTran -> open_start_day  = date("Y-m-d H:i:00", strtotime($request->open_start_day));
-            $CSTran -> open_finish_day = date("Y-m-d H:i:00", strtotime($request->open_finish_day));
-            $CSTran -> save();
-
-            $CSTQuery = CourseScheduleTransactions::select('course_schedule_transactions.*','courses.course_name')
-            ->where('instructor_id', '=', $instructor_id )
-            ->join('courses','courses.id','=','course_schedule_transactions.course_id');
-            $CST = $CSTQuery -> first();
-            return view('course_schedule.paraConfilm', ['CST' => $CST]);
-
+            $courses = Course::find($request->course_id);
+            return view('course_schedule.paraConfilm', ['request' => $request, 'courses' => $courses]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->action('CourseScheduleController@index');
@@ -168,16 +149,7 @@ class CourseScheduleController extends Controller
      */
     public function intrConfilm(Request $request){
         try{
-            $auth = Auth::user();
-            $instructor_id = $auth->id;
-            // トランザクションに残っている自分のレコードをを物理削除する
-            $this->deleteTransactions();
-
-            // リクエストをトランザクションに登録
-            list($CST , $last_insert_id) = $this->insert_CourseScheduleTransactions(6, $request);
-            $CSLT = $this->insert_CourseScheduleListTransactions($last_insert_id, $request);
-
-            return view('course_schedule.intrConfilm', ['CST' => $CST, 'CSLT' => $CSLT ]);
+            return view('course_schedule.intrConfilm', ['request' => $request ]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return view('course_schedule.intrCreate');
@@ -185,93 +157,32 @@ class CourseScheduleController extends Controller
     }
 
     /**
-     * リクエストをトランザクションに登録
-     * return トランザクション
-     * return トランID
-     */
-    public function insert_CourseScheduleTransactions($course_id, $request){
-        $CST = new CourseScheduleTransactions;
-        $CST -> instructor_id = $this->_auth_id ;
-        $CST -> course_id     = 6;
-        $CST -> date          = date("Y-m-d", strtotime($request->date1));
-        $CST -> time          = date("H:i:00", strtotime($request->date1));
-        $CST -> price         = $request->input('price');
-        $CST -> erea          = $request->input('erea');
-        $CST -> venue         = $request->input('venue');
-        $CST -> notices       = $request->input('notices');
-        $CST -> comment       = $request->input('comment');
-        if($request->open_start_day){
-            $CST -> open_start_day  = date("Y-m-d H:i:00", strtotime($request->open_start_day));
-        }
-        if($request->open_finish_day){
-            $CST -> open_finish_day = date("Y-m-d H:i:00", strtotime($request->open_finish_day));
-        }
-        $CST -> save();
-        $last_insert_id = $CST->id;
-        return [$CST , $last_insert_id];
-
-
-    }
-
-    /**
-     * リクエストをイントラスケジュールトランザクションに登録
-     * return トランザクション
-     */
-    public function insert_CourseScheduleListTransactions($last_insert_id, $request){
-        $CSLT = new CourseScheduleListTransactions;
-        $CSLT->id   = $last_insert_id;
-        $CSLT->course_title=$request->course_title ;
-        $CSLT->date1  = date("Y-m-d H:i:00", strtotime($request->date1));
-        $CSLT->date2  = date("Y-m-d H:i:00", strtotime($request->date2));
-        $CSLT->date3  = date("Y-m-d H:i:00", strtotime($request->date3));
-        $CSLT->date4  = date("Y-m-d H:i:00", strtotime($request->date4));
-        $CSLT->date5  = date("Y-m-d H:i:00", strtotime($request->date5));
-        if($request->date6){
-            $CSLT->date6  = date("Y-m-d H:i:00", strtotime($request->date6));
-        }
-        if($request->date7){
-            $CSLT->date7  = date("Y-m-d H:i:00", strtotime($request->date7));
-        }
-        if($request->date8){
-            $CSLT->date8  = date("Y-m-d H:i:00", strtotime($request->date8));
-        }
-        if($request->date9){
-            $CSLT->date9  = date("Y-m-d H:i:00", strtotime($request->date9));
-        }
-        if($request->date10){
-            $CSLT->date10  = date("Y-m-d H:i:00", strtotime($request->date10));
-        }
-        $CSLT->save();
-
-        return $CSLT;
-
-    }
-
-    /**
      * パラリンビクス講座を登録する
      */
-    public function paraStore(){
+    public function paraStore(Request $request){
         try {
-
-            $CST = CourseScheduleTransactions::where('instructor_id', '=', $this->_auth_id )->first();
-            if(empty($CST))throw new \Exception("不正なaccessです");
-
             $CS = new CourseSchedule;
-            $CS->date     = $CST->date ;
-            $CS->time     = $CST->time ;
-            $CS->instructor_id  = $CST->instructor_id ;
-            $CS->course_id      = $CST->course_id ;
-            $CS->erea     = $CST->erea ;
-            $CS->venue    = $CST->venue ;
-            $CS->price    = $CST->price ;
-            $CS->notices  = $CST->notices ;
-            $CS->comment  = $CST->comment ;
+            $CS->instructor_id  = $this->_auth_id ;
+            $CS->course_id      = $request->course_id ;
+            $CS->erea     = $request->erea ;
+            $CS->venue    = $request->venue ;
+            $CS->price    = $request->price ;
+            $CS->notices  = $request->notices ;
+            $CS->comment  = $request->comment ;
             $CS->approval_flg    = 2 ;
-            $CS->open_start_day  = $CST->open_start_day ;
-            $CS->open_finish_day = $CST->open_finish_day ;
+            $CS->open_start_day = date( 'Y-m-d H:i:s', strtotime( $request->open_start_day ) )   ;
+            $CS->open_finish_day = date( 'Y-m-d H:i:s', strtotime( $request->open_finish_day ) )   ;
             $CS->save();
-            
-            $course = Course::find($CST->course_id);
+            $CS_id = $CS->id;
+
+            $CSW = new CourseScheduleWhens;
+            $CSW->course_schedules_id = $CS_id;
+            $CSW->instructor_id = $this->_auth_id;
+            $CSW->date = date( 'Y-m-d H:i:s', strtotime( substr($request->date, 0, 10)."T".$request->time ) )  ;
+            $CSW->howMany = 1;
+            $CSW->save();
+
+            $course = Course::find($CS->course_id);
             $data = [
                 "instructor" => $this->_user->name,
                 "course"     => $course->course_name,
@@ -284,7 +195,6 @@ class CourseScheduleController extends Controller
                 ->subject('事務局にスケジュールの申請がありました');
             });
 
-            $this->deleteTransactions();
             session()->flash('msg_success', '申請が完了しました');
 
         } catch (\Throwable $e) {
@@ -297,42 +207,36 @@ class CourseScheduleController extends Controller
     /**
      *イントラ養成コースの登録
      */
-    public function intrStore(){
+    public function intrStore(Request $request){
         try{
-            // イントラスケジュールリストを取得
-            list($CST, $CSLT) = $this->getIntrCourseScheduleListTransactions();
-
             $CS = new CourseSchedule;
-            $CS->date     = $CST->date ;
-            $CS->time     = $CST->time ;
-            $CS->instructor_id  = $CST->instructor_id ;
-            $CS->course_id      = $CST->course_id ;
-            $CS->erea     = $CST->erea ;
-            $CS->venue    = $CST->venue ;
-            $CS->price    = $CST->price ;
-            $CS->notices  = $CST->notices ;
-            $CS->comment  = $CST->comment ;
+            $CS->instructor_id  = $this->_auth_id ;
+            $CS->course_id      = 6 ;
+            $CS->course_title   = $request->course_title ;
+            $CS->erea     = $request->erea ;
+            $CS->venue    = $request->venue ;
+            $CS->price    = $request->price ;
+            $CS->notices  = $request->notices ;
+            $CS->comment  = $request->comment ;
             $CS->approval_flg    = 2 ;
-            $CS->open_start_day  = $CST->open_start_day ;
-            $CS->open_finish_day = $CST->open_finish_day ;
+            $CS->open_start_day = date( 'Y-m-d H:i:s', strtotime( $request->open_start_day ) )   ;
+            $CS->open_finish_day = date( 'Y-m-d H:i:s', strtotime( $request->open_finish_day ) )   ;
             $CS->save();
+            $CS_id = $CS->id;
 
-            $CSL = new CourseScheduleList;
-            $CSL->id      = $CS->id ;
-            $CSL->course_title = $CSLT->course_title ;
-            $CSL->date1   = $CSLT->date1 ;
-            $CSL->date2   = $CSLT->date2 ;
-            $CSL->date3   = $CSLT->date3 ;
-            $CSL->date4   = $CSLT->date4 ;
-            $CSL->date5   = $CSLT->date5 ;
-            $CSL->date6   = $CSLT->date6 ;
-            $CSL->date7   = $CSLT->date7 ;
-            $CSL->date8   = $CSLT->date8 ;
-            $CSL->date9   = $CSLT->date9 ;
-            $CSL->date10  = $CSLT->date10 ;
-            $CSL->save();
+            // 日程の登録
+            $this->storeCourseScheduleWhens($CS_id, $request->date1, 1);
+            $this->storeCourseScheduleWhens($CS_id, $request->date2, 2);
+            $this->storeCourseScheduleWhens($CS_id, $request->date3, 3);
+            $this->storeCourseScheduleWhens($CS_id, $request->date4, 4);
+            $this->storeCourseScheduleWhens($CS_id, $request->date5, 5);
+            if($request->date6) $this->storeCourseScheduleWhens($CS_id, $request->date6, 6);
+            if($request->date7) $this->storeCourseScheduleWhens($CS_id, $request->date7, 7);
+            if($request->date8) $this->storeCourseScheduleWhens($CS_id, $request->date8, 8);
+            if($request->date9) $this->storeCourseScheduleWhens($CS_id, $request->date9, 9);
+            if($request->date10) $this->storeCourseScheduleWhens($CS_id, $request->date10, 10);
 
-            $course = Course::find($CST->course_id);
+            $course = Course::find(6);
             $data = [
                 "instructor" => $this->_user->name,
                 "course"     => $course->course_name,
@@ -345,9 +249,6 @@ class CourseScheduleController extends Controller
                 ->subject('事務局にスケジュールの申請がありました');
             });
 
-            // トランザクションを削除
-            $this->deleteTransactions();
-
             session()->flash('msg_success', '申請が完了しました');
             return redirect()->action('CourseScheduleController@index');
         } catch (\Throwable $e) {
@@ -357,27 +258,16 @@ class CourseScheduleController extends Controller
     }
 
     /**
-     * ログインユーザーの[イントラコーススケジュールリスト]トランザクションを返す
+     * コースの日程を登録
      */
-    public function getIntrCourseScheduleListTransactions(){
-        $CST = CourseScheduleTransactions::where('instructor_id', '=', $this->_auth_id )->first();
-        if(empty($CST))throw new \Exception("この操作は禁止されています");
-        $CSLT = CourseScheduleListTransactions::find($CST ->id );
-        if(empty($CSLT))throw new \Exception("この操作は禁止されています");
-        return [$CST, $CSLT];
-    }
+    public function storeCourseScheduleWhens($CS_id, $dateTime, $howMany){
+        $CSW = new CourseScheduleWhens;
+        $CSW->course_schedules_id = $CS_id;
+        $CSW->instructor_id = $this->_auth_id;
+        $CSW->date = substr($dateTime, 0, 10)." ".substr($dateTime, 11, 5).":00" ;
+        $CSW->howMany = $howMany ;
+        $CSW->save();
 
-    /**
-     *トランザクションから、渡されたユーザーidで登録されているレコードを削除する
-     *
-     */
-    public function deleteTransactions(){
-        $data = DB::table('course_schedule_transactions')->where('instructor_id', '=', $this->_auth_id )->first();
-        if(!empty($data)){
-            $tran_id = $data->id;
-            DB::table('course_schedule_transactions')->where('id', $tran_id )->delete();
-            DB::table('course_schedule_list_transactions')->where('id', $tran_id )->delete();
-        }
     }
 
     /**
@@ -394,9 +284,11 @@ class CourseScheduleController extends Controller
             if($para_course->instructor_id <> $this->_auth_id )throw new \Exception("あなたのスケジュールではありません");
             if($para_course->course_id == 6 )throw new \Exception("表示しようとしているスケジュールはパラリンビクス講座ではありません");
 
+            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->get();
+
             $para_course = $this->getApprovalName($para_course);
             $ApprovalComments = ApprovalComments::where('course_schedules_id', $id )->get();
-            return view('course_schedule.paraShow', ['para_course' => $para_course, 'ApprovalComments'=> $ApprovalComments]);
+            return view('course_schedule.paraShow', ['para_course' => $para_course, 'courseScheduleWhens' => $courseScheduleWhens, 'ApprovalComments'=> $ApprovalComments]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -409,9 +301,8 @@ class CourseScheduleController extends Controller
     public function intrShow($id){
         try {
             // 養成コースを取得
-            $intr_course = CourseSchedule::select('course_schedules.*', 'courses.course_name', 'users.name')
+            $intr_course = CourseSchedule::select('course_schedules.*', 'courses.course_name')
             ->join('courses','courses.id','=','course_schedules.course_id')
-            ->join('users','users.id','=','course_schedules.instructor_id')
             ->find($id);
 
             // ユーザーのScheduleじゃなければ前の画面へ戻る
@@ -419,9 +310,9 @@ class CourseScheduleController extends Controller
             if($intr_course->course_id <> 6 )throw new \Exception("表示しようとしているスケジュールは養成講座ではありません");
             $intr_course = $this->getApprovalName($intr_course);
 
-            $CourseScheduleList = CourseScheduleList::find($id);
+            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->orderBy('howMany')->get();
             $ApprovalComments = ApprovalComments::where('course_schedules_id', $id )->get();
-            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'CourseScheduleList' => $CourseScheduleList, 'ApprovalComments' => $ApprovalComments ]);
+            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens, 'ApprovalComments' => $ApprovalComments ]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -434,13 +325,16 @@ class CourseScheduleController extends Controller
     public function paraEdit($id){
         try {
             $intr_course = CourseSchedule::find($id);
-            // 受理済みかの確認
             if($intr_course->instructor_id <> $this->_auth_id )throw new \Exception("あなたのスケジュールではありません");
             $courses = Course::where('parent_id',1)->get();
+
+            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->get();
+
+            // 受理済みかの確認
             if($intr_course->approval_flg == 5 ){
-                return view('course_schedule.paraEditReleaseSchedule', ['intr_course' => $intr_course, 'courses' => $courses]);
+                return view('course_schedule.paraEditReleaseSchedule', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens, 'courses' => $courses]);
             }
-            return view('course_schedule.paraEdit', ['intr_course' => $intr_course, 'courses' => $courses]);
+            return view('course_schedule.paraEdit', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens, 'courses' => $courses]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -454,14 +348,13 @@ class CourseScheduleController extends Controller
         try {
             $auth_id = Auth::user()->id;
             $intr_course = CourseSchedule::find($id);
-            $intr_schedule = CourseScheduleList::find($id);
+            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->orderBy('howMany')->get();
             // 受理済みかの確認
             if($intr_course->approval_flg == 5 ){
-                
-                return view('course_schedule.intrEditReleaseSchedule', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+                return view('course_schedule.intrEditReleaseSchedule', ['intr_course' => $intr_course,'courseScheduleWhens' => $courseScheduleWhens]);
             }
 
-            return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'intr_schedule' => $intr_schedule]);
+            return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -479,7 +372,6 @@ class CourseScheduleController extends Controller
             if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
             // 受理済みか削除されたデータじゃないか確認
             if($intr_course->approval_flg >= 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
-
             $intr_course->course_id= $request->course_id ;
             $intr_course->price= $request->price ;
             $intr_course->erea= $request->erea ;
@@ -490,6 +382,11 @@ class CourseScheduleController extends Controller
             $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
             $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
+
+            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->first();
+            $courseScheduleWhens->date = date("Y-m-d H:i:00", strtotime( $request->date .' '. $request->time));
+            $courseScheduleWhens->save();
+
 
             session()->flash('msg_success', '更新が完了しました');
             return redirect()->action('CourseScheduleController@index');
@@ -528,11 +425,10 @@ class CourseScheduleController extends Controller
      */
     public function intrUpdate(Request $request, $id){
         try {
-            $auth_id = Auth::user()->id;
+            // dd($request->date1);
             $intr_course = CourseSchedule::find($id);
-            $intr_schedule = CourseScheduleList::find($id);
             // 自分のスケジュールを更新しようとしているか確認
-            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            if($intr_course->instructor_id <> $this->_auth_id)throw new \Exception("不正な更新accessです");
             // 受理済みか削除されたデータじゃないか確認
             if($intr_course->approval_flg > 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
 
@@ -546,14 +442,40 @@ class CourseScheduleController extends Controller
             $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
 
-            $intr_schedule->course_title = $request->course_title ;
-            $intr_schedule->save();
+            $this->updateCourseScheduleWhens( $id, $request->date1 ,1);
+            $this->updateCourseScheduleWhens( $id, $request->date2 ,2);
+            $this->updateCourseScheduleWhens( $id, $request->date3 ,3);
+            $this->updateCourseScheduleWhens( $id, $request->date4 ,4);
+            $this->updateCourseScheduleWhens( $id, $request->date5 ,5);
+            $this->updateCourseScheduleWhens( $id, $request->date6 ,6);
+            $this->updateCourseScheduleWhens( $id, $request->date7 ,7);
+            $this->updateCourseScheduleWhens( $id, $request->date8 ,8);
+            $this->updateCourseScheduleWhens( $id, $request->date9 ,9);
+            $this->updateCourseScheduleWhens( $id, $request->date10 ,10);
 
             session()->flash('msg_success', '更新が完了しました');
             return redirect()->action('CourseScheduleController@index');
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * 養成コースに紐づくスケジュールを更新する
+     */
+    public function updateCourseScheduleWhens( $id, $requestDate, $howMany){
+        if($requestDate){
+            DB::table('course_schedule_whens')
+                ->updateOrInsert(
+                    ['course_schedules_id' => $id, 'howMany' => $howMany],
+                    ['date' => $requestDate, 'instructor_id' => $this->_auth_id ]
+                );
+        }else{
+            DB::table('course_schedule_whens')
+                ->where('course_schedules_id' , $id)
+                ->where('howMany', $howMany)
+                ->delete();
         }
     }
 
@@ -583,26 +505,25 @@ class CourseScheduleController extends Controller
     }
 
     /**
-     * delete 申請済みのイントラコースを削除
+     * delete 申請済みのパラリンビクスコースを削除
      */
-    public function intrDelete($id){
+    public function paraDelete($id){
         try {
-            $auth_id = Auth::user()->id;
-            $intr_course = CourseSchedule::find($id);
+            $para_course = CourseSchedule::find($id);
             // ユーザーのコースか確認
-            if( empty($intr_course) || $intr_course->instructor_id <> $auth_id )throw new \Exception("不正なaccessです");
+            if( empty($para_course) || $para_course->instructor_id <> $this->_auth_id )throw new \Exception("不正なaccessです");
 
             // コースのIDを取得
-            $intr_course_id = $intr_course->id;
+            $para_course_id = $para_course->id;
 
             // 取得したコースを論理削除
-            CourseSchedule::where('id', $intr_course_id)
+            CourseSchedule::where('id', $para_course_id)
             ->update([
                 'delete_flag' => 1
             ]);
 
-            // トランザクションを論理削除
-            CourseScheduleList::where('id', $intr_course_id)
+            // 紐づいている日程を論理削除
+            CourseScheduleWhens::where('course_schedules_id', $para_course_id)
             ->update([
                 'delete_flag' => 1
             ]);
@@ -614,7 +535,38 @@ class CourseScheduleController extends Controller
         return redirect()->action('CourseScheduleController@index');
     }
 
-    // destroy	既存レコードの削除(Delete)
+    /**
+     * delete 申請済みのイントラコースを削除
+     */
+    public function intrDelete($id){
+        try {
+            $auth_id = Auth::user()->id;
+            $intr_course = CourseSchedule::find($id);
+            // ユーザーのコースか確認
+            if( empty($intr_course) || $intr_course->instructor_id <> $auth_id )throw new \Exception("不正なaccessです");
+            if($intr_course->approval_flg > 2) throw new \Exception("削除しようとしたコースは受領済みの為削除できません。");
+
+            // コースのIDを取得
+            $intr_course_id = $intr_course->id;
+
+            // 取得したコースを論理削除
+            CourseSchedule::where('id', $intr_course_id)->update([
+                                'delete_flag' => 1
+            ]);
+
+            // コースに紐づいているスケジュールを論理削除
+            CourseScheduleWhens::where('course_schedules_id', $intr_course_id)
+                            ->update([
+                                'delete_flag' => 1
+            ]);
+            session()->flash('msg_success', '削除が完了しました');
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+        return redirect()->action('CourseScheduleController@index');
+    }
+
 
     public function getParaCourses(){
         $PCS = CourseSchedule::select('course_schedules.*','courses.course_name');

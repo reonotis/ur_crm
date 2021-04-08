@@ -14,35 +14,18 @@
                     <table class="customerSearchTable">
                         <tr>
                             <th>コース名</th>
-                            <td>{{ $CourseScheduleList->course_title }}</td>
+                            <td>{{ $intr_course->course_title }}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
                             <td>{{ number_format($intr_course->price) }}円</td>
                         </tr>
                         <tr>
-                            <th>実施日時</th>
+                            <th>実施日程</th>
                             <td>
-                                <div class="inputDateTime">1回目　{{$CourseScheduleList->date1->format('Y/m/d H:i')}}~</div>
-                                <div class="inputDateTime">2回目　{{$CourseScheduleList->date2->format('Y/m/d H:i')}}~</div>
-                                <div class="inputDateTime">3回目　{{$CourseScheduleList->date3->format('Y/m/d H:i')}}~</div>
-                                <div class="inputDateTime">4回目　{{$CourseScheduleList->date4->format('Y/m/d H:i')}}~</div>
-                                <div class="inputDateTime">5回目　{{$CourseScheduleList->date5->format('Y/m/d H:i')}}~</div>
-                                @if($CourseScheduleList->date6)
-                                    <div class="inputDateTime">6回目　{{$CourseScheduleList->date6->format('Y/m/d H:i')}}~</div>
-                                @endif
-                                @if($CourseScheduleList->date7)
-                                    <div class="inputDateTime">7回目　{{$CourseScheduleList->date7->format('Y/m/d H:i')}}~</div>
-                                @endif
-                                @if($CourseScheduleList->date8)
-                                    <div class="inputDateTime">8回目　{{$CourseScheduleList->date8->format('Y/m/d H:i')}}~</div>
-                                @endif
-                                @if($CourseScheduleList->date9)
-                                    <div class="inputDateTime">9回目　{{$CourseScheduleList->date9->format('Y/m/d H:i')}}~</div>
-                                @endif
-                                @if($CourseScheduleList->date10)
-                                    <div class="inputDateTime">10回目　{{$CourseScheduleList->date10->format('Y/m/d H:i')}}~</div>
-                                @endif
+                                @foreach($courseScheduleWhens as $courseScheduleWhen)
+                                <div class="inputDateTime">{{$courseScheduleWhen->howMany }}回目　{{$courseScheduleWhen->date->format('Y/m/d H:i')}}~</div>
+                                @endforeach
                             </td>
                         </tr>
                         <tr>

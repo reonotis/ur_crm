@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CourseScheduleWhens;
 use App\Models\CustomerSchedule;
 use DateTime;
 
@@ -115,18 +116,19 @@ class ScheduleController extends Controller
         if(isset($_GET['month']))$month = $_GET['month'];
 
         $NISSUU = (date('t', strtotime($DATE)));
-        $query = CustomerSchedule::select(DB::raw('count(*) as customer_count'), 'customer_schedules.*', 'customers.name as customerName', 'courses.course_name' )
-            ->leftJoin('customers', 'customers.id', '=', 'customer_schedules.customer_id')
-            ->leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_schedules.course_schedules_id')
-            ->leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id')
-            ->where('customer_schedules.date', 'LIKE', $month.'%' )
-            ->groupBy(['customer_schedules.date','customer_schedules.course_schedules_id'])
-            ->orderByRaw('customer_schedules.date asc, customer_schedules.time asc, customer_schedules.howMany asc');
+        $query = CourseScheduleWhens::select('course_schedule_whens.*','course_schedules.course_title','courses.course_name', 'users.name')
+        ->join('course_schedules', 'course_schedules.id' , '=', 'course_schedule_whens.course_schedules_id')
+        ->join('courses', 'courses.id' , '=', 'course_schedules.course_id')
+        ->join('users', 'users.id' , '=', 'course_schedules.instructor_id')
+        ->where('course_schedule_whens.date', 'LIKE', $month.'%')
+        ->orderByRaw('course_schedule_whens.date asc');
         if( $this->_auth_authority_id >= 7){
-            $query -> where('customer_schedules.instructor_id','=', $this->_auth_id  );
+            $query -> where('course_schedule_whens.instructor_id','=', $this->_auth_id  );
         }
+        $schedules=$query->get();
 
-        $schedules = $query->get();
+        // dd($schedules[0]->date->format('Y-m-d'));
+        
         $monthData = [];
         $day = 1;
         for($i = 0; $i < $NISSUU; $i++){

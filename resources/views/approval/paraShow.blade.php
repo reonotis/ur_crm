@@ -26,7 +26,7 @@
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>{{ $courseSchedules->date->format('Y/m/d'). "　" . date('H:i', strtotime($courseSchedules->open_time)) }}～</td>
+                            <td>{{ $CSW->date->format('Y/m/d H:i') }}～</td>
                         </tr>
                         <tr>
                             <th>エリア</th>

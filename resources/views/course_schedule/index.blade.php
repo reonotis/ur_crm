@@ -28,7 +28,7 @@
                     @foreach ($para_course_schedules as $course_schedule)
                         <tr>
                             <td>{{ $course_schedule->course_name }}</td>
-                            <td>{{ $course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($course_schedule->time)) }}</td>
+                            <td>{{ date('Y年m月d日　H:i', strtotime($course_schedule->dataTime)) }}～</td>
                             <td>{{ $course_schedule->erea }}</td>
                             <td>{{ $course_schedule->venue }}</td>
                             <td>{{ number_format($course_schedule->price) }}円</td>
@@ -49,7 +49,7 @@
                 <thead>
                     <tr>
                         <th>コースタイトル</th>
-                        <th>開講日</th>
+                        <th>次回開講日時</th>
                         <th>エリア</th>
                         <th>会場</th>
                         <th>料金</th>
@@ -58,16 +58,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($intr_course_schedules as $intr_course_schedule)
+                    @foreach ($intr_course_schedules as $course_schedule)
                         <tr>
-                            <td>{{ $intr_course_schedule->course_title }}</td>
-                            <td>{{ $intr_course_schedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($intr_course_schedule->time)) }}</td>
-                            <td>{{ $intr_course_schedule->erea }}</td>
-                            <td>{{ $intr_course_schedule->venue }}</td>
-                            <td>{{ number_format($intr_course_schedule->price) }}円</td>
-                            <td>{{ $intr_course_schedule->approval_name }}</td>
+                            <td>{{ $course_schedule->course_title }}</td>
+                            <td>{{ $course_schedule->howMany ."回目　" .$course_schedule->date->format('Y年m月d日　H:i') }}</td>
+                            <td>{{ $course_schedule->erea }}</td>
+                            <td>{{ $course_schedule->venue }}</td>
+                            <td>{{ number_format($course_schedule->price) }}円</td>
+                            <td>{{ $course_schedule->approval_name }}</td>
                             <td>
-                                <a href="{{route('courseSchedule.intrShow', ['id' => $intr_course_schedule->id ] )}}">詳細</a>
+                                <a href="{{route('courseSchedule.intrShow', ['id' => $course_schedule->id ] )}}">詳細</a>
                             </td>
                         </tr>
                     @endforeach
@@ -75,7 +75,7 @@
             </table>
         </div>
 <?php
-// dd($intr_course_schedules);
+    // dd($para_course_schedules);
 ?>
 
 

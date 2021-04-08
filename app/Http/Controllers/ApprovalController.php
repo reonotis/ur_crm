@@ -6,6 +6,7 @@ use App\Models\ApprovalComments;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\CourseScheduleList;
+use App\Models\CourseScheduleWhens;
 use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,17 +45,26 @@ class ApprovalController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $CourseSchedule = CourseSchedule::select('course_schedules.*', 'courses.course_name', 'users.name')
+
+        // 養成コースを取得
+        $subQuery = CourseScheduleWhens::whereIn('date', function($query) {
+            $query->select(DB::raw('min(date) As date'))->from('course_schedule_whens')->groupBy('course_schedules_id')->where( 'course_schedule_whens.date', '>=' ,date('Y-m-d H:i:s'));
+        });
+        // サブクエリをJOINします
+        $CourseSchedule = CourseSchedule::select('course_schedules.*', 'courses.course_name', 'course_schedule_whens.date', 'users.name')
+        ->joinSub($subQuery, 'course_schedule_whens', function ($join) {
+            $join->on('course_schedule_whens.course_schedules_id', '=', 'course_schedules.id');
+        })
         ->join('courses','courses.id','=','course_schedules.course_id')
         ->join('users','users.id','=','course_schedules.instructor_id')
-        ->where('course_schedules.delete_flag',NULL)
-        ->where('course_schedules.approval_flg', '>=', 2 )
+        ->where('course_schedules.delete_flag', NULL)
+        ->where('course_schedules.approval_flg', 2)
+        ->orderBy('course_schedule_whens.date','asc')
         ->get();
 
         $CourseSchedule = CheckCouses::setApprovalNames($CourseSchedule);
 
         return view('approval.index', ['courseSchedules' => $CourseSchedule]);
-        
 
     }
 
@@ -82,10 +92,10 @@ class ApprovalController extends Controller
      */
     public function confilmParaCourse($id){
         try {
-            $PCS = $this->getParaCouse($id);
+            list($PCS, $CSW) = $this->getParaCouse($id);
             if(empty($PCS))throw new \Exception("対象のデータがありません");
             $ApprovalComments = ApprovalComments::where('course_schedules_id', $id)->get();
-            return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments]);
+            return view('approval.paraShow', ['courseSchedules' => $PCS, 'ApprovalComments'=> $ApprovalComments, 'CSW' => $CSW]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -100,18 +110,19 @@ class ApprovalController extends Controller
         ->join('courses','courses.id','=','course_schedules.course_id')
         ->join('users','users.id','=','course_schedules.instructor_id')
         ->find($id);
+        $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id)->first();
         $select = CheckCouses::setApprovalName($select);
-        return $select ;
+        return [$select, $courseScheduleWhens] ;
     }
 
     /**
      * 養成講座申請画面を表示します。
      */
     public function confilmIntrCourse($id){
-        list($select, $CSL) = $this->getIntrCouse($id);
+        list($select, $CSW) = $this->getIntrCouse($id);
         $ApprovalComments = ApprovalComments::where('course_schedules_id', $id)->get();
-        if(empty($CSL))throw new \Exception("対象のデータがありません");
-        return view('approval.intrShow', ['courseSchedule' => $select,'courseScheduleList' => $CSL, 'ApprovalComments'=> $ApprovalComments]);
+        if(empty($CSW))throw new \Exception("対象のデータがありません");
+        return view('approval.intrShow', ['courseSchedule' => $select,'courseScheduleWhens' => $CSW, 'ApprovalComments'=> $ApprovalComments]);
     }
 
     /**
@@ -124,8 +135,8 @@ class ApprovalController extends Controller
         ->find($id);
         $select = CheckCouses::setApprovalName($select);
 
-        $CSL = CourseScheduleList::find($id);
-        return [$select, $CSL] ;
+        $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id)->get();
+        return [$select, $courseScheduleWhens] ;
     }
 
     /**

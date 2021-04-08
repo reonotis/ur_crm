@@ -22,7 +22,7 @@
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>{{ $para_course->date->format('Y年m月d日') . "　" . date('H:i', strtotime($para_course->time)) }}～</td>
+                            <td>{{ $courseScheduleWhens[0]->date->format('Y年m月d日 H:i') }}～</td>
                         </tr>
                         <tr>
                             <th>エリア</th>
@@ -62,7 +62,7 @@
                         <tr>
                             <td colspan="2">
                                 @if($para_course->approval_flg <= 2)
-                                    <a href="{{route('courseSchedule.intrDelete', ['id' => $para_course->id ])}}">
+                                    <a href="{{route('courseSchedule.paraDelete', ['id' => $para_course->id ])}}">
                                         <button class="btn btn-outline-danger" onClick="return confilmDelete()">申請を中止して削除する</button>
                                     </a>
                                 @endif

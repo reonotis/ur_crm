@@ -18,7 +18,7 @@
                         </tr>
                         <tr>
                             <th>講座</th>
-                            <td>{{$courseScheduleList->course_title}}</td>
+                            <td>{{$courseSchedule->course_title}}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
@@ -27,26 +27,10 @@
                         <tr>
                             <th>開催日程</th>
                             <td>
-                                1回目　{{ $courseScheduleList->date1->format('Y/m/d') }}～<br>
-                                2回目　{{ $courseScheduleList->date2->format('Y/m/d') }}～<br>
-                                3回目　{{ $courseScheduleList->date3->format('Y/m/d') }}～<br>
-                                4回目　{{ $courseScheduleList->date4->format('Y/m/d') }}～<br>
-                                5回目　{{ $courseScheduleList->date5->format('Y/m/d') }}～<br>
-                                @if($courseScheduleList->date6)
-                                    6回目　{{$courseScheduleList->date6->format('Y/m/d')}}<br>
-                                @endif
-                                @if($courseScheduleList->date7)
-                                    7回目　{{$courseScheduleList->date7->format('Y/m/d')}}<br>
-                                @endif
-                                @if($courseScheduleList->date8)
-                                    8回目　{{$courseScheduleList->date8->format('Y/m/d')}}<br>
-                                @endif
-                                @if($courseScheduleList->date9)
-                                    9回目　{{$courseScheduleList->date9->format('Y/m/d')}}<br>
-                                @endif
-                                @if($courseScheduleList->date10)
-                                    10回目　{{$courseScheduleList->date10->format('Y/m/d')}}<br>
-                                @endif
+                                @foreach($courseScheduleWhens as $courseScheduleWhen)
+                                    <div class="inputDateTime">{{$courseScheduleWhen->howMany }}回目　{{$courseScheduleWhen->date->format('Y/m/d H:i')}}~</div>
+                                @endforeach
+                                
                             </td>
                         </tr>
                         <tr>

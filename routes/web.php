@@ -102,13 +102,6 @@ Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
-
-
-
-
 // 申請関係
 Route::group(['prefix'=>'approval', 'middleware'=>'auth'], function(){
     Route::get('index', 'ApprovalController@index')->name('approval.index');
@@ -124,18 +117,19 @@ Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
     Route::get('intrCreate', 'CourseScheduleController@intrCreate')->name('courseSchedule.intrCreate');
     Route::post('intrConfilm', 'CourseScheduleController@intrConfilm')->name('courseSchedule.intrConfilm');
-    Route::get('intrStore', 'CourseScheduleController@intrStore')->name('courseSchedule.intrStore');
+    Route::post('intrStore', 'CourseScheduleController@intrStore')->name('courseSchedule.intrStore');
     Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
     Route::get('paraCreate', 'CourseScheduleController@paraCreate')->name('courseSchedule.paraCreate');
     Route::post('paraConfilm', 'CourseScheduleController@paraConfilm')->name('courseSchedule.paraConfilm');
     Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
-    Route::get('paraStore', 'CourseScheduleController@paraStore')->name('courseSchedule.paraStore');
+    Route::post('paraStore', 'CourseScheduleController@paraStore')->name('courseSchedule.paraStore');
     Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
     Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
     Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');
     Route::post('intrUpdateOpenDay/{id}', 'CourseScheduleController@intrUpdateOpenDay')->name('courseSchedule.intrUpdateOpenDay');
     Route::post('paraUpdate/{id}', 'CourseScheduleController@paraUpdate')->name('courseSchedule.paraUpdate');
     Route::post('paraUpdateOpenDay/{id}', 'CourseScheduleController@paraUpdateOpenDay')->name('courseSchedule.paraUpdateOpenDay');
+    Route::get('paraDelete/{id}', 'CourseScheduleController@paraDelete')->name('courseSchedule.paraDelete');
     Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
     Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
     Route::get('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');

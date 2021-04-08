@@ -28,8 +28,8 @@
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                    <input class="formInput" type="date" name="date" id="date" value="{{ $intr_course->date->format('Y-m-d') }}" >
-                                    <input class="formInput" type="time" name="time" id="time" value="{{ $intr_course->time }}" step="300" >
+                                    <input class="formInput" type="date" name="date" id="date" value="{{ $courseScheduleWhens[0]->date->format('Y-m-d') }}" >
+                                    <input class="formInput" type="time" name="time" id="time" value="{{ $courseScheduleWhens[0]->date->format('H:i') }}"  >
                                 </td>
                             </tr>
                             <tr>

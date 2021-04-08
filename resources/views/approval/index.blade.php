@@ -32,7 +32,7 @@
                     @foreach($courseSchedules as $courseSchedule)
                         <tr>
                             <td>{{ $courseSchedule->course_name}}</td>
-                            <td>{{ $courseSchedule->date->format('Y年m月d日') . "　" . date('H:i', strtotime($courseSchedule->open_time)) }}</td>
+                            <td>{{ $courseSchedule->date->format('Y年m月d日 H:i') }}</td>
                             <td>{{ $courseSchedule->name }}</td>
                             <td>{{ number_format($courseSchedule->price) }}円</td>
                             <td>{{ $courseSchedule->approval_name }}</td>
