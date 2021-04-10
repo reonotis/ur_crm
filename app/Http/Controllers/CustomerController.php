@@ -136,9 +136,10 @@ class CustomerController extends Controller
 
         // 顧客のスケジュールを取得する
         $CSQuery = DB::table('customer_schedules');
-            $CSQuery -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id');
-            $CSQuery -> leftJoin('courses', 'courses.id', '=', 'customer_schedules.course_schedules_id');
         $CSQuery   -> select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' );
+            $CSQuery -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id');
+            $CSQuery -> leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_schedules.course_schedules_id');
+            $CSQuery -> leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id');
         $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
         $CSQuery -> orderByRaw('customer_schedules.date DESC , customer_schedules.time DESC , customer_schedules.howMany DESC ');
         $CustomerSchedules = $CSQuery -> get();
