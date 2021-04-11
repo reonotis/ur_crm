@@ -149,13 +149,15 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('editPassword', 'SettingController@editPassword')->name('setting.editPassword');
     Route::get('editTell', 'SettingController@editTell')->name('setting.editTell');
     Route::get('editAddress', 'SettingController@editAddress')->name('setting.editAddress');
+    Route::post('sendChangeEmailLink', 'SettingController@sendChangeEmailLink')->name('setting.sendChangeEmailLink');
+    Route::get('editEmail', 'SettingController@editEmail')->name('setting.editEmail');
+    Route::get("resetEmail/{token}", "SettingController@resetEmail");
     Route::get('editImage', 'SettingController@editImage')->name('setting.editImage');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
     Route::post('updateTell', 'SettingController@updateTell')->name('setting.updateTell');
     Route::post('updateAddress', 'SettingController@updateAddress')->name('setting.updateAddress');
     Route::post('updateImage', 'SettingController@updateImage')->name('setting.updateImage');
 });
-
 
 
 

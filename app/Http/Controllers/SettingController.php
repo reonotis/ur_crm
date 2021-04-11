@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Models\EmailReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CheckUsers;
 use App\Http\Requests\updatePass;
 use \InterventionImage;
+use Illuminate\Support\Str;
+use Mail;
+use Carbon\Carbon;
+
+
 
 class SettingController extends Controller
 {
@@ -17,10 +23,33 @@ class SettingController extends Controller
     private $_fileExtntion = ['jpg', 'jpeg', 'png'];
     private $_resize = '300';
 
+    private $_user;                 //Auth::user()
+    private $_auth_id ;             //Auth::user()->id;
+    private $_auth_authority_id ;   //権限
+    private $_toAkemi ;
+    private $_toInfo ;
+    private $_toReon ;
+    private $_newEmail ;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 8){
+                dd("権限がありません。");
+            }
+            $this->_toAkemi = config('mail.toAkemi');
+            $this->_toInfo = config('mail.toInfo');
+            $this->_toReon = config('mail.toReon');
+            return $next($request);
+        });
+    }
 
 
-
-    //
+    /**
+     * 設定画面を表示します。
+     */
     public function index(){
         $auth = Auth::user();
         $myId = $auth->id;
@@ -32,19 +61,17 @@ class SettingController extends Controller
         return view('setting.index', compact('auth'));
     }
 
-
     /**
-    * パスワードの編集画面を表示します。
-    */
+     * パスワードの編集画面を表示します。
+     */
     public function editPassword(){
         $auth = Auth::user();
         return view('setting.editPassword', compact('auth'));
     }
 
-
     /**
-    * 電話番号の編集画面を表示します。
-    */
+     * 電話番号の編集画面を表示します。
+     */
     public function editTell(){
         $auth = Auth::user();
         $myId = $auth->id;
@@ -56,8 +83,8 @@ class SettingController extends Controller
     }
 
     /**
-    * 住所の編集画面を表示します。
-    */
+     * 住所の編集画面を表示します。
+     */
     public function editAddress(){
         $auth = Auth::user();
         $myId = $auth->id;
@@ -69,8 +96,8 @@ class SettingController extends Controller
     }
 
     /**
-    * 画像の更新画面を表示します。
-    */
+     * 画像の更新画面を表示します。
+     */
     public function editImage(){
         $auth = Auth::user();
         $myId = $auth->id;
@@ -81,14 +108,115 @@ class SettingController extends Controller
         return view('setting.editImg', compact('auth'));
     }
 
-
-
-
-
+    /**
+     * メールアドレスの更新画面を表示します。
+     */
+    public function editEmail(){
+        return view('setting.editEmail');
+    }
 
     /**
-    * パスワードの更新を行います。
-    */
+     * メールアドレスの変更が可能か確認してユーザーにメールを送ります。
+     */
+    public function sendChangeEmailLink(Request $request){
+        $new_email1 = $request->new_email1 ;
+        $new_email2 = $request->new_email2 ;
+        $this->_newEmail = $request->new_email1 ;
+        
+        // トークン生成
+        $token = hash_hmac(
+            'sha256',
+            Str::random(40) . $new_email1,
+            config('app.key')
+        );
+
+        // トークンをDBに保存
+        DB::beginTransaction();
+        try {
+            if(!$new_email1) throw new \Exception("メールアドレスが入力されていません");
+            if($new_email1 <> $new_email2) throw new \Exception("メールアドレスが確認用と一致していません");
+            $param = [];
+            $param['user_id'] = $this->_auth_id;
+            $param['new_email'] = $new_email1;
+            $param['token'] = $token;
+            $email_reset = EmailReset::create($param);
+            DB::commit();
+
+            $data = [
+                "instructor" => $this->_user->name,
+                "url"        => url('').'/setting/resetEmail/'.$param['token']
+            ];
+            Mail::send('emails.changeEmail', $data, function($message){
+                $message->to($this->_newEmail)
+                ->subject('メールアドレス変更');
+            });
+
+            session()->flash('msg_success', '確認用のメールを新しいメールアドレスに送信しました。');
+            return redirect('/home');
+        } catch (\Exception $e) {
+            DB::rollback();
+            session()->flash('msg_danger','異常' );
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+        return view('setting.editEmail');
+    }
+
+    
+    /**
+     * メールアドレスの再設定処理
+     *
+     * @param Request $request
+     * @param [type] $token
+     */
+    public function resetEmail($token){
+        $email_resets = DB::table('email_resets')
+            ->where('token', $token)
+            ->first();
+
+        // トークンが存在している、かつ、有効期限が切れていないかチェック
+        if ($email_resets && !$this->tokenExpired($email_resets->created_at)) {
+ 
+            // ユーザーのメールアドレスを更新
+            $user = User::find($email_resets->user_id);
+            $user->email = $email_resets->new_email;
+            $user->save();
+ 
+            // レコードを削除
+            DB::table('email_resets')
+                ->where('token', $token)
+                ->delete();
+ 
+                session()->flash('msg_success', 'メールアドレスを更新しました。');
+                return redirect('/home');
+        } else {
+            // レコードが存在していた場合削除
+            if ($email_resets) {
+                DB::table('email_resets')
+                    ->where('token', $token)
+                    ->delete();
+            }
+            session()->flash('msg_danger','メールアドレスの更新に失敗しました。' );
+            return redirect('/home');
+        }
+    }
+
+    /**
+     * トークンが有効期限切れかどうかチェック
+     *
+     * @param  string  $createdAt
+     * @return bool
+     */
+    protected function tokenExpired($createdAt)
+    {
+        // トークンの有効期限は60分に設定
+        $expires = 60 * 60;
+        return Carbon::parse($createdAt)->addSeconds($expires)->isPast();
+    }
+
+    /**
+     * パスワードの更新を行います。
+     */
     public function updatePassword(updatePass $request){
         $auth = Auth::user();
         $hashPass = $auth->password;
@@ -109,10 +237,9 @@ class SettingController extends Controller
         return redirect()->action('SettingController@index');
     }
 
-
     /**
-    * 電話番号の更新を行います。
-    */
+     * 電話番号の更新を行います。
+     */
     public function updateTell(request $request){
         $newTell = $request->input('tell');
 
@@ -136,11 +263,9 @@ class SettingController extends Controller
         }
     }
 
-
-
     /**
-    * 住所の更新を行います。
-    */
+     * 住所の更新を行います。
+     */
     public function updateAddress(request $request){
         $zip21 = $request->input('zip21');
         $zip22 = $request->input('zip22');
@@ -175,8 +300,8 @@ class SettingController extends Controller
 
 
     /**
-    * 画像の更新を行います。
-    */
+     * 画像の更新を行います。
+     */
     public function updateImage(request $request){
         $auth = Auth::user();
         $myId = $auth->id;
