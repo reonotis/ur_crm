@@ -161,6 +161,8 @@ class CourseScheduleController extends Controller
      */
     public function paraStore(Request $request){
         try {
+            
+        $request->session()->regenerateToken();
             $CS = new CourseSchedule;
             $CS->instructor_id  = $this->_auth_id ;
             $CS->course_id      = $request->course_id ;

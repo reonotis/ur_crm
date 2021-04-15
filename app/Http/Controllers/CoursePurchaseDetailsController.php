@@ -18,6 +18,29 @@ use App\Http\Controllers\Controller,
 
 class CoursePurchaseDetailsController extends Controller
 {
+
+    private $_user;                 //Auth::user()
+    private $_auth_id ;             //Auth::user()->id;
+    private $_auth_authority_id ;   //権限
+    private $_toAkemi ;
+    private $_toInfo ;
+    private $_toReon ;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 8){
+                dd("権限がありません。");
+            }
+            $this->_toAkemi = config('mail.toAkemi');
+            $this->_toInfo = config('mail.toInfo');
+            $this->_toReon = config('mail.toReon');
+            return $next($request);
+        });
+    }
+
     /**
      * 新しいコースに申し込む
      *
@@ -132,48 +155,47 @@ class CoursePurchaseDetailsController extends Controller
         return redirect()->action('CustomerController@display', ['id' => $customer_id]);
     }
 
-
-
-
     public function scheduleEdit($id){
         // 渡されたIDの顧客情報を取得する
-        $query = DB::table('customer_schedules');
-        $query -> where('id','=',$id);
+        $query = CustomerSchedule::select('customer_schedules.*', 'users.name')
+            ->join('users', 'users.id', '=', 'customer_schedules.instructor_id')
+            -> where('customer_schedules.id','=',$id);
         $customerSchedule = $query -> first();
 
         $customer_id = $customerSchedule -> customer_id;
         $customer = CheckCustomerData::getCustomer($customer_id);
 
-        $intrQuery = DB::table('users');
-        $instructors = $intrQuery -> get();
-
-
-        return view('customer.editSchedule',compact('customer', 'customerSchedule', 'instructors'));
+        return view('customer.editSchedule',compact('customer', 'customerSchedule'));
     }
 
+    public function scheduleUpdate(Request $request, $id){
+        try{
+            throw new \Exception("機能さくせいちゅです。");
+            $id         = $request->input('id');
+            $date       = $request->input('date');
+            $time       = $request->input('time');
+            $status     = $request->input('status');
+            $comment    = $request->input('comment');
+            $memo       = $request->input('memo');
 
+            $CS = CustomerSchedule::find($id);
+            if($this->_auth_authority_id >= 5){
+                dd( $this->_auth_authority_id  , $CS->instructor_id);
+            }
+            $CS->date    = $date ;
+            $CS->time    = $time ;
+            $CS->status  = $status ;
+            $CS->comment = $comment ;
+            $CS->memo    = $memo ;
+            $CS->save();
 
-    public function scheduleUpdate(Request $request){
-        $id         = $request->input('id');
-        $date       = $request->input('date');
-        $time       = $request->input('time');
-        $status     = $request->input('status');
-        $instructor = $request->input('instructor');
-        $comment    = $request->input('comment');
-        $memo       = $request->input('memo');
+            $customer_id = $CS->customer_id;
 
-        $cShe = CustomerSchedule::find($id);
-        $cShe->date          = $date ;
-        $cShe->time          = $time ;
-        $cShe->status        = $status ;
-        $cShe->instructor_id = $instructor ;
-        $cShe->comment       = $comment ;
-        $cShe->memo          = $memo ;
-        $cShe->save();
-
-        $customer_id = $cShe->customer_id;
-
-        return redirect()->action('CustomerController@display', ['id' => $customer_id]);
+            return redirect()->action('CustomerController@display', ['id' => $customer_id]);
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
 
 }
