@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ApprovalComments;
 use App\Models\Course;
-use App\Models\CourseSchedule;
-use App\Models\CourseScheduleWhens;
 use App\Models\InstructorCourse;
 use App\Models\InstructorCourseSchedule;
 use Illuminate\Http\Request;
@@ -226,16 +224,16 @@ class CourseScheduleController extends Controller
             $IC_id = $IC->id;
 
             // 日程の登録
-            $this->storeCourseScheduleWhens($IC_id, $request->date1, 1);
-            $this->storeCourseScheduleWhens($IC_id, $request->date2, 2);
-            $this->storeCourseScheduleWhens($IC_id, $request->date3, 3);
-            $this->storeCourseScheduleWhens($IC_id, $request->date4, 4);
-            $this->storeCourseScheduleWhens($IC_id, $request->date5, 5);
-            if($request->date6) $this->storeCourseScheduleWhens($IC_id, $request->date6, 6);
-            if($request->date7) $this->storeCourseScheduleWhens($IC_id, $request->date7, 7);
-            if($request->date8) $this->storeCourseScheduleWhens($IC_id, $request->date8, 8);
-            if($request->date9) $this->storeCourseScheduleWhens($IC_id, $request->date9, 9);
-            if($request->date10) $this->storeCourseScheduleWhens($IC_id, $request->date10, 10);
+            $this->storeInstructorCourseSchedule($IC_id, $request->date1, 1);
+            $this->storeInstructorCourseSchedule($IC_id, $request->date2, 2);
+            $this->storeInstructorCourseSchedule($IC_id, $request->date3, 3);
+            $this->storeInstructorCourseSchedule($IC_id, $request->date4, 4);
+            $this->storeInstructorCourseSchedule($IC_id, $request->date5, 5);
+            if($request->date6) $this->storeInstructorCourseSchedule($IC_id, $request->date6, 6);
+            if($request->date7) $this->storeInstructorCourseSchedule($IC_id, $request->date7, 7);
+            if($request->date8) $this->storeInstructorCourseSchedule($IC_id, $request->date8, 8);
+            if($request->date9) $this->storeInstructorCourseSchedule($IC_id, $request->date9, 9);
+            if($request->date10) $this->storeInstructorCourseSchedule($IC_id, $request->date10, 10);
 
             $course = Course::find(6);
             $data = [
@@ -261,7 +259,7 @@ class CourseScheduleController extends Controller
     /**
      * コースの日程を登録
      */
-    public function storeCourseScheduleWhens($IC_id, $dateTime, $howMany){
+    public function storeInstructorCourseSchedule($IC_id, $dateTime, $howMany){
         $ICS = new InstructorCourseSchedule;
         $ICS->instructor_courses_id = $IC_id;
         $ICS->instructor_id = $this->_auth_id;
@@ -389,9 +387,9 @@ class CourseScheduleController extends Controller
             $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
 
-            $courseScheduleWhens = InstructorCourseSchedule::where('instructor_courses_id', $id )->first();
-            $courseScheduleWhens->date = date("Y-m-d H:i:00", strtotime( $request->date .' '. $request->time));
-            $courseScheduleWhens->save();
+            $InstructorCourseSchedule = InstructorCourseSchedule::where('instructor_courses_id', $id )->first();
+            $InstructorCourseSchedule->date = date("Y-m-d H:i:00", strtotime( $request->date .' '. $request->time));
+            $InstructorCourseSchedule->save();
 
 
             session()->flash('msg_success', '更新が完了しました');
@@ -565,22 +563,5 @@ class CourseScheduleController extends Controller
         return redirect()->action('CourseScheduleController@index');
     }
 
-
-    public function getParaCourses(){
-        $PCS = CourseSchedule::select('course_schedules.*','courses.course_name');
-        // if($this->_auth_authority_id >= 7){
-            $PCS = $PCS->where('instructor_id','=', $this->_auth_id );
-        // }
-        $PCS = $PCS->where('course_id', '<>', '6' );
-        $PCS = $PCS->where('course_schedules.delete_flag', '0' );
-        $PCS = $PCS->leftJoin('courses','courses.id','=','course_schedules.course_id');
-        $PCS = $PCS->get();
-        if($PCS){
-            $PCS = $this->getApprovalNames($PCS);
-        }
-
-        return $PCS;
-
-    }
 
 }

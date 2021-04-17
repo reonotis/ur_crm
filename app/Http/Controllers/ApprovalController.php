@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ApprovalComments;
 use App\Models\Course;
-use App\Models\CourseSchedule;
-use App\Models\CourseScheduleList;
-use App\Models\CourseScheduleWhens;
+use App\Models\InstructorCourse;
+use App\Models\InstructorCourseSchedule;
 use App\Services\CheckCouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,19 +46,19 @@ class ApprovalController extends Controller
     public function index(){
 
         // 養成コースを取得
-        $subQuery = CourseScheduleWhens::whereIn('date', function($query) {
-            $query->select(DB::raw('min(date) As date'))->from('course_schedule_whens')->groupBy('course_schedules_id')->where( 'course_schedule_whens.date', '>=' ,date('Y-m-d H:i:s'));
+        $subQuery = InstructorCourseSchedule::whereIn('date', function($query) {
+            $query->select(DB::raw('min(date) As date'))->from('instructor_course_schedules')->groupBy('instructor_courses_id')->where( 'instructor_course_schedules.date', '>=' ,date('Y-m-d H:i:s'));
         });
         // サブクエリをJOINします
-        $CourseSchedule = CourseSchedule::select('course_schedules.*', 'courses.course_name', 'course_schedule_whens.date', 'users.name')
-        ->joinSub($subQuery, 'course_schedule_whens', function ($join) {
-            $join->on('course_schedule_whens.course_schedules_id', '=', 'course_schedules.id');
+        $CourseSchedule = InstructorCourse::select('instructor_courses.*', 'courses.course_name', 'instructor_course_schedules.date', 'users.name')
+        ->joinSub($subQuery, 'instructor_course_schedules', function ($join) {
+            $join->on('instructor_course_schedules.instructor_courses_id', '=', 'instructor_courses.id');
         })
-        ->join('courses','courses.id','=','course_schedules.course_id')
-        ->join('users','users.id','=','course_schedules.instructor_id')
-        ->where('course_schedules.delete_flag', NULL)
-        ->where('course_schedules.approval_flg', 2)
-        ->orderBy('course_schedule_whens.date','asc')
+        ->join('courses','courses.id','=','instructor_courses.course_id')
+        ->join('users','users.id','=','instructor_courses.instructor_id')
+        ->where('instructor_courses.delete_flag', NULL)
+        ->where('instructor_courses.approval_flg', 2)
+        ->orderBy('instructor_course_schedules.date','asc')
         ->get();
 
         $CourseSchedule = CheckCouses::setApprovalNames($CourseSchedule);
@@ -68,14 +67,14 @@ class ApprovalController extends Controller
 
     }
 
-
     /**
      *渡されたIDのスケジュールを確認し、パラコースか、養成コースの確認画面を表示する
     */
     public function confilm($id){
         try {
-            $PCS = CourseSchedule::find($id);
+            $PCS = InstructorCourse::find($id);
             if(empty($PCS))throw new \Exception("対象のデータがありません");
+
             if($PCS->course_id == 6){
                 return redirect()->action('ApprovalController@confilmIntrCourse', ['id' => $id ]);
             }else{
@@ -106,11 +105,11 @@ class ApprovalController extends Controller
      * パラリンコースの詳細を取得
      */
     public function getParaCouse($id){
-        $select = CourseSchedule::select('course_schedules.*','courses.course_name','users.name')
-        ->join('courses','courses.id','=','course_schedules.course_id')
-        ->join('users','users.id','=','course_schedules.instructor_id')
+        $select = InstructorCourse::select('instructor_courses.*','courses.course_name','users.name')
+        ->join('courses','courses.id','=','instructor_courses.course_id')
+        ->join('users','users.id','=','instructor_courses.instructor_id')
         ->find($id);
-        $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id)->first();
+        $courseScheduleWhens = InstructorCourseSchedule::where('instructor_courses_id', $id)->first();
         $select = CheckCouses::setApprovalName($select);
         return [$select, $courseScheduleWhens] ;
     }
@@ -119,24 +118,24 @@ class ApprovalController extends Controller
      * 養成講座申請画面を表示します。
      */
     public function confilmIntrCourse($id){
-        list($select, $CSW) = $this->getIntrCouse($id);
+        list($select, $ICS) = $this->getIntrCouse($id);
         $ApprovalComments = ApprovalComments::where('course_schedules_id', $id)->get();
-        if(empty($CSW))throw new \Exception("対象のデータがありません");
-        return view('approval.intrShow', ['courseSchedule' => $select,'courseScheduleWhens' => $CSW, 'ApprovalComments'=> $ApprovalComments]);
+        if(empty($ICS))throw new \Exception("対象のデータがありません");
+        return view('approval.intrShow', ['courseSchedule'=>$select, 'InstructorCourseSchedules'=>$ICS, 'ApprovalComments'=> $ApprovalComments]);
     }
 
     /**
      * 養成コースの詳細を取得
      */
     public function getIntrCouse($id){
-        $select = CourseSchedule::select('course_schedules.*','courses.course_name','users.name')
-        ->join('courses','courses.id','=','course_schedules.course_id')
-        ->join('users','users.id','=','course_schedules.instructor_id')
+        $InstructorCourse = InstructorCourse::select('instructor_courses.*','courses.course_name','users.name')
+        ->join('courses','courses.id','=','instructor_courses.course_id')
+        ->join('users','users.id','=','instructor_courses.instructor_id')
         ->find($id);
-        $select = CheckCouses::setApprovalName($select);
+        $InstructorCourse = CheckCouses::setApprovalName($InstructorCourse);
 
-        $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id)->get();
-        return [$select, $courseScheduleWhens] ;
+        $InstructorCourseSchedule = InstructorCourseSchedule::where('instructor_courses_id', $id)->get();
+        return [$InstructorCourse, $InstructorCourseSchedule] ;
     }
 
     /**
@@ -187,14 +186,13 @@ class ApprovalController extends Controller
      */
     public function update(Request $request, $id){
         try {
-            $ApprovalComment = ApprovalComments::where('course_schedules_id', $id )->get();
             if(empty($request->appComment))throw new \Exception("コメントが入力されていません");
-            $IAC = new ApprovalComments;
-            $IAC->course_schedules_id = $id;
-            $IAC->comment = $request->appComment;
-            $IAC->save();
+            $AC = new ApprovalComments;
+            $AC->course_schedules_id = $id;
+            $AC->comment = $request->appComment;
+            $AC->save();
 
-            $course_schedules = CourseSchedule::find($id );
+            $course_schedules = InstructorCourse::find($id );
             $course = Course::find($course_schedules->course_id);
             $intr = DB::table('users')->find($course_schedules->instructor_id);
 
@@ -256,19 +254,19 @@ class ApprovalController extends Controller
     /**
      *
      */
-    public function register_WP_courseSchedules($id,$course_schedules){
-        $select = DB::connection('mysql_2')->table('my_schedule')->select('*')->get();
-        dd($select);
-        $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
-            'date' => $course_schedules->date,
-            'open_time' => $course_schedules->time,
-            'course_id' => $course_schedules->course_id,
-            'price' => $course_schedules->price,
-            'instructor_id' => $course_schedules->instructor_id,
-            'open_flg' => 0
-        ]);
-        dd( $lastID);
+    // public function register_WP_courseSchedules($id,$course_schedules){
+    //     $select = DB::connection('mysql_2')->table('my_schedule')->select('*')->get();
+    //     dd($select);
+    //     $lastID = DB::connection('mysql_2')->table('my_schedule')->insertGetId([
+    //         'date' => $course_schedules->date,
+    //         'open_time' => $course_schedules->time,
+    //         'course_id' => $course_schedules->course_id,
+    //         'price' => $course_schedules->price,
+    //         'instructor_id' => $course_schedules->instructor_id,
+    //         'open_flg' => 0
+    //     ]);
+    //     dd( $lastID);
 
-    }
+    // }
 
 }
