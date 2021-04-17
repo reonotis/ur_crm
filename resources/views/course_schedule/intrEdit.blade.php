@@ -26,16 +26,16 @@
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                    <div class="inputDateTime">1回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date1" value="<?= $courseScheduleWhens[0]->date->format("Y-m-d")."T".$courseScheduleWhens[0]->date->format("H:i:s") ?>" required ></div>
-                                    <div class="inputDateTime">2回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date2" value="<?= $courseScheduleWhens[1]->date->format("Y-m-d")."T".$courseScheduleWhens[1]->date->format("H:i:s") ?>" required ></div>
-                                    <div class="inputDateTime">3回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date3" value="<?= $courseScheduleWhens[2]->date->format("Y-m-d")."T".$courseScheduleWhens[2]->date->format("H:i:s") ?>" required ></div>
-                                    <div class="inputDateTime">4回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date4" value="<?= $courseScheduleWhens[3]->date->format("Y-m-d")."T".$courseScheduleWhens[3]->date->format("H:i:s") ?>" required ></div>
-                                    <div class="inputDateTime">5回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date5" value="<?= $courseScheduleWhens[4]->date->format("Y-m-d")."T".$courseScheduleWhens[4]->date->format("H:i:s") ?>" required ></div>
-                                    <div class="inputDateTime">6回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date6" value="<?php if(isset($courseScheduleWhens[5])) echo  $courseScheduleWhens[5]->date->format("Y-m-d")."T".$courseScheduleWhens[5]->date->format("H:i:s") ?>" ></div>
-                                    <div class="inputDateTime">7回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date7" value="<?php if(isset($courseScheduleWhens[6])) echo  $courseScheduleWhens[6]->date->format("Y-m-d")."T".$courseScheduleWhens[6]->date->format("H:i:s") ?>" ></div>
-                                    <div class="inputDateTime">8回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date8" value="<?php if(isset($courseScheduleWhens[7])) echo  $courseScheduleWhens[7]->date->format("Y-m-d")."T".$courseScheduleWhens[7]->date->format("H:i:s") ?>" ></div>
-                                    <div class="inputDateTime">9回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date9" value="<?php if(isset($courseScheduleWhens[8])) echo  $courseScheduleWhens[8]->date->format("Y-m-d")."T".$courseScheduleWhens[8]->date->format("H:i:s") ?>" ></div>
-                                    <div class="inputDateTime">10回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date10" value="<?php if(isset($courseScheduleWhens[9])) echo  $courseScheduleWhens[9]->date->format("Y-m-d")."T".$courseScheduleWhens[9]->date->format("H:i:s") ?>" ></div>
+                                    <div class="inputDateTime">1回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date1" value="<?= $InstructorCourseSchedule[0]->date->format("Y-m-d")."T".$InstructorCourseSchedule[0]->date->format("H:i:s") ?>" required ></div>
+                                    <div class="inputDateTime">2回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date2" value="<?= $InstructorCourseSchedule[1]->date->format("Y-m-d")."T".$InstructorCourseSchedule[1]->date->format("H:i:s") ?>" required ></div>
+                                    <div class="inputDateTime">3回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date3" value="<?= $InstructorCourseSchedule[2]->date->format("Y-m-d")."T".$InstructorCourseSchedule[2]->date->format("H:i:s") ?>" required ></div>
+                                    <div class="inputDateTime">4回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date4" value="<?= $InstructorCourseSchedule[3]->date->format("Y-m-d")."T".$InstructorCourseSchedule[3]->date->format("H:i:s") ?>" required ></div>
+                                    <div class="inputDateTime">5回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date5" value="<?= $InstructorCourseSchedule[4]->date->format("Y-m-d")."T".$InstructorCourseSchedule[4]->date->format("H:i:s") ?>" required ></div>
+                                    <div class="inputDateTime">6回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date6" value="<?php if(isset($InstructorCourseSchedule[5])) echo  $InstructorCourseSchedule[5]->date->format("Y-m-d")."T".$InstructorCourseSchedule[5]->date->format("H:i:s") ?>" ></div>
+                                    <div class="inputDateTime">7回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date7" value="<?php if(isset($InstructorCourseSchedule[6])) echo  $InstructorCourseSchedule[6]->date->format("Y-m-d")."T".$InstructorCourseSchedule[6]->date->format("H:i:s") ?>" ></div>
+                                    <div class="inputDateTime">8回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date8" value="<?php if(isset($InstructorCourseSchedule[7])) echo  $InstructorCourseSchedule[7]->date->format("Y-m-d")."T".$InstructorCourseSchedule[7]->date->format("H:i:s") ?>" ></div>
+                                    <div class="inputDateTime">9回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date9" value="<?php if(isset($InstructorCourseSchedule[8])) echo  $InstructorCourseSchedule[8]->date->format("Y-m-d")."T".$InstructorCourseSchedule[8]->date->format("H:i:s") ?>" ></div>
+                                    <div class="inputDateTime">10回目<input type="datetime-local" class="formInput inputDatatimeLocal" name="date10" value="<?php if(isset($InstructorCourseSchedule[9])) echo  $InstructorCourseSchedule[9]->date->format("Y-m-d")."T".$InstructorCourseSchedule[9]->date->format("H:i:s") ?>" ></div>
                                 </td>
                             </tr>
                             <tr>
@@ -62,7 +62,6 @@
                                     </div>
                                     <div class="inputOpenDateTime">
                                         公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" value="{{ $intr_course->open_finish_day->format('Y-m-d').'T'.$intr_course->open_finish_day->format('H:i') }}" >まで
-                                        
                                     </div>
                                 </td>
                             </tr>

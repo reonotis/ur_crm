@@ -23,8 +23,8 @@
                         <tr>
                             <th>実施日程</th>
                             <td>
-                                @foreach($courseScheduleWhens as $courseScheduleWhen)
-                                <div class="inputDateTime">{{$courseScheduleWhen->howMany }}回目　{{$courseScheduleWhen->date->format('Y/m/d H:i')}}~</div>
+                                @foreach($InstructorCourseSchedules as $InstructorCourseSchedule)
+                                <div class="inputDateTime">{{$InstructorCourseSchedule->howMany }}回目　{{$InstructorCourseSchedule->date->format('Y/m/d H:i')}}~</div>
                                 @endforeach
                             </td>
                         </tr>

@@ -57,7 +57,7 @@ class CourseScheduleController extends Controller
 
         // 養成コースを取得
         $subQuery = InstructorCourseSchedule::whereIn('date', function($query) {
-            $query->select(DB::raw('min(date) As date'))->from('instructor_course_schedules')->groupBy('instructor_courses_id')->where( 'instructor_course_schedules.date', '>=' ,date('Y-m-d H:i:s'));
+            $query->select(DB::raw('min(date) As date'))->from('instructor_course_schedules')->groupByRaw('instructor_courses_id')->where( 'instructor_course_schedules.date', '>=' ,date('Y-m-d H:i:s'));
         });
         // // サブクエリをJOINします
         $intr_course_schedules = InstructorCourse::select('instructor_courses.*', 'instructor_course_schedules.date', 'instructor_course_schedules.howMany' )
@@ -302,8 +302,8 @@ class CourseScheduleController extends Controller
     public function intrShow($id){
         try {
             // 養成コースを取得
-            $intr_course = CourseSchedule::select('course_schedules.*', 'courses.course_name')
-            ->join('courses','courses.id','=','course_schedules.course_id')
+            $intr_course = InstructorCourse::select('instructor_courses.*', 'courses.course_name')
+            ->join('courses','courses.id','=','instructor_courses.course_id')
             ->find($id);
 
             // ユーザーのScheduleじゃなければ前の画面へ戻る
@@ -311,9 +311,9 @@ class CourseScheduleController extends Controller
             if($intr_course->course_id <> 6 )throw new \Exception("表示しようとしているスケジュールは養成講座ではありません");
             $intr_course = $this->getApprovalName($intr_course);
 
-            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->orderBy('howMany')->get();
+            $InstructorCourseSchedules = InstructorCourseSchedule::where('instructor_courses_id', $id )->orderBy('howMany')->get();
             $ApprovalComments = ApprovalComments::where('course_schedules_id', $id )->get();
-            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens, 'ApprovalComments' => $ApprovalComments ]);
+            return view('course_schedule.intrShow', ['intr_course' => $intr_course, 'InstructorCourseSchedules' => $InstructorCourseSchedules, 'ApprovalComments' => $ApprovalComments ]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -348,14 +348,20 @@ class CourseScheduleController extends Controller
     public function intrEdit($id){
         try {
             $auth_id = Auth::user()->id;
-            $intr_course = CourseSchedule::find($id);
-            $courseScheduleWhens = CourseScheduleWhens::where('course_schedules_id', $id )->orderBy('howMany')->get();
+            $intr_course = InstructorCourse::find($id);
+            $InstructorCourseSchedule = InstructorCourseSchedule::where('instructor_courses_id', $id )->orderBy('howMany')->get();
+            // 自分のScheduleか確認
+            if($intr_course->instructor_id <> $this->_auth_id )throw new \Exception("あなたのスケジュールではありません");
+
+            // 養成コースか確認
+            if($intr_course->course_id <> 6 )throw new \Exception("編集しようとしているスケジュールは養成講座ではありません");
+
             // 受理済みかの確認
             if($intr_course->approval_flg == 5 ){
-                return view('course_schedule.intrEditReleaseSchedule', ['intr_course' => $intr_course,'courseScheduleWhens' => $courseScheduleWhens]);
+                return view('course_schedule.intrEditReleaseSchedule', ['intr_course' => $intr_course,'InstructorCourseSchedules' => $InstructorCourseSchedule]);
             }
 
-            return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'courseScheduleWhens' => $courseScheduleWhens]);
+            return view('course_schedule.intrEdit', ['intr_course' => $intr_course, 'InstructorCourseSchedule' => $InstructorCourseSchedule]);
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -401,10 +407,9 @@ class CourseScheduleController extends Controller
      */
     public function paraUpdateOpenDay(Request $request, $id){
         try {
-            $auth_id = Auth::user()->id;
-            $intr_course = CourseSchedule::find($id);
+            $intr_course = InstructorCourse::find($id);
             // 自分のスケジュールを更新しようとしているか確認
-            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
+            if($intr_course->instructor_id <> $this->_auth_id)throw new \Exception("不正な更新accessです");
             // 削除されたデータじゃないか確認
             if( $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
 
@@ -425,8 +430,7 @@ class CourseScheduleController extends Controller
      */
     public function intrUpdate(Request $request, $id){
         try {
-            // dd($request->date1);
-            $intr_course = CourseSchedule::find($id);
+            $intr_course = InstructorCourse::find($id);
             // 自分のスケジュールを更新しようとしているか確認
             if($intr_course->instructor_id <> $this->_auth_id)throw new \Exception("不正な更新accessです");
             // 受理済みか削除されたデータじゃないか確認
@@ -442,16 +446,16 @@ class CourseScheduleController extends Controller
             $intr_course->open_finish_day=  date("Y-m-d H:i:00", strtotime($request->open_finish_day));
             $intr_course->save();
 
-            $this->updateCourseScheduleWhens( $id, $request->date1 ,1);
-            $this->updateCourseScheduleWhens( $id, $request->date2 ,2);
-            $this->updateCourseScheduleWhens( $id, $request->date3 ,3);
-            $this->updateCourseScheduleWhens( $id, $request->date4 ,4);
-            $this->updateCourseScheduleWhens( $id, $request->date5 ,5);
-            $this->updateCourseScheduleWhens( $id, $request->date6 ,6);
-            $this->updateCourseScheduleWhens( $id, $request->date7 ,7);
-            $this->updateCourseScheduleWhens( $id, $request->date8 ,8);
-            $this->updateCourseScheduleWhens( $id, $request->date9 ,9);
-            $this->updateCourseScheduleWhens( $id, $request->date10 ,10);
+            $this->update_instructorCourseSchedules( $id, $request->date1 ,1);
+            $this->update_instructorCourseSchedules( $id, $request->date2 ,2);
+            $this->update_instructorCourseSchedules( $id, $request->date3 ,3);
+            $this->update_instructorCourseSchedules( $id, $request->date4 ,4);
+            $this->update_instructorCourseSchedules( $id, $request->date5 ,5);
+            $this->update_instructorCourseSchedules( $id, $request->date6 ,6);
+            $this->update_instructorCourseSchedules( $id, $request->date7 ,7);
+            $this->update_instructorCourseSchedules( $id, $request->date8 ,8);
+            $this->update_instructorCourseSchedules( $id, $request->date9 ,9);
+            $this->update_instructorCourseSchedules( $id, $request->date10 ,10);
 
             session()->flash('msg_success', '更新が完了しました');
             return redirect()->action('CourseScheduleController@index');
@@ -464,16 +468,16 @@ class CourseScheduleController extends Controller
     /**
      * 養成コースに紐づくスケジュールを更新する
      */
-    public function updateCourseScheduleWhens( $id, $requestDate, $howMany){
+    public function update_instructorCourseSchedules( $id, $requestDate, $howMany){
         if($requestDate){
-            DB::table('course_schedule_whens')
+            DB::table('instructor_course_schedules')
                 ->updateOrInsert(
-                    ['course_schedules_id' => $id, 'howMany' => $howMany],
+                    ['instructor_courses_id' => $id, 'howMany' => $howMany],
                     ['date' => $requestDate, 'instructor_id' => $this->_auth_id ]
                 );
         }else{
-            DB::table('course_schedule_whens')
-                ->where('course_schedules_id' , $id)
+            DB::table('instructor_course_schedules')
+                ->where('instructor_courses_id' , $id)
                 ->where('howMany', $howMany)
                 ->delete();
         }
@@ -484,11 +488,10 @@ class CourseScheduleController extends Controller
      */
     public function intrUpdateOpenDay(Request $request, $id){
         try {
-            $auth_id = Auth::user()->id;
-            $intr_course = CourseSchedule::find($id);
+            $intr_course = InstructorCourse::find($id);
             // 自分のスケジュールを更新しようとしているか確認
-            if($intr_course->instructor_id <> $auth_id)throw new \Exception("不正な更新accessです");
-            // 受理済みか削除されたデータじゃないか確認
+            if($intr_course->instructor_id <> $this->_auth_id)throw new \Exception("不正な更新accessです");
+            // 削除されたデータじゃないか確認
             if($intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
 
             $intr_course->open_start_day=  date("Y-m-d H:i:00", strtotime($request->open_start_day));
@@ -540,23 +543,18 @@ class CourseScheduleController extends Controller
      */
     public function intrDelete($id){
         try {
-            $auth_id = Auth::user()->id;
-            $intr_course = CourseSchedule::find($id);
+            $intr_course = InstructorCourse::find($id);
             // ユーザーのコースか確認
-            if( empty($intr_course) || $intr_course->instructor_id <> $auth_id )throw new \Exception("不正なaccessです");
+            if( empty($intr_course) || $intr_course->instructor_id <> $this->_auth_id )throw new \Exception("不正なaccessです");
             if($intr_course->approval_flg > 2) throw new \Exception("削除しようとしたコースは受領済みの為削除できません。");
 
-            // コースのIDを取得
-            $intr_course_id = $intr_course->id;
-
             // 取得したコースを論理削除
-            CourseSchedule::where('id', $intr_course_id)->update([
+            InstructorCourse::where('id', $id)->update([
                                 'delete_flag' => 1
             ]);
 
             // コースに紐づいているスケジュールを論理削除
-            CourseScheduleWhens::where('course_schedules_id', $intr_course_id)
-                            ->update([
+            InstructorCourseSchedule::where('instructor_courses_id', $id)->update([
                                 'delete_flag' => 1
             ]);
             session()->flash('msg_success', '削除が完了しました');
