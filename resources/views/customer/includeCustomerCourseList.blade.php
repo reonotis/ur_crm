@@ -12,7 +12,6 @@
     <th>購入コース</th>
     <th>金額</th>
     <th>入金確認</th>
-    <th>確認</th>
   </tr>
   <?php foreach ($CoursePurchaseDetails as $key => $CoursePurchaseDetail) { ?>
     <tr>
@@ -20,7 +19,6 @@
       <td><?= $CoursePurchaseDetail->course_name ?></td>
       <td><?= number_format($CoursePurchaseDetail->price) ?>円</td>
       <td><?= paymentConfirmation($CoursePurchaseDetail->pay_confirm , $CoursePurchaseDetail->payment_day ) ?></td>
-      <td><a href="" >確認する</a></td>
     </tr>
   <?php  } ?>
 

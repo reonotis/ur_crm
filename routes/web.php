@@ -117,12 +117,12 @@ Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
     Route::get('intrCreate', 'CourseScheduleController@intrCreate')->name('courseSchedule.intrCreate');
     Route::post('intrConfilm', 'CourseScheduleController@intrConfilm')->name('courseSchedule.intrConfilm');
-    Route::post('intrStore', 'CourseScheduleController@intrStore')->name('courseSchedule.intrStore');
+    Route::post('requestIntrCourse', 'CourseScheduleController@requestIntrCourse')->name('courseSchedule.requestIntrCourse');
     Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
     Route::get('paraCreate', 'CourseScheduleController@paraCreate')->name('courseSchedule.paraCreate');
     Route::post('paraConfilm', 'CourseScheduleController@paraConfilm')->name('courseSchedule.paraConfilm');
     Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
-    Route::post('paraStore', 'CourseScheduleController@paraStore')->name('courseSchedule.paraStore');
+    Route::post('requestParaCourse', 'CourseScheduleController@requestParaCourse')->name('courseSchedule.requestParaCourse');
     Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
     Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
     Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');

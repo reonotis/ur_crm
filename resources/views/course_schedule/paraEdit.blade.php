@@ -23,13 +23,17 @@
                             </tr>
                             <tr>
                                 <th>料金</th>
-                                <td><input type="text" class="formInput" name="price" value="{{ $intr_course->price }}"></td>
+                                <td>
+                                    <div class="inputUnits">
+                                        <input type="number" name="price" value="{{ $intr_course->price }}" step="100" class="formInput inputUnit" >円
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                    <input class="formInput" type="date" name="date" id="date" value="{{ $courseScheduleWhens[0]->date->format('Y-m-d') }}" >
-                                    <input class="formInput" type="time" name="time" id="time" value="{{ $courseScheduleWhens[0]->date->format('H:i') }}"  >
+                                    <input class="formInput" type="date" name="date" id="date" value="{{ $InstructorCourseSchedule[0]->date->format('Y-m-d') }}" >
+                                    <input class="formInput" type="time" name="time" id="time" value="{{ $InstructorCourseSchedule[0]->date->format('H:i') }}"  >
                                 </td>
                             </tr>
                             <tr>

@@ -66,7 +66,6 @@ class CoursePurchaseDetailsController extends Controller
         return view('customer.appryCourse', compact('customer', 'courses', 'CoursePurchaseDetails'));
     }
 
-
     /**
      * 申し込むコースをトランザクションに入れる
      *

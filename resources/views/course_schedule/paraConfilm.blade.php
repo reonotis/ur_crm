@@ -48,7 +48,7 @@
                         <tr>
                             <td colspan="2">
                                 <span class="support" id="support" >上記の内容で申請しても宜しいでしょうか？</span>
-                                <form method="post" action="{{route('courseSchedule.paraStore')}}" class="form-inline my-2 my-lg-0">
+                                <form method="post" action="{{route('courseSchedule.requestParaCourse')}}" class="form-inline my-2 my-lg-0">
                                 {{csrf_field()}}
                                     <button class="btn btn-outline-secondary" type="button" onClick="history.back()">戻る</button>
                                     <input type="hidden" name="price" value="<?= $request->price ?>" >

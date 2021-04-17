@@ -26,7 +26,7 @@
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                {{$intr_course -> date ->format('Y年m月d日') }}　{{ date('H:i', strtotime($intr_course->time)) }}～
+                                {{$courseScheduleWhens[0] -> date ->format('Y年m月d日 H:i') }}　～
                             </td>
                             </tr>
                             <tr>

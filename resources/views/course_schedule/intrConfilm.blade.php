@@ -71,7 +71,7 @@
                         <tr>
                             <td colspan="2">
                                 <span class="support" id="support" >上記の内容で事務局に申請しますか<br>承認後の変更は出来ません。</span>
-                                <form action="{{route('courseSchedule.intrStore', ['id' => $request->id ] )}}" method="post" >
+                                <form action="{{route('courseSchedule.requestIntrCourse', ['id' => $request->id ] )}}" method="post" >
                                     @csrf
                                     <button class="btn btn-outline-secondary" type="button" onClick="history.back()">戻る</button>
                                     <input type="hidden" name="course_title" value="{{ $request->course_title }}" >

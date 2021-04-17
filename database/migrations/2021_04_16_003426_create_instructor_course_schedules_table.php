@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCourseScheduleWhensTable extends Migration
+class CreateInstructorCourseSchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateCourseScheduleWhensTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_schedule_whenses', function (Blueprint $table) {
+        Schema::create('instructor_course_schedules', function (Blueprint $table) {
             $table->bigIncrements('id')                    ->comment('ID');
-            $table->integer('course_schedules_id')         ->comment('コーススケジュールID');
+            $table->integer('instructor_courses_id')       ->comment('インストラクターコースID');
             $table->integer('instructor_id')               ->comment('インストラクターID');
             $table->timestamp('date')                      ->comment('日程');
             $table->tinyInteger('howMany')     ->nullable()->comment('何回目の受講か');
@@ -24,9 +24,6 @@ class CreateCourseScheduleWhensTable extends Migration
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
             $table->boolean('delete_flag')->default('0')->comment('削除フラグ');
         });
-
-        // ALTER 文を実行しテーブルにコメントを設定
-        DB::statement("ALTER TABLE course_schedule_whenses COMMENT 'コーススケジュールの日程を管理するテーブル'");
     }
 
     /**
@@ -36,6 +33,6 @@ class CreateCourseScheduleWhensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_schedule_whenses');
+        Schema::dropIfExists('instructor_course_schedules');
     }
 }
