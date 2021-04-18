@@ -115,32 +115,55 @@ class ScheduleController extends Controller
         $DATE = date('Y-m-d');
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
-
         $NISSUU = (date('t', strtotime($month)));
-        // $query = CourseScheduleWhens::select('course_schedule_whens.*','course_schedules.course_title','courses.course_name', 'users.name')
-        // ->join('course_schedules', 'course_schedules.id' , '=', 'course_schedule_whens.course_schedules_id')
-        // ->join('courses', 'courses.id' , '=', 'course_schedules.course_id')
-        // ->join('users', 'users.id' , '=', 'course_schedules.instructor_id')
-        // ->where('course_schedule_whens.date', 'LIKE', $month.'%')
-        // ->orderByRaw('course_schedule_whens.date asc');
-        // if( $this->_auth_authority_id >= 7){
-        //     $query -> where('course_schedule_whens.instructor_id','=', $this->_auth_id  );
-        // }
-        // $schedules=$query->get();
 
-        // dd($schedules[0]->date->format('Y-m-d'));
-        
+        // customer_schedulesのサブquery作成
+        $CSQuery = CustomerSchedule::select('customer_id', 'course_schedules_id', 'instructor_id','date_time', 'howMany')
+            ->where('date_time', 'LIKE', "$month%")
+            ->where('delete_flag', 0);
+        if($this->_auth_authority_id >= 5 ) $CSQuery->where('instructor_id', $this->_auth_id);
+        $CS = $CSQuery->get();
+
+        // InstructorCourseScheduleのサブqueryと各テーブルを結合
+        $ICSQuery = InstructorCourseSchedule::select(DB::raw('count(customer_id) as NINZUU') ,
+                                                    'instructor_courses.id',
+                                                    'instructor_course_schedules.date',
+                                                    'CS.date_time',
+                                                    'instructor_course_schedules.howMany',
+                                                    'courses.course_name',
+                                                    'users.name'
+                                                    )
+        ->leftJoinSub($CSQuery, 'CS', 'CS.course_schedules_id', 'instructor_course_schedules.id')
+        ->join('instructor_courses', 'instructor_courses.id', 'instructor_course_schedules.instructor_courses_id')
+        ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->join('users', 'users.id', 'instructor_course_schedules.instructor_id')
+        ->where('instructor_course_schedules.date', 'LIKE', "$month%")
+        ->where('instructor_course_schedules.delete_flag', 0)
+        ->groupBy( 'date_time','instructor_course_schedules.id')
+        ;
+        if($this->_auth_authority_id >= 5 ) $ICSQuery->where('instructor_course_schedules.instructor_id', $this->_auth_id);
+        $schedules = $ICSQuery->get();
+
+        // dd( $schedules);
+
         $monthData = [];
         $day = 1;
         for($i = 0; $i < $NISSUU; $i++){
             $monthData[$i]['date'] = date('Y年m月d日', strtotime( $month ."-" . sprintf('%02d', $day)));
             $monthData[$i]['week'] = date('D', strtotime( $month ."-" . sprintf('%02d', $day)));
 
-            // foreach( $schedules as $schedule){
-            //     if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
-            //         $monthData[$i]['schedules'][] = $schedule;
-            //     }
-            // }
+            foreach( $schedules as $schedule){
+                if($schedule->date_time){
+                    // dd($schedule->date_time);
+                    if(date('Y-m-d',  strtotime(  $schedule->date_time )) == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
+                        $monthData[$i]['schedules'][] = $schedule;
+                    }
+                }else{
+                    if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
+                        $monthData[$i]['schedules'][] = $schedule;
+                    }
+                }
+            }
             $day ++;
         }
         return view('schedule.list', [ 'month' => $month, 'monthData' => $monthData]);

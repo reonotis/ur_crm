@@ -33,7 +33,7 @@
                         <?php
                             if(isset($dayData['schedules'])){
                                 foreach($dayData['schedules'] as $schedule){
-                                    echo $schedule->course_name ."　(". $schedule->customer_count . "名)<br>";
+                                    echo $schedule->course_name ."　" . $schedule->howMany . "回目　(". $schedule->NINZUU . "名)<br>";
                                 }
                             }
                         ?>
