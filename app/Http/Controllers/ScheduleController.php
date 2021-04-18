@@ -130,6 +130,7 @@ class ScheduleController extends Controller
                                                     'instructor_course_schedules.date',
                                                     'CS.date_time',
                                                     'instructor_course_schedules.howMany',
+                                                    'courses.id AS courses_id',
                                                     'courses.course_name',
                                                     'users.name'
                                                     )
@@ -142,9 +143,10 @@ class ScheduleController extends Controller
         ->groupBy('course_schedules_id', 'date_time','instructor_course_schedules.id')
         ;
         if($this->_auth_authority_id >= 5 ) $ICSQuery->where('instructor_course_schedules.instructor_id', $this->_auth_id);
-        $schedules = $ICSQuery->get();
+        $results = $ICSQuery->get();
 
-        // dd( $schedules);
+
+        $schedules = $this->correct_schedules($results);
 
         $monthData = [];
         $day = 1;
@@ -153,15 +155,8 @@ class ScheduleController extends Controller
             $monthData[$i]['week'] = date('D', strtotime( $month ."-" . sprintf('%02d', $day)));
 
             foreach( $schedules as $schedule){
-                if($schedule->date_time){
-                    // dd($schedule->date_time);
-                    if(date('Y-m-d',  strtotime(  $schedule->date_time )) == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
-                        $monthData[$i]['schedules'][] = $schedule;
-                    }
-                }else{
-                    if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
-                        $monthData[$i]['schedules'][] = $schedule;
-                    }
+                if( $schedule['date'] == date('Y年m月d日', strtotime( $month ."-" . sprintf('%02d', $day))) ){
+                    $monthData[$i]['schedules'][] = $schedule;
                 }
             }
             $day ++;
@@ -169,12 +164,32 @@ class ScheduleController extends Controller
         return view('schedule.list', [ 'month' => $month, 'monthData' => $monthData]);
     }
 
+    /**
+     * 取得したスケジュールを分かりやすく更新する
+     */
+    public function correct_schedules($results){
+        $count = 0;
+        foreach($results as $result){
+            $schedules[$count]["id"]        = $result->id;
+            $schedules[$count]["NINZUU"]    = $result->NINZUU . "人";
+            $schedules[$count]["name"]      = $result->name;
 
-    public function changeTypes($schedules){
-        foreach($schedules as $schedule){
-            // $schedule->date = $schedule->date->format('y年m月d');
-            // $schedule->date = "sss";
-            // dd($schedule->date->format('ymd'));
+            // 養成講座だったらcourse_nameに回数を付ける
+            if($result->courses_id == 6){
+                $schedules[$count]["course_name"] = $result->course_name . " " . $result->howMany . "回目" ;
+            }else{
+                $schedules[$count]["course_name"] = $result->course_name;
+            }
+
+            // customer_schedules.date_time が紐づいている場合と、紐づいていない場合で日時のフォーマットを合わせる
+            if($result->date_time){
+                $schedules[$count]["date"]      = date('Y年m月d日', strtotime($result->date_time)) ;
+                $schedules[$count]["time"]      = date('H:i', strtotime($result->date_time)) ;
+            }else{
+                $schedules[$count]["date"]      = $result->date->format('Y年m月d日');
+                $schedules[$count]["time"]      = $result->date->format('H:i');
+            }
+            $count ++;
         }
         return $schedules;
     }

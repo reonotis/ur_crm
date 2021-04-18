@@ -4,14 +4,12 @@
     <th>コース内容</th>
     <th>状況</th>
     <th>インストラクター</th>
-    <th>詳細</th>
   </tr>
 
   <?php foreach ($CustomerSchedules as $key => $CustomerSchedule) { ?>
     <tr>
       <td>
-        <?= date('Y年m月d日 ',  strtotime($CustomerSchedule->date)) ?>
-        <?= date('　h:i',  strtotime($CustomerSchedule->time)) ?>
+        <?= date('Y年m月d日　H:i',  strtotime($CustomerSchedule->date_time)) ?>
       </td>
       <td>
         <?= $CustomerSchedule->course_name  ?> の　
@@ -19,7 +17,6 @@
       </td>
       <td><?= $CustomerSchedule->status?></td>
       <td><?= $CustomerSchedule->intrName ?></td>
-      <td><a href="{{route('courseDetails.scheduleEdit', ['id' => $CustomerSchedule->id ] )}}" >詳細を見る</a></td>
     </tr>
   <?php  } ?>
 

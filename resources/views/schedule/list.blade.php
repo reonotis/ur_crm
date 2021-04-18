@@ -16,7 +16,7 @@
             <tr>
                 <th>日付</th>
                 <th>曜日</th>
-                <th>スケジュール (申し込み人数)</th>
+                <th>スケジュール　(申し込み人数)</th>
             </tr>
             @foreach ($monthData as $dayData)
                 <tr <?php if($dayData['week'] == 'Sun'){
@@ -33,7 +33,9 @@
                         <?php
                             if(isset($dayData['schedules'])){
                                 foreach($dayData['schedules'] as $schedule){
-                                    echo $schedule->course_name ."　" . $schedule->howMany . "回目　(". $schedule->NINZUU . "名)<br>";
+                                    echo "<a href='". $schedule['id'] ."' >" . $schedule['course_name'] ."　" ;
+                                    if($schedule['name']) echo $schedule['name']."　";
+                                    echo "(". $schedule['NINZUU'] . ")</a><br>";
                                 }
                             }
                         ?>

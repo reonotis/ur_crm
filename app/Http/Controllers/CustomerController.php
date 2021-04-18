@@ -144,7 +144,7 @@ class CustomerController extends Controller
             -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'instructor_course_schedules.instructor_courses_id')
             -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
-        $CSQuery -> orderByRaw('customer_schedules.date DESC , customer_schedules.time DESC , customer_schedules.howMany DESC ');
+        $CSQuery -> orderByRaw('customer_schedules.date_time DESC, customer_schedules.howMany DESC ');
         $CustomerSchedules = $CSQuery -> get();
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
         

@@ -39,28 +39,6 @@ Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
 
 
 
-// Client関係
-Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ClientController@index')->name('client.index');
-    Route::get('list', 'ClientController@list')->name('client.list');
-    Route::get('display/{id}', 'ClientController@display')->name('client.display');
-    // Route::get('display', 'ClientController@display')->name('client.display');
-    Route::get('search', 'ClientController@search')->name('client.search');
-    Route::get('searching', 'ClientController@searching')->name('client.searching');
-    Route::get('create', 'ClientController@create')->name('client.create');
-    Route::post('store', 'ClientController@store')->name('client.store');
-    Route::post('update/{id}', 'ClientController@update')->name('client.update');
-    Route::get('show/{id}', 'ClientController@show')->name('client.show');
-    Route::get('newCall/{id}', 'ClientController@newCall')->name('client.newCall');
-    // ajax
-    Route::get('aj_history_id/{id}', 'ClientController@aj_history_id')->name('client.aj_history_id');
-    Route::get('aj_contactList/{id}', 'ClientController@aj_contactList')->name('client.aj_contactList');
-    Route::get('aj_orderList/{id}', 'ClientController@aj_orderList')->name('client.aj_orderList');
-    Route::get('aj_history_detail/{id}', 'ClientController@aj_history_detail')->name('client.aj_history_detail');
-    Route::post('aj_contact_update/{id}', 'ClientController@aj_contact_update')->name('client.aj_contact_update');
-});
-
-
 
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
@@ -135,6 +113,9 @@ Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
 });
 
+
+
+
 // ユーザー（インストラクター関係）
 Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('index', 'UserController@index')->name('user.index');
@@ -142,6 +123,14 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::post('store', 'UserController@store')->name('user.store');
     Route::get('display/{id}', 'UserController@display')->name('user.display');
 });
+
+// courseの詳細
+Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
+    Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
+});
+
+
+
 
 // setting関係
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
@@ -158,13 +147,6 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::post('updateAddress', 'SettingController@updateAddress')->name('setting.updateAddress');
     Route::post('updateImage', 'SettingController@updateImage')->name('setting.updateImage');
 });
-
-
-
-
-Route::get( '/mailsend' , 'MailSendController@index');
-
-
 
 
 
