@@ -139,7 +139,7 @@ class ScheduleController extends Controller
         ->join('users', 'users.id', 'instructor_course_schedules.instructor_id')
         ->where('instructor_course_schedules.date', 'LIKE', "$month%")
         ->where('instructor_course_schedules.delete_flag', 0)
-        ->groupBy( 'date_time','instructor_course_schedules.id')
+        ->groupBy('course_schedules_id', 'date_time','instructor_course_schedules.id')
         ;
         if($this->_auth_authority_id >= 5 ) $ICSQuery->where('instructor_course_schedules.instructor_id', $this->_auth_id);
         $schedules = $ICSQuery->get();
