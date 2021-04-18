@@ -17,10 +17,10 @@ class CreateCustomerCourseMappingTable extends Migration
             $table->bigIncrements('id')                  ->comment('ID');
             $table->integer('customer_id')               ->comment('顧客ID');
             $table->date('date')                         ->comment('購入日');
-            $table->integer('course_schedule_id')        ->comment('購入したコースID');
+            $table->integer('instructor_courses_id')     ->comment('購入したコースID');
             $table->integer('price')                     ->comment('料金');
             $table->integer('pay_confirm')->default('0') ->comment('入金確認');
-            $table->date('payment_day')   ->nullable()   ->comment('入金日');
+            $table->date('payment_day')    ->nullable()  ->comment('入金日');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->integer('created_by')  ->nullable()  ->comment('作成者')	;
