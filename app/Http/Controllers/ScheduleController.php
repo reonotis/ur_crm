@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\CourseScheduleWhens;
+use App\Models\InstructorCourse;
+use App\Models\InstructorCourseSchedule;
 use App\Models\CustomerSchedule;
 use DateTime;
 
@@ -115,17 +116,17 @@ class ScheduleController extends Controller
         $month = substr($DATE, 0, 7);
         if(isset($_GET['month']))$month = $_GET['month'];
 
-        $NISSUU = (date('t', strtotime($DATE)));
-        $query = CourseScheduleWhens::select('course_schedule_whens.*','course_schedules.course_title','courses.course_name', 'users.name')
-        ->join('course_schedules', 'course_schedules.id' , '=', 'course_schedule_whens.course_schedules_id')
-        ->join('courses', 'courses.id' , '=', 'course_schedules.course_id')
-        ->join('users', 'users.id' , '=', 'course_schedules.instructor_id')
-        ->where('course_schedule_whens.date', 'LIKE', $month.'%')
-        ->orderByRaw('course_schedule_whens.date asc');
-        if( $this->_auth_authority_id >= 7){
-            $query -> where('course_schedule_whens.instructor_id','=', $this->_auth_id  );
-        }
-        $schedules=$query->get();
+        $NISSUU = (date('t', strtotime($month)));
+        // $query = CourseScheduleWhens::select('course_schedule_whens.*','course_schedules.course_title','courses.course_name', 'users.name')
+        // ->join('course_schedules', 'course_schedules.id' , '=', 'course_schedule_whens.course_schedules_id')
+        // ->join('courses', 'courses.id' , '=', 'course_schedules.course_id')
+        // ->join('users', 'users.id' , '=', 'course_schedules.instructor_id')
+        // ->where('course_schedule_whens.date', 'LIKE', $month.'%')
+        // ->orderByRaw('course_schedule_whens.date asc');
+        // if( $this->_auth_authority_id >= 7){
+        //     $query -> where('course_schedule_whens.instructor_id','=', $this->_auth_id  );
+        // }
+        // $schedules=$query->get();
 
         // dd($schedules[0]->date->format('Y-m-d'));
         
@@ -135,11 +136,11 @@ class ScheduleController extends Controller
             $monthData[$i]['date'] = date('Y年m月d日', strtotime( $month ."-" . sprintf('%02d', $day)));
             $monthData[$i]['week'] = date('D', strtotime( $month ."-" . sprintf('%02d', $day)));
 
-            foreach( $schedules as $schedule){
-                if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
-                    $monthData[$i]['schedules'][] = $schedule;
-                }
-            }
+            // foreach( $schedules as $schedule){
+            //     if( $schedule->date->format('Y-m-d') == date('Y-m-d', strtotime( $month ."-" . sprintf('%02d', $day))) ){
+            //         $monthData[$i]['schedules'][] = $schedule;
+            //     }
+            // }
             $day ++;
         }
         return view('schedule.list', [ 'month' => $month, 'monthData' => $monthData]);

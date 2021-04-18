@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\CustomerSchedule;
+use App\Models\InstructorCourse;
+use App\Models\InstructorCourseSchedule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -56,7 +58,7 @@ class CustomerController extends Controller
      */
     public function search(){
         // アーティサンコマンドでWordpressからの申し込みファイルをインポートする
-        Artisan::call('command:courseApplicationImport');
+        // Artisan::call('command:courseApplicationImport');
         return view('customer.search');
     }
 
@@ -134,12 +136,13 @@ class CustomerController extends Controller
         // 権限がエージェントだったら住所にmaskをかける
         if($this->_auth_authority_id >= 7) $customer = $this->maskCustomerData($customer);
 
-        // 顧客のスケジュールを取得する
-        $CSQuery = DB::table('customer_schedules');
-        $CSQuery   -> select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' );
-            $CSQuery -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id');
-            $CSQuery -> leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_schedules.course_schedules_id');
-            $CSQuery -> leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id');
+        // 顧客のスケジュールを取得するinstructor_courses
+
+        $CSQuery = CustomerSchedule::select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' )
+            -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id')
+            -> leftJoin('instructor_course_schedules', 'instructor_course_schedules.id', '=', 'customer_schedules.course_schedules_id')
+            -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'instructor_course_schedules.instructor_courses_id')
+            -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
         $CSQuery -> orderByRaw('customer_schedules.date DESC , customer_schedules.time DESC , customer_schedules.howMany DESC ');
         $CustomerSchedules = $CSQuery -> get();
@@ -147,8 +150,8 @@ class CustomerController extends Controller
         
         // 購入コース明細を取得する
         $CPDQuery = DB::table('customer_course_mapping');
-        $CPDQuery -> leftJoin('course_schedules', 'course_schedules.id', '=', 'customer_course_mapping.course_schedule_id');
-        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'course_schedules.course_id');
+        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.course_schedule_id');
+        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CPDQuery -> select('customer_course_mapping.*', 'courses.course_name' );
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
