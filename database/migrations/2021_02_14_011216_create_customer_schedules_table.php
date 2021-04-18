@@ -16,7 +16,6 @@ class CreateCustomerSchedulesTable extends Migration
         Schema::create('customer_schedules', function (Blueprint $table) {
             $table->bigIncrements('id')                  ->comment('ID');
             $table->integer('customer_id')               ->comment('顧客ID');
-            $table->time('time','0')->default('12:00:00')->comment('受講時間');
             $table->timestamp('dateTime')                ->comment('受講日時');
 
             $table->integer('course_schedules_id')       ->comment('コーススケジュールID');
