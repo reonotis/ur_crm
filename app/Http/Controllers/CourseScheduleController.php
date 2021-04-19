@@ -434,6 +434,7 @@ class CourseScheduleController extends Controller
             // 受理済みか削除されたデータじゃないか確認
             if($intr_course->approval_flg > 5 || $intr_course->delete_flag == 1 )throw new \Exception("このデータは更新できません");
 
+            $intr_course->course_title= $request->course_title ;
             $intr_course->price= $request->price ;
             $intr_course->erea= $request->erea ;
             $intr_course->venue= $request->venue ;
