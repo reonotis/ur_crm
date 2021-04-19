@@ -19,8 +19,9 @@ class CreateCustomerCourseMappingTable extends Migration
             $table->date('date')                         ->comment('購入日');
             $table->integer('instructor_courses_id')     ->comment('購入したコースID');
             $table->integer('price')                     ->comment('料金');
-            $table->integer('pay_confirm')->default('0') ->comment('入金確認');
+            $table->integer('pay_confirm')->default('0') ->comment('入金確認 0:未入金 1:入金済み');
             $table->date('payment_day')    ->nullable()  ->comment('入金日');
+            $table->integer('status')     ->default('0') ->comment('状態 0:申込中 1:cancel 2:入確済 5:受講完 6:mail送信済 9:イントラ登録済');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->integer('created_by')  ->nullable()  ->comment('作成者')	;

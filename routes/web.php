@@ -127,6 +127,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 // courseの詳細
 Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
+    Route::get('completCustomerSchedule/{id}', 'CourseDetailController@completCustomerSchedule')->name('course_detail.completCustomerSchedule');
 });
 
 

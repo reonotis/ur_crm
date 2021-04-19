@@ -4,84 +4,63 @@
 <div class="container">
     <div class="row justify-content-center">
 
-    <h3>申請コース一覧</h3>
-
-
+    <h3>開催コース詳細</h3>
 
         <div class="coursesErea" >
-            <h4>パラリンビクス講座
-                <a href="{{route('courseSchedule.paraCreate')}}">新しくパラリンビクス講座を申請する</a>
-            </h4>
-            <table class="scheduleListTable">
-                <thead>
+            <h4>コース概要</h4>
+            <?= $IC->course_name ."　". $IC->course_title  ?>
+<br>
+<br>
+<br>
+<br>
+            <h4>参加者のスケジュール</h4>
+            <table class="scheduleListTable" >
+                <tr>
+                    <th>日時</th>
+                    <th>内容</th>
+                    <th>参加者</th>
+                    <th>受講状態</th>
+                </tr>
+                @foreach($customer_schedules as $data)
                     <tr>
-                        <th>コース名</th>
-                        <th>実施日時</th>
-                        <th>エリア</th>
-                        <th>会場</th>
-                        <th>料金</th>
-                        <th>状態</th>
-                        <th>詳細</th>
+                        <td>{{ $data->date_time->format('Y-m-d　H:i～') }}</td>
+                        <td>{{ $data->howMany }}回目</td>
+                        <td>{{ $data->name }}</td>
+                        <td>
+                            <?php if($data->status){
+                                echo "受講済み";
+                            }else{
+                                ?>
+                                <a href="{{ route('course_detail.completCustomerSchedule', ['id' => $data->id ]) }}" onclick="return confirmFunction1()">受講済みにする</a>
+
+                                <?php 
+                            }
+                            ?>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($para_course_schedules as $course_schedule)
-                        <tr>
-                            <td>{{ $course_schedule->course_name }}</td>
-                            <td>{{ date('Y年m月d日　H:i', strtotime($course_schedule->dataTime)) }}～</td>
-                            <td>{{ $course_schedule->erea }}</td>
-                            <td>{{ $course_schedule->venue }}</td>
-                            <td>{{ number_format($course_schedule->price) }}円</td>
-                            <td>{{ $course_schedule->approval_name }}</td>
-                            <td>
-                                <a href="{{route('courseSchedule.paraShow', ['id' => $course_schedule->id ] )}}">詳細</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                @endforeach
             </table>
         </div>
-        <div class="coursesErea" >
-            <h4>インストラクター養成講座
-                <a href="{{route('courseSchedule.intrCreate')}}">新しく養成講座を申請する</a>
-            </h4>
-            <table class="scheduleListTable">
-                <thead>
-                    <tr>
-                        <th>コースタイトル</th>
-                        <th>次回開講日時</th>
-                        <th>エリア</th>
-                        <th>会場</th>
-                        <th>料金</th>
-                        <th>状態</th>
-                        <th>詳細</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($intr_course_schedules as $course_schedule)
-                        <tr>
-                            <td>{{ $course_schedule->course_title }}</td>
-                            <td>{{ $course_schedule->howMany ."回目　" .$course_schedule->date->format('Y年m月d日　H:i') }}</td>
-                            <td>{{ $course_schedule->erea }}</td>
-                            <td>{{ $course_schedule->venue }}</td>
-                            <td>{{ number_format($course_schedule->price) }}円</td>
-                            <td>{{ $course_schedule->approval_name }}</td>
-                            <td>
-                                <a href="{{route('courseSchedule.intrShow', ['id' => $course_schedule->id ] )}}">詳細</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-<?php
-    // dd($para_course_schedules);
-?>
-
-
     </div>
 </div>
 
+
+<?php
+    // dd($IC, $ICS, $customer_schedules);
+?>
+
 @endsection
 
+<script>
+    function confirmFunction1() {
+        //ret変数に確認ダイアログの結果を代入する。
+        ret = window.confirm('このスケジュールを受講済みにします。\n宜しいですか？\nこの操作は元には戻せません');
 
+        //確認ダイアログの結果がOKの場合外部リンクを開く
+        if (ret == true){
+            return true
+        }else{
+            return false
+        }
+    }
+</script>

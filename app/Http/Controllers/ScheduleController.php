@@ -168,29 +168,29 @@ class ScheduleController extends Controller
      * 取得したスケジュールを分かりやすく更新する
      */
     public function correct_schedules($results){
-            $count = 0;
-            foreach($results as $result){
-                $schedules[$count]["id"]        = $result->id;
-                $schedules[$count]["NINZUU"]    = $result->NINZUU . "人";
-                $schedules[$count]["name"]      = $result->name;
-            
-                // 養成講座だったらcourse_nameに回数を付ける
-                if($result->courses_id == 6){
-                    $schedules[$count]["course_name"] = $result->course_name . " " . $result->howMany . "回目" ;
-                }else{
-                    $schedules[$count]["course_name"] = $result->course_name;
-                }
-            
-                // customer_schedules.date_time が紐づいている場合と、紐づいていない場合で日時のフォーマットを合わせる
-                if($result->date_time){
-                    $schedules[$count]["date"]      = date('Y年m月d日', strtotime($result->date_time)) ;
-                    $schedules[$count]["time"]      = date('H:i', strtotime($result->date_time)) ;
-                }else{
-                    $schedules[$count]["date"]      = $result->date->format('Y年m月d日');
-                    $schedules[$count]["time"]      = $result->date->format('H:i');
-                }
-                $count ++;
+        $count = 0;
+        foreach($results as $result){
+            $schedules[$count]["id"]        = $result->id;
+            $schedules[$count]["NINZUU"]    = $result->NINZUU . "人";
+            $schedules[$count]["name"]      = $result->name;
+
+            // 養成講座だったらcourse_nameに回数を付ける
+            if($result->courses_id == 6){
+                $schedules[$count]["course_name"] = $result->course_name . " " . $result->howMany . "回目" ;
+            }else{
+                $schedules[$count]["course_name"] = $result->course_name;
             }
+
+            // customer_schedules.date_time が紐づいている場合と、紐づいていない場合で日時のフォーマットを合わせる
+            if($result->date_time){
+                $schedules[$count]["date"]      = date('Y年m月d日', strtotime($result->date_time)) ;
+                $schedules[$count]["time"]      = date('H:i', strtotime($result->date_time)) ;
+            }else{
+                $schedules[$count]["date"]      = $result->date->format('Y年m月d日');
+                $schedules[$count]["time"]      = $result->date->format('H:i');
+            }
+            $count ++;
+        }
         if(!isset($schedules)) $schedules = false ;
         return $schedules;
     }

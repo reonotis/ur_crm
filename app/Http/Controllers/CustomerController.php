@@ -144,13 +144,13 @@ class CustomerController extends Controller
             -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'instructor_course_schedules.instructor_courses_id')
             -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
-        $CSQuery -> orderByRaw('customer_schedules.date_time DESC, customer_schedules.howMany DESC ');
+        $CSQuery -> orderByRaw('customer_schedules.date_time ASC, customer_schedules.howMany ASC ');
         $CustomerSchedules = $CSQuery -> get();
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
         
         // 購入コース明細を取得する
         $CPDQuery = DB::table('customer_course_mapping');
-        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.course_schedule_id');
+        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.customer_id');
         $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CPDQuery -> select('customer_course_mapping.*', 'courses.course_name' );
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
