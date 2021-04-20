@@ -178,7 +178,7 @@ class CourseDetailController extends Controller
                 $data = [
                     "course"     => $this->_instructor_courses,
                     "mapping"     => $this->_customerCourseMapping,
-                    "url"        => url('')
+                    "url"        => url('').'/home'
                 ];
                 Mail::send('emails.reportMail_completeIntrCourse', $data, function($message){
                     $message->to($this->_toInfo, 'Test')
