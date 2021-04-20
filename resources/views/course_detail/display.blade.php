@@ -20,6 +20,7 @@
                     <th>内容</th>
                     <th>参加者</th>
                     <th>受講状態</th>
+                    <th>更新</th>
                 </tr>
                 @foreach($customer_schedules as $data)
                     <tr>
@@ -32,10 +33,14 @@
                             }else{
                                 ?>
                                 <a href="{{ route('course_detail.completCustomerSchedule', ['id' => $data->id ]) }}" onclick="return confirmFunction1()">受講済みにする</a>
-
                                 <?php 
                             }
                             ?>
+                        </td>
+                        <td>
+                            <?php if(!$data->status){ ?>
+                                <a href="" >日時を修正</a>
+                            <?php } ?>
                         </td>
                     </tr>
                 @endforeach
