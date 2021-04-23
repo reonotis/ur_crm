@@ -40,6 +40,15 @@ Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
 
 
 
+// 管理画面関係
+Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
+    Route::get('index', 'adminController@index')->name('admin.index');
+    Route::get('customer_complet_course', 'adminController@customer_complet_course')->name('admin.customer_complet_course');
+});
+
+
+
+
 // 顧客関係
 Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('index', 'CustomerController@index')->name('customer.index');
@@ -128,6 +137,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
     Route::get('completCustomerSchedule/{id}', 'CourseDetailController@completCustomerSchedule')->name('course_detail.completCustomerSchedule');
+    Route::get('edit/{id}', 'CourseDetailController@edit')->name('course_detail.edit');
 });
 
 

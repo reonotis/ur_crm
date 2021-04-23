@@ -39,7 +39,7 @@
                         </td>
                         <td>
                             <?php if(!$data->status){ ?>
-                                <a href="" >日時を修正</a>
+                                <a href="{{ route('course_detail.edit', ['id' => $data->id ]) }}" >日時を修正</a>
                             <?php } ?>
                         </td>
                     </tr>

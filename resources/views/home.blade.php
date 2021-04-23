@@ -14,16 +14,35 @@
                         </div>
                     @endif
 
-                    管理者の場合<br>
-                    　・申請中で未受理のコースがあれば表示<br>
-                    　・養成courseを終えたお客様がいれば表示<br>
-                    <br><br>
-                    それ以外の場合<br>
-                    　・システムのからのメッセージ表示<br>
-                    　・申請したコースが差し戻されていたら表示<br>
+
+                    <!-- 管理者へのメッセージ -->
+                    @if(isset($adminMessage['UnAppCourse']))
+                        <a href="<?= url('').'/approval/index'  ?>" class="messegeLink" >申請中のコースが <?= count($adminMessage['UnAppCourse']) ?> 件あります<br></a>
+                    @endif
+                    @if(isset($adminMessage['compCourse']))
+                        @foreach($adminMessage['compCourse'] as $data)
+                            <a href="" class="messegeLink" ><?= $data->name ?>様が養成courseを終了しました<br></a>
+                        @endforeach
+                    @endif
+
+                    <!-- インストラクターへのメッセージ -->
+                    @if(count($intrMessage['NgAppCourse']))
+                        <a href="<?= url('').'/courseSchedule/index'  ?>" class="messegeLink" >差し戻されたコースが <?= count($intrMessage['NgAppCourse']) ?> 件あります<br></a>
+                    @endif
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+
+<style>
+.messegeLink{
+    display: block;
+
+    margin-top :10px;
+}
+</style>

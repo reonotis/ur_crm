@@ -92,6 +92,7 @@ class CourseDetailController extends Controller
     public function edit($id)
     {
         //
+        dd('更新画面作成中です');
     }
 
     /**
