@@ -61,6 +61,21 @@ class AdminController extends Controller
         
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
+    
+    /**
+     * 
+     */
+    public function unPayd()
+    {
+        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name')
+        ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
+        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
+        ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->where('pay_confirm', 0)
+        ->get();
+        
+        return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
+    }
 
     /**
      * Show the form for creating a new resource.

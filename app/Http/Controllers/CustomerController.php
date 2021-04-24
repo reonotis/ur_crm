@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerSchedule;
 use App\Models\InstructorCourse;
 use App\Models\InstructorCourseSchedule;
+use App\Models\CustomerCourseMapping;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -137,7 +138,6 @@ class CustomerController extends Controller
         if($this->_auth_authority_id >= 7) $customer = $this->maskCustomerData($customer);
 
         // 顧客のスケジュールを取得するinstructor_courses
-
         $CSQuery = CustomerSchedule::select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' )
             -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id')
             -> leftJoin('instructor_course_schedules', 'instructor_course_schedules.id', '=', 'customer_schedules.course_schedules_id')
@@ -147,15 +147,14 @@ class CustomerController extends Controller
         $CSQuery -> orderByRaw('customer_schedules.date_time ASC, customer_schedules.howMany ASC ');
         $CustomerSchedules = $CSQuery -> get();
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
-        
+
         // 購入コース明細を取得する
-        $CPDQuery = DB::table('customer_course_mapping');
-        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.customer_id');
+        $CPDQuery = CustomerCourseMapping::select('customer_course_mapping.*', 'courses.course_name' );
+        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.instructor_courses_id');
         $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
-        $CPDQuery -> select('customer_course_mapping.*', 'courses.course_name' );
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
-        
+
         return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails'));
     }
 

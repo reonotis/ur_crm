@@ -22,7 +22,9 @@
                 <a href="{{route('user.index')}}" class="btn btn-admin">?? 新規イントラ追加 ??</a>
             </div>
             <div class="admin_h5_wrap"><h5 class="admin_h5">入金管理</h5></div>
-            <a href="" class="btn btn-admin">?? 未入金リスト ??</a>
+            <div class="adminBtnErea">
+                <a href="{{route('admin.unPayd')}}" class="btn btn-admin">?? 未入金リスト ??</a>
+            </div>
 
         </div>
 

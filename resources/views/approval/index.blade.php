@@ -8,9 +8,9 @@
 </h3>
 
         <div class="LeftBOX" style="width:100%;">
-            <a href="">
+            <!-- <a href="">
                 申請済みの講座を確認する
-            </a>
+            </a> -->
             <!-- <button class="btn btn-outline-success my-2 my-sm-0 BOXin" type="submit">申請する</button> -->
         </div>
 

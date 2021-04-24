@@ -44,6 +44,7 @@ Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
 Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('index', 'adminController@index')->name('admin.index');
     Route::get('customer_complet_course', 'adminController@customer_complet_course')->name('admin.customer_complet_course');
+    Route::get('unPayd', 'adminController@unPayd')->name('admin.unPayd');
 });
 
 
