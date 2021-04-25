@@ -182,6 +182,7 @@ class CourseScheduleController extends Controller
             $ICS->howMany = 1;
             $ICS->save();
             $course = Course::find($IC->course_id);
+            dd($this->_toInfo);
             $data = [
                 "instructor" => $this->_user->name,
                 "course"     => $course->course_name,
