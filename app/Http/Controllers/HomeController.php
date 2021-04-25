@@ -37,7 +37,7 @@ class HomeController extends Controller
     public function index()
     {
         $adminMessage[] = "";
-        $unPayd = "";
+        $unPayd = array();
         // 管理者だったら
         if($this->_auth_authority_id <= 5 ){
             // 未承認のコースを取得
@@ -52,10 +52,8 @@ class HomeController extends Controller
             $adminMessage['compCourse'] = $compCourse;
 
             // 未入金のお客様を取得
-            $unPayd = CustomerCourseMapping::where('pay_confirm', 0)->get();
-
+            $unPayd = CustomerCourseMapping::where('pay_confirm', 0 )->get();
         }
-
         $NgAppCourse = InstructorCourse::where('approval_flg', 1 )->where('instructor_id', $this->_auth_id )->get();
         $intrMessage['NgAppCourse'] = $NgAppCourse;
 
