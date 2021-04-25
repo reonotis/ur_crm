@@ -9,4 +9,9 @@ class CustomerCourseMapping extends Model
     //
     protected $table = 'customer_course_mapping';
 
+    protected $dates = [
+        'limit_day',
+    ];
+
+
 }

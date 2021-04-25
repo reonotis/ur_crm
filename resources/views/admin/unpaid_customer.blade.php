@@ -14,6 +14,7 @@
                         <tr>
                             <th>顧客名</th>
                             <th>受講予定コース</th>
+                            <th>入金依頼メール</th>
                             <th>期日</th>
                             <th>確認</th>
                         </tr>
@@ -23,7 +24,20 @@
                             <tr>
                                 <td><a href="{{ route('customer.display', $CCM->customer_id ) }}" >{{ $CCM->name }}</a></td>
                                 <td>{{ $CCM->course_name}}</td>
-                                <td>確認項目です。</td>
+                                <td>
+                                    @if($CCM->status == 0)
+                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >送信する</a>
+                                    @else
+                                    送信済み<a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" > 再送信する</a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($CCM->limit_day))
+                                    {{ $CCM->limit_day->format('Y年m月d日') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td><a href="" >確認</a></td>
                             </tr>
                         @endforeach

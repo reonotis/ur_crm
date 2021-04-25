@@ -42,7 +42,10 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('unPayd', 'AdminController@unPayd')->name('admin.unPayd');
     Route::get('instructorRegistrRequest/{id}', 'SendMail\RegistrRequestController@instructorRegistrRequest')->name('admin.instructorRegistrRequest');
     Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
+    Route::get('requestPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@index')->name('admin.requestPaymentCourseFee');
+    Route::post('sendmailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendmailPaymentCourseFee')->name('admin.sendmailPaymentCourseFee');
 });
+
 
 
 //

@@ -22,6 +22,7 @@ class ApprovalController extends Controller
     private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
+    private $_toIntr ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -195,7 +196,7 @@ class ApprovalController extends Controller
             $course_schedules = InstructorCourse::find($id );
             $course = Course::find($course_schedules->course_id);
             $intr = DB::table('users')->find($course_schedules->instructor_id);
-
+            $this->_toIntr = $intr->email;
             if($request->NG){
                 $course_schedules->approval_flg = 1 ;
                 $course_schedules->save() ;
@@ -209,7 +210,7 @@ class ApprovalController extends Controller
                     "url"         => url('').'/courseSchedule/index'
                 ];
                 Mail::send('emails.scheduleApplicationResult', $data, function($message){
-                    $message->to($this->_toReon)
+                    $message->to($this->_toIntr)
                     ->cc($this->_toInfo)
                     ->bcc($this->_toReon)
                     ->subject('スケジュールが差し戻されました');
@@ -228,7 +229,7 @@ class ApprovalController extends Controller
                     "url"         => 'https://paralymbics.jp/schedules/'
                 ];
                 Mail::send('emails.scheduleApplicationResult', $data, function($message){
-                    $message->to($this->_toReon)
+                    $message->to($this->_toIntr)
                     ->cc($this->_toInfo)
                     ->bcc($this->_toReon)
                     ->subject('スケジュールが承認されました');
