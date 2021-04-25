@@ -135,6 +135,6 @@ return [
 
     'toAkemi' => env('MAIL_TO_AKEMI'),
     'toInfo'  => env('MAIL_TO_INFO'),
-    'toInfo'  => env('MAIL_TO_REON'),
+    'toReon'  => env('MAIL_TO_REON'),
 
 ];
