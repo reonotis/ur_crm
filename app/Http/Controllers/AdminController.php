@@ -58,8 +58,24 @@ class AdminController extends Controller
         ->join('customers', 'customers.id', 'customer_id')
         ->where('status', '>=',5)
         ->get();
+        
+        $CCMs = $this->aaa($CCMs);
+
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
+
+    /**
+     * 
+     */
+    public function aaa($CCMs){
+        foreach($CCMs as $CCM){
+            if($CCM->status == 5){
+                // dd($CCM);
+            }
+        }
+        return $CCMs;
+    }
+
 
     /**
      * 

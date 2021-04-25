@@ -133,8 +133,8 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
-    'toAkemi' => 'fujisawareon@yahoo.co.jp',
-    'toInfo' => 'fujisawareon@yahoo.co.jp',
-    'toReon' => 'fujisawareon@yahoo.co.jp',
+    'toAkemi' => env('MAIL_TO_AKEMI'),
+    'toInfo'  => env('MAIL_TO_INFO'),
+    'toInfo'  => env('MAIL_TO_REON'),
 
 ];
