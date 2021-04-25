@@ -16,13 +16,13 @@
 
 
                     <!-- 管理者へのメッセージ -->
-                    @if(count($adminMessage['UnAppCourse']))
+                    @if(isset($adminMessage['UnAppCourse']) && count($adminMessage['UnAppCourse']))
                         <a href="<?= url('').'/approval/index'  ?>" class="messegeLink" >申請中のコースが <?= count($adminMessage['UnAppCourse']) ?> 件あります<br></a>
                     @endif
-                    @if(count($unPayd))
+                    @if($unPayd <> "")
                         <a href="<?= url('').'/admin/unPayd'  ?>" class="messegeLink" >未入金のお客様が <?= count($unPayd) ?> 名います<br></a>
                     @endif
-                    @if(isset($adminMessage['compCourse']))
+                    @if(isset($adminMessage['compCourse']) && count($adminMessage['compCourse']))
                         @foreach($adminMessage['compCourse'] as $data)
                             <a href="<?= url('').'/admin/customer_complet_course'  ?>" class="messegeLink" ><?= $data->name ?>様が養成courseを終了しました<br></a>
                         @endforeach
