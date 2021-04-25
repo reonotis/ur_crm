@@ -37,6 +37,7 @@ class HomeController extends Controller
     public function index()
     {
         $adminMessage[] = "";
+        $unPayd = "";
         // 管理者だったら
         if($this->_auth_authority_id <= 5 ){
             // 未承認のコースを取得
