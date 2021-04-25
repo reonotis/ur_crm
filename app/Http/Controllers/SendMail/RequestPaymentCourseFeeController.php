@@ -70,7 +70,7 @@ class RequestPaymentCourseFeeController extends Controller
      */
     public function sendmailPaymentCourseFee(Request $request, $id){
         try {
-            $dayLimit = $request->dayLimit->format('Y-m-d');
+            $dayLimit = $request->dayLimit;
             $str_dayLimit = date('Y年m月d日', strtotime($dayLimit));
             $text = str_replace("###limitDay###", $str_dayLimit, $request->text);
             
