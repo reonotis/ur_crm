@@ -23,7 +23,7 @@
                             <tr>
                                 <td><a href="{{ route('customer.display', $CCM->customer_id ) }}" >{{ $CCM->name }}</a></td>
                                 <td>{{ $CCM->course_name}}</td>
-                                <td> - -</td>
+                                <td>確認項目です。</td>
                                 <td><a href="" >確認</a></td>
                             </tr>
                         @endforeach

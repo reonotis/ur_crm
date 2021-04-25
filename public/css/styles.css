@@ -329,6 +329,11 @@ textarea.formInput{
 	padding :5px;
 }
 
+textarea.mailformInput{
+	height :500px;
+	padding :5px;
+}
+
 
 
 select{

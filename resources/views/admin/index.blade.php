@@ -9,7 +9,7 @@
             <div class="admin_h5_wrap"><h5 class="admin_h5">コース管理</h5></div>
             <div class="adminBtnErea">
                 <a href="{{route('approval.index')}}" class="btn btn-admin">未承認コースの確認</a>
-                <a href="" class="btn btn-admin">?? 承認済コースの確認 ??</a>
+                <a href="" class="btn btn-admin">承認済コース いる??</a>
             </div>
             <div class="admin_h5_wrap"><h5 class="admin_h5">顧客管理</h5></div>
             <div class="adminBtnErea">
@@ -23,7 +23,7 @@
             </div>
             <div class="admin_h5_wrap"><h5 class="admin_h5">入金管理</h5></div>
             <div class="adminBtnErea">
-                <a href="{{route('admin.unPayd')}}" class="btn btn-admin">?? 未入金リスト ??</a>
+                <a href="{{route('admin.unPayd')}}" class="btn btn-admin">未入金リスト</a>
             </div>
 
         </div>

@@ -29,13 +29,9 @@ Auth::routes([
 
 
 
-
-//
-Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ReportController@index')->name('report.index');
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/home', 'HomeController@index')->name('home');
 });
-
-
 
 
 
@@ -44,8 +40,15 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('index', 'AdminController@index')->name('admin.index');
     Route::get('customer_complet_course', 'AdminController@customer_complet_course')->name('admin.customer_complet_course');
     Route::get('unPayd', 'AdminController@unPayd')->name('admin.unPayd');
+    Route::get('instructorRegistrRequest/{id}', 'SendMail\RegistrRequestController@instructorRegistrRequest')->name('admin.instructorRegistrRequest');
+    Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
 });
 
+
+//
+Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
+    Route::get('index', 'ReportController@index')->name('report.index');
+});
 
 
 
@@ -60,6 +63,8 @@ Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CustomerController@display')->name('customer.display');
 });
 
+
+
 // コース申し込み関係
 Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
     Route::get('apply/{id}', 'CoursePurchaseDetailsController@apply')->name('courseDetails.apply');
@@ -71,21 +76,11 @@ Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
 // スケジュール関係
 Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
     Route::get('index', 'ScheduleController@index')->name('schedule.index');
     Route::get('list', 'ScheduleController@list')->name('schedule.list');
 });
-
-
-
-
-
-
-
 
 
 
@@ -97,6 +92,7 @@ Route::group(['prefix'=>'approval', 'middleware'=>'auth'], function(){
     Route::get('confilmIntrCourse/{id}', 'ApprovalController@confilmIntrCourse')->name('approval.confilmIntrCourse');
     Route::post('update/{id}', 'ApprovalController@update')->name('approval.update');
 });
+
 
 
 // 実施講座関係
@@ -124,7 +120,6 @@ Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
 
 
 
-
 // ユーザー（インストラクター関係）
 Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('index', 'UserController@index')->name('user.index');
@@ -133,13 +128,14 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'UserController@display')->name('user.display');
 });
 
+
+
 // courseの詳細
 Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
     Route::get('completCustomerSchedule/{id}', 'CourseDetailController@completCustomerSchedule')->name('course_detail.completCustomerSchedule');
     Route::get('edit/{id}', 'CourseDetailController@edit')->name('course_detail.edit');
 });
-
 
 
 
@@ -161,19 +157,8 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
-
-
 Route::group(['prefix'=>'history', 'middleware'=>'auth'], function(){
     Route::get('index', 'HistoryController@index')->name('history.index');
 });
-
-Route::group(['middleware'=>'auth'], function(){
-    Route::get('/home', 'HomeController@index')->name('home');
-});
-
-
 
 

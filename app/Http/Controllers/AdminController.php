@@ -56,12 +56,11 @@ class AdminController extends Controller
     {
         $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers', 'customers.id', 'customer_id')
-        ->where('status', 5)
+        ->where('status', '>=',5)
         ->get();
-        
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
-    
+
     /**
      * 
      */
@@ -73,7 +72,7 @@ class AdminController extends Controller
         ->join('courses', 'courses.id', 'instructor_courses.course_id')
         ->where('pay_confirm', 0)
         ->get();
-        
+
         return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
     }
 

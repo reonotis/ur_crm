@@ -49,12 +49,16 @@ class HomeController extends Controller
             ->get();
             $adminMessage['UnAppCourse'] = $UnAppCourse;
             $adminMessage['compCourse'] = $compCourse;
+
+            // 未入金のお客様を取得
+            $unPayd = CustomerCourseMapping::where('pay_confirm', 0)->get();
+
         }
 
         $NgAppCourse = InstructorCourse::where('approval_flg', 1 )->where('instructor_id', $this->_auth_id )->get();
         $intrMessage['NgAppCourse'] = $NgAppCourse;
 
-        return view('home', compact('adminMessage','intrMessage'));
+        return view('home', compact('adminMessage','intrMessage','unPayd'));
     }
 
     /**
