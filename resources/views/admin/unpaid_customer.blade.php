@@ -14,6 +14,7 @@
                         <tr>
                             <th>顧客名</th>
                             <th>受講予定コース</th>
+                            <th>申込日時</th>
                             <th>入金依頼メール</th>
                             <th>期日</th>
                             <th>確認</th>
@@ -23,7 +24,8 @@
                         @foreach($CCMs as $CCM)
                             <tr>
                                 <td><a href="{{ route('customer.display', $CCM->customer_id ) }}" >{{ $CCM->name }}</a></td>
-                                <td>{{ $CCM->course_name}}</td>
+                                <td><a href="{{ route('course_detail.display', $CCM->instructor_courses_id ) }}" >{{ $CCM->course_name}}</a></td>
+                                <td>{{ $CCM->date->format('Y年 m月 d日') }}</td>
                                 <td>
                                     @if($CCM->status == 0)
                                         <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >送信する</a>

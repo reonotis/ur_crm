@@ -1,11 +1,11 @@
 @extends('email_forms.sendMailForm')
 
-@section('mail_title','イントラ登録依頼メール	' )
+@section('mail_title','インストラクター規約同意依頼メール' )
 
 @section('text' )
 <form method="post" action="{{ route('admin.sendmailRegistrRequest',['id' => $customer->id ]) }}" class="form-inline my-2 my-lg-0">
 @csrf
-<input type="hidden" name="" value="" >
+<input type="hidden" name="title" value="インストラクター規約同意依頼メール" >
 <textarea name="text" class="formInput mailformInput">
 <?= $customer->name ?> 様
 この度はインストラクター養成講座の修了おめでとうございます。

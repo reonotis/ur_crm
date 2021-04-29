@@ -6,12 +6,15 @@
 <div class="coursesErea" >
         <form action="" method="{{route('schedule.list')}}">
             <div class="inputYearMonths">
-                <input type="month" name="month" class="formInput inputYearMonth" value="<?= $month ?>" >
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">更新</button>
+                <a href="{{ route('schedule.list', ['month' => $monthList[0]] ) }}" class="btn btn-outline-success btn-sm" ><< 前月</a>
+                <input type="month" name="month" class="formInput inputYearMonth" value="<?= $monthList[1] ?>" onchange="this.form.submit();" >
+                <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">更新</button> -->
+                <a href="{{ route('schedule.list', ['month' => $monthList[2]] ) }}" class="btn btn-outline-success btn-sm" >翌月 >></a>
+                
             </div>
         </form>
 <?php
-$time_value = $month .'-01';
+$time_value = $monthList[1] .'-01';
 $month = date('Y年m月',strtotime($time_value));
 ?>
         <h4><?= $month ?>のスケジュール</h4>
@@ -22,14 +25,14 @@ $month = date('Y年m月',strtotime($time_value));
                 <th>スケジュール　(申し込み人数)</th>
             </tr>
             @foreach ($monthData as $dayData)
-                <tr <?php if($dayData['week'] == 'Sun'){
-                    echo " class='SunRows' " ;
-                }else if($dayData['week'] == 'Sat'){
-                    echo " class='SatRows' " ;
-
-                } 
-
-                ?> >
+                <tr
+                    <?php if($dayData['week'] == 'Sun'){
+                                echo " class='SunRows' " ;
+                            }else if($dayData['week'] == 'Sat'){
+                                echo " class='SatRows' " ;
+                            }
+                    ?>
+                >
                     <td>{{ $dayData['date'] }}</td>
                     <td>{{ $dayData['week'] }}</td>
                     <td>

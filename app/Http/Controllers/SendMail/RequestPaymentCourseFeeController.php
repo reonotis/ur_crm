@@ -17,7 +17,7 @@ class RequestPaymentCourseFeeController extends Controller
     private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
-    private $_mailTo ;
+    private $_toInstructor ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -77,15 +77,14 @@ class RequestPaymentCourseFeeController extends Controller
 
             $CCM = CustomerCourseMapping::find($id);
             $customer = Customer::find($id);
-            $this->_mailTo = $customer->email;
+            $this->_toInstructor = $customer->email;
 
-// dd( $dayLimit, $text, $id, $CCM ,$this->_mailTo );
             // 依頼メールの送信
             $data = [
                 "text"  => $text,
             ];
             Mail::send('emails.mailtext', $data, function($message){
-                $message->to($this->_mailTo, 'Test')
+                $message->to($this->_toInstructor, 'Test')
                 ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
                 ->subject('入金依頼メール');

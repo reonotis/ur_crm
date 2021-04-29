@@ -23,7 +23,7 @@ class CreateCustomerCourseMappingTable extends Migration
             $table->date('limit_day')      ->nullable()  ->comment('入金期日');
             $table->integer('pay_confirm') ->default('0')->comment('入金確認 0:未入金 1:cancel 2:入金済');
             $table->date('payment_day')    ->nullable()  ->comment('入金日');
-            $table->integer('status')      ->default('0')->comment('状態 0:申込中 1:入金依頼mail送信済 2:cancel 3:入確済 5:受講完 6:mail送信済 9:イントラ登録済');
+            $table->integer('status')      ->default('0')->comment('状態 0:申込中 1:入金依頼mail送信済 2:cancel 3:入確済 5:受講完 6:登録依頼mail送信済 7:契約完了 8:入金依頼mail送信済み 9:初期費用入金 10:イントラ登録済');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->integer('created_by')  ->nullable()  ->comment('作成者')	;

@@ -161,7 +161,11 @@ class ScheduleController extends Controller
             }
             $day ++;
         }
-        return view('schedule.list', [ 'month' => $month, 'monthData' => $monthData]);
+        $monthList[0] =  date('Y-m', strtotime(date($month.'-1') . '-1 month'));
+        $monthList[1] =  $month;
+        $monthList[2] =  date('Y-m', strtotime(date($month.'-1') . '+1 month'));
+
+        return view('schedule.list', [ 'monthList' => $monthList, 'monthData' => $monthData]);
     }
 
     /**

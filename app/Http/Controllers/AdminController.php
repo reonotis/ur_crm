@@ -59,22 +59,10 @@ class AdminController extends Controller
         ->where('status', '>=',5)
         ->get();
         
-        $CCMs = $this->aaa($CCMs);
 
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
 
-    /**
-     * 
-     */
-    public function aaa($CCMs){
-        foreach($CCMs as $CCM){
-            if($CCM->status == 5){
-                // dd($CCM);
-            }
-        }
-        return $CCMs;
-    }
 
 
     /**
@@ -91,6 +79,17 @@ class AdminController extends Controller
 
         return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
     }
+
+
+    /**
+     * 
+     */
+    public function completeContract($id)
+    {
+        echo $id . "のコースを完了処理";
+    }
+
+
 
     /**
      * Show the form for creating a new resource.

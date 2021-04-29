@@ -5,7 +5,10 @@ namespace App\Http\Controllers\SendMail;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerCourseMapping;
+use App\Models\HistorySendingEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 class RegistrRequestController extends Controller
@@ -55,10 +58,16 @@ class RegistrRequestController extends Controller
                 ->subject('インストラクター登録依頼');
             });
 
+
+            // DB更新
             $CCM = CustomerCourseMapping::find($id);
             $CCM->status = 6;
             $CCM->save();
-            // DB更新
+
+            // メール送信履歴登録
+            DB::table('history_sending_emails')->insert([
+                ['customer_id'=>$CCM->customer_id, 'title'=>$request->title, 'text'=>$request->text]
+            ]);
 
             session()->flash('msg_success', 'メールを送信しました。');
         return redirect()->action('AdminController@customer_complet_course');

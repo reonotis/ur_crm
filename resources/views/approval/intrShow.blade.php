@@ -4,8 +4,8 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="fullWidth">
-            <button class="btn btn-light btn-sm" type="button" onClick="history.back()">戻る</button>
+        <div class="col-md-10">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
         </div>
         <div class="col-md-8">
             <div class="card">
@@ -30,7 +30,6 @@
                                 @foreach($InstructorCourseSchedules as $InstructorCourseSchedule)
                                     <div class="inputDateTime">{{$InstructorCourseSchedule->howMany }}回目　{{$InstructorCourseSchedule->date->format('Y/m/d H:i')}}~</div>
                                 @endforeach
-                                
                             </td>
                         </tr>
                         <tr>
