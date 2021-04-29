@@ -17,7 +17,7 @@
                             <th>申込日時</th>
                             <th>入金依頼メール</th>
                             <th>期日</th>
-                            <th>確認</th>
+                            <th>入金完了</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +30,7 @@
                                     @if($CCM->status == 0)
                                         <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >送信する</a>
                                     @else
-                                    送信済み<a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" > 再送信する</a>
+                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" > 再送信する</a>
                                     @endif
                                 </td>
                                 <td>
@@ -40,7 +40,7 @@
                                         -
                                     @endif
                                 </td>
-                                <td><a href="" >確認</a></td>
+                                <td><a href="{{ route('admin.confirmedPaymentCourseFee',[ 'id'=>$CCM->id]) }}" onclick="return completePayment();" >入金完了</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -72,5 +72,15 @@
 // dd($CCM);
 ?>
 @endsection
+
+
+<script>
+    function completePayment(){
+        var result = window.confirm('この申し込みを入金済みにします。\n講座への入金確認を終えていますか？\n\nこの操作は取り消せません');
+        if( result ) return true; return false;
+    }
+</script>
+
+
 
 

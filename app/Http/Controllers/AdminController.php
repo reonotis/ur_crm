@@ -86,74 +86,40 @@ class AdminController extends Controller
      */
     public function completeContract($id)
     {
-        echo $id . "のコースを完了処理";
+        try {
+            DB::beginTransaction();
+            $CCM = CustomerCourseMapping::find($id);
+            $CCM->status = 7;
+            $CCM->save();
+            // throw new \Exception("強制修了");
+            DB::commit();
+            session()->flash('msg_success', 'ステータスを契約完了にしました。');
+            return redirect()->back();    // 前の画面へ戻る
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function confirmedPaymentCourseFee($id)
     {
-        //
-    }
+        try {
+            DB::beginTransaction();
+            $CCM = CustomerCourseMapping::find($id);
+            $CCM->pay_confirm = 1;
+            $CCM->status = 3;
+            $CCM->save();
+            // throw new \Exception("強制修了");
+            DB::commit();
+            session()->flash('msg_success', '入金確認が完了にしました。');
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
 }

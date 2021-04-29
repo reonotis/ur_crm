@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerCourseMapping;
 use App\Models\InstructorCourseSchedule;
+use App\Models\HistorySendingEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 class RequestPaymentCourseFeeController extends Controller
@@ -77,7 +80,7 @@ class RequestPaymentCourseFeeController extends Controller
             $text = str_replace("###price###", number_format($request->price), $text);
 
             $CCM = CustomerCourseMapping::find($id);
-            $customer = Customer::find($id);
+            $customer = Customer::find($CCM->instructor_id);
             $this->_toInstructor = $customer->email;
 
             // 依頼メールの送信
@@ -90,6 +93,14 @@ class RequestPaymentCourseFeeController extends Controller
                 ->bcc($this->_toReon)
                 ->subject('入金依頼メール');
             });
+
+            // メール送信履歴登録
+            DB::table('history_send_emails')->insert([[
+                'customer_id'=>$customer->id,
+                'user_id'    =>$this->_auth_id,
+                'title'      =>$request->title,
+                'text'       =>$request->text
+            ]]);
 
             // DB更新
             $CCM->limit_day = $dayLimit;

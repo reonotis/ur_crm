@@ -28,16 +28,18 @@
                             <td><a href="{{ route('customer.display', ['id'=>$CCM->customer_id ]) }}">{{ $CCM->name }} 様</a></td>
                             <td><a href="{{ route('course_detail.display', ['id'=>$CCM->instructor_courses_id ]) }}" >確認</a></td>
                             <td>
-                                @if($CCM->status > 5)
-                                    送信済み　再送機能いる？
-                                @else
+                                @if($CCM->status == 5)
                                     <a href="{{ route('admin.instructorRegistrRequest', ['id'=>$CCM->customer_id ]) }}" >メールを送る</a>
+                                @elseif($CCM->status == 6)
+                                    <a href="{{ route('admin.instructorRegistrRequest', ['id'=>$CCM->customer_id ]) }}" >再送信する</a>
+                                @else
+                                    送信済み
                                 @endif
                             </td>
                             <td>
                                 @if($CCM->status < 6)
                                     未完了
-                                @elseif($CCM->status = 6)
+                                @elseif($CCM->status == 6)
                                     <a href="{{ route('admin.completeContract', ['id'=>$CCM->id ]) }}" onclick="return confilmCompleteContract();" >完了にする</a>
                                 @else
                                     完了
@@ -46,14 +48,22 @@
                             <td>
                                 @if($CCM->status < 7)
                                     未送信
-                                @elseif($CCM->status = 7)
-                                    <a href="" >メールを送る</a>
+                                @elseif($CCM->status == 7)
+                                    <a href="{{ route('admin.RequestAnnualMembershipFee', ['id'=>$CCM->customer_id ]) }}" >メールを送る</a>
                                 @else
-                                    送信済み
+                                    <a href="{{ route('admin.RequestAnnualMembershipFee', ['id'=>$CCM->customer_id ]) }}" >再送する</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if($CCM->status < 8)
+                                    未確認
+                                @elseif($CCM->status == 8)
+                                    <a href="" onclick="return confilmAnnualMembershipFee();" >完了にする</a>
+                                @else
+                                    完了
                                 @endif
                             </td>
                             <td>未確認</td>
-                            <td></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -76,5 +86,13 @@
         var result = window.confirm('このお客様の契約を完了しますか？');
         if( result ) return true; return false;
     }
+
+    
+    function confilmAnnualMembershipFee(){
+        var result = window.confirm('年会費の入金を確認済みにします。\n講座への入金を確認しましたか？\n\nこの操作は取り消せません');
+        if( result ) return true; return false;
+    }
+
+
 </script>
 

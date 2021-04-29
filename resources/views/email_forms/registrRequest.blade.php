@@ -14,13 +14,15 @@
 このあとお客様に送付されます、クラウドサインからのメールをご確認ください。
 メール内部のURLを確認し、規約への同意をお願い致します。
 
-規約への同意が認められた後に、年会費(00000円)のお支払いをお願いいたします。
+規約への同意が認められた後に、年会費 {{ number_format($annualFee) }}円 のお支払いをお願いいたします。
 ※振込の詳細は別途お送りいたします。
 
 ご不明点がある場合は下記メールアドレスまで直接お問い合わせください。
 email : info@paralymbics.jp
 
 引き続きよろしくお願いいたします。
+
+@include('email_forms.footer')
 </textarea>
 <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >送信する</button>
 </form>

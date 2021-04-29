@@ -5,7 +5,7 @@
 @section('text' )
 <form method="post" action="{{ route('admin.sendmailPaymentCourseFee', ['id'=>$CCM->id]) }}" class="form-inline my-2 my-lg-0">
 @csrf
-<input type="hidden" name="" value="" >
+<input type="hidden" name="title" value="入金依頼メール" >
 <div class="inputRowErea" >
   <div class="inputRowEreaTitle" >入金期限</div>
   <div class="" >
@@ -24,23 +24,15 @@
 
 下記をご確認いただき、指定期日までにご入金ください。
 振込期日 : ###limitDay###
-振込金額 : ###price###
-----------------------------------------------
-■銀行振り込みの場合
-
-
-
-----------------------------------------------
-■paypal入金の場合
-
-
-
-----------------------------------------------
+振込金額 : ###price### 円
+@include('email_forms.transferAccount')
 
 ご不明点がある場合は下記メールアドレスまで直接お問い合わせください。
 email : info@paralymbics.jp
 
 引き続きよろしくお願いいたします。
+
+@include('email_forms.footer')
 </textarea>
 <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >送信する</button>
 </form>

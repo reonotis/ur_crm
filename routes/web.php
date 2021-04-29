@@ -44,9 +44,12 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
     Route::get('requestPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@index')->name('admin.requestPaymentCourseFee');
     Route::post('sendmailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendmailPaymentCourseFee')->name('admin.sendmailPaymentCourseFee');
+    Route::get('RequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@index')->name('admin.RequestAnnualMembershipFee');
+    Route::post('sendRequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@sendRequestAnnualMembershipFee')->name('admin.sendRequestAnnualMembershipFee');
+
+    Route::get('confirmedPaymentCourseFee/{id}', 'AdminController@confirmedPaymentCourseFee')->name('admin.confirmedPaymentCourseFee');
     Route::get('completeContract/{id}', 'AdminController@completeContract')->name('admin.completeContract');
 });
-
 
 //
 Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){

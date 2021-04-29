@@ -5,13 +5,14 @@ namespace App\Http\Controllers\SendMail;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerCourseMapping;
+use App\Models\InstructorCourseSchedule;
 use App\Models\HistorySendingEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mail;
 
-class RegistrRequestController extends Controller
+class RequestAnnualMembershipFeeController extends Controller
 {
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
@@ -19,6 +20,7 @@ class RegistrRequestController extends Controller
     private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
+    private $_toCustomer ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -35,48 +37,65 @@ class RegistrRequestController extends Controller
         });
     }
 
-    //
-    public function instructorRegistrRequest($id){
+    /**
+     *
+     */
+    public function index($id){
         $annualFee     = config('paralymbics.annualFee.firstTime');
-        $customer = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
+        $CCM = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers','customers.id','customer_course_mapping.customer_id')
         ->find($id);
-        return view('email_forms.registrRequest', ['customer'=>$customer, 'annualFee'=>$annualFee]);
+
+        return view('email_forms.requestAnnualMembershipFee', ['CCM'=>$CCM, 'annualFee'=>$annualFee]);
     }
 
-    //
-    public function sendmailRegistrRequest(Request $request, $id){
+    /**
+     *
+     */
+    public function sendRequestAnnualMembershipFee(Request $request, $id){
         try {
+            DB::beginTransaction();
+
+            $text = $request->text;
+            $text = str_replace("###price###", number_format($request->price), $text);
+
+            $CCM = CustomerCourseMapping::find($id);
+            $customer = Customer::find($CCM->customer_id);
+            $this->_toCustomer = $customer->email;
 
             // 依頼メールの送信
             $data = [
-                "text"  => $request->text,
+                "text"  => $text,
             ];
             Mail::send('emails.mailtext', $data, function($message){
-                $message->to($this->_toInfo, 'Test')
+                $message->to($this->_toCustomer, 'Test')
                 ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
-                ->subject('インストラクター登録依頼');
+                ->subject('入金依頼メール');
             });
-
-            // DB更新
-            $CCM = CustomerCourseMapping::find($id);
-            $CCM->status = 6;
-            $CCM->save();
 
             // メール送信履歴登録
             DB::table('history_send_emails')->insert([[
-                'customer_id'=>$CCM->customer_id,
-                'user_id'=>$this->_auth_id,
-                'title'=>$request->title,
-                'text'=>$request->text
+                'customer_id'=>$customer->id,
+                'user_id'    =>$this->_auth_id,
+                'title'      =>$request->title,
+                'text'       =>$request->text
             ]]);
 
+            // DB更新
+            $CCM->status    = 8;
+            $CCM->save();
+
             session()->flash('msg_success', 'メールを送信しました。');
-        return redirect()->action('AdminController@customer_complet_course');
+            DB::commit();
+            
+            return redirect()->action('AdminController@customer_complet_course');
         } catch (\Throwable $e) {
+            DB::rollback();
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
         }
     }
+
+
 }
