@@ -3,16 +3,28 @@
 @section('mail_title','入金依頼メール	' )
 
 @section('text' )
-<form method="post" action="{{ route('admin.sendmailPaymentCourseFee', ['id'=>$customer->id]) }}" class="form-inline my-2 my-lg-0">
+<form method="post" action="{{ route('admin.sendmailPaymentCourseFee', ['id'=>$CCM->id]) }}" class="form-inline my-2 my-lg-0">
 @csrf
 <input type="hidden" name="" value="" >
-<input type="date" name="dayLimit" value="<?= $dayLimit ?>" >
+<div class="inputRowErea" >
+  <div class="inputRowEreaTitle" >入金期限</div>
+  <div class="" >
+    <input type="date" name="dayLimit" value="<?= $dayLimit ?>" class="formInput" >
+  </div>
+</div>
+<div class="inputRowErea" >
+  <div class="inputRowEreaTitle" >振込金額</div>
+  <div class="inputUnits" >
+    <input type="number" name="price" value="{{ $CCM->price }}" class="formInput inputUnit" > 円
+  </div>
+</div>
 <textarea name="text" class="formInput mailformInput">
-{{ $customer->name }} 様
+{{ $CCM->name }} 様
 コースへのお申込み誠にありがとうございます。
 
 下記をご確認いただき、指定期日までにご入金ください。
 振込期日 : ###limitDay###
+振込金額 : ###price###
 ----------------------------------------------
 ■銀行振り込みの場合
 

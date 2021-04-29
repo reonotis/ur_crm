@@ -16,6 +16,7 @@ class CreateHistorySendEmailsTable extends Migration
         Schema::create('history_send_emails', function (Blueprint $table) {
             $table->bigIncrements('id')                    ->comment('ID');
             $table->integer('customer_id')                 ->comment('顧客ID');
+            $table->integer('user_id')                     ->comment('送信したインストラクターID');
 
             $table->string('title')                        ->comment('タイトル');
             $table->string('text')                         ->comment('メール本文');

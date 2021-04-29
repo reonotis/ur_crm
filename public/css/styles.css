@@ -322,7 +322,27 @@ label {
 	align-items: center;
 }
 
+.inputRowErea {
+	min-width  : 70% ;
+	margin     :  0 0 15px ;
+	padding-bottom:5px;
+	border-bottom :solid 1px var(--green);
+	display    : flex ;
+	flex-flow  : wrap;
+	align-items: center;
+}
+.inputRowEreaTitle {
+  padding         : 3px 15px ;
+  text-align      : center ;
+  font-size       : 17px ;
+  font-weight     : bold;
+  background      : #fff ;
+  color           : var(--green);
+  justify-content : center;
+  display         : flex;
+  align-items     : center;
 
+}
 
 
 textarea.formInput{
@@ -334,8 +354,6 @@ textarea.mailformInput{
 	height :500px;
 	padding :5px;
 }
-
-
 
 select{
 	padding :10px 15px;

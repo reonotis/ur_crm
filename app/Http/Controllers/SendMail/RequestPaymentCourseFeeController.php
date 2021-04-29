@@ -38,10 +38,10 @@ class RequestPaymentCourseFeeController extends Controller
      *
      */
     public function index($id){
-        $customer = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
+        $CCM = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers','customers.id','customer_course_mapping.customer_id')
         ->find($id);
-        $instructor_courses_id =$customer->instructor_courses_id;
+        $instructor_courses_id =$CCM->instructor_courses_id;
 
         $ICS = InstructorCourseSchedule::
         where('instructor_courses_id', $instructor_courses_id )
@@ -49,7 +49,7 @@ class RequestPaymentCourseFeeController extends Controller
         ->first();
 
         // A 購入日から1週間後を調べる
-        $oneWeekLater = date('Y-m-d', strtotime('1 week', strtotime($customer->date)));
+        $oneWeekLater = date('Y-m-d', strtotime('1 week', strtotime($CCM->date)));
 
         // B コースの初回日時から3日前を調べる
         $threeDaysAGo = date('Y-m-d', strtotime('-3 day', strtotime($ICS->date)));
@@ -62,7 +62,7 @@ class RequestPaymentCourseFeeController extends Controller
         }
         $dayLimit = $oneWeekLater;
 
-        return view('email_forms.requestPaymentCourseFee', ['customer' => $customer, 'dayLimit'=> $dayLimit]);
+        return view('email_forms.requestPaymentCourseFee', ['CCM' => $CCM, 'dayLimit'=> $dayLimit]);
     }
 
     /**
@@ -72,8 +72,9 @@ class RequestPaymentCourseFeeController extends Controller
         try {
             $dayLimit = $request->dayLimit;
             $str_dayLimit = date('Y年m月d日', strtotime($dayLimit));
-            $text = str_replace("###limitDay###", $str_dayLimit, $request->text);
-            
+            $text = $request->text;
+            $text = str_replace("###limitDay###", $str_dayLimit, $text);
+            $text = str_replace("###price###", number_format($request->price), $text);
 
             $CCM = CustomerCourseMapping::find($id);
             $customer = Customer::find($id);
@@ -90,10 +91,12 @@ class RequestPaymentCourseFeeController extends Controller
                 ->subject('入金依頼メール');
             });
 
-            $CCM->limit_day = $dayLimit;
-            $CCM->status = 1;
-            $CCM->save();
             // DB更新
+            $CCM->limit_day = $dayLimit;
+            $CCM->price     = $request->price;
+            $CCM->status    = 1;
+            $CCM->save();
+
             session()->flash('msg_success', 'メールを送信しました。');
         return redirect()->action('AdminController@unPayd');
         } catch (\Throwable $e) {
