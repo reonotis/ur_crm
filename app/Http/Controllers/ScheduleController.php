@@ -118,6 +118,7 @@ class ScheduleController extends Controller
         $NISSUU = (date('t', strtotime($month)));
 
         // customer_schedulesのサブquery作成
+
         $CSQuery = CustomerSchedule::select('customer_id', 'course_schedules_id', 'instructor_id','date_time', 'howMany')
             ->where('date_time', 'LIKE', "$month%")
             ->where('delete_flag', 0);
@@ -125,7 +126,7 @@ class ScheduleController extends Controller
         $CS = $CSQuery->get();
 
         // InstructorCourseScheduleのサブqueryと各テーブルを結合
-        $ICSQuery = InstructorCourseSchedule::select(DB::raw('count(customer_id) as NINZUU') ,
+        $ICSQuery = InstructorCourseSchedule::select(DB::raw('count(CS.customer_id) as NINZUU') ,
                                                     'instructor_courses.id',
                                                     'instructor_course_schedules.date',
                                                     'CS.date_time',
