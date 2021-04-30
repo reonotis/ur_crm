@@ -353,6 +353,8 @@ textarea.formInput{
 textarea.mailformInput{
 	height :500px;
 	padding :5px;
+	line-height:15px;
+	font-size: 12px;
 }
 
 select{
