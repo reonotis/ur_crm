@@ -8,6 +8,7 @@ use App\Models\CustomerSchedule;
 use App\Models\InstructorCourse;
 use App\Models\InstructorCourseSchedule;
 use App\Models\CustomerCourseMapping;
+use App\Models\HistorySendEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -155,8 +156,44 @@ class CustomerController extends Controller
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
 
-        return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails'));
+        // メール履歴を取得
+        $HSEmails=HistorySendEmail::select('history_send_emails.*', 'users.name')
+        ->where('customer_id', $customer_id )
+        ->join('users', 'users.id', '=', 'history_send_emails.user_id' );
+        // if($this->_auth_authority_id >= 5) $HSEmails = $HSEmails->where('user_id', $this->_auth_id );
+        $HSEmails = $HSEmails->orderBy('send_time','desc')->get();
+        $HSEmails = $this->changeMailTime($HSEmails);
+        // dd($HSEmails);
+        return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails', 'HSEmails' ));
     }
+
+    /**
+     * メールの時間の表示形式を調整する
+     */
+    public function changeMailTime($HSEmails){
+        foreach($HSEmails as $HSEmail){
+            // 本日だったら
+            if($HSEmail->send_time->format('Y-m-d') == date('Y-m-d')){
+                $HSEmail->sendtime = $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') == date('Y-m-d',strtotime('-1 day')) ){  // 昨日だったら
+                $HSEmail->sendtime = "昨日 " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') == date('Y-m-d',strtotime('-2 day')) ){  // おととい
+                $HSEmail->sendtime = "おととい " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') > date('Y-m-d',strtotime('-3 day')) ){   // 3日前
+                $HSEmail->sendtime = "3日前 " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y') == date('Y') ){                              //今年だったら
+                $HSEmail->sendtime = $HSEmail->send_time->format('m月d日');
+            }elseif(1==1){  //それ以外
+                $HSEmail->sendtime = $HSEmail->send_time->format('Y年m月d日');
+            }
+            // dd($HSEmail->send_time);
+        }
+
+        return $HSEmails;
+    }
+
+
+
 
     /**
      * 顧客情報を編集します

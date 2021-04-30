@@ -493,15 +493,83 @@ table.customerSearchTable{
 }
 
 
+.customerMailContents{
+	background: #fff;
+}
+.customerMailTitles{
+  position: relative;
+	width     : 100%;
+	margin    : 5px 0 0 ;
+	background: #e6eff8;
+	display   : flex;
+	flex-flow : wrap;
+	justify-content: space-between;
+	border :solid 1px #e6eff8;
+	border :none;
+	cursor: pointer;
+}
+.customerMailTitles:hover{
+	background :#d9ebfc;
+	transition:0.2s;
+}
+
+.customerMailTitles::after{
+	content:"";
+  position: absolute;
+  top: calc(50% - 8px);
+  right: 30px;
+	display: block;
+	width         :20px;
+	height        :30px;
+  border-top    : 15px solid var(--info);
+  border-right  : 10px solid transparent;
+  border-bottom : 15px solid transparent;
+  border-left   : 10px solid transparent;
+}
+.customerMailTitlesMain{
+	width     : 100%;
+	margin    : 5px 0 0 ;
+	background: #e6eff8;
+	display   : flex;
+	flex-flow : wrap;
+	justify-content: space-between;
+	border :solid 1px #e6eff8;
+	border :none;
+	background: var(--info);
+	border :solid 1px var(--info);
+	color: #fff;
+
+}
+.customerMailTitle{
+	padding : 5px 10px;
+}
+.customerMailTitle.send{
+	width:120px;
+	border-right : solid 1px #fff;
+}
+.customerMailTitle.time{
+	width:200px;
+	border-right : solid 1px #fff;
+}
+.customerMailTitle.title{
+	width: calc(100% - 320px );
+}
+
+.customerMailText{
+	margin  : 0 0 20px;
+	padding : 10px 5px 10px 20px;
+	border :solid 1px #e6eff8;
+	border-top:none;
+	font-size:12px;
+	display: none;
+}
+
 
 
 .customerDetail{
 	padding :0 10px;
 	margin :10px 0 50px;
 }
-
-
-
 .customerBasicInformation{
 	width : var(--customer-sidebar);
 	min-height: 500px;

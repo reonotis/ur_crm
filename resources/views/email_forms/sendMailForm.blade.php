@@ -24,3 +24,12 @@
 </div>
 @endsection
 </table>
+
+
+
+<script>
+    function confirmSendMail(){
+        var result = window.confirm('メールを送信します。\n宜しいですか？');
+        if( result ) return true; return false;
+    }
+</script>

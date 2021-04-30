@@ -9,6 +9,4 @@
 <a href="{{$url}}">{{$url}}</a>
 <br>
 <br>
----------------------------<br>
-このメールは自動返信メールです<br>
-<br>
+@include('emails.footer')

@@ -123,6 +123,10 @@ class CourseDetailController extends Controller
             $IC = InstructorCourse::select('instructor_courses.*', 'courses.course_name')
                 ->join('courses', 'courses.id', '=', 'instructor_courses.course_id' )
                 ->find($id);
+
+                // 管理者以下の権限の場合、自分のコースかを確認
+            if( $this->_auth_authority_id >= 5 && $IC->instructor_id <> $this->_auth_id ) throw new \Exception("このスケジュールは更新できません");
+
             $ICS = InstructorCourseSchedule::where('instructor_courses_id', $id)->get();
             foreach($ICS as $data){
                 $ID[] = $data->id;

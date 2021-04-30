@@ -18,8 +18,8 @@ class CreateHistorySendEmailsTable extends Migration
             $table->integer('customer_id')                 ->comment('顧客ID');
             $table->integer('user_id')                     ->comment('送信したインストラクターID');
 
-            $table->string('title')                        ->comment('タイトル');
-            $table->string('text')                         ->comment('メール本文');
+            $table->string('title', 100)                   ->comment('タイトル');
+            $table->string('text', 5000)                   ->comment('メール本文');
             $table->timestamp('send_time')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('送信日時');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;

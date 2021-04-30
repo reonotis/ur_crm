@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ApprovalComments;
-use App\Models\Course;
-use App\Models\InstructorCourse;
-use App\Models\InstructorCourseSchedule;
 use App\Models\CustomerCourseMapping;
-use App\Services\CheckCouses;
+use App\Models\Customer;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +19,8 @@ class AdminController extends Controller
     private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
+    private $_toCustomer ;
+    private $_toInstructor ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -111,10 +110,39 @@ class AdminController extends Controller
             $CCM->pay_confirm = 1;
             $CCM->status = 3;
             $CCM->save();
-            // throw new \Exception("強制修了");
-            DB::commit();
-            session()->flash('msg_success', '入金確認が完了にしました。');
 
+            // 顧客とインストラクターのmail_addresを取得
+            $customer = Customer::find($CCM->customer_id);
+            $this->_toCustomer = $customer->email;
+
+            $user = User::find($CCM->instructor_id);
+            $this->_toInstructor = $user->email;
+            $instructor_name = $user->name;
+            $customer_name = $customer->name ;
+
+            $data = [
+                "instructor_name"  => $instructor_name,
+                "customer_name"  => $customer_name,
+            ];
+            // お客様へ入金確認のメールを送る
+            Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
+                $message->to($this->_toCustomer)
+                ->cc($this->_toAkemi)
+                ->bcc($this->_toReon)
+                ->subject('ご入金を確認いたしました');
+            });
+
+            // インストラクターへ入金確認のメールを送る
+            Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
+                $message->to($this->_toInstructor)
+                ->cc($this->_toAkemi)
+                ->bcc($this->_toReon)
+                ->subject('お申込者のご入金確認通知');
+            });
+            // throw new \Exception("強制修了");
+
+            DB::commit();
+            session()->flash('msg_success', '入金確認を完了にしました。');
             return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
         } catch (\Throwable $e) {
             DB::rollback();

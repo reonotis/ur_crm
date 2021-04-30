@@ -14,14 +14,15 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name')->comment('名前');
-            $table->string('read')->nullable()->comment('ヨミ');
-            $table->string('email')->unique()->comment('メールアドレス');
+            $table->bigIncrements('id')                    ->comment('ID');
+            $table->bigIncrements('customer_id')           ->comment('顧客だった時のID');
+            $table->string('name')                         ->comment('名前');
+            $table->string('read')->nullable()             ->comment('ヨミ');
+            $table->string('email')->unique()              ->comment('メールアドレス');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->comment('パスワード');
-            $table->tinyInteger('authority_id')->comment('権限');
-            $table->tinyInteger('enrolled_id')->nullable()->comment('在籍');
+            $table->string('password')                     ->comment('パスワード');
+            $table->tinyInteger('authority_id')            ->comment('権限');
+            $table->tinyInteger('enrolled_id')->nullable() ->comment('在籍');
             $table->rememberToken();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

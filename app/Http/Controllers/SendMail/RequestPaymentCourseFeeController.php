@@ -20,7 +20,8 @@ class RequestPaymentCourseFeeController extends Controller
     private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
-    private $_toInstructor ;
+    private $_toCustomer ;
+    private $_textCount = 5000 ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -58,11 +59,10 @@ class RequestPaymentCourseFeeController extends Controller
         $threeDaysAGo = date('Y-m-d', strtotime('-3 day', strtotime($ICS->date)));
 
         // A or B の日付が近い方を期限日にする
-        if($oneWeekLater > $threeDaysAGo){
-            $dayLimit = $threeDaysAGo;
-        }else{
-            $dayLimit = $oneWeekLater;
-        }
+        $dayLimit = ($oneWeekLater > $threeDaysAGo) ? $threeDaysAGo : $oneWeekLater;
+
+        // 元々期限が入っていたらその期限にする
+        if($CCM->limit_day <> NULL) $dayLimit = $CCM->limit_day;
         $dayLimit = $oneWeekLater;
 
         return view('email_forms.requestPaymentCourseFee', ['CCM' => $CCM, 'dayLimit'=> $dayLimit]);
@@ -81,14 +81,16 @@ class RequestPaymentCourseFeeController extends Controller
 
             $CCM = CustomerCourseMapping::find($id);
             $customer = Customer::find($CCM->instructor_id);
-            $this->_toInstructor = $customer->email;
+            $this->_toCustomer = $customer->email;
+
+            if($this->_textCount < mb_strlen($text)) throw new \Exception("文字数が多すぎます");
 
             // 依頼メールの送信
             $data = [
                 "text"  => $text,
             ];
             Mail::send('emails.mailtext', $data, function($message){
-                $message->to($this->_toInstructor, 'Test')
+                $message->to($this->_toCustomer, 'Test')
                 ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
                 ->subject('入金依頼メール');
@@ -99,7 +101,7 @@ class RequestPaymentCourseFeeController extends Controller
                 'customer_id'=>$customer->id,
                 'user_id'    =>$this->_auth_id,
                 'title'      =>$request->title,
-                'text'       =>$request->text
+                'text'       =>$text
             ]]);
 
             // DB更新

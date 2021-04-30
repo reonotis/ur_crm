@@ -59,7 +59,7 @@ return [
     //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
     //     'name' => env('MAIL_FROM_NAME', 'Example'),
     // ],
-    'from' => ['address' => "reonotis@larvel.com", 'name' => "laravel_CRM_system"],
+    'from' => ['address' => "info@paralymbics.jp", 'name' => "GivLiv_System"],
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

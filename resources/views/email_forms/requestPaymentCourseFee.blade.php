@@ -34,7 +34,9 @@ email : info@paralymbics.jp
 
 @include('email_forms.footer')
 </textarea>
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit" >送信する</button>
+<button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="return confirmSendMail();" >送信する</button>
 </form>
+
 @endsection
+
 
