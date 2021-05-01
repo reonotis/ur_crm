@@ -80,7 +80,8 @@ class RequestPaymentCourseFeeController extends Controller
             $text = str_replace("###price###", number_format($request->price), $text);
 
             $CCM = CustomerCourseMapping::find($id);
-            $customer = Customer::find($CCM->instructor_id);
+            $customer_id = $CCM->customer_id;
+            $customer = Customer::find($customer_id);
             $this->_toCustomer = $customer->email;
 
             if($this->_textCount < mb_strlen($text)) throw new \Exception("文字数が多すぎます");
@@ -90,10 +91,10 @@ class RequestPaymentCourseFeeController extends Controller
                 "text"  => $text,
             ];
             Mail::send('emails.mailtext', $data, function($message){
-                $message->to($this->_toCustomer, 'Test')
-                ->cc($this->_toAkemi)
+                $message->to($this->_toCustomer)
+                ->cc($this->_toInfo)
                 ->bcc($this->_toReon)
-                ->subject('入金依頼メール');
+                ->subject('コース代金入金依頼メール');
             });
 
             // メール送信履歴登録
