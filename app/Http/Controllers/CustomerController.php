@@ -158,7 +158,7 @@ class CustomerController extends Controller
 
         // メール履歴を取得
         $HSEmails=HistorySendEmail::select('history_send_emails.*', 'users.name')
-        ->where('customer_id', $customer_id )
+        ->where('history_send_emails.customer_id', $customer_id )
         ->join('users', 'users.id', '=', 'history_send_emails.user_id' );
         // if($this->_auth_authority_id >= 5) $HSEmails = $HSEmails->where('user_id', $this->_auth_id );
         $HSEmails = $HSEmails->orderBy('send_time','desc')->get();
