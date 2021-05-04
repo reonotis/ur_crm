@@ -17,9 +17,9 @@
                         <th>コース確認</th>
                         <th>規約同意依頼メール</th>
                         <th>契約</th>
-                        <th>入金依頼メール</th>
+                        <!-- <th>入金依頼メール</th>
                         <th>入金確認</th>
-                        <th>登録完了</th>
+                        <th>登録完了</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +45,7 @@
                                     完了
                                 @endif
                             </td>
-                            <td>
+                            <!-- <td>
                                 @if($CCM->status < 7)
                                     未送信
                                 @elseif($CCM->status == 7)
@@ -63,7 +63,7 @@
                                     完了
                                 @endif
                             </td>
-                            <td>未確認</td>
+                            <td>未確認</td> -->
                         </tr>
                     @endforeach
                 </tbody>
@@ -83,7 +83,7 @@
 
 <script>
     function confilmCompleteContract(){
-        var result = window.confirm('このお客様の契約を完了しますか？');
+        var result = window.confirm('このお客様の契約を完了しますか？\n完了した時点でインストラクターに登録されますが、権限は付与されません。');
         if( result ) return true; return false;
     }
 

@@ -37,11 +37,34 @@ class RegistrRequestController extends Controller
 
     //
     public function instructorRegistrRequest($id){
-        $annualFee     = config('paralymbics.annualFee.firstTime');
+        $oneMonth = config('paralymbics.annualFee.oneMonth');
+        $certificationFee = config('paralymbics.certificationFee');
+
         $customer = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers','customers.id','customer_course_mapping.customer_id')
         ->find($id);
-        return view('email_forms.registrRequest', ['customer'=>$customer, 'annualFee'=>$annualFee]);
+        // 翌月を求める
+        // echo date("Y-m", strtotime( date("Y-m-d") . " + months"));
+        $KOTOSHIno3 = date("Y-03-01");
+        $KOTOSHIno3 = date('Y-m-d', strtotime('last day of ' . $KOTOSHIno3));
+
+        $claims['licenseStartDay'] = date("Y-m-01",strtotime(date("Y-m-d") . "+1 month"));
+        // $YOKUGETU = "2021-02-01";  // テスト用
+
+        // 今年中に年度末がくる場合
+        if($KOTOSHIno3 > $claims['licenseStartDay'] ){
+            $claims['licenseFinishDay'] = $KONNENDOMATU ;  //
+            $claims['months'] = 3 - (date('m',strtotime($claims['licenseStartDay'])) - 1);
+        }else{  // 年度末が来年になる場合
+            $KONNENDOMATU = date('Y-m-d' ,strtotime('+1 year ' . $KOTOSHIno3));
+            $claims['licenseFinishDay'] = date('Y-m-d', strtotime('last day of ' . $KONNENDOMATU));
+            $claims['months'] = 15 - (date('m',strtotime($claims['licenseStartDay'])) - 1);
+        }
+
+        $claims['licenseFee'] = $claims['months'] * $oneMonth ;  //
+        $claims['certificationFee'] = $certificationFee ; // 認定料金
+
+        return view('email_forms.registrRequest', ['customer'=>$customer, 'claims'=>$claims] );
     }
 
     //
@@ -56,7 +79,7 @@ class RegistrRequestController extends Controller
                 $message->to($this->_toInfo, 'Test')
                 ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
-                ->subject('インストラクター登録依頼');
+                ->subject('インストラクター規約同意依頼メール');
             });
 
             // DB更新
@@ -73,7 +96,7 @@ class RegistrRequestController extends Controller
             ]]);
 
             session()->flash('msg_success', 'メールを送信しました。');
-        return redirect()->action('AdminController@customer_complet_course');
+            return redirect()->action('AdminController@customer_complet_course');
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る

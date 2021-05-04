@@ -1,6 +1,6 @@
 @extends('email_forms.sendMailForm')
 
-@section('mail_title','年会費入金依頼メール	' )
+@section('mail_title','年会費入金依頼メール' )
 
 @section('text' )
 <form method="post" action="{{ route('admin.sendRequestAnnualMembershipFee',['id'=>$CCM->id]) }}" class="form-inline my-2 my-lg-0">

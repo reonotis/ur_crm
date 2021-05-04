@@ -4,5 +4,6 @@
 <br>
 /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_<br>
 パラリンビクス協会<br>
-email : info@paralymbics.jp<br>
+【運営会社】 株式会社FireHeart<br>
+【email】 info@paralymbics.jp<br>
 /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_<br>

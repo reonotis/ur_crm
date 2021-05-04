@@ -6,6 +6,7 @@ use App\Models\CustomerCourseMapping;
 use App\Models\Customer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mail;
@@ -55,9 +56,10 @@ class AdminController extends Controller
     {
         $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers', 'customers.id', 'customer_id')
+        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
+        ->where('course_id', 6)
         ->where('status', '>=',5)
         ->get();
-        
 
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
@@ -91,8 +93,21 @@ class AdminController extends Controller
             $CCM->status = 7;
             $CCM->save();
             // throw new \Exception("強制修了");
+            $customer = Customer::find($CCM->customer_id);
+            $password = $customer->birthdayYear . $customer->birthdayMonth . $customer->birthdayDay;
+
+            $User = new User;
+            $User->customer_id = $customer->id ;    //    顧客だった時のID
+            $User->name        = $customer->name ;
+            $User->read        = $customer->read ;
+            $User->email       = $customer->email ;
+            $User->password    = Hash::make($password);
+            $User->authority_id= 9 ;
+            $User->enrolled_id= 9 ;
+            $User->save();
+
             DB::commit();
-            session()->flash('msg_success', 'ステータスを契約完了にしました。');
+            session()->flash('msg_success', '契約完了にし、インストラクターの登録を行いました。');
             return redirect()->back();    // 前の画面へ戻る
         } catch (\Throwable $e) {
             DB::rollback();
