@@ -249,7 +249,11 @@ label {
 }
 .inputDatatimeLocal{
 	width :220px;
-
+}
+.inputData{
+	width :150px;
+	margin-right :10px;
+	float: left;
 }
 
 .inputBirthday{
@@ -324,6 +328,7 @@ label {
 
 .inputRowErea {
 	min-width  : 70% ;
+	width     :100%;
 	margin     :  0 0 15px ;
 	padding-bottom:5px;
 	border-bottom :solid 1px var(--green);
@@ -332,7 +337,8 @@ label {
 	align-items: center;
 }
 .inputRowEreaTitle {
-  padding         : 3px 15px ;
+	width           : 150px ;
+	padding         : 3px 15px ;
   text-align      : center ;
   font-size       : 17px ;
   font-weight     : bold;
@@ -341,7 +347,9 @@ label {
   justify-content : center;
   display         : flex;
   align-items     : center;
-
+}
+.inputRowEreaValue{
+	width : calc( 100% -  150px ) ;
 }
 
 
@@ -454,7 +462,10 @@ table.customerSearchTable{
 	border-collapse: separate;
 	border-spacing: 0 10px;
 }
-
+.display-container{
+	max-width :1200px;
+	margin : 0 auto;
+}
 .customerSearchTable th{
 	height:40px;
 	padding : 3px 10px ;
@@ -878,4 +889,106 @@ table.customerSearchTable{
 	border-bottom:solid 1px var(--info);
 	font-size: .9em;
 	
+}
+
+
+.ClaimDetailRowMain{
+	position: relative;
+	width: 100%;
+	margin: 5px 0 0;
+	background: var(--info);
+	color :#fff;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.ClaimDetailRow{
+	border-bottom :solid 1px var(--info);
+	position: relative;
+	width: 100%;
+	margin: 5px 0 0;
+	background: #e6eff8;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+
+
+
+.ClaimDetail_itemName,
+.ClaimDetail_unitPrice,
+.ClaimDetail_quantity,
+.ClaimDetail_price,
+.ClaimDetail_rank,
+.ClaimDetail_delete{
+	padding :5px;
+	text-align :center;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.ClaimDetail_itemName > input ,
+.ClaimDetail_quantity > input ,
+.ClaimDetail_rank > input {
+	width :100%;
+}
+.ClaimDetail_unitPrice > input,
+.ClaimDetail_price > input{
+	width :calc(100% - 15px);
+}
+.ClaimDetail_quantity > input[type="number"]{
+	width :calc(100% - 60px )
+}
+.ClaimDetail_quantity > input[type="text"]{
+	width :60px;
+}
+.ClaimDetail_itemName{
+	width :300px;
+	text-align :center;
+}
+.ClaimDetail_unitPrice{
+	width :100px;
+	text-align :center;
+}
+.ClaimDetail_quantity{
+	width :120px;
+	text-align :center;
+}
+.ClaimDetail_price{
+	width :100px;
+	text-align :center;
+}
+.ClaimDetail_rank{
+	width :60px;
+	text-align :center;
+}
+.ClaimDetail_delete{
+	width :50px;
+	text-align :center;
+}
+
+.confilmClaimDetailRow{
+	border-bottom :solid 1px var(--info);
+	width: 100%;
+	margin: 3px 0 ;
+	padding :3px 0 0;
+	font-size: 0.85em;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.confilmClaimDetailRow>.item_name{
+	width :250px;
+}
+.confilmClaimDetailRow>.unit_price{
+	width :80px;
+	text-align: right;
+}
+.confilmClaimDetailRow>.quantity{
+	width :80px;
+	text-align: center;
+}
+.confilmClaimDetailRow>.price{
+	width :80px;
+	text-align: right;
 }

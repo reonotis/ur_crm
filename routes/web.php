@@ -132,6 +132,27 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('create', 'UserController@create')->name('user.create');
     Route::post('store', 'UserController@store')->name('user.store');
     Route::get('display/{id}', 'UserController@display')->name('user.display');
+    Route::get('searching', 'UserController@searching')->name('user.searching');
+    Route::get('newClaim/{id}', 'ClaimController@create')->name('user.newClaim');
+    Route::post('sendMailNewClaim/{id}', 'SendMail\NewClaimController@sendMailNewClaim')->name('user.sendMailNewClaim');
+    Route::get('sendEmail/{id}', 'SendMail\sendEmailController@index')->name('user.sendEmail');
+    Route::post('sendMail/{id}', 'SendMail\sendEmailController@sendMail')->name('user.sendMail');
+    Route::get('claimDisplay/{id}', 'UserController@claimDisplay')->name('user.claimDisplay');
+    Route::post('claimComplete/{id}', 'UserController@claimComplete')->name('user.claimComplete');
+});
+
+
+// 
+Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
+    Route::get('updateOrInsert/{id}', 'ClaimController@updateOrInsert')->name('claim.updateOrInsert');
+    Route::get('addClaimDetail/{id}', 'ClaimController@addClaimDetail')->name('claim.addClaimDetail');
+    Route::get('deleteClaimDetail/{id}', 'ClaimController@deleteClaimDetail')->name('claim.deleteClaimDetail');
+    Route::get('updateOrInsert_claimDetail/{id}', 'ClaimController@updateOrInsert_claimDetail')->name('claim.updateOrInsert_claimDetail');
+    Route::get('deleteTran/{id}', 'ClaimController@deleteTran')->name('claim.deleteTran');
+    Route::get('rankDuwn/{id}', 'ClaimController@rankDuwn')->name('claim.rankDuwn');
+    Route::get('confilmAddClaim/{id}', 'ClaimController@confilmAddClaim')->name('claim.confilmAddClaim');
+    Route::get('storeClaim/{id}', 'ClaimController@storeClaim')->name('claim.storeClaim');
+    Route::get('show/{id}', 'ClaimController@show')->name('claim.show');
 });
 
 

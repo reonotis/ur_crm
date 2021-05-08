@@ -45,7 +45,8 @@ class HomeController extends Controller
 
             // 養成courseを終えたお客様を取得
             $compCourse = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name' )
-            ->where('status', 5)
+            ->where('status', '>=',5)
+            ->where('status', '<=',6)
             ->where('course_id', 6)
             ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
             ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')

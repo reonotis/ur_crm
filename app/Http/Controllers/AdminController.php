@@ -59,6 +59,7 @@ class AdminController extends Controller
         ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
         ->where('course_id', 6)
         ->where('status', '>=',5)
+        ->where('status', '<=',6)
         ->get();
 
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
@@ -106,9 +107,29 @@ class AdminController extends Controller
             $User->enrolled_id= 9 ;
             $User->save();
 
+
+            DB::table('users_info')
+            ->updateOrInsert(
+                [   'tel' => $customer->tel ,
+                    'intr_No'  => $customer->menberNumber ,
+                    'birthdayYear'  => $customer->birthdayYear ,
+                    'birthdayMonth'  => $customer->birthdayMonth ,
+                    'birthdayDay'  =>  $customer->birthdayDay ,
+                    'zip21'  => $customer->zip21 ,
+                    'zip22'  => $customer->zip22 ,
+                    'pref21'  => $customer->pref21 ,
+                    'addr21'  => $customer->addr21 ,
+                    'strt21'  => $customer->strt21
+                ],
+                ['id' => $User->id ]
+            );
+
+            // dd($User);
+
             DB::commit();
             session()->flash('msg_success', '契約完了にし、インストラクターの登録を行いました。');
-            return redirect()->back();    // 前の画面へ戻る
+            return redirect()->action('UserController@display', ['id' => $User->id]);
+            // return redirect()->back();    // 前の画面へ戻る
         } catch (\Throwable $e) {
             DB::rollback();
             session()->flash('msg_danger',$e->getMessage() );
