@@ -1001,14 +1001,18 @@ table.customerSearchTable{
 	width :220px;
 }
 .confilmClaimDetailRow>.unit_price{
-	width :60px;
+	width :80px;
 	text-align: right;
 }
 .confilmClaimDetailRow>.quantity{
-	width :60px;
+	width :80px;
 	text-align: center;
 }
 .confilmClaimDetailRow>.price{
-	width :60px;
+	width :80px;
 	text-align: right;
+}
+.cancelPaymentFee{
+	color :#f7a7a7;
+	text-decoration: line-through;
 }

@@ -7,9 +7,11 @@ use App\Models\Claim;
 use App\Models\ClaimsTransactions;
 use App\Models\ClaimsDetail;
 use App\Models\ClaimsDetailsTransactions;
+use App\Models\Payment;
 use App\Services\CheckClaims;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mail;
 
@@ -365,7 +367,6 @@ class ClaimController extends Controller
             // バリデーションチェック
             if($claim->status == 5 ) throw new \Exception("入金済みデータのため請求できません");
 
-
             // 本文を修正
             $text = $request->text;
             $limit_date = $claim->limit_date->format('　Y年 m月 d日') ;
@@ -414,10 +415,11 @@ class ClaimController extends Controller
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
         }
-
-
     }
 
+    /**
+     * 渡された請求IDから請求情報と明細を返す
+     */
     public function getClaimsData($id){
         $user_type = Claim::select('user_type')->find($id)->user_type;
         if($user_type == 1){
@@ -430,6 +432,102 @@ class ClaimController extends Controller
         $claimsDetails = ClaimsDetail::where('claim_id', $id)->get();
         return [$claim, $claimsDetails];
     }
+
+    /**
+     * 渡された請求IDからステータスを確認してキャンセル状態に更新する
+     */
+    public function cancelClaims($id){
+        DB::beginTransaction();
+        try {
+            // 請求データを取得
+            list($claim, $claimsDetails) = $this->getClaimsData($id);
+
+            if($claim->status == 0 ) throw new \Exception("まだ請求を行っていないためキャンセルできません");
+            if($claim->status == 5 ) throw new \Exception("支払い完了しているためキャンセルできません");
+
+            $claim = Claim::find($id);
+            $claim->status  = 3 ;
+            $claim->save();
+
+            DB::commit();
+            session()->flash('msg_success', '請求データのステータスをキャンセルにしました。');
+            return redirect()->action('UserController@display',['id'=>$claim->user_id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * 渡された請求IDからステータスを確認して入金済み状態に更新する
+     */
+    public function completePaidClaim(Request $request, $id){
+        DB::beginTransaction();
+        try {
+            // 請求データを取得
+            if($request->complete_date == NULL)throw new \Exception("計上日を入力してください");
+
+            if(! $complete_date = Carbon::createFromFormat('Y-m-d', $request->complete_date))throw new \Exception("日付の値が不正です");
+
+            list($claim, $claimsDetails) = $this->getClaimsData($id);
+
+            if($claim->status == 5 ) throw new \Exception("既に入金済みです");
+
+            $claim = Claim::find($id);
+            $claim->status  = 5 ;
+            $claim->complete_date = $complete_date ;
+            $claim->save();
+
+
+            // TODO 売り上げ情報に登録
+            $payment = new Payment;
+            $payment->claim_id  = $claim->id ;
+            $payment->sold_type  = 1 ;
+            $payment->sold_id  = 0 ;
+            $payment->customer_id  = NULL ;
+            $payment->instructor_id = $claim->user_id ;
+            $payment->amount  = $claim->price ;
+            $payment->item_name  = $claim->title ;
+            $payment->accounting_date  = $complete_date ;
+            $payment->save();
+
+            // throw new \Exception("売上情報に登録していません");
+            DB::commit();
+            session()->flash('msg_success', '請求データのステータスを入金済みにしました。');
+            return redirect()->action('UserController@display',['id'=>$claim->user_id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * 渡された請求IDからステータスを確認して削除する
+     */
+    public function deleteClaims($id){
+        DB::beginTransaction();
+        try {
+            // 請求データを取得
+            list($claim, $claimsDetails) = $this->getClaimsData($id);
+
+            if($claim->status <> 0 ) throw new \Exception("一度請求したデータは削除できません");
+
+            $claim = Claim::find($id);
+            $claim->delete_flag = 1 ;
+            $claim->save();
+
+            DB::commit();
+            session()->flash('msg_success', '請求データを削除しました');
+            return redirect()->action('UserController@display',['id'=>$claim->user_id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
 
 
 }

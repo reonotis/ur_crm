@@ -55,15 +55,16 @@
                     <div class="cusInfoTitle" >ステータス</div>
                     <div class="cusInfoContent" >{{ $claim->statusName }}</div>
                   </div>
-                  @if($claim->status <= 3)
+                  @if($claim->status <= 1)
                     <div class="cusInfoRow" >
                       <div class="cusInfoTitle" >ステータス変更</div>
                       <div class="cusInfoContent" >
-                        <a href="" >キャンセル</a> <br>
-                        <a href="" >入金済みにする</a> <br>
-                          @if($claim->status ==0)
-                            <a href="" >請求データを削除</a>
-                          @endif
+                        @if($claim->status >= 1 && $claim->status <> 3 )
+                          <a href="{{ route('claim.cancelClaims', ['id'=>$claim->id] ) }}" >キャンセル</a> <br>
+                        @endif
+                        @if($claim->status == 0)
+                        <a href="{{ route('claim.deleteClaims', ['id'=>$claim->id] ) }}" >請求データを削除</a> <br>
+                        @endif
                       </div>
                     </div>
                     <div class="cusInfoRow" >
@@ -78,6 +79,16 @@
                         </form>
                       </div>
                     </div>
+                    <div class="cusInfoRow" >
+                      <div class="cusInfoTitle" >ステータス</div>
+                      <div class="cusInfoContent" >
+                        <form action="{{ route('claim.completePaidClaim', ['id'=>$claim->id] ) }}" method="post" >
+                          @csrf
+                          売上計上日<input type="date" name="complete_date" >
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="return confirmCompletePaidClaim();">入金済みにする</button>
+                      </form>
+                    </div>
+                  </div>
                   @endif
 
                 </div>
@@ -91,6 +102,10 @@
 @endsection
 
 <script>
+    function confirmCompletePaidClaim(){
+        var result = window.confirm('ステータスを【入金済み】にします\n入金の確認を終えていますか？');
+        if( result ) return true; return false;
+    }
     function confirmSendMail(){
         var result = window.confirm('インストラクターに請求メールを送信しますか？\nメール送信後はステータスが【請求中】になります');
         if( result ) return true; return false;

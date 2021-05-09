@@ -44,6 +44,7 @@ class UserController extends Controller
 
         // 顧客番号の条件を設定する
         $this->setQueryLike($query, $request->input('menberNumber'), 'users_info.intr_No');
+        // TODO ほかの検索機能を作成する
 
         $users = $query -> paginate(20);
 
@@ -98,6 +99,7 @@ class UserController extends Controller
         $claims = Claim::select(('claims.*'))
         ->where('user_type', '2')
         ->where('user_id', $id)
+        ->where('delete_flag', '0')
         ->get();
         $claims = CheckClaims::setStatuses($claims);
 

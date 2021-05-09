@@ -154,6 +154,9 @@ Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
     Route::get('storeClaim/{id}', 'ClaimController@storeClaim')->name('claim.storeClaim');
     Route::get('show/{id}', 'ClaimController@show')->name('claim.show');
     Route::post('sendRequestClaimMail/{id}', 'ClaimController@sendRequestClaimMail')->name('claim.sendRequestClaimMail');
+    Route::get('cancelClaims/{id}', 'ClaimController@cancelClaims')->name('claim.cancelClaims');
+    Route::post('completePaidClaim/{id}', 'ClaimController@completePaidClaim')->name('claim.completePaidClaim');
+    Route::get('deleteClaims/{id}', 'ClaimController@deleteClaims')->name('claim.deleteClaims');
 });
 
 

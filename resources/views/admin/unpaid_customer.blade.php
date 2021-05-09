@@ -46,7 +46,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="admin_h5_wrap"><h5 class="admin_h5">年会費</h5></div>
+            <div class="admin_h5_wrap"><h5 class="admin_h5">インストラクターからの集金</h5></div>
 
             <div class="adminBtnErea">
                 <table class="scheduleListTable" >
@@ -58,6 +58,8 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <!-- TODO イントラからの未入金を取得するようにする -->
+
                     </tbody>
                 </table>
             </div>

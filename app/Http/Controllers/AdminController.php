@@ -79,6 +79,7 @@ class AdminController extends Controller
         ->where('pay_confirm', 0)
         ->get();
 
+        // TODO イントラからの未入金を取得するようにする
         return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
     }
 

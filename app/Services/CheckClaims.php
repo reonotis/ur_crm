@@ -40,10 +40,15 @@ class CheckClaims
                 // 今のところ処理はありません
         }
 
-        if($claim->claim_date <> '0000-00-00'){
+        if($claim->claim_date <> '0000-00-00' ){
             $claim->claim_date = date('Y年 m月 d日' , strtotime($claim->claim_date));
         }else{
             $claim->claim_date = '-';
+        }
+        if($claim->complete_date == '0000-00-00' || $claim->complete_date == NULL ){
+            $claim->complete_paidDate = '-';
+        }else{
+            $claim->complete_paidDate = date('Y年 m月 d日' , strtotime($claim->complete_date));
         }
 
 
