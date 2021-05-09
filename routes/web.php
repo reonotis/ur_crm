@@ -142,7 +142,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
 });
 
 
-// 
+// 請求関係
 Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
     Route::get('updateOrInsert/{id}', 'ClaimController@updateOrInsert')->name('claim.updateOrInsert');
     Route::get('addClaimDetail/{id}', 'ClaimController@addClaimDetail')->name('claim.addClaimDetail');
@@ -153,6 +153,7 @@ Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
     Route::get('confilmAddClaim/{id}', 'ClaimController@confilmAddClaim')->name('claim.confilmAddClaim');
     Route::get('storeClaim/{id}', 'ClaimController@storeClaim')->name('claim.storeClaim');
     Route::get('show/{id}', 'ClaimController@show')->name('claim.show');
+    Route::post('sendRequestClaimMail/{id}', 'ClaimController@sendRequestClaimMail')->name('claim.sendRequestClaimMail');
 });
 
 
