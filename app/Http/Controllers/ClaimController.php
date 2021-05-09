@@ -7,11 +7,38 @@ use App\Models\Claim;
 use App\Models\ClaimsTransactions;
 use App\Models\ClaimsDetail;
 use App\Models\ClaimsDetailsTransactions;
+use App\Services\CheckClaims;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mail;
 
 class ClaimController extends Controller
 {
+
+    private $_user;
+    protected $_auth_id ;
+    protected $_auth_authority_id ;
+    public $_backslash = '\\';
+    private $_toInfo ;
+    private $_toReon ;
+    private $_toIntr ;
+    private $_subject ;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 7){
+                dd("権限がありません。");
+            }
+            $this->_toInfo = config('mail.toInfo');
+            $this->_toReon = config('mail.toReon');
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -214,6 +241,8 @@ class ClaimController extends Controller
             $this->create_claims($ClaimTrn, $ClaimDetailTrans);
 
             // トランザクションの削除
+            ClaimsDetailsTransactions::where('claim_trn_id', $CTrn_id)->delete();
+            ClaimsTransactions::destroy($CTrn_id);
 
             DB::commit();
             session()->flash('msg_success', '請求データを作成しました。');
@@ -276,6 +305,7 @@ class ClaimController extends Controller
     public function show($id){
         try {
             $user_type = Claim::select('user_type')->find($id)->user_type;
+
             if($user_type == 1){
                 $claim = Claim::where('')->find($id);
             }else if($user_type == 2){
@@ -283,9 +313,10 @@ class ClaimController extends Controller
                 ->join('users', "users.id", "claims.user_id")
                 ->find($id);
             }
+            $claim = CheckClaims::setStatus($claim);
 
-            $claimsDetail = ClaimsDetail::where('claim_id', $id)->get();
-            return view('user.claimShow',compact('claim', 'claimsDetail'));
+            $claimsDetails = ClaimsDetail::where('claim_id', $id)->get();
+            return view('user.claimShow',compact('claim', 'claimsDetails'));
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -323,7 +354,82 @@ class ClaimController extends Controller
         //
     }
 
+    public function sendRequestClaimMail(Request $request, $id){
+        try {
+            DB::beginTransaction();
 
+            // 請求データを取得
+            list($claim, $claimsDetails) = $this->getClaimsData($id);
+            $this->_toIntr =  $claim->email ;
+
+            // バリデーションチェック
+            if($claim->status == 5 ) throw new \Exception("入金済みデータのため請求できません");
+
+
+            // 本文を修正
+            $text = $request->text;
+            $limit_date = $claim->limit_date->format('　Y年 m月 d日') ;
+            $claim_data = "　振込金額 : " . number_format($claim->price) . "円\r\n";
+            $claim_data .= "　内訳\r\n";
+            foreach($claimsDetails as $data){
+                $claim_data .= "　　・".$data->item_name." : ".number_format($data->unit_price) ." × ".$data->quantity.$data->unit."　　".number_format($data->price)."円\r\n" ;
+            }
+            $text = str_replace("###customerName###", $claim->name, $text);
+            $text = str_replace("###limit_date###", $limit_date, $text);
+            $text = str_replace("###claim_detail###", $claim_data, $text);// TODO 
+
+            // 依頼メールの送信
+            $this->_subject = $claim->title . "のご請求につきまして" ;
+            $data = [
+                "text"  => $text,
+            ];
+            Mail::send('emails.mailtext', $data, function($message){
+                $message->to($this->_toIntr)
+                ->cc($this->_toInfo)
+                ->bcc($this->_toReon)
+                ->subject( $this->_subject );
+            });
+
+            // メール送信履歴登録
+            DB::table('history_send_emails_instructors')->insert([[
+                'instructor_id' => $claim->user_id,
+                'user_id'       => $this->_auth_id,
+                'title'         => $this->_subject,
+                'text'          => $text
+            ]]);
+
+            // 請求済みに更新
+            $claim = Claim::find($id);
+            $claim->status = 1;
+            if($claim->claim_date == '0000-00-00' ){
+                $claim->claim_date = date('Y-m-d') ;
+            }
+            $claim->save();
+
+            session()->flash('msg_success', '請求依頼メールを送信しました。');
+            DB::commit();
+            return redirect()->action('UserController@display',['id'=>$claim->user_id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+
+
+    }
+
+    public function getClaimsData($id){
+        $user_type = Claim::select('user_type')->find($id)->user_type;
+        if($user_type == 1){
+            $claim = Claim::where('')->find($id);
+        }else if($user_type == 2){
+            $claim = Claim::select('claims.*', 'users.name', 'users.email')
+            ->join('users', "users.id", "claims.user_id")
+            ->find($id);
+        }
+        $claimsDetails = ClaimsDetail::where('claim_id', $id)->get();
+        return [$claim, $claimsDetails];
+    }
 
 
 }

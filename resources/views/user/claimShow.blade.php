@@ -28,12 +28,57 @@
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >請求金額</div>
-                    <div class="cusInfoContent" >{{ $claim->price }}</div>
+                    <div class="cusInfoContent" >{{ number_format($claim->price)   }} 円</div>
+                  </div>
+                  <div class="cusInfoRow" >
+                    <div class="cusInfoTitle" >内訳</div>
+                    <div class="cusInfoContent" >
+                      @foreach($claimsDetails as $claimsDetail)
+                        <div class="confilmClaimDetailRow">
+                            <div class="item_name">
+                                {{ $claimsDetail->item_name }}
+                            </div>
+                            <div class="unit_price">
+                                {{ number_format($claimsDetail->unit_price) }} 円 
+                            </div>
+                            <div class="quantity">
+                                {{ number_format($claimsDetail->quantity) ." ". $claimsDetail->unit }} 
+                            </div>
+                            <div class="price">
+                                {{ number_format($claimsDetail->price) }} 円
+                            </div>
+                        </div>
+                      @endforeach
+                    </div>
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >ステータス</div>
-                    <div class="cusInfoContent" ></div>
+                    <div class="cusInfoContent" >{{ $claim->statusName }}</div>
                   </div>
+                  @if($claim->status <= 3)
+                    <div class="cusInfoRow" >
+                      <div class="cusInfoTitle" >ステータス変更</div>
+                      <div class="cusInfoContent" >
+                        <a href="" >キャンセル</a> <br>
+                        <a href="" >入金済みにする</a> <br>
+                          @if($claim->status ==0)
+                            <a href="" >請求データを削除</a>
+                          @endif
+                      </div>
+                    </div>
+                    <div class="cusInfoRow" >
+                      <div class="cusInfoTitleMail" >請求メール送付</div>
+                      <div class="cusInfoContentMail" >
+                        <form action="{{route('claim.sendRequestClaimMail',['id'=>$claim->id ] )}}" method="POST" >
+                          @csrf
+                          件名　:　{{ $claim->title }} のご請求につきまして
+                          <textarea class="formInput mailformInput" name="text" >@include('user.include_requestClaimMail')</textarea>
+                          ※メールを送付すると請求中になります。<br>
+                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="return confirmSendMail();">送信する</button>
+                        </form>
+                      </div>
+                    </div>
+                  @endif
 
                 </div>
             </div>
@@ -46,8 +91,8 @@
 @endsection
 
 <script>
-    function confirmClaimComplete(){
-        var result = window.confirm('入金完了にし、売り上げ情報に登録します。\n宜しいですか？');
+    function confirmSendMail(){
+        var result = window.confirm('インストラクターに請求メールを送信しますか？\nメール送信後はステータスが【請求中】になります');
         if( result ) return true; return false;
     }
 </script>

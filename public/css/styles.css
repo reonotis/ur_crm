@@ -700,13 +700,13 @@ table.customerSearchTable{
 }
 
 .cusInfoRow{
-  display       : flex ;
-  flex-flow     : wrap ;
+	display       : flex ;
+	flex-flow     : wrap ;
 	margin :8px 0;
 }
 
 .cusInfoTitle{
-  float         : left ;
+	float         : left ;
 	width :140px;
 	padding :5px;
 	font-size:13px;
@@ -724,8 +724,28 @@ table.customerSearchTable{
 	border-bottom:solid 1px var(--info);
 	font-size: .9em;
 }
+.cusInfoTitleMail{
+	float         : left ;
+	writing-mode: vertical-rl;
+	width :50px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--info);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+.cusInfoContentMail{
+	float         : left ;
+	width :calc(100% - 50px);
+	padding :5px;
+	border-bottom:solid 1px var(--info);
+	font-size: .9em;
+}
 .editCusInfoTitle{
-  float         : left ;
+	float         : left ;
 	width :140px;
 	padding :5px;
 	font-size:13px;
@@ -978,17 +998,17 @@ table.customerSearchTable{
 	justify-content: space-between;
 }
 .confilmClaimDetailRow>.item_name{
-	width :250px;
+	width :220px;
 }
 .confilmClaimDetailRow>.unit_price{
-	width :80px;
+	width :60px;
 	text-align: right;
 }
 .confilmClaimDetailRow>.quantity{
-	width :80px;
+	width :60px;
 	text-align: center;
 }
 .confilmClaimDetailRow>.price{
-	width :80px;
+	width :60px;
 	text-align: right;
 }

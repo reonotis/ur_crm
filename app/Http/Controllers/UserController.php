@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Client;
-use App\Models\Authority;
 use App\Models\Claim;
 use App\Models\Payment;
 use App\Models\HistorySendEmailsInstructor;
@@ -13,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CheckUsers;
+use App\Services\CheckClaims;
 
 
 class UserController extends Controller
@@ -100,7 +99,7 @@ class UserController extends Controller
         ->where('user_type', '2')
         ->where('user_id', $id)
         ->get();
-        $claims = $this->setBillingStatuses($claims);
+        $claims = CheckClaims::setStatuses($claims);
 
         $HSEIs = HistorySendEmailsInstructor::select('history_send_emails_instructors.*', 'users.name')
         ->join('users', 'users.id', 'history_send_emails_instructors.user_id')

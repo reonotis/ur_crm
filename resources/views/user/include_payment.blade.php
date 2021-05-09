@@ -22,11 +22,7 @@
         <td>{{ number_format($claim->price) }} 円</td>
         <td>{{ $claim->claim_date }}</td>
         <td>
-          @if($claim->Status == 0)
-            {{ $claim->billing_Status }}
-            <a href="" >請求する</a>
-          @endif
-
+          {{ $claim->statusName }}
         </td>
         <td>{{ $claim->payment_complete_date }}</td>
         <td><a href="{{ route('claim.show',['id'=>$claim->id]) }}">確認</a></td>
