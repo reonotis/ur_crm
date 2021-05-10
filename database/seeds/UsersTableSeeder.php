@@ -22,14 +22,14 @@ class UsersTableSeeder extends Seeder
             ],[
                 'name' => '穐里 明美',
                 'read' => 'アキサト アケミ',
-                'email' => 'akemi@test.jp',
+                'email' => 'akisato@paralymbics.jp',
                 'password' => Hash::make('akemi'),
                 'authority_id' => '2',
                 'enrolled_id' => '1',
             ],[
                 'name' => '西川 薫',
                 'read' => 'ニシカワ カオリ',
-                'email' => 'kaori@test.jp',
+                'email' => 'nishikawa@paralymbics.jp',
                 'password' => Hash::make('kaori'),
                 'authority_id' => '3',
                 'enrolled_id' => '1',
