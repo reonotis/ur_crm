@@ -52,8 +52,10 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
 });
 
 //
-Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ReportController@index')->name('report.index');
+Route::group(['prefix'=>'sales', 'middleware'=>'auth'], function(){
+    Route::get('index', 'SalesInstructorController@index')->name('sales.index');
+    Route::get('list', 'SalesInstructorController@list')->name('sales.list');
+    Route::get('show/{month}', 'SalesInstructorController@show')->name('sales.show');
 });
 
 

@@ -33,7 +33,7 @@
                         <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $user-> id }}</td>
+                                    <td>{{ $user-> intr_No }}</td>
                                     <td>{{ $user-> name }}</td>
                                     <td>{{ $user-> authority }}</td>
                                     <td><a href="{{ route('user.display',['id'=>$user->id]) }}" >確認する</a></td>

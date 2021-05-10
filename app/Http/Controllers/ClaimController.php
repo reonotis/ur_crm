@@ -57,6 +57,9 @@ class ClaimController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create($id){
+        $claimDetailList = config('paralymbics.claimDetailList');
+        $claimDetailList = json_encode($claimDetailList);
+
         $user = User::find($id);
         $ClaimTrn = ClaimsTransactions::
         where('user_type', 2)
@@ -65,12 +68,12 @@ class ClaimController extends Controller
 
         if($ClaimTrn){
             $CTrn_id = $ClaimTrn->id;
-            $CDTrns = ClaimsDetailsTransactions::where('claim_trn_id', $CTrn_id)->orderBy('rank')->get();
+            $CDTrans = ClaimsDetailsTransactions::where('claim_trn_id', $CTrn_id)->orderBy('rank')->get();
         }else{
-            $CDTrns = "" ;
+            $CDTrans = "" ;
         }
 
-        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrns'));
+        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrans', 'claimDetailList'));
         //
     }
 
@@ -210,17 +213,28 @@ class ClaimController extends Controller
                         where('user_type', 2)
                         ->where('user_id', $id)
                         ->first();
+            if(!$ClaimTrn) throw new \Exception("データが出来ていません");
+            if(!$ClaimTrn->title) throw new \Exception("請求名目が入力されていません");
+            if($ClaimTrn->limit_date <= date('Y-m-d')) throw new \Exception("入金期日の値が過去日、もしくは不正な値になっています");
 
             $CTrn_id = $ClaimTrn->id;
             $CDTrns = ClaimsDetailsTransactions::where('claim_trn_id', $CTrn_id)->orderBy('rank')->get();
+            if(count($CDTrns) == 0) throw new \Exception("内訳項目のデータがありません");
 
             foreach($CDTrns as $CDTrn){
+                if(!isset($CDTrn->item_name))throw new \Exception("項目名が入力されていないデータがあります。");
                 $grossAmount[] =$CDTrn->price;
             }
+
+            $claimDetailList = config('paralymbics.claimDetailList');
+            // TODO claimDetailListに存在しないデータがないか確認したい
+
             $grossAmount = collect($grossAmount)->sum();
+            if($grossAmount == 0) throw new \Exception("請求金額が0以下のためデータが作成できません");
+
             return view('claim.comfilmAddClaim', compact('user', 'ClaimTrn', 'CDTrns', 'grossAmount'));
         } catch (\Throwable $e) {
-            session()->flash('msg_danger', '不正なアクセスです。' );
+            session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
         }
     }
@@ -377,7 +391,7 @@ class ClaimController extends Controller
             }
             $text = str_replace("###customerName###", $claim->name, $text);
             $text = str_replace("###limit_date###", $limit_date, $text);
-            $text = str_replace("###claim_detail###", $claim_data, $text);// TODO 
+            $text = str_replace("###claim_detail###", $claim_data, $text);
 
             // 依頼メールの送信
             $this->_subject = $claim->title . "のご請求につきまして" ;
@@ -480,7 +494,7 @@ class ClaimController extends Controller
             $claim->save();
 
 
-            // TODO 売り上げ情報に登録
+            // 売り上げ情報に登録
             $payment = new Payment;
             $payment->claim_id  = $claim->id ;
             $payment->sold_type  = 1 ;

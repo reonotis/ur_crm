@@ -22,17 +22,17 @@
     </div>
     <div class="BOXin tabsContentsArea">
         <div class="tabArea">
-          <div class="tab active">基本情報</div>
-          <div class="tab">年会費などの支払い情報</div>
+          <div class="tab active">支払い情報</div>
+          <div class="tab">基本情報</div>
           <div class="tab">顧客一覧</div>
           <div class="tab">メール</div>
         </div>
         <div class="tabsContents">
           <div class="tabscontent show">
-            @include('user.include_information')
+            @include('user.include_payment')
           </div>
           <div class="tabscontent">
-            @include('user.include_payment')
+            @include('user.include_information')
           </div>
           <div class="tabscontent">
           </div>

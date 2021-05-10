@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\InstructorCourse;
 use App\Models\InstructorCourseSchedule;
 use App\Models\CustomerSchedule;
 // use DateTime;
@@ -20,7 +19,7 @@ class ScheduleController extends Controller
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
-            $this->_user = \Auth::user();
+            $this->_user = Auth::user();
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 8){

@@ -77,7 +77,7 @@
             <?php if(Auth::user()->authority_id < 7 ) { ?>
                 <li><a href="{{route('admin.index')}}">管理画面</a></li>
             <?php }?>
-            <li><a href="{{route('report.index')}}">売上実績</a></li>
+            <li><a href="{{route('sales.list')}}">売上実績</a></li>
             <li><a href="{{route('customer.search')}}">顧客検索</a></li>
             <li><a href="{{route('courseSchedule.index')}}">申請登録</a></li>
             <li><a href="{{route('schedule.list')}}">スケジュール</a></li>

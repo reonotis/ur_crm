@@ -41,27 +41,27 @@
                             <div class="ClaimDetail_delete" >削除</div>
                         </div>
                         <div id="result">
-                            @if($CDTrns)
-                                @foreach($CDTrns as $CDTrn )
+                            @if($CDTrans)
+                                @foreach($CDTrans as $CDTran )
                                     <div class="ClaimDetailRow">
                                         <div class="ClaimDetail_itemName" >
-                                            <input type="text" id="item_name_<?= $CDTrn->id ?>" value="{{$CDTrn->item_name}}" onchange="updateOrInsert_claimDetail(<?= $CDTrn->id ?>);" >
+                                            <input type="text" id="item_name_<?= $CDTran->id ?>" value="{{$CDTran->item_name}}" onchange="setDefaultPrice(<?= $CDTran->id ?>);" >
                                         </div>
                                         <div class="ClaimDetail_unitPrice" >
-                                            <input type="number" id="unit_price_<?= $CDTrn->id ?>" value="{{$CDTrn->unit_price}}" onchange="reCalculation(<?= $CDTrn->id ?>);" >円
+                                            <input type="number" id="unit_price_<?= $CDTran->id ?>" value="{{$CDTran->unit_price}}" onchange="reCalculation(<?= $CDTran->id ?>);" >円
                                         </div>
                                         <div class="ClaimDetail_quantity" >
-                                            <input type="number" id="quantity_<?= $CDTrn->id ?>" value="{{$CDTrn->quantity}}" onchange="reCalculation(<?= $CDTrn->id ?>);" >
-                                            <input type="text" id="unit_<?= $CDTrn->id ?>" value="{{$CDTrn->unit}}" onchange="updateOrInsert_claimDetail(<?= $CDTrn->id ?>);" >
+                                            <input type="number" id="quantity_<?= $CDTran->id ?>" value="{{$CDTran->quantity}}" onchange="reCalculation(<?= $CDTran->id ?>);" >
+                                            <input type="text" id="unit_<?= $CDTran->id ?>" value="{{$CDTran->unit}}" onchange="updateOrInsert_claimDetail(<?= $CDTran->id ?>);" >
                                         </div>
                                         <div class="ClaimDetail_price" >
-                                            <input type="number" id="price_<?= $CDTrn->id ?>" value="{{$CDTrn->price}}" onchange="updateOrInsert_claimDetail(<?= $CDTrn->id ?>);" >円
+                                            <input type="number" id="price_<?= $CDTran->id ?>" value="{{$CDTran->price}}" onchange="updateOrInsert_claimDetail(<?= $CDTran->id ?>);" >円
                                         </div>
                                         <div class="ClaimDetail_rank" >
-                                            <a href="" onclick="return rankDuwn(<?= $CDTrn->id ?>);" >↓</a>
+                                            <a href="" onclick="return rankDuwn(<?= $CDTran->id ?>);" >↓</a>
                                         </div>
                                         <div class="ClaimDetail_delete" >
-                                            <a href="" onclick="return confilmDelete(<?= $CDTrn->id ?>);" >削除</a>
+                                            <a href="" onclick="return confilmDelete(<?= $CDTran->id ?>);" >削除</a>
                                         </div>
                                     </div>
                                 @endforeach
@@ -78,7 +78,9 @@
             </div>
         </div>
     </div>
-
+<?php
+    // dd($claimDetailList);
+?>
 </div>
 @endsection
 
@@ -107,7 +109,7 @@
 
                 html=html + "<div class=\"ClaimDetailRow\" >";
                 html=html +     "<div class=\"ClaimDetail_itemName\" >";
-                html=html +         "<input type=\"text\" id=\"item_name_" + id + "\" value=\"" + item_name + "\" onchange=\"updateOrInsert_claimDetail(" + id + ");\" >";
+                html=html +         "<input type=\"text\" id=\"item_name_" + id + "\" value=\"" + item_name + "\" onchange=\"setDefaultPrice(" + id + ");\" >";
                 html=html +     "</div>";
                 html=html +     "<div class=\"ClaimDetail_unitPrice\" >";
                 html=html +         "<input type=\"number\" id=\"unit_price_" + id + "\" value=\"" + unit_price + "\" onchange=\"reCalculation(" + id + ");\" >円";
@@ -128,8 +130,7 @@
                 html=html +     "</div>";
                 html=html + "</div>";
             }
-
-                $('#result').html(html);
+        $('#result').html(html);
     }
 
     function reCalculation(id){
@@ -140,13 +141,29 @@
         updateOrInsert_claimDetail(id)
     }
 
+    function setDefaultPrice(id){
+        var claimDetailList = JSON.parse('<?php echo $claimDetailList; ?>');
+        var item_name  = document.getElementById("item_name_" + id).value
+        var unit_price = document.getElementById("unit_price_" + id)
+        var unit       = document.getElementById("unit_" + id)
+        claimDetailList.some(function(List){
+            if(item_name.includes(List.item_name)){
+                console.log(List.unit_price)
+                unit_price.value = List.unit_price
+                unit.value       = List.unit
+                return true;
+            }
+        });
+
+        reCalculation(id)
+    }
+
     function updateOrInsert_claimDetail(id){
         var item_name  = document.getElementById("item_name_" + id)
         var unit_price = document.getElementById("unit_price_" + id)
         var quantity   = document.getElementById("quantity_" + id)
         var unit       = document.getElementById("unit_" + id)
         var price      = document.getElementById("price_" + id)
-        console.log(item_name.value);
         $.get({
             url: "/claim/updateOrInsert_claimDetail/" + id,
             method: 'GET',
@@ -159,7 +176,7 @@
                 'price'     : price.value,
             }
         }).done(function (data) { //ajaxが成功したときの処理
-            console.log("更新成功 ID : " + data);
+            // console.log("更新成功 ID : " + data);
         }).fail(function () { //ajax通信がエラーのときの処理
             console.log('更新失敗');
         })

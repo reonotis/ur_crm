@@ -8,20 +8,18 @@ class CheckClaims
 {
 
     /**
-    * 請求情報のステータスを確認して日本語のステータスをセットする
-    */
+     * 請求情報のステータスを確認して日本語のステータスをセットする
+     */
     public static function setStatuses($claims){
-        
         foreach($claims as $claim){
             $claim = self::setStatus($claim);
         }
         return $claims;
     }
 
-
     /**
-    * 請求情報のステータスを確認して日本語のステータスをセットする
-    */
+     * 請求情報のステータスを確認して日本語のステータスをセットする
+     */
     public static function setStatus($claim){
         switch ($claim->status){
             case 0:
@@ -50,9 +48,6 @@ class CheckClaims
         }else{
             $claim->complete_paidDate = date('Y年 m月 d日' , strtotime($claim->complete_date));
         }
-
-
-        // TODO 請求日と計上日を登録しないといけない
         return $claim;
     }
 

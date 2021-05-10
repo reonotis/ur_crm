@@ -8,7 +8,10 @@
                 <div class="card-header">売上確認</div>
 
                 <div class="card-body">
-                    
+                    ※過去1年分を表示しています。<br>
+                    @foreach( $months as $month )
+                    <a href="{{ route('sales.show', ['month'=>$month['month'] ]) }}" >{{ $month['displayName'] }}</a> <br>
+                    @endforeach
 
                 </div>
             </div>
