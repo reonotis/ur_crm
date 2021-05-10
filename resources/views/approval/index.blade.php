@@ -8,9 +8,9 @@
 </h3>
 
         <div class="LeftBOX" style="width:100%;">
-            <a href="">
+            <!-- <a href="">
                 申請済みの講座を確認する
-            </a>
+            </a> -->
             <!-- <button class="btn btn-outline-success my-2 my-sm-0 BOXin" type="submit">申請する</button> -->
         </div>
 
@@ -21,7 +21,7 @@
                 <thead>
                     <tr>
                         <th>コース名</th>
-                        <th>実施日時</th>
+                        <th>開講日</th>
                         <th>インストラクター</th>
                         <th>料金</th>
                         <th>状態</th>
@@ -31,8 +31,8 @@
                 <tbody>
                     @foreach($courseSchedules as $courseSchedule)
                         <tr>
-                            <td>{{ $courseSchedule->course_name }}</td>
-                            <td>{{ $courseSchedule->date->format('Y年m月d日') . " 　" . date('H:i', strtotime($courseSchedule->time)) }}</td>
+                            <td>{{ $courseSchedule->course_name}}</td>
+                            <td>{{ $courseSchedule->date->format('Y年m月d日 H:i') }}</td>
                             <td>{{ $courseSchedule->name }}</td>
                             <td>{{ number_format($courseSchedule->price) }}円</td>
                             <td>{{ $courseSchedule->approval_name }}</td>
@@ -48,7 +48,9 @@
 
     </div>
 </div>
-
+<?php
+// dd($courseSchedules);
+?>
 @endsection
 
 

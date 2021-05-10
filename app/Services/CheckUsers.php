@@ -92,22 +92,22 @@ class CheckUsers
     */
     public static function checkAuthority($user){
         if($user->authority_id === 1){
-            $user->authority = "オーナー" ;
+            $user->authority = "System Owner" ;
         }
         if($user->authority_id === 2){
-            $user->authority = "社長" ;
+            $user->authority = "代表" ;
         }
         if($user->authority_id === 3){
-            $user->authority = "部長" ;
+            $user->authority = "総務" ;
         }
         if($user->authority_id === 4){
-            $user->authority = "課長" ;
+            $user->authority = "部長" ;
         }
         if($user->authority_id === 5){
-            $user->authority = "社員" ;
+            $user->authority = "課長" ;
         }
         if($user->authority_id === 6){
-            $user->authority = "経理" ;
+            $user->authority = "社員" ;
         }
         if($user->authority_id === 7){
             $user->authority = "エージェント" ;
@@ -116,7 +116,7 @@ class CheckUsers
             $user->authority = "---" ;
         }
         if($user->authority_id === 9){
-            $user->authority = "なし" ;
+            $user->authority = "権限なし" ;
         }
         return $user;
     }

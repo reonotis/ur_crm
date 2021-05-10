@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\CustomerSchedule;
+use App\Models\InstructorCourse;
+use App\Models\InstructorCourseSchedule;
+use App\Models\CustomerCourseMapping;
+use App\Models\HistorySendEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -19,39 +23,50 @@ use App\Http\Controllers\Controller,
 class CustomerController extends Controller
 {
 
+    private $_user;                 //Auth::user()
+    private $_auth_id ;             //Auth::user()->id;
+    private $_auth_authority_id ;   //権限
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = \Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 8){
+                dd("権限がありません。");
+            }
+            return $next($request);
+        });
+    }
 
     /**
      * Display a listing of the resource.
      *
      */
     public function index(){
-        $auths = Auth::user();
         return view('customer.index');
     }
-
-
-
 
     /**
      * 顧客の登録画面に遷移します。
      *
      */
     public function create(){
-        $auths = Auth::user();
         return view('customer.create');
     }
 
-
-
-
-
-
+    /**
+     * 検索画面を表示する
+     */
     public function search(){
         // アーティサンコマンドでWordpressからの申し込みファイルをインポートする
-        Artisan::call('command:courseApplicationImport');
+        // Artisan::call('command:courseApplicationImport');
         return view('customer.search');
     }
 
+    /**
+     * 条件に基づき検索した結果を表示する
+     */
     public function searching(Request $request){
 
         $query = DB::table('customers')
@@ -84,76 +99,105 @@ class CustomerController extends Controller
         $this->setQueryLike($query, $request->input('addr21'), 'addr21');
         $this->setQueryLike($query, $request->input('strt21'), 'strt21');
 
-
         // 非表示の顧客を表示するか設定する
         if( !$request->input('hidden_flag')) $query -> where('customers.hidden_flag','=','0');
 
         // ユーザーの権限がエージェント以下だったら自分の顧客だけ選択する
-        $auth = Auth::user();
-        if($auth->authority_id >= 7){
-            $query -> where('customers.instructor' ,'=', $auth->id);
-        }
-        $auth = Auth::user();
-        if($auth->enrolled >= 9){
-            echo "退職";
-            exit;
-        }
-
-
+        if($this->_auth_authority_id >= 7) $query -> where('customers.instructor' ,'=', $this->_auth_id);
 
         $query -> select('customers.*','users.name as instName');
         $query -> orderby('customers.id','asc');
-        // dd($query);
         $customers = $query -> paginate(20);
-        // Session::put('search_client_id', $customers);
 
         return view('customer.list', ['customers' => $customers]);
     }
 
-    public function setQueryLike($query, $date, $name){
-        if($date !== null){
-            $date_split = mb_convert_kana($date, 's');    //全角スペースを半角にする
-            $date_split2 = preg_split('/[\s]+/', $date_split, -1, PREG_SPLIT_NO_EMPTY);    //半角スペースで区切る
-            foreach($date_split2 as $value){
+    /**
+     * 渡されたqueryにwhere句を追加する
+     */
+    public function setQueryLike($query, $data, $name){
+        if($data !== null){
+            $data_split = mb_convert_kana($data, 's');    //全角スペースを半角にする
+            $data_split2 = preg_split('/[\s]+/', $data_split, -1, PREG_SPLIT_NO_EMPTY);    //半角スペースで区切る
+            foreach($data_split2 as $value){
                 $query -> where('customers.'.$name ,'like','%'.$value.'%');
             }
         }
     }
 
+    /**
+     * 顧客の詳細画面を表示する
+     */
     public function display($customer_id){
         // 渡されたIDの顧客情報を取得する
         $customer = CheckCustomerData::getCustomer($customer_id);
-        if(empty($customer))return redirect()->back();
-        
-        $auth = Auth::user();
-        if($auth->authority_id >= 7){
-            $customer = $this->maskCustomerData($customer);
-        }
 
-        // 顧客のスケジュールを取得する
-        $CSQuery = DB::table('customer_schedules');
-            $CSQuery -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id');
-            $CSQuery -> leftJoin('courses', 'courses.id', '=', 'customer_schedules.course_id');
-        $CSQuery   -> select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' );
+        // 顧客情報が無ければ前の画面に戻る
+        if(empty($customer))return redirect()->back();
+
+        // 権限がエージェントだったら住所にmaskをかける
+        if($this->_auth_authority_id >= 7) $customer = $this->maskCustomerData($customer);
+
+        // 顧客のスケジュールを取得するinstructor_courses
+        $CSQuery = CustomerSchedule::select('customer_schedules.*', 'users.name as intrName', 'courses.course_name' )
+            -> leftJoin('users', 'users.id', '=', 'customer_schedules.instructor_id')
+            -> leftJoin('instructor_course_schedules', 'instructor_course_schedules.id', '=', 'customer_schedules.course_schedules_id')
+            -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'instructor_course_schedules.instructor_courses_id')
+            -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
         $CSQuery -> where('customer_schedules.customer_id','=',$customer_id);
-        $CSQuery -> orderByRaw('customer_schedules.date DESC , customer_schedules.time DESC , customer_schedules.howMany DESC ');
+        $CSQuery -> orderByRaw('customer_schedules.date_time ASC, customer_schedules.howMany ASC ');
         $CustomerSchedules = $CSQuery -> get();
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
 
-
-        // 購入コース明細を取得する　course_purchase_details
-        $CPDQuery = DB::table('course_purchase_details');
-        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'course_purchase_details.purchase_id');
-        $CPDQuery -> select('course_purchase_details.*', 'courses.course_name' );
-        $CPDQuery -> where('course_purchase_details.customer_id','=',$customer_id);
+        // 購入コース明細を取得する
+        $CPDQuery = CustomerCourseMapping::select('customer_course_mapping.*', 'courses.course_name' );
+        $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.instructor_courses_id');
+        $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
+        $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
 
-        return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails'));
+        // メール履歴を取得
+        $HSEmails=HistorySendEmail::select('history_send_emails.*', 'users.name')
+        ->where('history_send_emails.customer_id', $customer_id )
+        ->join('users', 'users.id', '=', 'history_send_emails.user_id' );
+        // if($this->_auth_authority_id >= 5) $HSEmails = $HSEmails->where('user_id', $this->_auth_id );
+        $HSEmails = $HSEmails->orderBy('send_time','desc')->get();
+        $HSEmails = $this->changeMailTime($HSEmails);
+        // dd($HSEmails);
+        return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails', 'HSEmails' ));
     }
 
     /**
-    * 顧客情報を編集します
-    */
+     * メールの時間の表示形式を調整する
+     */
+    public function changeMailTime($HSEmails){
+        foreach($HSEmails as $HSEmail){
+            // 本日だったら
+            if($HSEmail->send_time->format('Y-m-d') == date('Y-m-d')){
+                $HSEmail->sendtime = $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') == date('Y-m-d',strtotime('-1 day')) ){  // 昨日だったら
+                $HSEmail->sendtime = "昨日 " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') == date('Y-m-d',strtotime('-2 day')) ){  // おととい
+                $HSEmail->sendtime = "おととい " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y-m-d') > date('Y-m-d',strtotime('-3 day')) ){   // 3日前
+                $HSEmail->sendtime = "3日前 " . $HSEmail->send_time->format('H:i');
+            }elseif($HSEmail->send_time->format('Y') == date('Y') ){                              //今年だったら
+                $HSEmail->sendtime = $HSEmail->send_time->format('m月d日');
+            }elseif(1==1){  //それ以外
+                $HSEmail->sendtime = $HSEmail->send_time->format('Y年m月d日');
+            }
+            // dd($HSEmail->send_time);
+        }
+
+        return $HSEmails;
+    }
+
+
+
+
+    /**
+     * 顧客情報を編集します
+     */
     public function edit($client_id){
         // 渡されたIDの顧客情報を取得する
         $query = DB::table('customers');
@@ -171,15 +215,9 @@ class CustomerController extends Controller
         return view('customer.edit', compact('customer', 'users'));
     }
 
-
-
-
-
-
-
     /**
-    * 顧客情報を更新します。
-    */
+     * 顧客情報を更新します。
+     */
     public function update(Request $request, $id){
         $birthdayYear  = $request->input('birthdayYear');
         $birthdayMonth = $request->input('birthdayMonth');
@@ -217,15 +255,11 @@ class CustomerController extends Controller
         return redirect()->action('CustomerController@display', ['id' => $id]);
     }
 
-
-
-
-
     /**
-    * 郵便番号3桁のバリデーションチェックを行います。
-    * input $date
-    */
-    function checkValidationZip1($date){
+     * 郵便番号3桁のバリデーションチェックを行います。
+     * input $date
+     */
+    public function checkValidationZip1($date){
         $this->_zip21 = NULL;
         if(strlen($date) <> 3 ){
             dd("郵便番号3桁が不正な値です。");
@@ -236,16 +270,11 @@ class CustomerController extends Controller
     }
 
     /**
-    * 顧客情報にmaskをかけます
-    */
-    function maskCustomerData($customer){
+     * 顧客情報にmaskをかけます
+     */
+    public function maskCustomerData($customer){
         $customer->strt21 = str_repeat("*",  mb_strlen($customer->strt21));
         return $customer;
     }
-
-
-
-
-
 
 }

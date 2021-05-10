@@ -17,10 +17,10 @@
   <?php foreach ($CoursePurchaseDetails as $key => $CoursePurchaseDetail) { ?>
     <tr>
       <td><?= date('Y年 m月 d日',  strtotime($CoursePurchaseDetail->date)) ?></td>
-      <td><?= $CoursePurchaseDetail->course_name ?></td>
+      <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" ><?= $CoursePurchaseDetail->course_name ?></a></td>
       <td><?= number_format($CoursePurchaseDetail->price) ?>円</td>
       <td><?= paymentConfirmation($CoursePurchaseDetail->pay_confirm , $CoursePurchaseDetail->payment_day ) ?></td>
-      <td><a href="" >確認する</a></td>
+      <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" >確認</a></td>
     </tr>
   <?php  } ?>
 
@@ -39,7 +39,7 @@
 
 
 <?php
-
+// dd($CoursePurchaseDetail);
   function paymentConfirmation($pay_confirm, $payment_day ){
     if($pay_confirm === 1){
       if($payment_day){

@@ -13,7 +13,7 @@ class CheckCouses
     public static function setApprovalName($data){
         switch ($data->approval_flg) {
             case '0':
-                $data->approval_name = '申請中';
+                $data->approval_name = '未申請';
                 break;
             case '1':
                 $data->approval_name = '差し戻し';
@@ -31,5 +31,15 @@ class CheckCouses
         return $data;
     }
 
+    /**
+     *承認状態を確認して承認名を付与する
+     */
+    public static function setApprovalNames($datas){
+        if(empty($datas))throw new \Exception("コースが取得できていません。");
+        foreach($datas as $data){
+            self::setApprovalName($data);
+        }
+        return $datas;
+    }
 
 }

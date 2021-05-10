@@ -22,7 +22,7 @@
                       <div class="editCusInfoTitle" >電話番号</div>
                       <div class="editCusInfoContent" >
                         <div class="inputBirthday">
-                            <input class="formInput"  type="text" name="tell" value="<?= $auth-> tel?>" placeholder="新しいパスワード" >
+                            <input class="formInput"  type="text" name="tell" value="<?= $auth-> tel?>" placeholder="新しい電話番号" >
                         </div>
                       </div>
                     </div>

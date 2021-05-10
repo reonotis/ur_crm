@@ -23,13 +23,17 @@
                             </tr>
                             <tr>
                                 <th>料金</th>
-                                <td><input type="text" class="formInput" name="price" value="{{ $intr_course->price }}"></td>
+                                <td>
+                                    <div class="inputUnits">
+                                        <input type="number" name="price" value="{{ $intr_course->price }}" step="100" class="formInput inputUnit" >円
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>実施日時</th>
                                 <td>
-                                    <input class="formInput" type="date" name="date" id="date" value="{{ $intr_course->date->format('Y-m-d') }}" >
-                                    <input class="formInput" type="time" name="time" id="time" value="{{ $intr_course->time }}" >
+                                    <input class="formInput" type="date" name="date" id="date" value="{{ $InstructorCourseSchedule[0]->date->format('Y-m-d') }}" >
+                                    <input class="formInput" type="time" name="time" id="time" value="{{ $InstructorCourseSchedule[0]->date->format('H:i') }}"  >
                                 </td>
                             </tr>
                             <tr>
@@ -47,6 +51,18 @@
                             <tr>
                                 <th>詳細</th>
                                 <td><textarea name="comment" placeholder="詳細" class="formInput" >{{ $intr_course -> comment }}</textarea></td>
+                            </tr>
+                            <tr>
+                                <th>公開期間</th>
+                                <td>
+                                    <div class="inputOpenDateTime">
+                                        公開開始日<input type="datetime-local" name="open_start_day" class="formInput inputDatatimeLocal" value="{{ $intr_course->open_start_day->format('Y-m-d').'T'.$intr_course->open_start_day->format('H:i') }}" min="<?php echo date('Y-m-d',strtotime("-1 day"));?>T00:00" >から
+                                    </div>
+                                    <div class="inputOpenDateTime">
+                                        公開終了日<input type="datetime-local" name="open_finish_day" class="formInput inputDatatimeLocal" value="{{ $intr_course->open_finish_day->format('Y-m-d').'T'.$intr_course->open_finish_day->format('H:i') }}" >まで
+                                        
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">

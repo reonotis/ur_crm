@@ -14,33 +14,37 @@
                     <table class="customerSearchTable">
                         <tr>
                             <th>講座</th>
-                            <td>{{ $intr_course->course_name }}</td>
+                            <td>{{ $para_course->course_name }}</td>
                         </tr>
                         <tr>
                             <th>料金</th>
-                            <td>{{ number_format($intr_course->price) }}円</td>
+                            <td>{{ number_format($para_course->price) }}円</td>
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>{{ $intr_course->date->format('Y年m月d日') . "　" . date('H:i', strtotime($intr_course->time)) }}～</td>
+                            <td>{{ $InstructorCourseSchedule[0]->date->format('Y年m月d日 H:i') }}～</td>
                         </tr>
                         <tr>
                             <th>エリア</th>
-                            <td>{{ $intr_course->erea }}</td>
+                            <td>{{ $para_course->erea }}</td>
                         </tr>
                         <tr>
                             <th>会場</th>
-                            <td>{{ $intr_course->venue }}</td>
+                            <td>{{ $para_course->venue }}</td>
                         </tr>
                         <tr>
                             <th>特記事項</th>
-                            <td>{{ $intr_course->notices }}</td>
+                            <td>{{ $para_course->notices }}</td>
                         </tr>
                         <tr>
                             <th>詳細</th>
-                            <td>{!! nl2br(e($intr_course -> comment)) !!}</td>
+                            <td>{!! nl2br(e($para_course -> comment)) !!}</td>
                         </tr>
-                        @if($ApprovalComments)
+                        <tr>
+                            <th>公開期間</th>
+                            <td>{{$para_course->open_start_day->format('Y/m/d H:i') }}　～　{{$para_course->open_finish_day->format('Y/m/d H:i') }}</td>
+                        </tr>
+                        @if(!isset($ApprovalComments))
                             <tr>
                                 <th>協会からのコメント</th>
                                 <td>
@@ -53,22 +57,20 @@
                         @endif
                         <tr>
                             <th>状態</th>
-                            <td>{{ $intr_course->approval_name }}</td>
+                            <td>{{ $para_course->approval_name }}</td>
                         </tr>
-                        @if($intr_course->approval_name == 0 || $intr_course->approval_name == 1 )
-                            <tr>
-                                <td colspan="2">
-                                    @if($intr_course->approval_flg < 5)
-                                        <a href="{{route('courseSchedule.intrDelete', ['id' => $intr_course->id ])}}">
-                                            <button class="btn btn-outline-danger" onClick="return confilmDelete()">申請を中止して削除する</button>
-                                        </a>
-                                        <a href="{{route('courseSchedule.paraEdit', ['id' => $intr_course->id ])}}">
-                                            <button class="btn btn-outline-success" >申請内容を修正する</button>
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
+                        <tr>
+                            <td colspan="2">
+                                @if($para_course->approval_flg <= 2)
+                                    <a href="{{route('courseSchedule.paraDelete', ['id' => $para_course->id ])}}">
+                                        <button class="btn btn-outline-danger" onClick="return confilmDelete()">申請を中止して削除する</button>
+                                    </a>
+                                @endif
+                                <a href="{{route('courseSchedule.paraEdit', ['id' => $para_course->id ])}}">
+                                    <button class="btn btn-outline-success" >申請内容を修正する</button>
+                                </a>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -77,7 +79,7 @@
 </div>
 
 <?php
-// dd($CST);
+// dd($ApprovalComments);
 ?>
 
 <script>

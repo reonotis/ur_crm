@@ -4,8 +4,8 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="fullWidth">
-            <button class="btn btn-light btn-sm" type="button" onClick="history.back()">戻る</button>
+        <div class="col-md-10">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
         </div>
         <div class="col-md-8">
             <div class="card">
@@ -14,7 +14,7 @@
                     <table class="customerSearchTable">
                         <tr>
                             <th>講師</th>
-                            <td>{{$courseSchedules->name}}</td>
+                            <td>{{$courseSchedules->name }}</td>
                         </tr>
                         <tr>
                             <th>講座</th>
@@ -26,7 +26,7 @@
                         </tr>
                         <tr>
                             <th>実施日時</th>
-                            <td>{{ $courseSchedules->date->format('Y年m月d日') . "　" . date('H:i', strtotime($courseSchedules->time)) }}～</td>
+                            <td>{{ $CSW->date->format('Y/m/d H:i') }}～</td>
                         </tr>
                         <tr>
                             <th>エリア</th>
@@ -46,21 +46,20 @@
                             <th>詳細</th>
                             <td>{!! nl2br(e($courseSchedules -> comment)) !!}</td>
                         </tr>
-                        <tr>
-                            <th>状態</th>
-                            <td>{{$courseSchedules->approval_name}}</td>
-                        </tr>
-                        @if($ApprovalComments)
+                        @if( count($ApprovalComments) >= 1)
                             <tr>
                                 <th>コメント</th>
                                 <td>
                                     @foreach($ApprovalComments as $ApprovalComment)
-                                        {{ $ApprovalComment->created_at->format('Y/m/d H:i ') }} 　
-                                        {{ $ApprovalComment->comment }}<br>
+                                        {{$ApprovalComment->comment}}<br>
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
+                        <tr>
+                            <th>状態</th>
+                            <td>{{$courseSchedules->approval_name}}</td>
+                        </tr>
                         @if($courseSchedules->approval_flg == 2 )
                             <tr>
                                 <th>承認 / 取下</th>
@@ -82,7 +81,7 @@
 </div>
 
 <?php
-// dd($ApprovalComments);
+    // dd($ApprovalComments);
 ?>
 
 <script>

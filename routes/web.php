@@ -29,35 +29,33 @@ Auth::routes([
 
 
 
-
-//
-Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ReportController@index')->name('report.index');
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/home', 'HomeController@index')->name('home');
 });
 
 
 
+// 管理画面関係
+Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
+    Route::get('index', 'AdminController@index')->name('admin.index');
+    Route::get('customer_complet_course', 'AdminController@customer_complet_course')->name('admin.customer_complet_course');
+    Route::get('unPayd', 'AdminController@unPayd')->name('admin.unPayd');
+    Route::get('instructorRegistrRequest/{id}', 'SendMail\RegistrRequestController@instructorRegistrRequest')->name('admin.instructorRegistrRequest');
+    Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
+    Route::get('requestPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@index')->name('admin.requestPaymentCourseFee');
+    Route::post('sendmailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendmailPaymentCourseFee')->name('admin.sendmailPaymentCourseFee');
+    Route::get('RequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@index')->name('admin.RequestAnnualMembershipFee');
+    Route::post('sendRequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@sendRequestAnnualMembershipFee')->name('admin.sendRequestAnnualMembershipFee');
 
+    Route::get('confirmedPaymentCourseFee/{id}', 'AdminController@confirmedPaymentCourseFee')->name('admin.confirmedPaymentCourseFee');
+    Route::get('completeContract/{id}', 'AdminController@completeContract')->name('admin.completeContract');
+});
 
-// Client関係
-Route::group(['prefix'=>'client', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ClientController@index')->name('client.index');
-    Route::get('list', 'ClientController@list')->name('client.list');
-    Route::get('display/{id}', 'ClientController@display')->name('client.display');
-    // Route::get('display', 'ClientController@display')->name('client.display');
-    Route::get('search', 'ClientController@search')->name('client.search');
-    Route::get('searching', 'ClientController@searching')->name('client.searching');
-    Route::get('create', 'ClientController@create')->name('client.create');
-    Route::post('store', 'ClientController@store')->name('client.store');
-    Route::post('update/{id}', 'ClientController@update')->name('client.update');
-    Route::get('show/{id}', 'ClientController@show')->name('client.show');
-    Route::get('newCall/{id}', 'ClientController@newCall')->name('client.newCall');
-    // ajax
-    Route::get('aj_history_id/{id}', 'ClientController@aj_history_id')->name('client.aj_history_id');
-    Route::get('aj_contactList/{id}', 'ClientController@aj_contactList')->name('client.aj_contactList');
-    Route::get('aj_orderList/{id}', 'ClientController@aj_orderList')->name('client.aj_orderList');
-    Route::get('aj_history_detail/{id}', 'ClientController@aj_history_detail')->name('client.aj_history_detail');
-    Route::post('aj_contact_update/{id}', 'ClientController@aj_contact_update')->name('client.aj_contact_update');
+//
+Route::group(['prefix'=>'sales', 'middleware'=>'auth'], function(){
+    Route::get('index', 'SalesInstructorController@index')->name('sales.index');
+    Route::get('list', 'SalesInstructorController@list')->name('sales.list');
+    Route::get('show/{month}', 'SalesInstructorController@show')->name('sales.show');
 });
 
 
@@ -73,6 +71,8 @@ Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CustomerController@display')->name('customer.display');
 });
 
+
+
 // コース申し込み関係
 Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
     Route::get('apply/{id}', 'CoursePurchaseDetailsController@apply')->name('courseDetails.apply');
@@ -84,27 +84,11 @@ Route::group(['prefix'=>'courseDetails', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
 // スケジュール関係
 Route::group(['prefix'=>'schedule', 'middleware'=>'auth'], function(){
+    Route::get('index', 'ScheduleController@index')->name('schedule.index');
     Route::get('list', 'ScheduleController@list')->name('schedule.list');
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -118,22 +102,31 @@ Route::group(['prefix'=>'approval', 'middleware'=>'auth'], function(){
 });
 
 
+
 // 実施講座関係
 Route::group(['prefix'=>'courseSchedule', 'middleware'=>'auth'], function(){
     Route::get('index', 'CourseScheduleController@index')->name('courseSchedule.index');
-    Route::get('create', 'CourseScheduleController@create')->name('courseSchedule.create');
+    Route::get('intrCreate', 'CourseScheduleController@intrCreate')->name('courseSchedule.intrCreate');
+    Route::post('intrConfilm', 'CourseScheduleController@intrConfilm')->name('courseSchedule.intrConfilm');
+    Route::post('requestIntrCourse', 'CourseScheduleController@requestIntrCourse')->name('courseSchedule.requestIntrCourse');
     Route::get('intrShow/{id}', 'CourseScheduleController@intrShow')->name('courseSchedule.intrShow');
+    Route::get('paraCreate', 'CourseScheduleController@paraCreate')->name('courseSchedule.paraCreate');
+    Route::post('paraConfilm', 'CourseScheduleController@paraConfilm')->name('courseSchedule.paraConfilm');
     Route::get('paraShow/{id}', 'CourseScheduleController@paraShow')->name('courseSchedule.paraShow');
+    Route::post('requestParaCourse', 'CourseScheduleController@requestParaCourse')->name('courseSchedule.requestParaCourse');
     Route::get('intrEdit/{id}', 'CourseScheduleController@intrEdit')->name('courseSchedule.intrEdit');
     Route::get('paraEdit/{id}', 'CourseScheduleController@paraEdit')->name('courseSchedule.paraEdit');
     Route::post('intrUpdate/{id}', 'CourseScheduleController@intrUpdate')->name('courseSchedule.intrUpdate');
+    Route::post('intrUpdateOpenDay/{id}', 'CourseScheduleController@intrUpdateOpenDay')->name('courseSchedule.intrUpdateOpenDay');
     Route::post('paraUpdate/{id}', 'CourseScheduleController@paraUpdate')->name('courseSchedule.paraUpdate');
+    Route::post('paraUpdateOpenDay/{id}', 'CourseScheduleController@paraUpdateOpenDay')->name('courseSchedule.paraUpdateOpenDay');
+    Route::get('paraDelete/{id}', 'CourseScheduleController@paraDelete')->name('courseSchedule.paraDelete');
     Route::get('intrDelete/{id}', 'CourseScheduleController@intrDelete')->name('courseSchedule.intrDelete');
-    Route::post('create2', 'CourseScheduleController@create2')->name('courseSchedule.create2');
     Route::post('create3', 'CourseScheduleController@create3')->name('courseSchedule.create3');
-    Route::GET('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
-    Route::get('register', 'CourseScheduleController@register')->name('courseSchedule.register');
+    Route::get('intrRegister', 'CourseScheduleController@intrRegister')->name('courseSchedule.intrRegister');
 });
+
+
 
 // ユーザー（インストラクター関係）
 Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
@@ -141,7 +134,43 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('create', 'UserController@create')->name('user.create');
     Route::post('store', 'UserController@store')->name('user.store');
     Route::get('display/{id}', 'UserController@display')->name('user.display');
+    Route::get('searching', 'UserController@searching')->name('user.searching');
+    Route::get('newClaim/{id}', 'ClaimController@create')->name('user.newClaim');
+    Route::post('sendMailNewClaim/{id}', 'SendMail\NewClaimController@sendMailNewClaim')->name('user.sendMailNewClaim');
+    Route::get('sendEmail/{id}', 'SendMail\sendEmailController@index')->name('user.sendEmail');
+    Route::post('sendMail/{id}', 'SendMail\sendEmailController@sendMail')->name('user.sendMail');
+    Route::get('claimDisplay/{id}', 'UserController@claimDisplay')->name('user.claimDisplay');
+    Route::post('claimComplete/{id}', 'UserController@claimComplete')->name('user.claimComplete');
 });
+
+
+// 請求関係
+Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
+    Route::get('updateOrInsert/{id}', 'ClaimController@updateOrInsert')->name('claim.updateOrInsert');
+    Route::get('addClaimDetail/{id}', 'ClaimController@addClaimDetail')->name('claim.addClaimDetail');
+    Route::get('deleteClaimDetail/{id}', 'ClaimController@deleteClaimDetail')->name('claim.deleteClaimDetail');
+    Route::get('updateOrInsert_claimDetail/{id}', 'ClaimController@updateOrInsert_claimDetail')->name('claim.updateOrInsert_claimDetail');
+    Route::get('deleteTran/{id}', 'ClaimController@deleteTran')->name('claim.deleteTran');
+    Route::get('rankDuwn/{id}', 'ClaimController@rankDuwn')->name('claim.rankDuwn');
+    Route::get('confilmAddClaim/{id}', 'ClaimController@confilmAddClaim')->name('claim.confilmAddClaim');
+    Route::get('storeClaim/{id}', 'ClaimController@storeClaim')->name('claim.storeClaim');
+    Route::get('show/{id}', 'ClaimController@show')->name('claim.show');
+    Route::post('sendRequestClaimMail/{id}', 'ClaimController@sendRequestClaimMail')->name('claim.sendRequestClaimMail');
+    Route::get('cancelClaims/{id}', 'ClaimController@cancelClaims')->name('claim.cancelClaims');
+    Route::post('completePaidClaim/{id}', 'ClaimController@completePaidClaim')->name('claim.completePaidClaim');
+    Route::get('deleteClaims/{id}', 'ClaimController@deleteClaims')->name('claim.deleteClaims');
+});
+
+
+
+// courseの詳細
+Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
+    Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
+    Route::get('completCustomerSchedule/{id}', 'CourseDetailController@completCustomerSchedule')->name('course_detail.completCustomerSchedule');
+    Route::get('edit/{id}', 'CourseDetailController@edit')->name('course_detail.edit');
+});
+
+
 
 // setting関係
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
@@ -149,6 +178,9 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('editPassword', 'SettingController@editPassword')->name('setting.editPassword');
     Route::get('editTell', 'SettingController@editTell')->name('setting.editTell');
     Route::get('editAddress', 'SettingController@editAddress')->name('setting.editAddress');
+    Route::post('sendChangeEmailLink', 'SettingController@sendChangeEmailLink')->name('setting.sendChangeEmailLink');
+    Route::get('editEmail', 'SettingController@editEmail')->name('setting.editEmail');
+    Route::get("resetEmail/{token}", "SettingController@resetEmail");
     Route::get('editImage', 'SettingController@editImage')->name('setting.editImage');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
     Route::post('updateTell', 'SettingController@updateTell')->name('setting.updateTell');
@@ -158,25 +190,8 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 Route::group(['prefix'=>'history', 'middleware'=>'auth'], function(){
     Route::get('index', 'HistoryController@index')->name('history.index');
 });
-
-Route::group(['middleware'=>'auth'], function(){
-    Route::get('/home', 'HomeController@index')->name('home');
-});
-
-
 
 

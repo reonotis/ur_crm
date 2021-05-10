@@ -9,7 +9,10 @@
                 @yield('content')
 
 <div class="">
-  <h2>顧客情報</h2>
+  <h3>顧客情報</h3>
+  <div class="fullWidth">
+    <button class="btn btn-light btn-sm" type="button" onClick="history.back()">戻る</button>
+  </div>
   <div class="customerDetail LeftBOX">
     <div class="BOXin customerBasicInformation">
       <div class="customerNam"><?= $customer->menberNumber ?></div>
@@ -45,20 +48,7 @@
               </div>
               <div class="cusInfoRow" >
                 <div class="editCusInfoTitle" >担当インストラクター</div>
-                <div class="editCusInfoContent" >
-                  <select name="instructor" required>
-                    <option value="0">--選択してください--</option>
-                    <?php foreach( $instructors as $instructor ){ ?>
-                      <option value="<?= $instructor->id ?>" <?php if($customerSchedule->instructor_id ===  $instructor->id ) echo " selected"; ?> ><?= $instructor->name ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
-              </div>
-              <div class="cusInfoRow" >
-                <div class="editCusInfoTitle" >顧客へのコメント</div>
-                <div class="editCusInfoContent">
-                  <textarea class="formInput" name="comment" placeholder="メール機能が出来た場合や、顧客のログイン機能が出来たら、ここに記入し奈多内容が閲覧されるようになります。" ><?=  $customerSchedule->comment ?></textarea>
-                </div>
+                <div class="editCusInfoContent" ><?= $customerSchedule->name?></div>
               </div>
               <div class="cusInfoRow" >
                 <div class="editCusInfoTitle" >メモ</div>

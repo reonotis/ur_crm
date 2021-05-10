@@ -55,11 +55,11 @@ return [
     |
     */
 
-    'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
-    ],
-
+    // 'from' => [
+    //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+    //     'name' => env('MAIL_FROM_NAME', 'Example'),
+    // ],
+    'from' => ['address' => "info@paralymbics.jp", 'name' => "パラリンビクス協会 事務局"],
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol
@@ -132,5 +132,9 @@ return [
     */
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
+
+    'toAkemi' => env('MAIL_TO_AKEMI'),
+    'toInfo'  => env('MAIL_TO_INFO'),
+    'toReon'  => env('MAIL_TO_REON'),
 
 ];

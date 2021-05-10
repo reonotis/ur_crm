@@ -23,7 +23,7 @@
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">メールアドレス</div>
-                        <div class="userSettingContent"><?= $auth->email ?><a href="" class="textRight">変更出来るようにしたい</a></div>
+                        <div class="userSettingContent"><?= $auth->email ?><a href="{{route('setting.editEmail')}}" class="textRight">変更する</a></div>
                     </div>
                     <div class="userSettingRow">
                         <div class="userSettingTitle">住所</div>

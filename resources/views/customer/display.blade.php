@@ -22,6 +22,7 @@
         <div class="tab active">基本情報</div>
         <div class="tab">受講履歴</div>
         <div class="tab">申し込み講座一覧</div>
+        <div class="tab">送付メール一覧</div>
       </div>
       <div class="tabsContents">
         <div class="tabscontent show">
@@ -32,6 +33,9 @@
         </div>
         <div class="tabscontent">
           @include('customer.includeCustomerCourseList')
+        </div>
+        <div class="tabscontent">
+          @include('customer.includeCustomerMail')
         </div>
       </div>
   </div>

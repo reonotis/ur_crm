@@ -150,7 +150,6 @@ label {
 }
 .BOXin{
   float         : left ;
-  /* position      : relative; */
 }
 
 
@@ -193,16 +192,19 @@ label {
 	font-size :0.9em;
 	display:inline-block;
 }
-
 .textRight{
 	text-align: right;
 	float: right;
 }
-
-
 .fullWidth{
 	width :100%;
 }
+
+
+
+
+
+
 
 
 
@@ -232,16 +234,28 @@ label {
   color: #ddd;
 }
 
+
+
+
 .inputUnits{
-	width : 150px;
+	width : 200px;
   display       : flex;
   flex-flow     : wrap;
   justify-content: space-between;
 	align-items: center;
 }
 .inputUnit{
-	width :120px;
+	width :180px;
 }
+.inputDatatimeLocal{
+	width :220px;
+}
+.inputData{
+	width :150px;
+	margin-right :10px;
+	float: left;
+}
+
 .inputBirthday{
 	min-width :300px;
 	max-width :300px;
@@ -255,6 +269,19 @@ label {
 }
 .inputMonth, .inputDay{
 	width :70px;
+}
+
+.inputYearMonths{
+	margin-bottom :10px;
+	padding :0 15px;
+	width : 340px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
+.inputYearMonth{
+	width :170px;
 }
 .inputZips{
 	margin-bottom :5px;
@@ -283,14 +310,47 @@ label {
 }
 .inputDateTime{
 	margin-bottom :5px;
-	width : 330px;
+	width : 300px;
   display       : flex;
   flex-flow     : wrap;
   justify-content: space-between;
 	align-items: center;
 }
 
+.inputOpenDateTime{
+	margin-bottom :5px;
+	width : 350px;
+  display       : flex;
+  flex-flow     : wrap;
+  justify-content: space-between;
+	align-items: center;
+}
 
+.inputRowErea {
+	min-width  : 70% ;
+	width     :100%;
+	margin     :  0 0 15px ;
+	padding-bottom:5px;
+	border-bottom :solid 1px var(--green);
+	display    : flex ;
+	flex-flow  : wrap;
+	align-items: center;
+}
+.inputRowEreaTitle {
+	width           : 150px ;
+	padding         : 3px 15px ;
+  text-align      : center ;
+  font-size       : 17px ;
+  font-weight     : bold;
+  background      : #fff ;
+  color           : var(--green);
+  justify-content : center;
+  display         : flex;
+  align-items     : center;
+}
+.inputRowEreaValue{
+	width : calc( 100% -  150px ) ;
+}
 
 
 textarea.formInput{
@@ -298,7 +358,12 @@ textarea.formInput{
 	padding :5px;
 }
 
-
+textarea.mailformInput{
+	height :500px;
+	padding :5px;
+	line-height:15px;
+	font-size: 12px;
+}
 
 select{
 	padding :10px 15px;
@@ -323,6 +388,73 @@ input:disabled {
 
 
 
+/* 管理画面関連 */
+.adminErea{
+	width :100%;
+	padding : 20px 10px;
+	margin :10px 20px 40px;
+	background :#fff;
+	border:solid 1px #ccc;
+	border-radius :10px;
+	flex-flow: wrap;
+}
+.admin_h5_wrap {
+	width:100%;
+	position: relative;
+	margin-bottom:15px;
+}
+.admin_h5_wrap:before {
+	content         : '' ;
+	background-color: var(--maincolor);
+	display         : block ;
+	position        : absolute;
+	left            : 0 ;
+	width           : 100%;
+	height          : 1px;
+	top             : 0 ;
+	bottom          : 0 ;
+	margin          : auto;
+}
+.admin_h5 {
+	margin     : 0;       /* デフォルトCSS打ち消し */
+	position   : relative ;  /* 位置調整 */
+	font-weight: normal;  /* 文字の太さ調整 */
+	display    : inline-block; /* インラインブロックにする */
+	background-color: #fff; /* 背景色指定 */
+	margin-left: 20px;   /* 周りの余白指定 */
+	padding    : 0 10px;    /* 余白指定 */
+}
+
+.adminBtnErea{
+	width :100%;
+	margin :0px 0px 40px;
+}
+.btn-admin {
+	width    :200px;
+	margin : 0px 5px 20px;
+	padding: 0.5rem 0.75rem;
+	background :var(--maincolor);
+	color: #fff;
+  border-bottom : 5px solid #3b4c7e;
+	border-radius : 10px ;
+	transition: .3s;
+}
+.btn-admin:hover {
+	color: #fff;
+  margin-top: 3px;
+  border-bottom: 2px solid #3b4c7e;
+	font-weight:700;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* 顧客関係 */
 table.customerSearchTable{
@@ -330,7 +462,10 @@ table.customerSearchTable{
 	border-collapse: separate;
 	border-spacing: 0 10px;
 }
-
+.display-container{
+	max-width :1200px;
+	margin : 0 auto;
+}
 .customerSearchTable th{
 	height:40px;
 	padding : 3px 10px ;
@@ -369,19 +504,88 @@ table.customerSearchTable{
 }
 
 
+.customerMailContents{
+	background: #fff;
+}
+.customerMailTitles{
+  position: relative;
+	width     : 100%;
+	margin    : 5px 0 0 ;
+	background: #e6eff8;
+	display   : flex;
+	flex-flow : wrap;
+	justify-content: space-between;
+	border :solid 1px #e6eff8;
+	border :none;
+	cursor: pointer;
+}
+.customerMailTitles:hover{
+	background :#d9ebfc;
+	transition:0.2s;
+}
 
+.customerMailTitles::after{
+	content:"";
+  position: absolute;
+  top: calc(50% - 8px);
+  right: 30px;
+	display: block;
+	width         :20px;
+	height        :30px;
+  border-top    : 15px solid var(--info);
+  border-right  : 10px solid transparent;
+  border-bottom : 15px solid transparent;
+  border-left   : 10px solid transparent;
+}
+.customerMailTitlesMain{
+	width     : 100%;
+	margin    : 5px 0 0 ;
+	background: #e6eff8;
+	display   : flex;
+	flex-flow : wrap;
+	justify-content: space-between;
+	border :solid 1px #e6eff8;
+	border :none;
+	background: var(--info);
+	border :solid 1px var(--info);
+	color: #fff;
 
-.customerDetail{
-	padding :0 10px;
-	margin :0 0 50px;
+}
+.customerMailTitle{
+	padding : 5px 10px;
+}
+.customerMailTitle.send{
+	width:120px;
+	border-right : solid 1px #fff;
+}
+.customerMailTitle.time{
+	width:200px;
+	border-right : solid 1px #fff;
+}
+.customerMailTitle.title{
+	width: calc(100% - 320px );
+}
+
+.customerMailText{
+	margin  : 0 0 20px;
+	padding : 10px 5px 10px 20px;
+	border :solid 1px #e6eff8;
+	border-top:none;
+	font-size:12px;
+	display: none;
 }
 
 
 
+.customerDetail{
+	padding :0 10px;
+	margin :10px 0 50px;
+}
 .customerBasicInformation{
 	width : var(--customer-sidebar);
 	min-height: 500px;
 	border :solid 1px var(--maincolor);
+	border-radius: 5px;
 }
 .tabsContentsArea{
 	width:calc(100% - (var(--customer-sidebar) + 10px));
@@ -496,13 +700,13 @@ table.customerSearchTable{
 }
 
 .cusInfoRow{
-  display       : flex ;
-  flex-flow     : wrap ;
+	display       : flex ;
+	flex-flow     : wrap ;
 	margin :8px 0;
 }
 
 .cusInfoTitle{
-  float         : left ;
+	float         : left ;
 	width :140px;
 	padding :5px;
 	font-size:13px;
@@ -520,8 +724,28 @@ table.customerSearchTable{
 	border-bottom:solid 1px var(--info);
 	font-size: .9em;
 }
+.cusInfoTitleMail{
+	float         : left ;
+	writing-mode: vertical-rl;
+	width :50px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--info);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+.cusInfoContentMail{
+	float         : left ;
+	width :calc(100% - 50px);
+	padding :5px;
+	border-bottom:solid 1px var(--info);
+	font-size: .9em;
+}
 .editCusInfoTitle{
-  float         : left ;
+	float         : left ;
 	width :140px;
 	padding :5px;
 	font-size:13px;
@@ -621,6 +845,40 @@ table.customerSearchTable{
 }
 
 
+.calendarTable{
+	width :100%;
+	max-width: 1200px;
+	margin : 0 0 20px;
+}
+.calendarTable th{
+	background: var(--info);
+	font-size: 1.1em;
+	color :#fff;
+	padding : 10px ;
+	border-right : solid 1px #fff;
+}
+.calendarTable th:nth-of-type(1) {
+	border-left : solid 1px var(--info);
+}
+.calendarTable th:nth-of-type(3) {
+	border-right : solid 1px var(--info);
+}
+.calendarTable tr.SatRows{
+	background:#eaf0ff;
+}
+.calendarTable tr.SunRows{
+	background:#fde2e2;
+}
+.calendarTable td{
+	padding :10px 10px 5px ;
+	border-bottom :solid 1px var(--primary);
+}
+.calendarTable td{
+	border-right : solid 1px var(--info);
+}
+.calendarTable td:nth-of-type(1) {
+	border-left : solid 1px var(--info);
+}
 
 
 
@@ -651,4 +909,110 @@ table.customerSearchTable{
 	border-bottom:solid 1px var(--info);
 	font-size: .9em;
 	
+}
+
+
+.ClaimDetailRowMain{
+	position: relative;
+	width: 100%;
+	margin: 5px 0 0;
+	background: var(--info);
+	color :#fff;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.ClaimDetailRow{
+	border-bottom :solid 1px var(--info);
+	position: relative;
+	width: 100%;
+	margin: 5px 0 0;
+	background: #e6eff8;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+
+
+
+.ClaimDetail_itemName,
+.ClaimDetail_unitPrice,
+.ClaimDetail_quantity,
+.ClaimDetail_price,
+.ClaimDetail_rank,
+.ClaimDetail_delete{
+	padding :5px;
+	text-align :center;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.ClaimDetail_itemName > input ,
+.ClaimDetail_quantity > input ,
+.ClaimDetail_rank > input {
+	width :100%;
+}
+.ClaimDetail_unitPrice > input,
+.ClaimDetail_price > input{
+	width :calc(100% - 15px);
+}
+.ClaimDetail_quantity > input[type="number"]{
+	width :calc(100% - 60px )
+}
+.ClaimDetail_quantity > input[type="text"]{
+	width :60px;
+}
+.ClaimDetail_itemName{
+	width :300px;
+	text-align :center;
+}
+.ClaimDetail_unitPrice{
+	width :100px;
+	text-align :center;
+}
+.ClaimDetail_quantity{
+	width :120px;
+	text-align :center;
+}
+.ClaimDetail_price{
+	width :100px;
+	text-align :center;
+}
+.ClaimDetail_rank{
+	width :60px;
+	text-align :center;
+}
+.ClaimDetail_delete{
+	width :50px;
+	text-align :center;
+}
+
+.confilmClaimDetailRow{
+	border-bottom :solid 1px var(--info);
+	width: 100%;
+	margin: 3px 0 ;
+	padding :3px 0 0;
+	font-size: 0.85em;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-between;
+}
+.confilmClaimDetailRow>.item_name{
+	width :220px;
+}
+.confilmClaimDetailRow>.unit_price{
+	width :80px;
+	text-align: right;
+}
+.confilmClaimDetailRow>.quantity{
+	width :80px;
+	text-align: center;
+}
+.confilmClaimDetailRow>.price{
+	width :80px;
+	text-align: right;
+}
+.cancelPaymentFee{
+	color :#f7a7a7;
+	text-decoration: line-through;
 }
