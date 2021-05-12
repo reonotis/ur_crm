@@ -17,7 +17,6 @@ class AdminController extends Controller
     protected $_auth_id ;
     protected $_auth_authority_id ;
     public $_backslash = '\\';
-    private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
     private $_toCustomer ;
@@ -25,13 +24,12 @@ class AdminController extends Controller
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
-            $this->_user = \Auth::user();
+            $this->_user = Auth::user();
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 5){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);
@@ -65,10 +63,8 @@ class AdminController extends Controller
         return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
 
-
-
     /**
-     * 
+     * 未入金者の一覧を表示する
      */
     public function unPayd()
     {
@@ -77,12 +73,28 @@ class AdminController extends Controller
         ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
         ->join('courses', 'courses.id', 'instructor_courses.course_id')
         ->where('pay_confirm', 0)
+        ->where('status','>=', 1)
         ->get();
 
         // TODO イントラからの未入金を取得するようにする
         return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
     }
 
+    /**
+     * 新しく申し込みがあった情報を表示する
+     */
+    public function newApply()
+    {
+        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name')
+        ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
+        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
+        ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->where('status', 0)
+        ->get();
+
+        // TODO イントラからの未入金を取得するようにする
+        return view('admin.newApply', ['CCMs' => $CCMs, 'a' => 1]);
+    }
 
     /**
      * 
@@ -162,9 +174,9 @@ class AdminController extends Controller
                 "customer_name"  => $customer_name,
             ];
             // お客様へ入金確認のメールを送る
-            Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
+            $あMail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
                 $message->to($this->_toCustomer)
-                ->cc($this->_toAkemi)
+                ->cc($this->_toInfo)
                 ->bcc($this->_toReon)
                 ->subject('ご入金を確認いたしました');
             });
@@ -172,7 +184,7 @@ class AdminController extends Controller
             // インストラクターへ入金確認のメールを送る
             Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
                 $message->to($this->_toInstructor)
-                ->cc($this->_toAkemi)
+                ->cc($this->_toInfo)
                 ->bcc($this->_toReon)
                 ->subject('お申込者のご入金確認通知');
             });
@@ -187,4 +199,23 @@ class AdminController extends Controller
             return redirect()->back();    // 前の画面へ戻る
         }
     }
+
+    public function cancelCourseMapping($id)
+    {
+        DB::beginTransaction();
+        try {
+            throw new \Exception("キャンセル処理作成中");
+
+
+            DB::commit();
+            session()->flash('msg_success', '成功メッセージ');
+            return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+    }
+
+
 }

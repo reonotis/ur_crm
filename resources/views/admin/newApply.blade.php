@@ -3,10 +3,10 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <h3>未入金者 一覧</h3>
+        <h3>コース申込者 一覧</h3>
 
         <div class="adminErea" >
-            <div class="admin_h5_wrap"><h5 class="admin_h5">コース代金</h5></div>
+            ※この申込情報一覧はコース代金の請求を行っていない顧客の一覧です。
 
             <div class="adminBtnErea">
                 <table class="scheduleListTable" >
@@ -15,9 +15,9 @@
                             <th>顧客名</th>
                             <th>受講予定コース</th>
                             <th>申込日時</th>
-                            <th>入金依頼メール</th>
-                            <th>期日</th>
-                            <th>入金完了</th>
+                            <th>請求</th>
+                            <th>コース初回実施日</th>
+                            <th>確認</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,9 +28,7 @@
                                 <td>{{ $CCM->date->format('Y年 m月 d日') }}</td>
                                 <td>
                                     @if($CCM->status == 0)
-                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >送信する</a>
-                                    @else
-                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" > 再送信する</a>
+                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >請求する</a>
                                     @endif
                                 </td>
                                 <td>
@@ -40,34 +38,13 @@
                                         -
                                     @endif
                                 </td>
-                                <td><a href="{{ route('sales.courseFeeShow',[ 'id'=>$CCM->id]) }}" onclick="return completePayment();" >入金完了</a></td>
+                                <td><a href="{{ route('sales.courseMappingShow',[ 'id'=>$CCM->id]) }}" >確認する</a></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            <div class="admin_h5_wrap"><h5 class="admin_h5">インストラクターからの集金</h5></div>
-
-            <div class="adminBtnErea">
-                <table class="scheduleListTable" >
-                    <thead>
-                        <tr>
-                            <th>顧客名</th>
-                            <th>確認</th>
-                            <th>イントラにする</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <!-- TODO イントラからの未入金を取得するようにする -->
-
-                    </tbody>
-                </table>
-            </div>
-
-
         </div>
-
-
     </div>
 </div>
 <?php

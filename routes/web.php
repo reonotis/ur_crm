@@ -39,6 +39,7 @@ Route::group(['middleware'=>'auth'], function(){
 Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('index', 'AdminController@index')->name('admin.index');
     Route::get('customer_complet_course', 'AdminController@customer_complet_course')->name('admin.customer_complet_course');
+    Route::get('newApply', 'AdminController@newApply')->name('admin.newApply');
     Route::get('unPayd', 'AdminController@unPayd')->name('admin.unPayd');
     Route::get('instructorRegistrRequest/{id}', 'SendMail\RegistrRequestController@instructorRegistrRequest')->name('admin.instructorRegistrRequest');
     Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
@@ -54,8 +55,11 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
 //
 Route::group(['prefix'=>'sales', 'middleware'=>'auth'], function(){
     Route::get('index', 'SalesInstructorController@index')->name('sales.index');
+    Route::get('courseMappingShow/{id}', 'SalesInstructorController@courseMappingShow')->name('sales.courseMappingShow');
+    Route::get('cancelCourseMapping/{id}', 'AdminController@cancelCourseMapping')->name('sales.cancelCourseMapping');
     Route::get('list', 'SalesInstructorController@list')->name('sales.list');
     Route::get('show/{month}', 'SalesInstructorController@show')->name('sales.show');
+    Route::get('courseFeeShow/{id}', 'SalesInstructorController@courseFeeShow')->name('sales.courseFeeShow');
 });
 
 

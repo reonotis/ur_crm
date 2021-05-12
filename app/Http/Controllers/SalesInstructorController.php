@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerCourseMapping;
+use App\Models\Claim;
+use App\Models\InstructorCourseSchedule;
+use App\Services\CheckClaims;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Customer;
-use \SplFileObject;
+
 
 class SalesInstructorController extends Controller
 {
@@ -60,6 +62,40 @@ class SalesInstructorController extends Controller
 
         dd($month , $this->_auth_id);
         return view('sales.show', compact('month') );
+        //
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function courseMappingShow($id)
+    {
+        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name', 'users.name AS intr_name')
+        ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
+        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
+        ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->join('users', 'users.id', 'customer_course_mapping.instructor_id')
+        ->find($id);
+        $ICS = InstructorCourseSchedule::where('instructor_courses_id',$CCMs->instructor_courses_id )->orderBy('date')->first();
+        $firstDate = $ICS->date;
+
+        $claim_ID = $CCMs->claim_id;
+        // claimsのデータがなければ作成する
+        if(!$claim_ID){
+            $claim = new Claim;
+            $claim->user_type = 1 ;
+            $claim->user_id = $CCMs->customer_id;
+            $claim->price = $CCMs->price;
+            $claim->save();
+            $claim_ID = $claim->id;
+            CustomerCourseMapping::where('id', $id)->update(['claim_id' => $claim_ID]);
+        }
+        $claim = Claim::find($claim_ID);
+        $claim = CheckClaims::setStatus($claim);
+
+        return view('admin.courseMappingShow', compact('CCMs','claim','firstDate') );
         //
     }
 

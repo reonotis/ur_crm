@@ -28,7 +28,11 @@
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >請求金額</div>
-                    <div class="cusInfoContent" >{{ number_format($claim->price)   }} 円</div>
+                    <div class="cusInfoContent" >{{ number_format($claim->price) }} 円</div>
+                  </div>
+                  <div class="cusInfoRow" >
+                    <div class="cusInfoTitle" >期日</div>
+                    <div class="cusInfoContent" ></div>
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >内訳</div>

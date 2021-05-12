@@ -231,7 +231,7 @@ label {
 	box-shadow: 0 0 0 0.2rem rgb(52 144 220 / 25%);
 }
 .formInput::placeholder {
-  color: #ddd;
+	color: #ddd;
 }
 
 
@@ -239,9 +239,9 @@ label {
 
 .inputUnits{
 	width : 200px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 .inputUnit{
@@ -259,9 +259,9 @@ label {
 .inputBirthday{
 	min-width :300px;
 	max-width :300px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 .inputYear{
@@ -275,9 +275,9 @@ label {
 	margin-bottom :10px;
 	padding :0 15px;
 	width : 340px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 .inputYearMonth{
@@ -286,9 +286,9 @@ label {
 .inputZips{
 	margin-bottom :5px;
 	width : 180px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 .inputZip{
@@ -297,9 +297,9 @@ label {
 .inputAddrs{
 	margin-bottom :5px;
 	width : 250px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 .inputAddr{
@@ -308,21 +308,37 @@ label {
 .inputStrt{
 	width : 100%;
 }
+.inputDate{
+	margin-bottom :5px;
+	width : 150px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputPrice{
+	margin-bottom :5px;
+	width : 100px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
 .inputDateTime{
 	margin-bottom :5px;
 	width : 300px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 
 .inputOpenDateTime{
 	margin-bottom :5px;
 	width : 350px;
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-between;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
 	align-items: center;
 }
 
@@ -339,19 +355,18 @@ label {
 .inputRowEreaTitle {
 	width           : 150px ;
 	padding         : 3px 15px ;
-  text-align      : center ;
-  font-size       : 17px ;
-  font-weight     : bold;
-  background      : #fff ;
-  color           : var(--green);
-  justify-content : center;
-  display         : flex;
-  align-items     : center;
+	text-align      : center ;
+	font-size       : 17px ;
+	font-weight     : bold;
+	background      : #fff ;
+	color           : var(--green);
+	justify-content : center;
+	display         : flex;
+	align-items     : center;
 }
 .inputRowEreaValue{
 	width : calc( 100% -  150px ) ;
 }
-
 
 textarea.formInput{
 	height :150px;
@@ -376,7 +391,7 @@ select.children
 	width :calc(100% - 40px);
 }
 input:disabled {
-  background: #ccc;
+	background: #ccc;
 }
 
 
@@ -435,14 +450,14 @@ input:disabled {
 	padding: 0.5rem 0.75rem;
 	background :var(--maincolor);
 	color: #fff;
-  border-bottom : 5px solid #3b4c7e;
-	border-radius : 10px ;
+	border-bottom : 5px solid #3b4c7e;
+border-radius : 10px ;
 	transition: .3s;
 }
 .btn-admin:hover {
 	color: #fff;
-  margin-top: 3px;
-  border-bottom: 2px solid #3b4c7e;
+	margin-top: 3px;
+	border-bottom: 2px solid #3b4c7e;
 	font-weight:700;
 }
 
@@ -508,7 +523,7 @@ table.customerSearchTable{
 	background: #fff;
 }
 .customerMailTitles{
-  position: relative;
+	position: relative;
 	width     : 100%;
 	margin    : 5px 0 0 ;
 	background: #e6eff8;
@@ -526,16 +541,16 @@ table.customerSearchTable{
 
 .customerMailTitles::after{
 	content:"";
-  position: absolute;
-  top: calc(50% - 8px);
-  right: 30px;
+	position: absolute;
+	top: calc(50% - 8px);
+	right: 30px;
 	display: block;
 	width         :20px;
 	height        :30px;
-  border-top    : 15px solid var(--info);
-  border-right  : 10px solid transparent;
-  border-bottom : 15px solid transparent;
-  border-left   : 10px solid transparent;
+	border-top    : 15px solid var(--info);
+	border-right  : 10px solid transparent;
+	border-bottom : 15px solid transparent;
+	border-left   : 10px solid transparent;
 }
 .customerMailTitlesMain{
 	width     : 100%;
@@ -621,7 +636,7 @@ table.customerSearchTable{
 
 .tabArea{
 	display: flex;
-  flex-flow     : wrap ;
+	flex-flow     : wrap ;
 	width :100%;
 	position: relative;
 	z-index:10;
@@ -718,6 +733,8 @@ table.customerSearchTable{
 	align-items: center;
 }
 .cusInfoContent{
+	display: flex;
+    align-items: center;
 	float         : left ;
 	width :calc(100% - 140px);
 	padding :5px;
@@ -788,8 +805,8 @@ table.customerSearchTable{
 
 .courseAppTitle{
 	border-left :solid 5px var(--maincolor);
-  color: var(--maincolor);
-  background: #f1f8ff;
+	color: var(--maincolor);
+	background: #f1f8ff;
 	padding : 10px 20px ;
 	margin :10px 0;
 
@@ -800,14 +817,14 @@ table.customerSearchTable{
 }
 
 .PurchaseCourseName{
-  background: #f1f8ff;
+	background: #f1f8ff;
 	border :solid 1px  var(--maincolor);
-  border-radius :8px;
-  box-shadow :0px 0px 30px rgba(222, 222, 223, 0.445);
+	border-radius :8px;
+	box-shadow :0px 0px 30px rgba(222, 222, 223, 0.445);
 	padding :10px 10px 10px 35px ;
 }
 .PurchaseCourseName li, .PurchaseCourseName li {
-  padding: 2px 0;
+	padding: 2px 0;
 }
 
 
@@ -884,9 +901,9 @@ table.customerSearchTable{
 
 /* setting */
 .userSettingRow{
-  display       : flex ;
-  flex-flow     : wrap ;
-	margin :8px 0;
+	display       : flex ;
+	flex-flow     : wrap ;
+margin :8px 0;
 
 }
 .userSettingTitle{

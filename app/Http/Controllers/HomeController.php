@@ -37,6 +37,7 @@ class HomeController extends Controller
     public function index()
     {
         $adminMessage[] = "";
+        $newApply = array();
         $unPayd = array();
         // 管理者だったら
         if($this->_auth_authority_id <= 5 ){
@@ -56,12 +57,13 @@ class HomeController extends Controller
             $adminMessage['compCourse'] = $compCourse;
 
             // 未入金のお客様を取得
-            $unPayd = CustomerCourseMapping::where('pay_confirm', 0 )->get();
+            $newApply = CustomerCourseMapping::where('status', 0 )->get();
+            $unPayd = CustomerCourseMapping::where('pay_confirm', 0 )->where('status', '>=', 1 )->get();
         }
         $NgAppCourse = InstructorCourse::where('approval_flg', 1 )->where('instructor_id', $this->_auth_id )->get();
         $intrMessage['NgAppCourse'] = $NgAppCourse;
 
-        return view('home', compact('adminMessage','intrMessage','unPayd'));
+        return view('home', compact('adminMessage','intrMessage','newApply' , 'unPayd'));
     }
 
     /**
