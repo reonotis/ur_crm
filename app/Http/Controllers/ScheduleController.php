@@ -176,7 +176,6 @@ class ScheduleController extends Controller
         foreach($results as $result){
             $schedules[$count]["id"]        = $result->id;
             $schedules[$count]["NINZUU"]    = $result->NINZUU . "人";
-            $schedules[$count]["name"]      = $result->name;
 
             // 養成講座だったらcourse_nameに回数を付ける
             if($result->courses_id == 6){
@@ -192,6 +191,14 @@ class ScheduleController extends Controller
             }else{
                 $schedules[$count]["date"]      = $result->date->format('Y年m月d日');
                 $schedules[$count]["time"]      = $result->date->format('H:i');
+            }
+
+            $schedules[$count]["text"] = $schedules[$count]["time"] ."～　";
+            // 権限があればインストラクター名を付与する
+            if($this->_auth_authority_id <= 5){
+                $schedules[$count]["text"] .= $schedules[$count]["course_name"] ."　".  $result->name."　" ;
+            }else{
+                $schedules[$count]["text"] = $schedules[$count]["course_name"] ."　" ;
             }
             $count ++;
         }

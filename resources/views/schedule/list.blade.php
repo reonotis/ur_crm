@@ -26,12 +26,8 @@ $month = date('Y年m月',strtotime($time_value));
             </tr>
             @foreach ($monthData as $dayData)
                 <tr
-                    <?php if($dayData['week'] == 'Sun'){
-                                echo " class='SunRows' " ;
-                            }else if($dayData['week'] == 'Sat'){
-                                echo " class='SatRows' " ;
-                            }
-                    ?>
+                    <?php if($dayData['week'] == 'Sun') echo " class='SunRows' "; ?>
+                    <?php if($dayData['week'] == 'Sat') echo " class='SatRows' "; ?>
                 >
                     <td>{{ $dayData['date'] }}</td>
                     <td>{{ $dayData['week'] }}</td>
@@ -40,8 +36,7 @@ $month = date('Y年m月',strtotime($time_value));
                             if(isset($dayData['schedules'])){
                                 foreach($dayData['schedules'] as $schedule){  ?>
                                     <a href="{{ route('course_detail.display', ['id' => $schedule['id'] ]) }}" >
-                                        <?= $schedule['time'] ."～　". $schedule['course_name'] ?>　
-                                        <?php if($schedule['name']) echo $schedule['name']."　"; ?>
+                                        <?= $schedule['text'] ?>　
                                         ( <?= $schedule['NINZUU'] ?> )
                                     </a><br>
                                 <?php

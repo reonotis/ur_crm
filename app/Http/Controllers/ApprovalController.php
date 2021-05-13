@@ -209,7 +209,6 @@ class ApprovalController extends Controller
                 ];
                 Mail::send('emails.scheduleApplicationResult', $data, function($message){
                     $message->to($this->_toIntr)
-                    ->cc($this->_toInfo)
                     ->bcc($this->_toReon)
                     ->subject('スケジュールが差し戻されました');
                 });
