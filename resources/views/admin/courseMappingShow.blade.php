@@ -42,11 +42,18 @@
                     <div class="cusInfoTitle" >ステータス</div>
                     <div class="cusInfoContent" >{{ $claim->statusName }}</div>
                   </div>
+
+                  @if($claim->status == 5 )
+                  <div class="cusInfoRow" >
+                    <div class="cusInfoTitle" >売上計上日</div>
+                    <div class="cusInfoContent" >{{ $claim->complete_date }}</div>
+                  </div>
+                  @endif
                   @if($claim->status==0 || $claim->status==1)
                     <div class="cusInfoRow">
                         <div class="cusInfoTitle">入金確認</div>
                         <div class="cusInfoContent">
-                          <form action="" method="post">
+                          <form action="{{ route('admin.completeCourseFee',['id'=>$CCMs->id]) }}" method="post">
                             @csrf
                             売上計上日<input type="date" name="complete_date">
                             <button class="btn btn-outline-success" type="submit" onclick="return confirmCompletePaidClaim();">入金済みにする</button>
@@ -58,7 +65,7 @@
                     <div class="cusInfoRow" >
                       <div class="cusInfoTitle" >キャンセル処理</div>
                       <div class="cusInfoContent" >
-                        <a href="{{ route('sales.cancelCourseMapping',['id',$CCMs->id] ) }}" onclick="return confirmCancelCourse();" >この申し込みをキャンセル扱いにする</a>
+                        <a href="{{ route('admin.cancelCourseMapping',['id'=>$CCMs->id]) }}" onclick="return confirmCancelCourse();" >この申し込みをキャンセル扱いにする</a>
                       </div>
                     </div>
                     <div class="cusInfoRow" >
@@ -74,7 +81,7 @@
                             <div class="cusInfoContent">振込金額　：　<input type="number" name="price" value="{{$claim->price}}" class="formInput inputPrice" >円</div>
                           </div>
                           <div class="cusInfoRow">
-                            <div class="cusInfoContent">振込期日　：　<input type="date" name="dayLimit" class="formInput inputDate" ></div>
+                            <div class="cusInfoContent">振込期日　：　<input type="date" name="dayLimit" value="<?php if($claim->limit_date) echo $claim->limit_date->format('Y-m-d') ?>" class="formInput inputDate" ></div>
                           </div>
                           <textarea class="formInput mailformInput" name="text" >@include('admin.include_requestClaimMail')</textarea>
                           <!-- <textarea class="formInput mailformInput" name="text" ></textarea> -->
@@ -90,7 +97,7 @@
     </div>
 </div>
 <?php
-// dd($claim);
+// dd($CCMs);
 ?>
 @endsection
 

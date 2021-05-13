@@ -15,32 +15,18 @@
                             <th>顧客名</th>
                             <th>受講予定コース</th>
                             <th>申込日時</th>
-                            <th>入金依頼メール</th>
                             <th>期日</th>
-                            <th>入金完了</th>
+                            <th>確認</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($CCMs as $CCM)
+                        @foreach($claims as $claim)
                             <tr>
-                                <td><a href="{{ route('customer.display', $CCM->customer_id ) }}" >{{ $CCM->name }}</a></td>
-                                <td><a href="{{ route('course_detail.display', $CCM->instructor_courses_id ) }}" >{{ $CCM->course_name}}</a></td>
-                                <td>{{ $CCM->date->format('Y年 m月 d日') }}</td>
-                                <td>
-                                    @if($CCM->status == 0)
-                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" >送信する</a>
-                                    @else
-                                        <a href="{{ route('admin.requestPaymentCourseFee',[ 'id'=>$CCM->id]) }}" > 再送信する</a>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if(isset($CCM->limit_day))
-                                    {{ $CCM->limit_day->format('Y年m月d日') }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td><a href="{{ route('sales.courseFeeShow',[ 'id'=>$CCM->id]) }}" onclick="return completePayment();" >入金完了</a></td>
+                                <td><a href="{{ route('customer.display', $claim->user_id ) }}" >{{ $claim->name }} 様</a></td>
+                                <td><a href="{{ route('course_detail.display', $claim->instructor_courses_id ) }}" >{{ $claim->course_name}}</a></td>
+                                <td>{{ $claim->date }}</td>
+                                <td>{{ $claim->limit_date->format('Y-m-d') }}</td>
+                                <td><a href="{{ route('admin.courseMappingShow',[ 'id'=>$claim->CCM_id]) }}" >確認</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -71,7 +57,7 @@
     </div>
 </div>
 <?php
-// dd($CCM);
+// dd($claim);
 ?>
 @endsection
 

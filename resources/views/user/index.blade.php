@@ -38,9 +38,9 @@
                             <tr>
                                 <th>権限</th>
                                 <td>
-                                    <select class="formInput" name="" >
-                                        <option>あり</option>
-                                        <option>なし</option>
+                                    <select class="formInput" name="authority" >
+                                        <option value="1" >あり</option>
+                                        <option value="0" >なし</option>
                                     </select>
                                 </td>
                             </tr>

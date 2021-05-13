@@ -47,16 +47,17 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::post('sendmailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendmailPaymentCourseFee')->name('admin.sendmailPaymentCourseFee');
     Route::get('RequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@index')->name('admin.RequestAnnualMembershipFee');
     Route::post('sendRequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@sendRequestAnnualMembershipFee')->name('admin.sendRequestAnnualMembershipFee');
-
+    Route::get('courseMappingShow/{id}', 'AdminController@courseMappingShow')->name('admin.courseMappingShow');
+    
+    Route::get('cancelCourseMapping/{id}', 'AdminController@cancelCourseMapping')->name('admin.cancelCourseMapping');
     Route::get('confirmedPaymentCourseFee/{id}', 'AdminController@confirmedPaymentCourseFee')->name('admin.confirmedPaymentCourseFee');
     Route::get('completeContract/{id}', 'AdminController@completeContract')->name('admin.completeContract');
+    Route::post('completeCourseFee/{id}', 'AdminController@completeCourseFee')->name('admin.completeCourseFee');
 });
 
 //
 Route::group(['prefix'=>'sales', 'middleware'=>'auth'], function(){
     Route::get('index', 'SalesInstructorController@index')->name('sales.index');
-    Route::get('courseMappingShow/{id}', 'SalesInstructorController@courseMappingShow')->name('sales.courseMappingShow');
-    Route::get('cancelCourseMapping/{id}', 'AdminController@cancelCourseMapping')->name('sales.cancelCourseMapping');
     Route::get('list', 'SalesInstructorController@list')->name('sales.list');
     Route::get('show/{month}', 'SalesInstructorController@show')->name('sales.show');
     Route::get('courseFeeShow/{id}', 'SalesInstructorController@courseFeeShow')->name('sales.courseFeeShow');

@@ -38,16 +38,28 @@ class UserController extends Controller
     }
 
     public function searching(Request $request){
-        $query = DB::table('users')
-                    ->select('users.*', 'users_info.intr_No')
+        $query = DB::table('users')->select('users.*', 'users_info.intr_No')
                     ->leftJoin('users_info', 'users_info.id', '=', 'users.id');
 
         // 顧客番号の条件を設定する
         $this->setQueryLike($query, $request->input('menberNumber'), 'users_info.intr_No');
-        // TODO ほかの検索機能を作成する
 
-        $users = $query -> paginate(20);
+        // 名前の条件を設定する
+        $this->setQueryLike($query, $request->input('name'), 'users.name');
 
+        // ヨミの条件を設定する
+        $this->setQueryLike($query, $request->input('read'), 'users.read');
+
+        // 権限の条件を設定する
+        if($request->input('authority')) $query -> where('users.authority_id','<=','7');
+
+        // 電話番号の条件を設定する
+        $this->setQueryLike($query, $request->input('tel'), 'users_info.tel');
+
+        // メールアドレスの条件を設定する
+        $this->setQueryLike($query, $request->input('email'), 'users.email');
+
+        $users = $query -> paginate(30);
         $users = CheckUsers::checkAuthoritys($users);
         return view('user.list', compact('users'));
     }

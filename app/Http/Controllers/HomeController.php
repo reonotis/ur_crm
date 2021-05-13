@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ApprovalComments;
 use App\Models\InstructorCourse;
-use App\Models\InstructorCourseSchedule;
+use App\Models\Claim;
 use App\Models\CustomerCourseMapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +57,7 @@ class HomeController extends Controller
 
             // 未入金のお客様を取得
             $newApply = CustomerCourseMapping::where('status', 0 )->get();
-            $unPayd = CustomerCourseMapping::where('pay_confirm', 0 )->where('status', '>=', 1 )->get();
+            $unPayd = Claim::where('status', 1 )->get();
         }
         $NgAppCourse = InstructorCourse::where('approval_flg', 1 )->where('instructor_id', $this->_auth_id )->get();
         $intrMessage['NgAppCourse'] = $NgAppCourse;

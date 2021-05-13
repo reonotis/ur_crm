@@ -733,7 +733,6 @@ table.customerSearchTable{
 	align-items: center;
 }
 .cusInfoContent{
-	display: flex;
     align-items: center;
 	float         : left ;
 	width :calc(100% - 140px);

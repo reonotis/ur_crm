@@ -19,9 +19,10 @@
                     @if(isset($adminMessage['UnAppCourse']) && count($adminMessage['UnAppCourse']))
                         <a href="<?= url('').'/approval/index'  ?>" class="messegeLink" >申請中のコースが <?= count($adminMessage['UnAppCourse']) ?> 件あります<br></a>
                     @endif
-                    @if(count($unPayd) >= 1)
-                    <!-- TODO 変数名を変えたほうがいい。  -->
+                    @if(count($newApply) >= 1)
                         <a href="<?= url('').'/admin/newApply'  ?>" class="messegeLink" >コースへの新しいお申し込みが <?= count($newApply) ?> 件あります。<br></a>
+                    @endif
+                    @if(count($unPayd) >= 1)
                         <a href="<?= url('').'/admin/unPayd'  ?>" class="messegeLink" >未入金のお客様が <?= count($unPayd) ?> 名います<br></a>
                     @endif
                     @if(isset($adminMessage['compCourse']) && count($adminMessage['compCourse']))
@@ -44,7 +45,8 @@
     </div>
 </div>
 @endsection
-
+<?php
+?>
 
 <style>
 .messegeLink{

@@ -122,7 +122,7 @@ class ScheduleController extends Controller
             ->where('date_time', 'LIKE', "$month%")
             ->where('delete_flag', 0);
         if($this->_auth_authority_id >= 5 ) $CSQuery->where('instructor_id', $this->_auth_id);
-        $CS = $CSQuery->get();
+        // $CS = $CSQuery->get();
 
         // InstructorCourseScheduleのサブqueryと各テーブルを結合
         $ICSQuery = InstructorCourseSchedule::select(DB::raw('count(CS.customer_id) as NINZUU') ,

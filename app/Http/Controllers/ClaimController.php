@@ -58,6 +58,12 @@ class ClaimController extends Controller
      */
     public function create($id){
         $claimDetailList = config('paralymbics.claimDetailList');
+        
+        foreach($claimDetailList as $data){   //取得したinstructor_course_schedulesのIDだけ取得
+            $item_name[] = "【".$data['item_name']."】";
+        }
+        $item_name_list = implode(",", $item_name); // 配列に変換
+
         $claimDetailList = json_encode($claimDetailList);
 
         $user = User::find($id);
@@ -73,7 +79,7 @@ class ClaimController extends Controller
             $CDTrans = "" ;
         }
 
-        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrans', 'claimDetailList'));
+        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrans', 'claimDetailList' ,'item_name_list'));
         //
     }
 

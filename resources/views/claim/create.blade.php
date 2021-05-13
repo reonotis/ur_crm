@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="container">
-        <!-- <a href="{{route('customer.index')}}">顧客検索</a> -->
-        
+
     <div class="row justify-content-center">
 
     <div class="fullWidth">
@@ -32,6 +31,7 @@
                         <br>
 
                         <div class="btn btn-outline-success" onclick="add_claimDetail();" >項目を追加する</div>
+                        ※項目名に　<?= $item_name_list?>　が記載された場合、デフォルトの単価が自動で表示されます。
                         <div class="ClaimDetailRowMain" >
                             <div class="ClaimDetail_itemName" >項目名</div>
                             <div class="ClaimDetail_unitPrice" >単価</div>

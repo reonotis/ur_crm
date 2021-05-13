@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerCourseMapping;
+use App\Models\CustomerSchedule;
 use App\Models\Customer;
+use App\Models\Claim;
+use App\Models\InstructorCourseSchedule;
 use App\User;
+use App\Services\CheckClaims;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -68,16 +72,17 @@ class AdminController extends Controller
      */
     public function unPayd()
     {
-        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name')
-        ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
-        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
-        ->join('courses', 'courses.id', 'instructor_courses.course_id')
-        ->where('pay_confirm', 0)
-        ->where('status','>=', 1)
+        $claims = Claim::select('claims.*','customers.name', 'CCM.id as CCM_id', 'CCM.instructor_courses_id', 'CCM.date', 'courses.course_name')
+        ->where('claims.user_type',1)
+        ->where('claims.status',1)
+        ->join('customers', 'customers.id', 'claims.user_id' )
+        ->join('customer_course_mapping as CCM', 'CCM.claim_id', 'claims.id' )
+        ->join('instructor_courses', 'instructor_courses.id', 'CCM.instructor_courses_id' )
+        ->join('courses', 'courses.id', 'instructor_courses.course_id' )
         ->get();
 
         // TODO イントラからの未入金を取得するようにする
-        return view('admin.unpaid_customer', ['CCMs' => $CCMs, 'a' => 1]);
+        return view('admin.unpaid_customer', ['claims' => $claims, 'a' => 1]);
     }
 
     /**
@@ -85,14 +90,20 @@ class AdminController extends Controller
      */
     public function newApply()
     {
-        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name')
+        $subQuery = InstructorCourseSchedule::whereIn('date', function($query) {
+            $query->select(DB::raw('min(date) As date'))->from('instructor_course_schedules')->groupByRaw('instructor_courses_id');
+        });
+
+        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name','instructor_course_schedules.date as first_date')
         ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
         ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
         ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->joinSub($subQuery, 'instructor_course_schedules', function ($join) {
+            $join->on('instructor_course_schedules.instructor_courses_id', '=', 'instructor_courses.id');
+        })
         ->where('status', 0)
         ->get();
 
-        // TODO イントラからの未入金を取得するようにする
         return view('admin.newApply', ['CCMs' => $CCMs, 'a' => 1]);
     }
 
@@ -204,11 +215,27 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
-            throw new \Exception("キャンセル処理作成中");
+            // CustomerCourseMappingのキャンセル処理
+            $CCM = CustomerCourseMapping::find($id);
+            $CCM->status = 2 ;
+            $CCM->save();
+            $CCM_ID = $CCM->instructor_courses_id;
 
+            // customer_schedulesのキャンセル処理
+            $ICSs = InstructorCourseSchedule::where('instructor_courses_id', $CCM_ID)->get();
+            foreach($ICSs as $ICS){
+                $ICS_IDs[] = $ICS->id ;
+            }
+            $idLists =  explode(",", implode(",", $ICS_IDs));
+            $CS = CustomerSchedule::whereIn('course_schedules_id',$idLists)->where('customer_id', $CCM->customer_id )->update(['delete_flag' => 1]);
+
+            // Claimのキャンセル処理
+            $claim_ID = $CCM->claim_id;
+            $result = Claim::where('id',$claim_ID)->update(['status' => 3]);
+            if(!$result) throw new \Exception("キャンセル処理に失敗しました。");
 
             DB::commit();
-            session()->flash('msg_success', '成功メッセージ');
+            session()->flash('msg_success', 'キャンセル処理を行いました');
             return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
         } catch (\Throwable $e) {
             DB::rollback();
@@ -217,5 +244,69 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function courseMappingShow($id)
+    {
+        $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name', 'courses.course_name', 'users.name AS intr_name')
+        ->join('customers', 'customers.id', 'customer_course_mapping.customer_id')
+        ->join('instructor_courses', 'instructor_courses.id', 'customer_course_mapping.instructor_courses_id')
+        ->join('courses', 'courses.id', 'instructor_courses.course_id')
+        ->join('users', 'users.id', 'customer_course_mapping.instructor_id')
+        ->find($id);
+        $ICS = InstructorCourseSchedule::where('instructor_courses_id',$CCMs->instructor_courses_id )->orderBy('date')->first();
+        $firstDate = $ICS->date;
+
+        $claim_ID = $CCMs->claim_id;
+        // claimsのデータがなければ作成する
+        if(!$claim_ID){
+            $claim = new Claim;
+            $claim->user_type = 1 ;
+            $claim->user_id = $CCMs->customer_id;
+            $claim->price = $CCMs->price;
+            $claim->save();
+            $claim_ID = $claim->id;
+            CustomerCourseMapping::where('id', $id)->update(['claim_id' => $claim_ID]);
+        }
+        $claim = Claim::find($claim_ID);
+        $claim = CheckClaims::setStatus($claim);
+        return view('admin.courseMappingShow', compact('CCMs','claim','firstDate') );
+        //
+    }
+
+    /**
+     * コース代金の入金を確認した状態に更新する
+     */
+    public function completeCourseFee(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            if(!$request->complete_date) throw new \Exception("売上計上日を入力してください");
+
+            // CustomerCourseMappingの更新
+            $CCM = CustomerCourseMapping::find($id);
+            $CCM->status = 3;
+            $CCM->save();
+
+            // Claimの更新
+            $claim = Claim::find($CCM->claim_id);
+            $claim->status = 5;
+            $claim->complete_date = $request->complete_date;
+            $claim->save();
+
+            DB::commit();
+            session()->flash('msg_success', '受領済みに更新しました');
+            // return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+        }
+        return redirect()->back();    // 前の画面へ戻る
+
+    }
 
 }

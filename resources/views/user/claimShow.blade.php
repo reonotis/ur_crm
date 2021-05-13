@@ -32,7 +32,7 @@
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >期日</div>
-                    <div class="cusInfoContent" ></div>
+                    <div class="cusInfoContent" >{{ $claim->limit_date->format('Y年 m月 d日') }}</div>
                   </div>
                   <div class="cusInfoRow" >
                     <div class="cusInfoTitle" >内訳</div>
@@ -64,10 +64,10 @@
                       <div class="cusInfoTitle" >ステータス変更</div>
                       <div class="cusInfoContent" >
                         @if($claim->status >= 1 && $claim->status <> 3 )
-                          <a href="{{ route('claim.cancelClaims', ['id'=>$claim->id] ) }}" >キャンセル</a> <br>
+                          <a href="{{ route('claim.cancelClaims', ['id'=>$claim->id] ) }}" onclick="return confilmCancel();" >キャンセル</a> <br>
                         @endif
                         @if($claim->status == 0)
-                        <a href="{{ route('claim.deleteClaims', ['id'=>$claim->id] ) }}" >請求データを削除</a> <br>
+                        <a href="{{ route('claim.deleteClaims', ['id'=>$claim->id] ) }}" onclick="return confilmDelete();">請求データを削除</a> <br>
                         @endif
                       </div>
                     </div>
@@ -112,6 +112,14 @@
     }
     function confirmSendMail(){
         var result = window.confirm('インストラクターに請求メールを送信しますか？\nメール送信後はステータスが【請求中】になります');
+        if( result ) return true; return false;
+    }
+    function confilmCancel(){
+        var result = window.confirm('この請求をキャンセルしますか？\nこの操作は取り消せません');
+        if( result ) return true; return false;
+    }
+    function confilmDelete(){
+        var result = window.confirm('この請求情報を削除しますか？\nこの操作は取り消せません');
         if( result ) return true; return false;
     }
 </script>
