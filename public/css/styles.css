@@ -798,10 +798,14 @@ table.customerSearchTable{
 .courseHistoryTable tr:nth-child(odd) td {
 	background: #ecf5fb;
 }
-
-
-
-
+.courseMappingShowContentRow{
+	display: flex;
+    align-items: center;
+	float         : left ;
+	width   :calc(100% - 40px);
+	padding :5px;
+	border-bottom:solid 1px var(--info);
+}
 .courseAppTitle{
 	border-left :solid 5px var(--maincolor);
 	color: var(--maincolor);

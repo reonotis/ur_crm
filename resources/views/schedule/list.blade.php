@@ -10,7 +10,7 @@
                 <input type="month" name="month" class="formInput inputYearMonth" value="<?= $monthList[1] ?>" onchange="this.form.submit();" >
                 <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">更新</button> -->
                 <a href="{{ route('schedule.list', ['month' => $monthList[2]] ) }}" class="btn btn-outline-success btn-sm" >翌月 >></a>
-                
+
             </div>
         </form>
 <?php
