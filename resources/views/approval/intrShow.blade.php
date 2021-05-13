@@ -75,8 +75,8 @@
                                     <form action="{{route('approval.update',['id' => $courseSchedule->id ])}}" method="POST">
                                         @csrf
                                         <input type="text" name="appComment" class="formInput" placeholder="コメントを入力" >
-                                        <button class="btn btn-outline-danger"  name="NG" value="NG" onClick="return confilmDelete()">取り下げる</button>
-                                        <button class="btn btn-outline-success" name="OK" value="OK"  >承認する</button>
+                                        <button class="btn btn-outline-danger"  name="NG" value="NG" onClick="return confilmDelete()" >取り下げる</button>
+                                        <button class="btn btn-outline-success" name="OK" value="OK" onClick="return confilmApply()" >承認する</button>
                                     </form>
                                 </td>
                             </tr>
@@ -93,15 +93,16 @@
 ?>
 
 <script>
-function confilmDelete(){
-    var result = window.confirm('この申請を取り下げますか？');
-    if( result ) {
-        return true;
-    } else {
-        return false;
+    function confilmDelete(){
+        var result = window.confirm('この申請を取り下げますか？');
+        if( result ) return true; return false;
     }
-}
+    function confilmApply(){
+        var result = window.confirm('この申請を取り下げますか？');
+        if( result ) return true; return false;
+    }
 </script>
+
 <style>
     th{
         width:120px;
