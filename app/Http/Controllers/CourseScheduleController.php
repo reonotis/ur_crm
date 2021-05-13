@@ -187,7 +187,7 @@ class CourseScheduleController extends Controller
                 "url"        => url('').'/approval/index'
             ];
             Mail::send('emails.applicationAccepted', $data, function($message){
-                $message->to($this->_toInfo, 'Test')
+                $message->to($this->_toInfo)
                 ->bcc($this->_toReon)
                 ->subject('事務局にスケジュールの申請がありました');
             });
@@ -249,7 +249,7 @@ class CourseScheduleController extends Controller
             return redirect()->action('CourseScheduleController@index');
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->action('CourseScheduleController@index');
+            return redirect()->back();    // 前の画面へ戻る
         }
     }
 
