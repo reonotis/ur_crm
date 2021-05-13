@@ -22,7 +22,6 @@ class CoursePurchaseDetailsController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
-    private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
 
@@ -34,7 +33,6 @@ class CoursePurchaseDetailsController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);

@@ -17,7 +17,6 @@ class CourseScheduleController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
-    private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
 
@@ -29,7 +28,6 @@ class CourseScheduleController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);
@@ -174,7 +172,7 @@ class CourseScheduleController extends Controller
             $IC->open_finish_day = date( 'Y-m-d H:i:s', strtotime( $request->open_finish_day ) )   ;
             $IC->save();
             $IC_id = $IC->id;
-            
+
             $ICS = new InstructorCourseSchedule;
             $ICS->instructor_courses_id = $IC_id;
             $ICS->instructor_id = $this->_auth_id;
@@ -190,7 +188,6 @@ class CourseScheduleController extends Controller
             ];
             Mail::send('emails.applicationAccepted', $data, function($message){
                 $message->to($this->_toInfo, 'Test')
-                ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
                 ->subject('事務局にスケジュールの申請がありました');
             });
@@ -243,8 +240,7 @@ class CourseScheduleController extends Controller
                 "url"        => url('').'/approval/index'
             ];
             Mail::send('emails.applicationAccepted', $data, function($message){
-                $message->to($this->_toInfo, 'Test')
-                ->cc($this->_toAkemi)
+                $message->to($this->_toInfo)
                 ->bcc($this->_toReon)
                 ->subject('事務局にスケジュールの申請がありました');
             });

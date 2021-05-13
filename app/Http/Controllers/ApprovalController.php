@@ -19,7 +19,6 @@ class ApprovalController extends Controller
     protected $_auth_id ;
     protected $_auth_authority_id ;
     public $_backslash = '\\';
-    private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
     private $_toIntr ;
@@ -32,7 +31,6 @@ class ApprovalController extends Controller
             if($this->_auth_authority_id >= 7){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);

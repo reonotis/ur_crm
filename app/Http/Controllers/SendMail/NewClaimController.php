@@ -32,7 +32,6 @@ class NewClaimController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);

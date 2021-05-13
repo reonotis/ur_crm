@@ -133,7 +133,6 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
-    'toAkemi' => env('MAIL_TO_AKEMI'),
     'toInfo'  => env('MAIL_TO_INFO'),
     'toReon'  => env('MAIL_TO_REON'),
 

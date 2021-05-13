@@ -17,7 +17,6 @@ class RequestAnnualMembershipFeeController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
-    private $_toAkemi ;
     private $_toInfo ;
     private $_toReon ;
     private $_toCustomer ;
@@ -30,7 +29,6 @@ class RequestAnnualMembershipFeeController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);
@@ -69,7 +67,6 @@ class RequestAnnualMembershipFeeController extends Controller
             ];
             Mail::send('emails.mailtext', $data, function($message){
                 $message->to($this->_toCustomer, 'Test')
-                ->cc($this->_toAkemi)
                 ->bcc($this->_toReon)
                 ->subject('入金依頼メール');
             });
@@ -88,7 +85,7 @@ class RequestAnnualMembershipFeeController extends Controller
 
             session()->flash('msg_success', 'メールを送信しました。');
             DB::commit();
-            
+
             return redirect()->action('AdminController@customer_complet_course');
         } catch (\Throwable $e) {
             DB::rollback();

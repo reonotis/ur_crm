@@ -19,7 +19,6 @@ class sendEmailController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
-    private $_toInfo ;
     private $_toReon ;
     private $_toInstructor ;
     private $_mailTitle ;
@@ -32,7 +31,6 @@ class sendEmailController extends Controller
             if($this->_auth_authority_id >= 8){
                 dd("権限がありません。");
             }
-            $this->_toAkemi = config('mail.toAkemi');
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
             return $next($request);
