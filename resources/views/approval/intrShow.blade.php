@@ -98,7 +98,7 @@
         if( result ) return true; return false;
     }
     function confilmApply(){
-        var result = window.confirm('この申請を取り下げますか？');
+        var result = window.confirm('この申請を承認しますか？\n承認後は期間中HPに掲載されます。');
         if( result ) return true; return false;
     }
 </script>
