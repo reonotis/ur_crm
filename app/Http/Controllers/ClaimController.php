@@ -85,6 +85,7 @@ class ClaimController extends Controller
 
     public function updateOrInsert($id){
         try {
+            return response()->json($id);
             DB::beginTransaction();
             DB::table('claims_transactions')->updateOrInsert(
                 [
