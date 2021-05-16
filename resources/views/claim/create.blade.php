@@ -187,6 +187,12 @@
         // TODO 本番だと何かがバグってる
         var claim_name = document.getElementById("claim_name")
         var limit_date = document.getElementById("limit_date")
+        
+        console.log("claim_name : " );
+        console.log(claim_name);
+        console.log("limit_date : ");
+        console.log(+ limit_date);
+        console.log("user : " + <?= $user->id ?>);
         $.get({
             url: "/claim/updateOrInsert/" + <?= $user->id ?>,
             method: 'GET',
