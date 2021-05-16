@@ -184,8 +184,9 @@
     }
 
     function updateOrInsert_claimsTrn(){
-        const claim_name = document.getElementById("claim_name")
-        const limit_date = document.getElementById("limit_date")
+        // TODO 本番だと何かがバグってる
+        var claim_name = document.getElementById("claim_name")
+        var limit_date = document.getElementById("limit_date")
         $.get({
             url: "/claim/updateOrInsert/" + <?= $user->id ?>,
             method: 'GET',
@@ -198,7 +199,8 @@
         }).done(function (data) { //ajaxが成功したときの処理
             console.log("更新成功 ID : " + data);
         }).fail(function () { //ajax通信がエラーのときの処理
-            console.log('更新失敗');
+            console.log("更新失敗 : ");
+            console.log(data);
         })
     }
 
