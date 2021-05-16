@@ -3,8 +3,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <h3>未入金者 一覧</h3>
+        <div class="fullWidth">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+        </div>
 
+        <h3>未入金者 一覧</h3>
         <div class="adminErea" >
             <div class="admin_h5_wrap"><h5 class="admin_h5">コース代金</h5></div>
 

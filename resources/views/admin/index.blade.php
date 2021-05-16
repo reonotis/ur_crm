@@ -13,7 +13,7 @@
             <div class="admin_h5_wrap"><h5 class="admin_h5">顧客管理</h5></div>
             <div class="adminBtnErea">
                 <!-- <a href="{{route('customer.search')}}" class="btn btn-admin">顧客検索</a> -->
-                <a href="{{route('admin.customer_complet_course')}}" class="btn btn-admin">修了者一覧</a>
+                <a href="{{route('admin.customer_complete_course')}}" class="btn btn-admin">修了者一覧</a>
             </div>
             <div class="admin_h5_wrap"><h5 class="admin_h5">インストラクター管理</h5></div>
             <div class="adminBtnErea">

@@ -89,8 +89,35 @@ class CourseDetailController extends Controller
      */
     public function edit($id)
     {
+        $customerSchedule = CustomerSchedule::select('customer_schedules.*', 'customers.name', 'instructor_courses.course_title', 'courses.course_name')
+        ->join('customers','customers.id','customer_schedules.customer_id')
+        ->join('instructor_course_schedules','instructor_course_schedules.id','customer_schedules.course_schedules_id')
+        ->join('instructor_courses','instructor_courses.id','instructor_course_schedules.instructor_courses_id')
+        ->join('courses','courses.id','instructor_courses.course_id')
+        ->find($id);
         //
-        dd('更新画面作成中です');
+        return view('course_detail.scheduleEdit', [ 'customerSchedule'=>$customerSchedule ]);
+    }
+
+    public function changeCourseScheduleDataTime(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $CS = CustomerSchedule::find($id);
+            $CS->date_time = date('Y-m-d H:i:s', strtotime($request->date));
+            $ICS = InstructorCourseSchedule::find($CS->course_schedules_id);
+            $InstructorCourse = InstructorCourse::find($ICS->instructor_courses_id);
+            $CS->save();
+
+            DB::commit();
+            session()->flash('msg_success', '成功メッセージ');
+            return redirect()->action('CourseDetailController@display', [ 'id'=>$InstructorCourse->id ]);
+
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
 
     /**

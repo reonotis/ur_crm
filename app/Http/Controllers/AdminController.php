@@ -54,7 +54,7 @@ class AdminController extends Controller
     /**
      * 
      */
-    public function customer_complet_course()
+    public function customer_complete_course()
     {
         $CCMs = CustomerCourseMapping::select('customer_course_mapping.*', 'customers.name')
         ->join('customers', 'customers.id', 'customer_id')
@@ -64,7 +64,7 @@ class AdminController extends Controller
         ->where('status', '<=',6)
         ->get();
 
-        return view('admin.customer_complet_course', ['CCMs' => $CCMs, 'a' => 1]);
+        return view('admin.customer_complete_course', ['CCMs' => $CCMs, 'a' => 1]);
     }
 
     /**
@@ -185,7 +185,7 @@ class AdminController extends Controller
                 "customer_name"  => $customer_name,
             ];
             // お客様へ入金確認のメールを送る
-            $あMail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
+            Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
                 $message->to($this->_toCustomer)
                 ->cc($this->_toInfo)
                 ->bcc($this->_toReon)

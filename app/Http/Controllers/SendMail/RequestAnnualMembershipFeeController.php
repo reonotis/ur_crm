@@ -65,7 +65,7 @@ class RequestAnnualMembershipFeeController extends Controller
             $data = [
                 "text"  => $text,
             ];
-            Mail::send('emails.mailtext', $data, function($message){
+            Mail::send('emails.mailText', $data, function($message){
                 $message->to($this->_toCustomer, 'Test')
                 ->bcc($this->_toReon)
                 ->subject('入金依頼メール');
@@ -86,7 +86,7 @@ class RequestAnnualMembershipFeeController extends Controller
             session()->flash('msg_success', 'メールを送信しました。');
             DB::commit();
 
-            return redirect()->action('AdminController@customer_complet_course');
+            return redirect()->action('AdminController@customer_complete_course');
         } catch (\Throwable $e) {
             DB::rollback();
             session()->flash('msg_danger',$e->getMessage() );

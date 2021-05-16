@@ -66,14 +66,14 @@ class RegistrRequestController extends Controller
     }
 
     //
-    public function sendmailRegistrRequest(Request $request, $id){
+    public function sendMailRegistrRequest(Request $request, $id){
         try {
 
             // 依頼メールの送信
             $data = [
                 "text"  => $request->text,
             ];
-            Mail::send('emails.mailtext', $data, function($message){
+            Mail::send('emails.mailText', $data, function($message){
                 $message->to($this->_toInfo)
                 ->bcc($this->_toReon)
                 ->subject('インストラクター規約同意依頼メール');
@@ -93,7 +93,7 @@ class RegistrRequestController extends Controller
             ]]);
 
             session()->flash('msg_success', 'メールを送信しました。');
-            return redirect()->action('AdminController@customer_complet_course');
+            return redirect()->action('AdminController@customer_complete_course');
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る

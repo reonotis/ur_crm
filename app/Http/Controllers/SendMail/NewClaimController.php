@@ -68,7 +68,7 @@ class NewClaimController extends Controller
             $data = [
                 "text"  => $text,
             ];
-            Mail::send('emails.mailtext', $data, function($message){
+            Mail::send('emails.mailText', $data, function($message){
                 $message->to($this->_toInstructor)
                 ->bcc($this->_toReon)
                 ->subject($this->_mailTitle);
@@ -96,7 +96,7 @@ class NewClaimController extends Controller
             DB::commit();
             session()->flash('msg_success', 'メールを送信しました。');
             return redirect()->action('UserController@display',['id'=>$id]);
-            // return redirect()->action('AdminController@customer_complet_course');
+            // return redirect()->action('AdminController@customer_complete_course');
         } catch (\Throwable $e) {
             DB::rollback();
             session()->flash('msg_danger',$e->getMessage() );

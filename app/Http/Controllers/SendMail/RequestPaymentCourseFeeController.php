@@ -72,7 +72,7 @@ class RequestPaymentCourseFeeController extends Controller
     /**
      *
      */
-    public function sendmailPaymentCourseFee(Request $request, $id){
+    public function sendMailPaymentCourseFee(Request $request, $id){
         DB::beginTransaction();
         try {
             $CCM = CustomerCourseMapping::find($id);
@@ -100,7 +100,7 @@ class RequestPaymentCourseFeeController extends Controller
             $data = [
                 "text"  => $text,
             ];
-            Mail::send('emails.mailtext', $data, function($message){
+            Mail::send('emails.mailText', $data, function($message){
                 $message->to($this->_toCustomer)
                 ->cc($this->_toInfo)
                 ->bcc($this->_toReon)

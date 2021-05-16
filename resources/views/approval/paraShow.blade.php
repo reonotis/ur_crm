@@ -87,11 +87,7 @@
 <script>
 function confilmDelete(){
     var result = window.confirm('この申請を取り下げますか？');
-    if( result ) {
-        return true;
-    } else {
-        return false;
-    }
+    if( result ) return true; return false;
 }
 </script>
 <style>

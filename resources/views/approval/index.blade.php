@@ -3,9 +3,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+    <div class="fullWidth">
+        <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+    </div>
 
-    <h3>申請関係一覧
-</h3>
+    <h3>申請関係一覧</h3>
 
         <div class="LeftBOX" style="width:100%;">
             <!-- <a href="">

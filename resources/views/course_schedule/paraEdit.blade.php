@@ -84,11 +84,7 @@
 <script>
 function confilmUpdate(){
     var result = window.confirm('この内容で更新しますか？');
-    if( result ) {
-        return true;
-    } else {
-        return false;
-    }
+    if( result ) return true; return false;
 }
 </script>
 <style>

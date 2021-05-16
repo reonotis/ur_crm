@@ -85,12 +85,7 @@
 <script>
 function confilmDelete(){
     var result = window.confirm('本当にこのスケジュールを削除しますか？\nこの操作は取り消せません。');
-    if( result ) {
-        return true;
-    } else {
-        console.log('キャンセルがクリックされました');
-        return false;
-    }
+    if( result ) return true; return false;
 }
 </script>
 <style>

@@ -184,7 +184,7 @@ class ClaimController extends Controller
         return redirect()->back();    // 前の画面へ戻る
     }
 
-    public function rankDuwn($id){
+    public function rankDown($id){
         DB::beginTransaction();
         try {
             $thisId = $id;
@@ -404,7 +404,7 @@ class ClaimController extends Controller
             $data = [
                 "text"  => $text,
             ];
-            Mail::send('emails.mailtext', $data, function($message){
+            Mail::send('emails.mailText', $data, function($message){
                 $message->to($this->_toIntr)
                 ->cc($this->_toInfo)
                 ->bcc($this->_toReon)

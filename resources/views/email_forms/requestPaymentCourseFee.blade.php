@@ -3,7 +3,7 @@
 @section('mail_title','入金依頼メール' )
 
 @section('text' )
-<form method="post" action="{{ route('admin.sendmailPaymentCourseFee', ['id'=>$CCM->id]) }}" class="form-inline my-2 my-lg-0">
+<form method="post" action="{{ route('admin.sendMailPaymentCourseFee', ['id'=>$CCM->id]) }}" class="form-inline my-2 my-lg-0">
 @csrf
 <input type="hidden" name="title" value="入金依頼メール" >
 <div class="inputRowErea" >

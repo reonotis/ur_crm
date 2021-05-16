@@ -59,13 +59,8 @@
 <script>
     function confirmFunction1() {
         //ret変数に確認ダイアログの結果を代入する。
-        ret = window.confirm('このスケジュールを受講済みにします。\n宜しいですか？\nこの操作は元には戻せません');
+        result = window.confirm('このスケジュールを受講済みにします。\n宜しいですか？\nこの操作は元には戻せません');
+        if( result ) return true; return false;
 
-        //確認ダイアログの結果がOKの場合外部リンクを開く
-        if (ret == true){
-            return true
-        }else{
-            return false
-        }
     }
 </script>

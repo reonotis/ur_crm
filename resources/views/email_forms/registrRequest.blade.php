@@ -3,7 +3,7 @@
 @section('mail_title','インストラクター規約同意依頼メール' )
 
 @section('text' )
-<form method="post" action="{{ route('admin.sendmailRegistrRequest',['id' => $customer->id ]) }}" class="form-inline my-2 my-lg-0">
+<form method="post" action="{{ route('admin.sendMailRegistrRequest',['id' => $customer->id ]) }}" class="form-inline my-2 my-lg-0">
 @csrf
 <input type="hidden" name="title" value="インストラクター規約同意依頼メール" >
 <textarea name="text" class="formInput mailformInput">

@@ -38,13 +38,13 @@ Route::group(['middleware'=>'auth'], function(){
 // 管理画面関係
 Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('index', 'AdminController@index')->name('admin.index');
-    Route::get('customer_complet_course', 'AdminController@customer_complet_course')->name('admin.customer_complet_course');
+    Route::get('customer_complete_course', 'AdminController@customer_complete_course')->name('admin.customer_complete_course');
     Route::get('newApply', 'AdminController@newApply')->name('admin.newApply');
     Route::get('unPayd', 'AdminController@unPayd')->name('admin.unPayd');
     Route::get('instructorRegistrRequest/{id}', 'SendMail\RegistrRequestController@instructorRegistrRequest')->name('admin.instructorRegistrRequest');
-    Route::post('sendmailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendmailRegistrRequest')->name('admin.sendmailRegistrRequest');
+    Route::post('sendMailRegistrRequest/{id}', 'SendMail\RegistrRequestController@sendMailRegistrRequest')->name('admin.sendMailRegistrRequest');
     Route::get('requestPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@index')->name('admin.requestPaymentCourseFee');
-    Route::post('sendmailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendmailPaymentCourseFee')->name('admin.sendmailPaymentCourseFee');
+    Route::post('sendMailPaymentCourseFee/{id}', 'SendMail\RequestPaymentCourseFeeController@sendMailPaymentCourseFee')->name('admin.sendMailPaymentCourseFee');
     Route::get('RequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@index')->name('admin.RequestAnnualMembershipFee');
     Route::post('sendRequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@sendRequestAnnualMembershipFee')->name('admin.sendRequestAnnualMembershipFee');
     Route::get('courseMappingShow/{id}', 'AdminController@courseMappingShow')->name('admin.courseMappingShow');
@@ -156,7 +156,7 @@ Route::group(['prefix'=>'claim', 'middleware'=>'auth'], function(){
     Route::get('deleteClaimDetail/{id}', 'ClaimController@deleteClaimDetail')->name('claim.deleteClaimDetail');
     Route::get('updateOrInsert_claimDetail/{id}', 'ClaimController@updateOrInsert_claimDetail')->name('claim.updateOrInsert_claimDetail');
     Route::get('deleteTran/{id}', 'ClaimController@deleteTran')->name('claim.deleteTran');
-    Route::get('rankDuwn/{id}', 'ClaimController@rankDuwn')->name('claim.rankDuwn');
+    Route::get('rankDown/{id}', 'ClaimController@rankDown')->name('claim.rankDown');
     Route::get('confilmAddClaim/{id}', 'ClaimController@confilmAddClaim')->name('claim.confilmAddClaim');
     Route::get('storeClaim/{id}', 'ClaimController@storeClaim')->name('claim.storeClaim');
     Route::get('show/{id}', 'ClaimController@show')->name('claim.show');
@@ -173,6 +173,7 @@ Route::group(['prefix'=>'course_detail', 'middleware'=>'auth'], function(){
     Route::get('display/{id}', 'CourseDetailController@display')->name('course_detail.display');
     Route::get('completCustomerSchedule/{id}', 'CourseDetailController@completCustomerSchedule')->name('course_detail.completCustomerSchedule');
     Route::get('edit/{id}', 'CourseDetailController@edit')->name('course_detail.edit');
+    Route::post('changeCourseScheduleDataTime/{id}', 'CourseDetailController@changeCourseScheduleDataTime')->name('course_detail.changeCourseScheduleDataTime');
 });
 
 

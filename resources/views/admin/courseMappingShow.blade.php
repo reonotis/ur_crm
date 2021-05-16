@@ -71,7 +71,7 @@
                     <div class="cusInfoRow" >
                       <div class="cusInfoTitleMail" >請求メール送付</div>
                       <div class="cusInfoContentMail" >
-                        <form action="{{ route('admin.sendmailPaymentCourseFee',['id'=>$CCMs->id]) }}" method="POST" >
+                        <form action="{{ route('admin.sendMailPaymentCourseFee',['id'=>$CCMs->id]) }}" method="POST" >
                           @csrf
 
                           <div class="cusInfoRow">

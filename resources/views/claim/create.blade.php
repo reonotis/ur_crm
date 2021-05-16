@@ -58,7 +58,7 @@
                                             <input type="number" id="price_<?= $CDTran->id ?>" value="{{$CDTran->price}}" onchange="updateOrInsert_claimDetail(<?= $CDTran->id ?>);" >円
                                         </div>
                                         <div class="ClaimDetail_rank" >
-                                            <a href="" onclick="return rankDuwn(<?= $CDTran->id ?>);" >↓</a>
+                                            <a href="" onclick="return rankDown(<?= $CDTran->id ?>);" >↓</a>
                                         </div>
                                         <div class="ClaimDetail_delete" >
                                             <a href="" onclick="return confilmDelete(<?= $CDTran->id ?>);" >削除</a>
@@ -123,7 +123,7 @@
                 html=html +     "</div>";
 
                 html=html +     "<div class=\"ClaimDetail_rank\" >";
-                html=html +         "<a href=\" \"  onclick=\"return rankDuwn(" + id + ");\"    >↓</a>";
+                html=html +         "<a href=\" \"  onclick=\"return rankDown(" + id + ");\"    >↓</a>";
                 html=html +     "</div>";
                 html=html +     "<div class=\"ClaimDetail_delete\" >";
                 html=html +         "<a href=\" \"  onclick=\"return confilmDelete(" + id + ");\"    >削除</a>";
@@ -219,9 +219,9 @@
         })
     }
 
-    function rankDuwn(id){
+    function rankDown(id){
         $.get({
-            url: "/claim/rankDuwn/" + id ,
+            url: "/claim/rankDown/" + id ,
             method: 'GET',
             dataType: 'json',
             data: {
