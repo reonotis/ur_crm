@@ -150,9 +150,10 @@ class CustomerController extends Controller
         $CustomerSchedules =  CheckCustomerData::attendanceStatus($CustomerSchedules);
 
         // 購入コース明細を取得する
-        $CPDQuery = CustomerCourseMapping::select('customer_course_mapping.*', 'courses.course_name' );
+        $CPDQuery = CustomerCourseMapping::select('customer_course_mapping.*', 'courses.course_name', 'claims.status as claimStatus', 'claims.complete_date' );
         $CPDQuery -> leftJoin('instructor_courses', 'instructor_courses.id', '=', 'customer_course_mapping.instructor_courses_id');
         $CPDQuery -> leftJoin('courses', 'courses.id', '=', 'instructor_courses.course_id');
+        $CPDQuery -> leftJoin('claims', 'claims.id', '=', 'customer_course_mapping.claim_id');
         $CPDQuery -> where('customer_course_mapping.customer_id','=',$customer_id);
         $CoursePurchaseDetails = $CPDQuery -> get();
 
@@ -163,7 +164,6 @@ class CustomerController extends Controller
         // if($this->_auth_authority_id >= 5) $HSEmails = $HSEmails->where('user_id', $this->_auth_id );
         $HSEmails = $HSEmails->orderBy('send_time','desc')->get();
         $HSEmails = $this->changeMailTime($HSEmails);
-        // dd($HSEmails);
         return view('customer.display', compact('customer', 'CustomerSchedules', 'CoursePurchaseDetails', 'HSEmails' ));
     }
 

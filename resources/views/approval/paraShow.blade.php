@@ -46,6 +46,10 @@
                             <th>詳細</th>
                             <td>{!! nl2br(e($courseSchedules -> comment)) !!}</td>
                         </tr>
+                        <tr>
+                            <th>公開期間</th>
+                            <td>{{$courseSchedules->open_start_day->format('Y/m/d H:i') }}　～　{{$courseSchedules->open_finish_day->format('Y/m/d H:i') }}</td>
+                        </tr>
                         @if( count($ApprovalComments) >= 1)
                             <tr>
                                 <th>コメント</th>

@@ -27,7 +27,7 @@
                     @endif
                     @if(isset($adminMessage['compCourse']) && count($adminMessage['compCourse']))
                         @foreach($adminMessage['compCourse'] as $data)
-                            <a href="<?= url('').'/admin/customer_complete_course'  ?>" class="messegeLink" ><?= $data->name ?>様が養成courseを終了しました<br></a>
+                            <a href="<?= url('').'/admin/customer_complete_course'  ?>" class="messegeLink" ><?= $data->name ?>様が養成コースを終了しました<br></a>
                         @endforeach
                     @endif
 

@@ -19,7 +19,7 @@
       <td><?= date('Y年 m月 d日',  strtotime($CoursePurchaseDetail->date)) ?></td>
       <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" ><?= $CoursePurchaseDetail->course_name ?></a></td>
       <td><?= number_format($CoursePurchaseDetail->price) ?>円</td>
-      <td><?= paymentConfirmation($CoursePurchaseDetail->pay_confirm , $CoursePurchaseDetail->payment_day ) ?></td>
+      <td><?= paymentConfirmation($CoursePurchaseDetail->claimStatus , $CoursePurchaseDetail->complete_date ) ?></td>
       <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" >確認</a></td>
     </tr>
   <?php  } ?>
@@ -39,18 +39,19 @@
 
 
 <?php
-// dd($CoursePurchaseDetail);
-  function paymentConfirmation($pay_confirm, $payment_day ){
-    if($pay_confirm === 1){
-      if($payment_day){
-        $date = date('Y年 m月 d日',  strtotime($payment_day)) . " に確認済" ;
-      }else{
-        $date = "入金確認済み" ;
+  function paymentConfirmation($claimStatus, $complete_date ){
+    if($claimStatus === 0){
+      $comment = "未確認";
+    }else if($claimStatus === 1){
+      $comment = "請求中";
+    }else if($claimStatus === 3){
+      $comment = "キャンセル";
+    }else if($claimStatus === 5){
+      if($complete_date){
+        $comment =  date('Y年 m月 d日',  strtotime($complete_date)) . " に計上済" ;
       }
-    }else{
-      $date = "未確認" ;
     }
-    return $date;
+    return $comment;
   }
 
 
