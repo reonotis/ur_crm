@@ -191,7 +191,7 @@
         console.log("claim_name : " );
         console.log(claim_name);
         console.log("limit_date : ");
-        console.log(+ limit_date);
+        console.log(limit_date);
         console.log("user : " + <?= $user->id ?>);
         $.get({
             url: "/claim/updateOrInsert/" + <?= $user->id ?>,
