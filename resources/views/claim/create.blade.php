@@ -189,6 +189,7 @@
         var claim_name = document.getElementById("claim_name")
         var limit_date = document.getElementById("limit_date")
         let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
+        console.log(LOCAL_ENVIRONMENT + "claim/updateOrInsert/" + <?= $user->id ?>);
         $.get({
             url: LOCAL_ENVIRONMENT + "claim/updateOrInsert/" + <?= $user->id ?>,
             method: 'GET',
