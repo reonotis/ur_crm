@@ -3,6 +3,9 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="fullWidth">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+        </div>
         <h3>コース申込者 一覧</h3>
 
         <div class="adminErea" >

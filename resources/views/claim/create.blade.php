@@ -5,9 +5,9 @@
 
     <div class="row justify-content-center">
 
-    <div class="fullWidth">
-        <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
-    </div>
+        <div class="fullWidth">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+        </div>
 
         <div class="col-md-12">
             <div class="card">

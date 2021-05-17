@@ -3,53 +3,44 @@
 
 @section('content')
 
+@yield('content')
 
-
-
-                @yield('content')
-
-<div class="">
+<div class="container">
+  <div class="fullWidth">
+    <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+  </div>
   <h3>顧客情報</h3>
-<div class="customerDetail LeftBOX">
-  <div class="BOXin customerBasicInformation">
-    <div class="customerNam"><?= $customer->menberNumber ?></div>
-    <div class=""><span class="customerNmae" ><?= $customer->name ?> </span>様 <?= $customer->sexName ?> </div>
-    <div class="customerRead">( <?= $customer->read ?>　サマ )</div>
-    <div class="customerIMG"></div>
+  <div class="customerDetail LeftBOX">
+    <div class="BOXin customerBasicInformation">
+      <div class="customerNam"><?= $customer->menberNumber ?></div>
+      <div class=""><span class="customerNmae" ><?= $customer->name ?> </span>様 <?= $customer->sexName ?> </div>
+      <div class="customerRead">( <?= $customer->read ?>　サマ )</div>
+      <div class="customerIMG"></div>
+    </div>
+    <div class="BOXin tabsContentsArea">
+        <div class="tabArea">
+          <div class="tab active">基本情報</div>
+          <div class="tab">受講履歴</div>
+          <div class="tab">申し込み講座一覧</div>
+          <div class="tab">送付メール一覧</div>
+        </div>
+        <div class="tabsContents">
+          <div class="tabscontent show">
+            @include('customer.includeCustomerInfomation')
+          </div>
+          <div class="tabscontent">
+            @include('customer.includeCustomerHistory')
+          </div>
+          <div class="tabscontent">
+            @include('customer.includeCustomerCourseList')
+          </div>
+          <div class="tabscontent">
+            @include('customer.includeCustomerMail')
+          </div>
+        </div>
+    </div>
   </div>
-  <div class="BOXin tabsContentsArea">
-      <div class="tabArea">
-        <div class="tab active">基本情報</div>
-        <div class="tab">受講履歴</div>
-        <div class="tab">申し込み講座一覧</div>
-        <div class="tab">送付メール一覧</div>
-      </div>
-      <div class="tabsContents">
-        <div class="tabscontent show">
-          @include('customer.includeCustomerInfomation')
-        </div>
-        <div class="tabscontent">
-          @include('customer.includeCustomerHistory')
-        </div>
-        <div class="tabscontent">
-          @include('customer.includeCustomerCourseList')
-        </div>
-        <div class="tabscontent">
-          @include('customer.includeCustomerMail')
-        </div>
-      </div>
-  </div>
-
 </div>
-
-
-
-
-
-</div>
-
-
-
 
 @endsection
 

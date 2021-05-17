@@ -3,8 +3,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="fullWidth">
+            <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+        </div>
 
-    <h3>開催コース詳細</h3>
+        <h3>開催コース詳細</h3>
 
         <div class="coursesErea" >
             <h4>コース概要</h4>
@@ -33,7 +36,7 @@
                             }else{
                                 ?>
                                 <a href="{{ route('course_detail.completCustomerSchedule', ['id' => $data->id ]) }}" onclick="return confirmFunction1()">受講済みにする</a>
-                                <?php 
+                                <?php
                             }
                             ?>
                         </td>

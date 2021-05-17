@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\User;
 use App\Models\EmailReset;
+use App\Services\CheckUsers;
+use App\Http\Requests\updatePass;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Services\CheckUsers;
-use App\Http\Requests\updatePass;
-use \InterventionImage;
+use InterventionImage;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
-use Mail;
 use Carbon\Carbon;
+use Mail;
 
 
 
 class SettingController extends Controller
 {
     // 定数の設定
-    private $_fileExtntion = ['jpg', 'jpeg', 'png'];
+    private $_fileExtntion = ['jpg', 'jpeg'];
     private $_resize = '300';
 
     private $_user;                 //Auth::user()
@@ -120,7 +121,7 @@ class SettingController extends Controller
         $new_email1 = $request->new_email1 ;
         $new_email2 = $request->new_email2 ;
         $this->_newEmail = $request->new_email1 ;
-        
+
         // トークン生成
         $token = hash_hmac(
             'sha256',
@@ -160,7 +161,6 @@ class SettingController extends Controller
         return view('setting.editEmail');
     }
 
-    
     /**
      * メールアドレスの再設定処理
      *
@@ -174,17 +174,17 @@ class SettingController extends Controller
 
         // トークンが存在している、かつ、有効期限が切れていないかチェック
         if ($email_resets && !$this->tokenExpired($email_resets->created_at)) {
- 
+
             // ユーザーのメールアドレスを更新
             $user = User::find($email_resets->user_id);
             $user->email = $email_resets->new_email;
             $user->save();
- 
+
             // レコードを削除
             DB::table('email_resets')
                 ->where('token', $token)
                 ->delete();
- 
+
                 session()->flash('msg_success', 'メールアドレスを更新しました。');
                 return redirect('/home');
         } else {
@@ -329,7 +329,6 @@ class SettingController extends Controller
         }
     }
 
-
     /**
      * 渡されたファイルが登録可能な拡張子か確認するしてOKなら拡張子を返す
      */
@@ -361,12 +360,12 @@ class SettingController extends Controller
 
         // 正方形の画像を作成
         $square_image = InterventionImage::make($file)
-                        ->crop($length, $length);
+            ->crop($length, $length);
 
         // リサイズして保存
         $image = InterventionImage::make($square_image)
-                        ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
-                        ->save(public_path('../storage/app/public/mainImages/' . $BaseFileName ) );
+            ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
+            ->save(public_path('../storage/app/public/mainImages/' . $BaseFileName ) );
     }
 
 

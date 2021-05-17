@@ -174,6 +174,7 @@ class ClaimController extends Controller
         DB::beginTransaction();
         try {
             $ClaimTrn = ClaimsTransactions::where('user_type',2)->where('user_id', $id)->first();
+            if(!$ClaimTrn) throw new \Exception("リセットするデータがありません");
             $ClaimTrn_id = $ClaimTrn->id;
             $ClaimTrn->delete();
             ClaimsDetailsTransactions::where('claim_trn_id', $ClaimTrn_id)->delete();
@@ -202,8 +203,6 @@ class ClaimController extends Controller
                 $nextId = $next_CDTrn->id;
                 ClaimsDetailsTransactions::where('id', $thisId)->update(['rank' => $nextRank]);
                 ClaimsDetailsTransactions::where('id', $nextId)->update(['rank' => $thisRank]);
-
-                // return response()->json( $next_CDTrn);
             }
 
             DB::commit();
@@ -216,7 +215,6 @@ class ClaimController extends Controller
 
     public function confilmAddClaim($id){
         try {
-
             $user = User::find($id);
             $ClaimTrn = ClaimsTransactions::
                         where('user_type', 2)

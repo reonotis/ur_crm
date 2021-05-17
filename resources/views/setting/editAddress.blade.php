@@ -3,9 +3,12 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+      <div class="fullWidth">
+        <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+      </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">住所変更<a href="{{route('setting.index')}}" class="textRight">戻る</a></div>
+                <div class="card-header">住所変更</div>
                 <div class="card-body">
                   @if($errors->any())
                     <div class="alert alert-danger" >
