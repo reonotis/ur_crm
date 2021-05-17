@@ -102,7 +102,8 @@ class SettingController extends Controller
         $myId = $auth->id;
 
         $query = DB::table('users')
-                -> leftJoin('users_info', 'users.id', '=', 'users_info.id');
+                ->leftJoin('users_info', 'users.id', '=', 'users_info.id')
+                ->where('users.id', $this->_auth_id);
         $auth = $query->first();
         return view('setting.editImg', compact('auth'));
     }
