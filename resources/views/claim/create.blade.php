@@ -79,7 +79,7 @@
         </div>
     </div>
 <?php
-    // dd($claimDetailList);
+    // dd($LOCAL_ENVIRONMENT);
 ?>
 </div>
 @endsection
@@ -164,6 +164,7 @@
         var quantity   = document.getElementById("quantity_" + id)
         var unit       = document.getElementById("unit_" + id)
         var price      = document.getElementById("price_" + id)
+
         $.get({
             url: "/claim/updateOrInsert_claimDetail/" + id,
             method: 'GET',
@@ -187,15 +188,9 @@
         // TODO 本番だと何かがバグってる
         var claim_name = document.getElementById("claim_name")
         var limit_date = document.getElementById("limit_date")
-
-        console.log("claim_name : " );
-        console.log(claim_name);
-        console.log("limit_date : ");
-        console.log(limit_date);
-        console.log("user : " + <?= $user->id ?>);
+        let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
         $.get({
-            url: "/crm/claim/updateOrInsert/" + <?= $user->id ?>, //本番
-            // url: "/claim/updateOrInsert/" + <?= $user->id ?>, //ローカル
+            url: LOCAL_ENVIRONMENT + "claim/updateOrInsert/" + <?= $user->id ?>,
             method: 'GET',
             dataType: 'json',
             data: {
@@ -207,7 +202,6 @@
             console.log("更新成功 ID : " + data);
         }).fail(function () { //ajax通信がエラーのときの処理
             console.log("更新失敗 : ");
-            console.log(data);
         })
     }
 

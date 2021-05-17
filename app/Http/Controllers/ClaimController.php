@@ -57,6 +57,9 @@ class ClaimController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create($id){
+        // ajaxを使用する場合の設定を読み込み
+        $LOCAL_ENVIRONMENT = env('LOCAL_ENVIRONMENT');
+
         $claimDetailList = config('paralymbics.claimDetailList');
 
         foreach($claimDetailList as $data){   //取得したinstructor_course_schedulesのIDだけ取得
@@ -79,13 +82,12 @@ class ClaimController extends Controller
             $CDTrans = "" ;
         }
 
-        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrans', 'claimDetailList' ,'item_name_list'));
+        return view('claim.create',compact('user', 'ClaimTrn', 'CDTrans', 'claimDetailList' ,'item_name_list', 'LOCAL_ENVIRONMENT'));
         //
     }
 
     public function updateOrInsert($id){
         try {
-            return response()->json($id);
             DB::beginTransaction();
             DB::table('claims_transactions')->updateOrInsert(
                 [
