@@ -53,12 +53,12 @@ class ClaimController extends Controller
     /**
      * Show the form for creating a new resource.
      * 既に請求トランテーブルにデータがあれば引き継いで請求情報を作成する画面を表示する。
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function create($id){
         $claimDetailList = config('paralymbics.claimDetailList');
-        
+
         foreach($claimDetailList as $data){   //取得したinstructor_course_schedulesのIDだけ取得
             $item_name[] = "【".$data['item_name']."】";
         }
