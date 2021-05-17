@@ -164,9 +164,10 @@
         var quantity   = document.getElementById("quantity_" + id)
         var unit       = document.getElementById("unit_" + id)
         var price      = document.getElementById("price_" + id)
+        let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
 
         $.get({
-            url: "/claim/updateOrInsert_claimDetail/" + id,
+            url: LOCAL_ENVIRONMENT + "claim/updateOrInsert_claimDetail/" + id,
             method: 'GET',
             dataType: 'json',
             data: {
@@ -185,7 +186,6 @@
     }
 
     function updateOrInsert_claimsTrn(){
-        // TODO 本番だと何かがバグってる
         var claim_name = document.getElementById("claim_name")
         var limit_date = document.getElementById("limit_date")
         let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
@@ -207,8 +207,9 @@
     }
 
     function add_claimDetail(){
+        let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
         $.get({
-            url: "/claim/addClaimDetail/" + <?= $user->id ?>,
+            url: LOCAL_ENVIRONMENT + "claim/addClaimDetail/" + <?= $user->id ?>,
             method: 'GET',
             dataType: 'json',
             data: {
@@ -224,8 +225,9 @@
     }
 
     function rankDown(id){
+        let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
         $.get({
-            url: "/claim/rankDown/" + id ,
+            url: LOCAL_ENVIRONMENT + "claim/rankDown/" + id ,
             method: 'GET',
             dataType: 'json',
             data: {
@@ -248,8 +250,9 @@
     }
 
     function delete_claimDetail(id){
+        let LOCAL_ENVIRONMENT = '<?= $LOCAL_ENVIRONMENT; ?>';
         $.get({
-            url: "/claim/deleteClaimDetail/" + id ,
+            url: LOCAL_ENVIRONMENT + "claim/deleteClaimDetail/" + id ,
             method: 'GET',
             dataType: 'json',
             data: {
