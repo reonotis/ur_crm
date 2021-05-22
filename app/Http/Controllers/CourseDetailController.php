@@ -30,7 +30,9 @@ class CourseDetailController extends Controller
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 8){
-                dd("権限がありません。");
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
             }
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
@@ -145,11 +147,12 @@ class CourseDetailController extends Controller
 
     public function display($id){
         try{
-            $IC = InstructorCourse::select('instructor_courses.*', 'courses.course_name')
+            $IC = InstructorCourse::select('instructor_courses.*', 'courses.course_name', 'users.name')
                 ->join('courses', 'courses.id', '=', 'instructor_courses.course_id' )
+                ->join('users', 'users.id', '=', 'instructor_courses.instructor_id' )
                 ->find($id);
 
-                // 管理者以下の権限の場合、自分のコースかを確認
+            // 管理者以下の権限の場合、自分のコースかを確認
             if( $this->_auth_authority_id >= 5 && $IC->instructor_id <> $this->_auth_id ) throw new \Exception("このスケジュールは更新できません");
 
             $ICS = InstructorCourseSchedule::where('instructor_courses_id', $id)->get();

@@ -23,7 +23,9 @@ class SalesInstructorController extends Controller
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 8){
-                dd("権限がありません。");
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
             }
             return $next($request);
         });

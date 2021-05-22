@@ -32,7 +32,9 @@ class AdminController extends Controller
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 5){
-                dd("権限がありません。");
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
             }
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
@@ -52,7 +54,6 @@ class AdminController extends Controller
     }
 
     /**
-     * 
      */
     public function customer_complete_course()
     {
@@ -81,8 +82,13 @@ class AdminController extends Controller
         ->join('courses', 'courses.id', 'instructor_courses.course_id' )
         ->get();
 
-        // TODO イントラからの未入金を取得するようにする
-        return view('admin.unpaid_customer', ['claims' => $claims, 'a' => 1]);
+        $instructorClaims = Claim::select('claims.*','users.name')
+        ->where('claims.user_type',2)
+        ->where('claims.status',1)
+        ->join('users', 'users.id', 'claims.user_id' )
+        ->get();
+
+        return view('admin.unpaid_customer', ['claims' => $claims, 'instructorClaims' => $instructorClaims]);
     }
 
     /**
@@ -108,7 +114,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 
+     *
      */
     public function completeContract($id)
     {

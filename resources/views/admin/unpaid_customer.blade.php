@@ -42,12 +42,23 @@
                     <thead>
                         <tr>
                             <th>顧客名</th>
+                            <th>請求項目</th>
+                            <th>金額</th>
+                            <th>期日</th>
                             <th>確認</th>
-                            <th>イントラにする</th>
                         </tr>
                     </thead>
                     <tbody>
                     <!-- TODO イントラからの未入金を取得するようにする -->
+                        @foreach($instructorClaims as $instructorClaim)
+                            <tr>
+                                <td><a href="{{ route('user.display', $instructorClaim->user_id ) }}" >{{ $instructorClaim->name }}</a></td>
+                                <td>{{ $instructorClaim->title }}</td>
+                                <td>{{ $instructorClaim->price }}</td>
+                                <td>{{ $instructorClaim->limit_date->format('Y-m-d') }}</td>
+                                <td><a href="{{ route('claim.show', $instructorClaim->id ) }}" >確認</a></td>
+                            </tr>
+                        @endforeach
 
                     </tbody>
                 </table>
@@ -60,7 +71,7 @@
     </div>
 </div>
 <?php
-// dd($claim);
+    // dd($instructorClaims);
 ?>
 @endsection
 

@@ -23,7 +23,7 @@
                         <a href="<?= url('').'/admin/newApply'  ?>" class="messegeLink" >コースへの新しいお申し込みが <?= count($newApply) ?> 件あります。<br></a>
                     @endif
                     @if(count($unPayd) >= 1)
-                        <a href="<?= url('').'/admin/unPayd'  ?>" class="messegeLink" >未入金のお客様が <?= count($unPayd) ?> 名います<br></a>
+                        <a href="<?= url('').'/admin/unPayd'  ?>" class="messegeLink" >未入金のお客様、もしくはインストラクターが <?= count($unPayd) ?> 名います<br></a>
                     @endif
                     @if(isset($adminMessage['compCourse']) && count($adminMessage['compCourse']))
                         @foreach($adminMessage['compCourse'] as $data)

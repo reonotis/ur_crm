@@ -32,8 +32,10 @@ class ClaimController extends Controller
             $this->_user = \Auth::user();
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
-            if($this->_auth_authority_id >= 7){
-                dd("権限がありません。");
+            if($this->_auth_authority_id >= 8){
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
             }
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');

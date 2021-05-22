@@ -11,9 +11,34 @@
 
         <div class="coursesErea" >
             <h4>コース概要</h4>
-            <?= $IC->course_name ."　". $IC->course_title  ?>
-<br>
-<br>
+            <div class="courseDetailRow">
+                <div class="courseDetailTitle">コース名</div>
+                <div class="courseDetailContent"><?= $IC->course_name ."　". $IC->course_title  ?></div>
+            </div>
+
+            <div class="courseDetailRow">
+                <div class="courseDetailTitle">インストラクター</div>
+                <div class="courseDetailContent"><?= $IC->name ?></div>
+            </div>
+
+            <div class="courseDetailRow">
+                <div class="courseDetailTitle">実施日</div>
+                <div class="courseDetailContent">
+                    @foreach($ICS as $date)
+                        <div>{{$date->date->format('Y年m月d日 H:i～') }}</div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="courseDetailRow">
+                <div class="courseDetailTitle">エリア</div>
+                <div class="courseDetailContent"><?= $IC->erea ?></div>
+            </div>
+            <div class="courseDetailRow">
+                <div class="courseDetailTitle">会場</div>
+                <div class="courseDetailContent"><?= $IC->venue ?></div>
+            </div>
+
 <br>
 <br>
             <h4>参加者のスケジュール</h4>

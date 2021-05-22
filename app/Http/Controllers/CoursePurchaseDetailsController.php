@@ -31,7 +31,9 @@ class CoursePurchaseDetailsController extends Controller
             $this->_auth_id = $this->_user->id;
             $this->_auth_authority_id = $this->_user->authority_id;
             if($this->_auth_authority_id >= 8){
-                dd("権限がありません。");
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
             }
             $this->_toInfo = config('mail.toInfo');
             $this->_toReon = config('mail.toReon');
@@ -45,7 +47,7 @@ class CoursePurchaseDetailsController extends Controller
      */
     public function apply($customer_id){
         // 渡されたIDの顧客情報を取得する
-        
+
         $customer = CheckCustomerData::getCustomer($customer_id);
 
         // コース一覧を取得する
