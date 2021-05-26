@@ -49,12 +49,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO イントラからの未入金を取得するようにする -->
                         @foreach($instructorClaims as $instructorClaim)
                             <tr>
                                 <td><a href="{{ route('user.display', $instructorClaim->user_id ) }}" >{{ $instructorClaim->name }}</a></td>
                                 <td>{{ $instructorClaim->title }}</td>
-                                <td>{{ $instructorClaim->price }}</td>
+                                <td>{{ number_format($instructorClaim->price) }}円</td>
                                 <td>{{ $instructorClaim->limit_date->format('Y-m-d') }}</td>
                                 <td><a href="{{ route('claim.show', $instructorClaim->id ) }}" >確認</a></td>
                             </tr>

@@ -35,11 +35,18 @@
   <div class="cusInfoTitle" >表示ステータス</div>
   <div class="cusInfoContent" ><?= $customer->hiddenStatus ?></div>
 </div>
-<div class="LeftBOX">
-  <a href="{{route('customer.edit', ['id' => $customer->id ] )}}">
-    <div class="button BOXin">編集する</div>
-  </a>
-</div>
+
+<?php
+  if(Auth::user()->authority_id <= 5){
+?>
+  <div class="LeftBOX">
+    <a href="{{route('customer.edit', ['id' => $customer->id ] )}}">
+      <div class="button BOXin">編集する</div>
+    </a>
+  </div>
+<?php
+  }
+?>
 
 
 
@@ -51,6 +58,8 @@
 
 
 <?php
+
+
 
   /**
   * 生年月日を計算し、正確な日付であれば年齢を出力する

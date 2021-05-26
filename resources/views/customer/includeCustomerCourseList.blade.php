@@ -1,9 +1,9 @@
 
-<div class="LeftBOX">
+<!-- <div class="LeftBOX">
   <a href="{{route('courseDetails.apply', ['id' => $customer->id ] )}}">
     <div class="button BOXin">新しいコースの申し込み</div>
   </a>
-</div>
+</div> -->
 
 
 <table class="courseHistoryTable">
@@ -17,7 +17,8 @@
   <?php foreach ($CoursePurchaseDetails as $key => $CoursePurchaseDetail) { ?>
     <tr>
       <td><?= date('Y年 m月 d日',  strtotime($CoursePurchaseDetail->date)) ?></td>
-      <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" ><?= $CoursePurchaseDetail->course_name ?></a></td>
+      <!-- <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" ><?= $CoursePurchaseDetail->course_name ?></a></td> -->
+      <td><?= $CoursePurchaseDetail->course_name ?></td>
       <td><?= number_format($CoursePurchaseDetail->price) ?>円</td>
       <td><?= paymentConfirmation($CoursePurchaseDetail->claimStatus , $CoursePurchaseDetail->complete_date ) ?></td>
       <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" >確認</a></td>

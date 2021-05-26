@@ -3,13 +3,13 @@
 
 @section('content')
 
+@yield('content')
 
-
-
-                @yield('content')
-
-<div class="">
-  <h2>顧客情報</h2>
+<div class="container">
+  <div class="fullWidth">
+    <button class="btn btn-outline-dark btn-sm" type="button" onClick="history.back()">戻る</button>
+  </div>
+  <h3>顧客情報</h2>
   <div class="customerDetail LeftBOX">
     <div class="BOXin customerBasicInformation">
       <div class="customerNam"><?= $customer->menberNumber ?></div>
@@ -30,8 +30,8 @@
                 <div class="editCusInfoTitle" >生年月日</div>
                 <div class="editCusInfoContent" >
                   <div class="inputBirthday">
-                      <input class="formInput inputYear"  type="number" name="birthdayYear"  value="<?= $customer->birthdayYear ?>"  placeholder="年" step="1" min="1900" max="2020" > 年 
-                      <input class="formInput inputMonth" type="number" name="birthdayMonth" value="<?= $customer->birthdayMonth ?>" placeholder="月" step="1" min="1"    max="12" > 月 
+                      <input class="formInput inputYear"  type="number" name="birthdayYear"  value="<?= $customer->birthdayYear ?>"  placeholder="年" step="1" min="1900" max="2020" > 年
+                      <input class="formInput inputMonth" type="number" name="birthdayMonth" value="<?= $customer->birthdayMonth ?>" placeholder="月" step="1" min="1"    max="12" > 月
                       <input class="formInput inputDay"   type="number" name="birthdayDay"   value="<?= $customer->birthdayDay ?>"   placeholder="日" step="1" min="1"    max="31" > 日
                   </div>
                 </div>

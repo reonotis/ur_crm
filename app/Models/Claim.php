@@ -9,5 +9,6 @@ class Claim extends Model
     //
     protected $dates = [
         'limit_date',
+        'complete_date',
     ];
 }

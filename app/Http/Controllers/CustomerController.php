@@ -194,27 +194,32 @@ class CustomerController extends Controller
         return $HSEmails;
     }
 
-
-
-
     /**
      * 顧客情報を編集します
      */
     public function edit($client_id){
-        // 渡されたIDの顧客情報を取得する
-        $query = DB::table('customers');
-            $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
-        $query -> select('customers.*', 'users.name as intrName');
-        $query -> where('customers.id','=',$client_id);
-        $customer = $query -> first();
+        try {
+            if($this->_auth_authority_id >= 7) throw new \Exception("顧客情報を編集する権限がありません");
+            // 渡されたIDの顧客情報を取得する
+            $query = DB::table('customers');
+                $query -> leftJoin('users', 'users.id', '=', 'customers.instructor');
+            $query -> select('customers.*', 'users.name as intrName');
+            $query -> where('customers.id','=',$client_id);
+            $customer = $query -> first();
 
-        // 選択できるインストラクターを取得する
-        $query = DB::table('users');
-        $query -> where ('enrolled_id', '<', '5');
-        $query -> orWhere ('id', '=', $customer->instructor);
-        $users = $query -> get();
+            // 選択できるインストラクターを取得する
+            $query = DB::table('users');
+            $query -> where ('enrolled_id', '<', '5');
+            $query -> orWhere ('id', '=', $customer->instructor);
+            $users = $query -> get();
 
-        return view('customer.edit', compact('customer', 'users'));
+            return view('customer.edit', compact('customer', 'users'));
+
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
 
     /**
@@ -276,6 +281,9 @@ class CustomerController extends Controller
      */
     public function maskCustomerData($customer){
         $customer->strt21 = str_repeat("*",  mb_strlen($customer->strt21));
+        $customer->email = preg_replace('/[^@]/', '*', $customer->email);
+        $customer->tel = preg_replace('/[0-9]/', '*', $customer->tel);
+
         return $customer;
     }
 

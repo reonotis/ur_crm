@@ -54,6 +54,7 @@ class AdminController extends Controller
     }
 
     /**
+     *
      */
     public function customer_complete_course()
     {
@@ -114,7 +115,7 @@ class AdminController extends Controller
     }
 
     /**
-     *
+     * インストラクター規約に同意した顧客をインストラクターに登録する
      */
     public function completeContract($id)
     {
@@ -123,10 +124,14 @@ class AdminController extends Controller
             $CCM = CustomerCourseMapping::find($id);
             $CCM->status = 7;
             $CCM->save();
-            // throw new \Exception("強制修了");
-            $customer = Customer::find($CCM->customer_id);
-            $password = $customer->birthdayYear . $customer->birthdayMonth . $customer->birthdayDay;
 
+            $customer = Customer::find($CCM->customer_id);
+            // ログイン時のパスワードを誕生日に設定
+            $password = $customer->birthdayYear . $customer->birthdayMonth . $customer->birthdayDay;
+            // パスワードが8桁にならなかったらエラー
+            if(strlen($password) <> 8 ) throw new \Exception("パスワードを設定する事ができませんでした。");
+
+            // ユーザー登録
             $User = new User;
             $User->customer_id = $customer->id ;    //    顧客だった時のID
             $User->name        = $customer->name ;
@@ -136,7 +141,6 @@ class AdminController extends Controller
             $User->authority_id= 9 ;
             $User->enrolled_id= 9 ;
             $User->save();
-
 
             DB::table('users_info')
             ->updateOrInsert(
@@ -154,7 +158,26 @@ class AdminController extends Controller
                 ['id' => $User->id ]
             );
 
-            // dd($User);
+            // 顧客にインストラクター登録完了メールを送信する
+            $this->_toCustomer = $customer->email;
+            $data = [
+                "customer_name"  => $customer->name,
+                "mail"  => $customer->email,
+                "password"  => $password,
+                "url"         => url('').'/home'
+            ];
+            // お客様へインストラクター登録のメールを送る
+            Mail::send('emails.registerInstructor_forCustomer', $data, function($message){
+                $message->to($this->_toCustomer)
+                ->cc($this->_toInfo)
+                ->bcc($this->_toReon)
+                ->subject('インストラクターへの登録が完了しました');
+            });
+
+            // TODO メール送信履歴を登録したい
+            // history_send_emails_instructors
+
+            // TODO 初回請求内容を作成
 
             DB::commit();
             session()->flash('msg_success', '契約完了にし、インストラクターの登録を行いました。');

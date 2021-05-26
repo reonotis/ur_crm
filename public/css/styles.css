@@ -471,6 +471,67 @@ border-radius : 10px ;
 
 
 
+
+
+
+
+/* 売り上げ確認 */
+.sales_contents{
+	margin-bottom :50px;
+}
+.sales_contents > .gross_amount_row{
+	width :300px;
+	margin:0 0 20px auto;
+	font-size:1.3em;
+	font-weight: 700;
+	text-align :right;
+	border-bottom :solid 1px var(--info);
+}
+.sales_contents > .gross_amount_row > .gross_amount{
+	width :130px;
+	float: right;
+}
+.sales_contents > .breakdown_title,
+.sales_contents > .breakdown_contents{
+	display: flex;
+	flex-flow: wrap;
+	border-bottom :solid 1px var(--info);
+}
+.breakdown_title{
+	background :var(--info);
+	margin-bottom :10px;
+	color:#fff;
+	font-weight: 700;
+}
+
+.breakdown_names,
+.breakdown_price,
+.breakdown_date{
+	padding :5px 10px 3px;
+}
+
+.breakdown_names{
+	width: 120px;
+}
+
+.breakdown_price{
+	width: 120px;
+}
+
+.breakdown_date{
+	width: 120px;
+}
+
+
+
+
+
+
+
+
+
+
+
 /* 顧客関係 */
 table.customerSearchTable{
 	width:100%;
@@ -599,7 +660,8 @@ table.customerSearchTable{
 .customerBasicInformation{
 	width : var(--customer-sidebar);
 	min-height: 500px;
-	border :solid 1px var(--maincolor);
+	background: #f2f7fc;
+	border :solid 1px var(--info);
 	border-radius: 5px;
 }
 .tabsContentsArea{
