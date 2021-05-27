@@ -28,8 +28,8 @@
 
                         @foreach($date['sales'] as $sale)
                             <div class="breakdown_contents" >
-                                <div class="breakdown_names" >{{ $sale->name }}</div>
-                                <div class="breakdown_price" >{{ number_format($sale->price) }}円</div>
+                                <div class="breakdown_names" >{{ $sale->name }}<span class="name_mr" >　様</span></div>
+                                <div class="breakdown_price" >{{ number_format($sale->price) }} <span class="unit" >円</span></div>
                                 <div class="breakdown_date" >{{ $sale->complete_date->format('m月d日') }}</div>
                             </div>
                         @endforeach

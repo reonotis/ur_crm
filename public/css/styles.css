@@ -513,6 +513,11 @@ border-radius : 10px ;
 .breakdown_names{
 	width: 120px;
 }
+.breakdown_names > .name_mr,
+.unit{
+	font-size: 0.9em;
+	color :#777;
+}
 
 .breakdown_price{
 	width: 120px;
