@@ -338,4 +338,23 @@ class AdminController extends Controller
 
     }
 
+
+    public function sales()
+    {
+        $month = date('Y-m', strtotime(date('Y-m-1').' -1 month'));//先月
+        if(!empty($_GET['month'])) $month = $_GET['month'];
+
+        $claim= Claim::where('claim_date', 'like', $month.'%')
+        ->where('status',5)->get();
+
+
+
+        // dd($claim);
+        return view('admin.sales', compact('claim'));
+
+    }
+
+
+
+
 }

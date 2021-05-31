@@ -48,6 +48,7 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'], function(){
     Route::get('RequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@index')->name('admin.RequestAnnualMembershipFee');
     Route::post('sendRequestAnnualMembershipFee/{id}', 'SendMail\RequestAnnualMembershipFeeController@sendRequestAnnualMembershipFee')->name('admin.sendRequestAnnualMembershipFee');
     Route::get('courseMappingShow/{id}', 'AdminController@courseMappingShow')->name('admin.courseMappingShow');
+    Route::get('sales', 'AdminController@sales')->name('admin.sales');
 
     Route::get('cancelCourseMapping/{id}', 'AdminController@cancelCourseMapping')->name('admin.cancelCourseMapping');
     Route::get('confirmedPaymentCourseFee/{id}', 'AdminController@confirmedPaymentCourseFee')->name('admin.confirmedPaymentCourseFee');
