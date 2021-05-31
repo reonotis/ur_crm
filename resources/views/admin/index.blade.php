@@ -26,7 +26,7 @@
             </div>
             <div class="admin_h5_wrap"><h5 class="admin_h5">売り上げ</h5></div>
             <div class="adminBtnErea">
-                <a href="{{route('admin.sales')}}" class="btn btn-admin">未入金リスト</a>
+                <a href="{{route('admin.sales')}}" class="btn btn-admin">売り上げ確認</a>
             </div>
         </div>
     </div>
