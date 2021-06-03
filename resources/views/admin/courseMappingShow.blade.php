@@ -78,10 +78,10 @@
                             <div class="courseMappingShowContentRow">件名　：　{{ $CCMs->course_name }}受講料のご請求につきまして</div>
                           </div>
                           <div class="cusInfoRow">
-                            <div class="courseMappingShowContentRow">振込金額　：　<input type="number" name="price" value="{{$claim->price}}" class="formInput inputPrice" >円</div>
+                            <div class="courseMappingShowContentRow">請求金額　：　<input type="number" name="price" value="{{$claim->price}}" class="formInput inputPrice" >円</div>
                           </div>
                           <div class="cusInfoRow">
-                            <div class="courseMappingShowContentRow">振込期日　：　<input type="date" name="dayLimit" value="<?php if($claim->limit_date) echo $claim->limit_date->format('Y-m-d') ?>" class="formInput inputDate" ></div>
+                            <div class="courseMappingShowContentRow">支払期日　：　<input type="date" name="dayLimit" value="<?php if($claim->limit_date) echo $claim->limit_date->format('Y-m-d') ?>" class="formInput inputDate" ></div>
                           </div>
                           <textarea class="formInput mailformInput" name="text" >@include('admin.include_requestClaimMail')</textarea>
                           <!-- <textarea class="formInput mailformInput" name="text" ></textarea> -->

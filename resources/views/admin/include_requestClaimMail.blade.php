@@ -9,10 +9,10 @@
 下記に受講料金のご請求内容を記載させて頂きますので
 振込期日までにご入金をお願いいたします。
 
-■振込期日
+■請求期日
 ###limitDay###
 
-■請求金額
+■支払金額
 ###price### 円
 
 @include('email_forms.transferAccount')

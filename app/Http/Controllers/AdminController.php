@@ -354,6 +354,7 @@ class AdminController extends Controller
                 ->bcc($this->_toReon)
                 ->subject('お申込者のご入金確認通知');
             });
+            // TODO　メール送信履歴を登録したい。
 
             DB::commit();
             session()->flash('msg_success', '入金確認済みに更新しました');
