@@ -6,6 +6,8 @@
 </div> -->
 
 
+
+
 <table class="courseHistoryTable">
   <tr>
     <th>購入日</th>
@@ -15,6 +17,8 @@
     <th>確認</th>
   </tr>
   <?php foreach ($CoursePurchaseDetails as $key => $CoursePurchaseDetail) { ?>
+
+
     <tr>
       <td><?= date('Y年 m月 d日',  strtotime($CoursePurchaseDetail->date)) ?></td>
       <!-- <td><a href="{{route('course_detail.display', ['id' => $CoursePurchaseDetail->instructor_courses_id ] )}}" ><?= $CoursePurchaseDetail->course_name ?></a></td> -->
@@ -35,21 +39,20 @@
 
 
 
-
-
-
-
 <?php
   function paymentConfirmation($claimStatus, $complete_date ){
-    if($claimStatus === 0){
-      $comment = "未確認";
-    }else if($claimStatus === 1){
-      $comment = "請求中";
-    }else if($claimStatus === 3){
-      $comment = "キャンセル";
-    }else if($claimStatus === 5){
-      if($complete_date){
-        $comment =  date('Y年 m月 d日',  strtotime($complete_date)) . " に計上済" ;
+    $comment = "";
+    if($claimStatus && $complete_date){
+      if($claimStatus === 0){
+        $comment = "未確認";
+      }else if($claimStatus === 1){
+        $comment = "請求中";
+      }else if($claimStatus === 3){
+        $comment = "キャンセル";
+      }else if($claimStatus === 5){
+        if($complete_date){
+          $comment =  date('Y年 m月 d日',  strtotime($complete_date)) . " に計上済" ;
+        }
       }
     }
     return $comment;
