@@ -27,7 +27,7 @@
 
 
 <div class="LeftBOX">
-  <a href="">
+  <a href="{{route('user.edit',['id'=>$user->id])}}">
     <div class="button BOXin">編集する</div>
   </a>
 </div>
@@ -44,8 +44,8 @@
 <?php
 
   /**
-  * 生年月日を計算し、正確な日付であれば年齢を出力する
-  */
+   * 生年月日を計算し、正確な日付であれば年齢を出力する
+   */
   function getBarthday($Year, $Month, $Day){
     $stringBirthday = "" ;
 

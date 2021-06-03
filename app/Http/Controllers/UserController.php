@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Claim;
+use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\HistorySendEmailsInstructor;
 use App\User;
@@ -16,6 +17,24 @@ use App\Services\CheckClaims;
 
 class UserController extends Controller
 {
+    private $_user;
+    protected $_auth_id ;
+    protected $_auth_authority_id ;
+
+    public function __construct(){
+        $this->middleware(function ($request, $next) {
+            $this->_user = Auth::user();
+            $this->_auth_id = $this->_user->id;
+            $this->_auth_authority_id = $this->_user->authority_id;
+            if($this->_auth_authority_id >= 5){
+                session()->flash('msg_danger', '権限がありません');
+                Auth::logout();
+                return redirect()->intended('/');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(){
         $auth = Auth::user();
 
@@ -115,6 +134,8 @@ class UserController extends Controller
         ->get();
         $claims = CheckClaims::setStatuses($claims);
 
+        $customers = Customer::where('instructor', $id)->get();
+
         $HSEIs = HistorySendEmailsInstructor::select('history_send_emails_instructors.*', 'users.name')
         ->join('users', 'users.id', 'history_send_emails_instructors.user_id')
         ->where('instructor_id', $id)
@@ -122,7 +143,54 @@ class UserController extends Controller
         ->get();
         $HSEIs = $this->changeMailTime($HSEIs);
 
-        return view('user.display', compact('user','claims','HSEIs'));
+        return view('user.display', compact('user','claims','customers','HSEIs'));
+    }
+
+    /**
+     * 編集画面を表示する
+     *
+     */
+    public function edit($id){
+        $query = DB::table('users')
+                    ->select('users.*', 'UI.intr_No', 'UI.tel', 'UI.birthdayYear', 'UI.birthdayMonth', 'UI.birthdayDay', 'UI.zip21', 'UI.zip22', 'UI.pref21', 'UI.addr21', 'UI.strt21')
+                    ->leftJoin('users_info AS UI', 'UI.id', 'users.id')
+                    ->where('users.id','=',$id);
+        $user = $query -> first();
+
+        return view('user.edit', compact('user'));
+    }
+
+    /**
+     * user の更新処理
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
+    public function update(Request $request, $id){
+        try {
+            DB::beginTransaction();
+
+            $User = User::find($id);
+
+            // 更新対象が自分だったら
+            if( $id == $this->_auth_id ){
+                if($request->authority_id > 5) throw new \Exception("自分の権限を下げることはできません");
+            }
+            $User->name = $request->name;
+            $User->email = $request->email;
+            $User->authority_id = $request->authority_id;
+            $User->save();
+
+            DB::commit();
+            session()->flash('msg_success', '更新しました。');
+            return redirect()->action('UserController@display', ['id' => $User->id]);
+            // return redirect()->back();    // 前の画面へ戻る
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
     }
 
     /**
@@ -159,7 +227,7 @@ class UserController extends Controller
         }else{
             $claim->claim_date = '-';
         }
-        
+
         return $claim;
     }
 
@@ -189,7 +257,7 @@ class UserController extends Controller
     }
 
     /**
-     * 
+     *
      */
     public function claimDisplay($id){
         $claim = Claim::select('claims.*', 'users.name')
@@ -200,7 +268,7 @@ class UserController extends Controller
     }
 
     /**
-     * 
+     *
      */
     public function claimComplete(Request $request, $id){
         try {

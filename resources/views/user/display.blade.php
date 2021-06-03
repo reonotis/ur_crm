@@ -35,6 +35,7 @@
             @include('user.include_information')
           </div>
           <div class="tabscontent">
+            @include('user.include_customer')
           </div>
           <div class="tabscontent">
             @include('user.include_mails')

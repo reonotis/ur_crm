@@ -139,17 +139,17 @@ label {
 }
 
 .LeftBOX{
-  display       : flex ;
-  flex-flow     : wrap ;
+	display       : flex ;
+	flex-flow     : wrap ;
 }
 
 .CenterBOX{
-  display       : flex;
-  flex-flow     : wrap;
-  justify-content: space-around;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-around;
 }
 .BOXin{
-  float         : left ;
+	float         : left ;
 }
 
 
@@ -468,8 +468,42 @@ border-radius : 10px ;
 
 
 
+/* イントラ編集画面 */
+.userEdit{
+	width :100%;
+	min-height: 500px;
+	background :#edf3ed;
+	padding :10px;
+	border :solid 1px var(--green);
+	border-radius:4px;
+}
 
 
+.intrEditRow{
+	display       : flex ;
+	flex-flow     : wrap ;
+	margin :8px 0;
+}
+
+.intrEditTitle{
+	float         : left ;
+	width :140px;
+	padding :5px;
+	font-size:13px;
+	font-weight: 800;
+	color:#fff;
+	background:var(--green);
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+.intrEditContent{
+	float         : left ;
+	width :calc(100% - 140px);
+	padding :5px;
+	border-bottom:solid 1px var(--green);
+	font-size: .9em;
+}
 
 
 

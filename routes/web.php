@@ -140,6 +140,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'auth'], function(){
     Route::get('create', 'UserController@create')->name('user.create');
     Route::post('store', 'UserController@store')->name('user.store');
     Route::get('display/{id}', 'UserController@display')->name('user.display');
+    Route::get('edit/{id}', 'UserController@edit')->name('user.edit');
+    Route::post('update/{id}', 'UserController@update')->name('user.update');
     Route::get('searching', 'UserController@searching')->name('user.searching');
     Route::get('newClaim/{id}', 'ClaimController@create')->name('user.newClaim');
     Route::post('sendMailNewClaim/{id}', 'SendMail\NewClaimController@sendMailNewClaim')->name('user.sendMailNewClaim');
