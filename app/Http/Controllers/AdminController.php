@@ -336,16 +336,23 @@ class AdminController extends Controller
             $instructor_name = $user->name;
             $customer_name = $customer->name ;
 
+            $course = CustomerCourseMapping::select('courses.course_name')
+            ->join('instructor_courses','instructor_courses.id','customer_course_mapping.instructor_courses_id')
+            ->join('courses','courses.id','instructor_courses.course_id')
+            ->find($id);
+            $course_name = $course->course_name;
+
             $data = [
                 "instructor_name"  => $instructor_name,
                 "customer_name"  => $customer_name,
+                "course_name"  => $course_name,
             ];
             // お客様へ入金確認のメールを送る
             Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
                 $message->to($this->_toCustomer)
                 ->cc($this->_toInfo)
                 ->bcc($this->_toReon)
-                ->subject('ご入金を確認いたしました');
+                ->subject('ご入金ありがとうございました。');
             });
             // インストラクターへ入金確認のメールを送る
             Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
