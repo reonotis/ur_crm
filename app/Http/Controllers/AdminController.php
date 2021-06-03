@@ -191,54 +191,54 @@ class AdminController extends Controller
 
     }
 
-    public function confirmedPaymentCourseFee($id)
-    {
-        try {
-            DB::beginTransaction();
-            $CCM = CustomerCourseMapping::find($id);
-            $CCM->pay_confirm = 1;
-            $CCM->status = 3;
-            $CCM->save();
+    // public function confirmedPaymentCourseFee($id)
+    // {
+    //     try {
+    //         DB::beginTransaction();
+    //         $CCM = CustomerCourseMapping::find($id);
+    //         $CCM->pay_confirm = 1;
+    //         $CCM->status = 3;
+    //         $CCM->save();
 
-            // 顧客とインストラクターのmail_addresを取得
-            $customer = Customer::find($CCM->customer_id);
-            $this->_toCustomer = $customer->email;
+    //         // 顧客とインストラクターのmail_addresを取得
+    //         $customer = Customer::find($CCM->customer_id);
+    //         $this->_toCustomer = $customer->email;
 
-            $user = User::find($CCM->instructor_id);
-            $this->_toInstructor = $user->email;
-            $instructor_name = $user->name;
-            $customer_name = $customer->name ;
+    //         $user = User::find($CCM->instructor_id);
+    //         $this->_toInstructor = $user->email;
+    //         $instructor_name = $user->name;
+    //         $customer_name = $customer->name ;
 
-            $data = [
-                "instructor_name"  => $instructor_name,
-                "customer_name"  => $customer_name,
-            ];
-            // お客様へ入金確認のメールを送る
-            Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
-                $message->to($this->_toCustomer)
-                ->cc($this->_toInfo)
-                ->bcc($this->_toReon)
-                ->subject('ご入金を確認いたしました');
-            });
+    //         $data = [
+    //             "instructor_name"  => $instructor_name,
+    //             "customer_name"  => $customer_name,
+    //         ];
+    //         // お客様へ入金確認のメールを送る
+    //         Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
+    //             $message->to($this->_toCustomer)
+    //             ->cc($this->_toInfo)
+    //             ->bcc($this->_toReon)
+    //             ->subject('ご入金を確認いたしました');
+    //         });
 
-            // インストラクターへ入金確認のメールを送る
-            Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
-                $message->to($this->_toInstructor)
-                ->cc($this->_toInfo)
-                ->bcc($this->_toReon)
-                ->subject('お申込者のご入金確認通知');
-            });
-            // throw new \Exception("強制修了");
+    //         // インストラクターへ入金確認のメールを送る
+    //         Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
+    //             $message->to($this->_toInstructor)
+    //             ->cc($this->_toInfo)
+    //             ->bcc($this->_toReon)
+    //             ->subject('お申込者のご入金確認通知');
+    //         });
+    //         // throw new \Exception("強制修了");
 
-            DB::commit();
-            session()->flash('msg_success', '入金確認を完了にしました。');
-            return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
-        } catch (\Throwable $e) {
-            DB::rollback();
-            session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->back();    // 前の画面へ戻る
-        }
-    }
+    //         DB::commit();
+    //         session()->flash('msg_success', '入金確認を完了にしました。');
+    //         return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
+    //     } catch (\Throwable $e) {
+    //         DB::rollback();
+    //         session()->flash('msg_danger',$e->getMessage() );
+    //         return redirect()->back();    // 前の画面へ戻る
+    //     }
+    // }
 
     public function cancelCourseMapping($id)
     {
@@ -327,8 +327,36 @@ class AdminController extends Controller
             $claim->complete_date = $request->complete_date;
             $claim->save();
 
+            // 顧客とインストラクターのmail_addresを取得
+            $customer = Customer::find($CCM->customer_id);
+            $this->_toCustomer = $customer->email;
+
+            $user = User::find($CCM->instructor_id);
+            $this->_toInstructor = $user->email;
+            $instructor_name = $user->name;
+            $customer_name = $customer->name ;
+
+            $data = [
+                "instructor_name"  => $instructor_name,
+                "customer_name"  => $customer_name,
+            ];
+            // お客様へ入金確認のメールを送る
+            Mail::send('emails.confirmedPaymentCourseFee_forCustomer', $data, function($message){
+                $message->to($this->_toCustomer)
+                ->cc($this->_toInfo)
+                ->bcc($this->_toReon)
+                ->subject('ご入金を確認いたしました');
+            });
+            // インストラクターへ入金確認のメールを送る
+            Mail::send('emails.confirmedPaymentCourseFee_forInstructor', $data, function($message){
+                $message->to($this->_toInstructor)
+                ->cc($this->_toInfo)
+                ->bcc($this->_toReon)
+                ->subject('お申込者のご入金確認通知');
+            });
+
             DB::commit();
-            session()->flash('msg_success', '受領済みに更新しました');
+            session()->flash('msg_success', '入金確認済みに更新しました');
             // return redirect()->action('CustomerController@display', ['id' => $CCM->customer_id, 'a' => 1]);
         } catch (\Throwable $e) {
             DB::rollback();
