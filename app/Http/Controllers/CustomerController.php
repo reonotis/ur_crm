@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\CheckCustomerData;
+use Mail;
 
 use App\Http\Controllers\Controller,
     Session;
@@ -26,6 +27,8 @@ class CustomerController extends Controller
     private $_user;                 //Auth::user()
     private $_auth_id ;             //Auth::user()->id;
     private $_auth_authority_id ;   //権限
+    private $_toCustomer ;
+    private $_mailTitle ;
 
     public function __construct(){
         $this->middleware(function ($request, $next) {
@@ -258,7 +261,6 @@ class CustomerController extends Controller
         $customer->hidden_flag  = $hidden_flag ;
         $customer->save();
 
-
         return redirect()->action('CustomerController@display', ['id' => $id]);
     }
 
@@ -285,6 +287,75 @@ class CustomerController extends Controller
         $customer->tel = preg_replace('/[0-9]/', '*', $customer->tel);
 
         return $customer;
+    }
+
+
+    /**
+     * メール送信画面を表示します。
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function sendEmail($id){
+        try {
+            $customer = Customer::find($id);
+
+            return view('email_forms.sendEmailCustomer', compact('customer') );
+
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+
+    }
+
+    /**
+     * メール送信画面を表示します。
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function sendMail(Request $request, $id){
+        try {
+            DB::beginTransaction();
+            $customer = Customer::find($id);
+            $this->_toCustomer = $customer->email;
+            $this->_mailTitle= $request->title;
+
+            // 権限がなければ自分の顧客じゃないかを確認
+            if( $this->_auth_authority_id >= 7 ){
+                if($customer->instructor <> $this->_auth_id){
+                    throw new \Exception("不正なメール送信を検知しました");
+                }
+
+            }
+            $text = $request->text;
+            // 依頼メールの送信
+            $data = [
+                "text"  => $text,
+            ];
+            Mail::send('emails.mailText', $data, function($message){
+                $message->to($this->_toCustomer)
+                ->subject($this->_mailTitle);
+            });
+
+            // メール送信履歴登録
+            DB::table('history_send_emails')->insert([[
+                'customer_id'   => $id,
+                'user_id'       => $this->_auth_id,
+                'title'         => $this->_mailTitle,
+                'text'          => $text
+            ]]);
+
+            DB::commit();
+            session()->flash('msg_success', 'メールを送信しました。');
+            return redirect()->action('CustomerController@display',['id'=>$id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back();    // 前の画面へ戻る
+        }
+
     }
 
 }

@@ -75,6 +75,8 @@ Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('search', 'CustomerController@search')->name('customer.search');
     Route::get('searching', 'CustomerController@searching')->name('customer.searching');
     Route::get('display/{id}', 'CustomerController@display')->name('customer.display');
+    Route::get('sendEmail/{id}', 'CustomerController@sendEmail')->name('customer.sendEmail');
+    Route::post('sendMail/{id}', 'CustomerController@sendMail')->name('customer.sendMail');
 });
 
 
