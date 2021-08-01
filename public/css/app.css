@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);
 
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
@@ -8,7 +9,14 @@
  */
 
 :root {
-	--maincolor:var(--blue);
+	--mainColor:var(--blue);
+	--mainColor_string:var(--light);
+	--mainColor2:var(--cyan);
+	--mainColor2_string:var(--light);
+	--mainColor3: #e9f5ff;
+	--mainColor3_string:var(--blue);
+	--editColor:var(--green);
+	--editColor_string:var(--white);
   --blue: #3490dc;
   --indigo: #6574cd;
   --purple: #9561e2;
@@ -18,7 +26,7 @@
   --yellow: #ffed4a;
   --green: #38c172;
   --teal: #4dc0b5;
-  --cyan: #6cb2eb;
+  --cyan: #82c2f7;
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
@@ -409,7 +417,7 @@ h3,
   font-size: 1.575rem;
   margin:8px 10px 15px;
   padding: 5px 10px ;
-  border-bottom: solid 1px var(--maincolor);
+  border-bottom: solid 1px var(--mainColor);
 }
 
 h4,
@@ -418,7 +426,7 @@ h4,
   margin-left: 10px;
   padding: 5px 10px ;
   margin-bottom: 15px;
-  border-left: solid 5px var(--maincolor);
+  border-left: solid 5px var(--mainColor);
 }
 
 h4>a {
@@ -427,10 +435,18 @@ h4>a {
   float: right;
 }
 
-
 h5,
 .h5 {
-  font-size: 1.125rem;
+  padding-left: 15px;
+  margin: 25px 0px 5px;
+  height: 35px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--mainColor);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
 }
 
 h6,
@@ -3436,7 +3452,7 @@ input[type=button].btn-block {
   color: #212529;
   text-align: left;
   list-style: none;
-  background-color: #fff;
+  background-color: var(--mainColor);
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
@@ -3604,7 +3620,9 @@ input[type=button].btn-block {
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 0.25rem 1.5rem;
+  height: 50px;
+  padding: 0.25rem 1.5rem !important;
+  line-height: 40px;
   clear: both;
   font-weight: 400;
   color: #212529;
@@ -4448,7 +4466,7 @@ input[type=button].btn-block {
 }
 
 .nav-link {
-  display: block;
+  /* display: block; */
   padding: 0.5rem 1rem;
 }
 

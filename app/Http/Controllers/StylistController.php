@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+// use App\Models\CustomerCourseMapping;
 use Illuminate\Http\Request;
+use App\User;
 
-class SettingController extends Controller
+class StylistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,9 +15,10 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
-        $user = \Auth::user();
-        return view('setting.index',compact('user'));
+
+        $users = User::select()->get();
+
+        return view('stylist.index', compact('users'));
     }
 
     /**
@@ -51,15 +54,6 @@ class SettingController extends Controller
     }
 
     /**
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function changeEmail()
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -82,14 +76,6 @@ class SettingController extends Controller
         //
     }
 
-    /**
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function changePassword()
-    {
-        //
-    }
     /**
      * Remove the specified resource from storage.
      *

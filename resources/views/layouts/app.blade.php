@@ -5,7 +5,7 @@
 
     $session_all = Session::all();
 
-    
+
     function console_log( $data ){
         echo '<script>';
         echo 'console.log('. json_encode( $data ) .')';
@@ -33,6 +33,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>	<!-- 住所入力 -->
+
 
 
 
@@ -74,14 +75,26 @@
         </div>
         <ul class="navi-links">
             <li><a href="{{route('home')}}">TOPお知らせ</a></li>
-            <?php if(Auth::user()->authority_id < 7 ) { ?>
-                <li><a href="{{route('admin.index')}}">管理画面</a></li>
-            <?php }?>
-            <li><a href="{{route('sales.list')}}">売上実績</a></li>
-            <li><a href="{{route('customer.search')}}">顧客検索</a></li>
-            <li><a href="{{route('courseSchedule.index')}}">申請登録</a></li>
-            <li><a href="{{route('schedule.list')}}">スケジュール</a></li>
-            <!-- <li><a href="">行動履歴</a></li> -->
+            <li><a href="{{route('report.index')}}">日報</a></li>
+
+            <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    顧客<span class="caret"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{route('customer.search')}}" >検索</a>
+                    <a class="dropdown-item" href="{{route('customer.create')}}" >登録</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    スタイリスト<span class="caret"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{route('stylist.index')}}">検索</a>
+                    <a class="dropdown-item" href="{{route('stylist.index')}}">登録</a>
+                </div>
+            </li>
             <li><a href="{{route('setting.index')}}">設定</a></li>
             <li>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
