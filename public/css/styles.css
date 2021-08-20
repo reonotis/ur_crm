@@ -10,6 +10,11 @@
 	--nav-height: 60px;
 }
 
+
+
+h5.edit{
+	background : var(--green);
+}
 navi{
 	display: flex;
 	padding: 0 50px;
@@ -201,7 +206,13 @@ label {
 	font-size :0.9em;
 	display:inline-block;
 }
-
+.modalText{
+	color :var(--mainColor);
+	cursor: pointer;
+}
+.modalText:hover{
+	color :var(--mainColor);
+}
 
 
 
@@ -238,7 +249,17 @@ label {
 	width: 48%;
 	margin-right: 2%;
 }
-
+.inputSex{
+    height: 100%;
+    align-items: center;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: start;
+}
+.inputSex label {
+    margin: 0 22px 0 0;
+    display: inline-block;
+}
 .inputUnits{
 	width : 200px;
 	display       : flex;
@@ -294,7 +315,7 @@ label {
 .inputZip{
 	width :80px;
 }
-.inputAddrs{
+.inputAddress{
 	margin-bottom :5px;
 	width : 250px;
 	display       : flex;
@@ -305,8 +326,11 @@ label {
 .inputAddr{
 	width : 120px;
 }
-.inputStrt{
+.inputStreet{
 	width : 100%;
+}
+.inputShop{
+	width : 200px;
 }
 .inputDate{
 	margin-bottom :5px;
@@ -393,32 +417,174 @@ input:disabled {
 
 
 
+/* 日報 */
+.report_index_area{
+	background : var(--mainColor3);
+	width: 100%;
+	padding: 30px 15px;
+    display: flex;
+}
+.report_index_report_area{
+	width: 270px;
+	margin-right: 15px;
+	padding: 10px;
+    background-color: #fff;
+    border: 1px solid var(--mainColor);
+    border-radius: 1rem;
+}
+.report_index_contents_area{
+	width: calc(100% - 270px);
+}
+
+.report_index_register_customer_area{
+    position: relative;
+	margin: 0 0 30px;
+	padding:0 30px 30PX;
+    background-color: #fff;
+    border: 1px solid var(--mainColor);
+    border-radius: 1rem;
+}
+
+
+
+
+
+.selectUsersInput {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+.selectUsersLabel {
+    display: inline-block;
+	/* background: var(--mainColor2); */
+    padding: 0.5rem 1rem;
+	margin: 10px 5px 10px 0px ;
+	border : solid 1px var(--mainColor);
+    border-radius: 5px;
+    transition: all .2s;
+}
+.selectUsersInput:checked + .selectUsersLabel {
+    background: var(--mainColor);
+    color: #fff;
+}
+.selectUsersInput:focus + .selectUsersLabel {
+    outline-color: var(--mainColor);
+}
+
+
+
+
+
+
 
 /* customer */
 .name_read{
 	font-size: 0.5em;
 }
-.customer_navigation{
-	max-width: 120px;
-	height: 50px;
-	line-height: 50px;
-	margin: 0 2px 0 0;
-	padding: 0 10px;
-	text-align: center;
-	background: var(--mainColor2);
+
+.customer_show_area{
+    position: relative;
+	width: 98%;
+	/* max-width: 1600px; */
+	margin: 0 auto;
+	padding: 10px;
+	background: var(--mainColor3);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    display: flex;
+}
+.customer_show_customer_area{
+	width: 200px;
+	min-height: 500px;
+	background: #fff;
+	margin-right: 10px;
+}
+.customer_show_customer_img{
+	width: 180px;
+	height: 180px;
+	margin: 9px auto;
+	background: var(--mainColor3);
+}
+.customer_show_customer_img > img{
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+}
+.customer_show_customer_member_number,
+.customer_show_customer_name,
+.customer_show_customer_birthday,
+.customer_show_customer_staff,
+.customer_show_customer_shop,
+.customer_show_customer_sex{
+	width: calc(100% - 10px );
+	display: inline-block;
+	padding: 3px 6px ;
+	margin: 5px;
+	border-bottom:solid 1px var(--gainsboro);
+}
+.customer_show_customer_name{
+	line-height: 100%;
+}
+
+.customer_show_contents_area{
+	width: calc(100% - 200px);
+}
+.customer_show_basicData_area,
+.customer_show_visitHistory_area{
+    position: relative;
+	margin: 15px 0 40px;
+	padding: 28px 10px 10px;
+	background: #fff;
+}
+.customer_show_contents_title{
+    position: absolute;
+	width: calc(100% - 20px) ;
+	top: -15px;
+	padding: 5px 10px ;
+	color: #fff;
+	background: var(--mainColor);
+	border-radius: 5px;
+}
+.customer_show_contents_title_btn{
+	font-size:0.8em;
+	padding: 2px 15px;
+	float: right;
+	background: #fff;
+	color: var(--mainColor);
 	border: solid 1px var(--mainColor);
-	color: var(--mainColor2_string);
+	border-radius: 15px;
 	transition: 0.2s;
 }
-.customer_navigation.active{
-	background: var(--mainColor3);
-	color: var(--mainColor3_string);
+.customer_show_contents_title_btn:hover{
+	background: var(--mainColor);
+	color:  #fff;
 }
-a > .customer_navigation:hover{
-    text-decoration: none;
-	background: var(--mainColor3);
-	color: var(--mainColor3_string);
+
+
+.customerShow_basicDataArea_row{
+    display: flex;
+	margin-bottom: 3px;
 }
+.customerShow_basicDataArea_title{
+	width: 140px;
+	padding: 3px 5px;
+    font-weight: bold;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	background: var(--mainColor2);
+	color: var(--mainColor2_string);
+	border-bottom: solid 1px var(--mainColor2);
+}
+.customerShow_basicDataArea_content{
+	width: calc(100% - 140px);
+	padding: 3px 5px;
+	border-bottom: solid 1px var(--mainColor2);
+}
+
+
+
+
+
 
 .editRow_01{
 	margin-bottom: 5px;
@@ -443,6 +609,64 @@ a > .customer_navigation:hover{
 	padding: 10px;
 	width: calc(100% - 160px);
 }
+.customer_img{
+	width: 100px;
+    height: 130px;
+}
+.customer_img>img{
+    width: 100px;
+    height: 130px;
+	object-fit: cover;
+}
+
+
+.editRow_02{
+	margin-bottom: 5px;
+	border-bottom: solid 1px var(--editColor);
+	display: flex;
+	flex-flow: wrap;
+}
+.editTitle_02{
+	width: 160px;
+	padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+	background: var(--editColor);
+	color: var(--white);
+	border: solid 1px var(--editColor);
+	float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.editContent_02{
+	padding: 10px;
+	width: calc(100% - 160px);
+}
+.visHisImgs{
+	width: 100%;
+	display: flex;
+	flex-flow: wrap;
+	justify-content: space-around;
+}
+.visHisImg{
+	float: left;
+	padding: 3px;
+	text-align: center;
+	width: calc(100% / 3 - 5px);
+}
+.visHisImg:nth-child(n + 2){
+	border-left: solid 1px var(--editColor);
+}
+.visHisImgAngleName{
+	width: 100%;
+	margin-bottom: 5px;
+	border-bottom: solid 3px var(--editColor);
+}
+.visHisImg > .customer_img{
+	margin: 0 auto;
+}
+
 
 
 
@@ -471,34 +695,29 @@ a > .customer_navigation:hover{
 .tableClass_001 tr:nth-child(odd) td {
 	background: #ecf5fb;
 }
-
-
 .tableClass_001 th.id,
 .tableClass_001 td.id{
-	/* color: var(--gray); */
 	font-size: 0.8em;
 }
 
-
-
+/* 顧客検索・顧客詳細画面 */
 .tableClass_002 {
 	width: 100%;
 }
 .tableClass_002 th{
-	max-width: 100px;
+	width: 150px;
 	text-align: center;
-	padding: 10px ;
-	font-size: 1.2em;
+	padding: 10px 5px;
+	font-size: 1em;
 	background: var(--mainColor2);
 	color: var(--mainColor2_string);
 	border-bottom: solid 1px #fff;
 }
 .tableClass_002 td{
-	padding: 15px 10px ;
+	width: calc(100% - 200px);
+	padding: 5px 10px ;
 	border-bottom: solid 1px var(--mainColor2);
 }
-
-
 
 /* 日報の来店顧客一覧に使用 */
 .tableClass_003 {
@@ -517,6 +736,88 @@ a > .customer_navigation:hover{
 	border-bottom: solid 1px var(--mainColor2);
 }
 
+/* 顧客登録に使用 */
+.tableClass_004 {
+	width: 100%;
+}
+.tableClass_004 th{
+	width: 150px;
+	text-align: center;
+	padding: 10px 5px  ;
+	font-size: 1em;
+	background: var(--green);
+	color: var(--mainColor2_string);
+	border-bottom: solid 1px #fff;
+}
+.tableClass_004 td{
+	width: calc(100% - 200px);
+	padding: 5px 10px ;
+	border-bottom: solid 1px var(--green);
+}
+
+/* 来店履歴に使用 */
+.tableClass_005 {
+	width: 100%;
+}
+.tableClass_005 th{
+	padding: 5px ;
+	font-size: 1em;
+	background: var(--mainColor2);
+	color: var(--mainColor2_string);
+	border-bottom: solid 1px #fff;
+}
+.tableClass_005 td{
+	padding: 5px ;
+	border-bottom: solid 1px var(--mainColor2);
+}
+.tableClass_005 th.id,
+.tableClass_005 td.id{
+	font-size: 0.8em;
+}
+
+/* スタイリスト一覧に使用 */
+.tableClass_006 {
+	width: 100%;
+	border-spacing: 0px 2px;
+    border-collapse: separate;
+	background: var(--info);
+}
+.tableClass_006 tr{
+	border-bottom: solid 1px var(--mainColor);
+	background: #fff;
+}
+.tableClass_006 th{
+	padding: 10px ;
+	font-size: 1.2em;
+	background: var(--info);
+	color: #fff;
+}
+.tableClass_006 td{
+	padding: 10px ;
+}
+
+/* スタイリスト詳細に使用 */
+.tableClass_007 {
+	width: 100%;
+	border-spacing: 0px 6px;
+    border-collapse: separate;
+}
+.tableClass_007 th{
+	width: 150px;
+	text-align: center;
+	padding: 10px 5px;
+	font-size: 1em;
+	background: var(--mainColor2);
+	color: var(--mainColor2_string);
+	border-bottom: solid 1px var(--mainColor2);
+}
+.tableClass_007 td{
+	width: calc(100% - 200px);
+	padding: 5px 10px ;
+	border-bottom: solid 1px var(--mainColor2);
+}
+
+
 
 
 
@@ -525,41 +826,31 @@ a > .customer_navigation:hover{
 
 
 /* 設定画面 */
-.settingNavigation{
-	text-align: center;
+.setting_navigation_area{
+	background : var(--mainColor3);
+	width: 100%;
 }
-
-#settingNavigation{
-	list-style: none;
-	overflow: hidden;
-	display: inline-block;
-	margin: 0 auto;
+.setting_navigation_area > .LeftBOX{
+	max-width: 800px;
+	margin: 0 auto 10px;
 }
-#settingNavigation li{
+.setting_navigation{
+	height: 50px;
+	line-height: 50px;
+	margin: 0 2px 0 0;
+	padding: 0 10px;
 	text-align: center;
-	padding :10px;
-	margin-right: 5px;
-	float: left;
 	background: var(--mainColor2);
-	border: solid 2px var(--mainColor2);
+	border: solid 1px var(--mainColor);
 	color: var(--mainColor2_string);
 	transition: 0.2s;
 }
-#settingNavigation a:last-child>li {
-	margin-right: 0;
-}
-#settingNavigation li.on{
-	background: var(--mainColor);
-	color: var(--mainColor_string);
-	border: solid 2px var(--mainColor);
-}
-#settingNavigation li a{
-	text-decoration: none;
-	font-weight: bold;
-	padding: 5px 10px;
-}
-#settingNavigation li:hover{
-	color: var(--mainColor3_string);
+.setting_navigation.active{
 	background: var(--mainColor3);
+	color: var(--mainColor3_string);
 }
-
+a > .setting_navigation:hover{
+    text-decoration: none;
+	background: var(--mainColor3);
+	color: var(--mainColor3_string);
+}

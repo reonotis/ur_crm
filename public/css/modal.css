@@ -1,0 +1,37 @@
+.modalBackground{
+	position: fixed;
+	width: 100% ;
+	height: 100%;
+	z-index: 1000;
+	background: #00000066;
+}
+.modalContent{
+	width: 95%;
+	max-width: 600px;
+	margin: 50px auto;
+	padding: 50px;
+	background: var(--mainColor3);
+	border: solid 1px #666;
+	border-radius: 30px;
+
+}
+.modalTextArea{
+	padding: 0 0 50px;
+}
+
+.modalClose{
+	width: 200px;
+	margin: 0 auto;
+	padding: 10px 20px;
+	text-align: center;
+	background: var(--mainColor);
+	border: solid 1px var(--mainColor);
+	color: var(--mainColor_string);
+	border-radius: 30px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.modalClose:hover{
+	background: var(--mainColor_string);
+	color: var(--mainColor);
+}
