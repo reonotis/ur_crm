@@ -33,8 +33,8 @@
                             </tr>
                         @endforeach
                     </table>
+                    {{ $customers->appends(request()->input())->links() }}
 
-        {{ $customers->links() }}
                 </div>
             </div>
         </div>

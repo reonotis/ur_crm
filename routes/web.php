@@ -40,6 +40,9 @@ Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
 // スタイリスト関係
 Route::group(['prefix'=>'stylist', 'middleware'=>'auth'], function(){
     Route::get('index', 'StylistController@index')->name('stylist.index');
+    Route::get('show/{id}', 'StylistController@show')->name('stylist.show');
+    Route::get('edit/{id}', 'StylistController@edit')->name('stylist.edit');
+    Route::post('update/{id}', 'StylistController@update')->name('stylist.update');
 });
 
 // 顧客関係
@@ -48,10 +51,23 @@ Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
     Route::get('searching', 'CustomerController@searching')->name('customer.searching');
     Route::get('create', 'CustomerController@create')->name('customer.create');
     Route::get('show/{id}', 'CustomerController@show')->name('customer.show');
-    Route::get('visit_history/{id}', 'CustomerController@visit_history')->name('customer.visit_history');
     Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
     Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
+    Route::post('store', 'CustomerController@store')->name('customer.store');
+    Route::get('delete/{id}', 'CustomerController@delete')->name('customer.delete');
 });
+
+// 来店履歴関係
+Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
+    Route::get('register/{id}', 'VisitHistoryController@register')->name('VisitHistory.register');
+    Route::get('edit', 'VisitHistoryController@edit')->name('VisitHistory.edit');
+    Route::get('updates/{id}', 'VisitHistoryController@updates')->name('VisitHistory.updates');
+    Route::get('single_edit/{id}', 'VisitHistoryController@single_edit')->name('VisitHistory.single_edit');
+    Route::get('destroy/{id}', 'VisitHistoryController@destroy')->name('VisitHistory.destroy');
+    Route::get('delete/{id}/angle/{angle}', 'VisitHistoryController@delete')->name('VisitHistory.delete');
+    Route::post('single_update/{id}', 'VisitHistoryController@single_update')->name('VisitHistory.single_update');
+});
+
 
 // 設定関連
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
@@ -59,4 +75,8 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('changeEmail', 'SettingController@changeEmail')->name('setting.changeEmail');
     Route::get('changePassword', 'SettingController@changePassword')->name('setting.changePassword');
 });
+
+
+
+
 

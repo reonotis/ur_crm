@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\VisitHistory;
 use App\User;
 use App\Services\CheckData;
 use Illuminate\Http\Request;
@@ -35,18 +36,35 @@ class ReportController extends Controller
      */
     public function index()
     {
-        //
-        $customers = Customer::select('customers.*', 'users.name as user_name')
-        ->whereDate('customers.created_at', date('Y-m-d'))
-        // ->whereNotNull('staff_id')
-        ->where('register_flow', 1)
-        ->where('customers.shop_id', $this->_user->shop_id)
-        ->leftJoin('users', 'users.id', '=', 'customers.staff_id')
+
+        $visit_histories = VisitHistory::select('visit_histories.*', 'customers.f_name', 'customers.l_name' , 'users.name', 'menus.menu_name' )
+        ->where('visit_histories.shop_id', $this->_user->shop_id)
+        ->where('vis_date', date('Y-m-d'))
+        ->where('visit_histories.delete_flag', 0)
+        ->join('customers', 'customers.id', '=', 'visit_histories.customer_id' )
+        ->leftJoin('users', 'users.id', '=', 'visit_histories.staff_id' )
+        ->leftJoin('menus', 'menus.id', '=', 'visit_histories.menu_id' )
         ->get();
 
+        $customers = Customer::select('customers.*', 'users.name as user_name', 'visit_histories.id as visit_history_id')
+        ->whereDate('customers.created_at', date('Y-m-d'))
+        ->where('customers.register_flow', 1)
+        ->where('customers.delete_flag', 0)
+        ->where('customers.shop_id', $this->_user->shop_id)
+        // ->leftJoin('visit_histories', 'visit_histories.customer_id', '=', 'customers.id')
+        // 来店履歴を作成していたら削除できないという判定をするためにJOIN
+
+        ->leftJoin('visit_histories', function ($join) {
+            $join->on('customers.id', '=', 'visit_histories.customer_id')
+                ->where('visit_histories.delete_flag', '0');
+        })
+
+        ->leftJoin('users', 'users.id', '=', 'customers.staff_id')
+        ->get();
         $customers = CheckData::set_sex_names($customers);
 
-        return view('report.index',compact('customers'));
+
+        return view('report.index',compact('visit_histories', 'customers'));
     }
 
     /**
@@ -57,12 +75,12 @@ class ReportController extends Controller
     public function set_stylist($id)
     {
         try {
-
             $customer = Customer::find($id);
             if($customer->staff_id) throw new \Exception("このお客様には既にスタイリストが設定されています。");
-            $users = User::where('shop_id', $customer->shop_id)->get();
-            return view('report.set_stylist',compact('customer', 'users' ));
+            $users = User::where('shop_id', $customer->shop_id)
+            ->where('authority_id', '>=', 3 )->where('authority_id', '<=', 7 )->get();
 
+            return view('report.set_stylist',compact('customer', 'users' ));
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -82,6 +100,18 @@ class ReportController extends Controller
             $customer = Customer::find($id);
             $customer->staff_id = $request->staff_id;
             $customer->save();
+
+            // 来店履歴を登録する
+            if( $request->stylistAndVisitHistory){
+                VisitHistory::insert([[
+                    'vis_date'    => date('Y-m-d'),
+                    'vis_time'    => date('H:i'),
+                    'customer_id' => $id,
+                    'shop_id'     => $customer->shop_id,
+                    'staff_id'    => $request->staff_id,
+                    ]
+                ]);
+            }
 
             // throw new \Exception("強制終了");
             DB::commit();

@@ -34,7 +34,21 @@ class MedicalRecordController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            // 顧客番号を生成する
+            list($TOKKAI_shop, $TOKKAI_no) = $this->_getMemberNumber($request);
+            $member_number = $TOKKAI_shop . $TOKKAI_no;
+
+            if( $request->question1){
+                $question1 = implode(',', $request->question1);
+            }else{
+                $question1 = NULL;
+            }
+
             Customer::insert([[
+                'TOKKAI_shop' => $TOKKAI_shop,
+                'TOKKAI_no'   => $TOKKAI_no,
+                'member_number' => $member_number,
                 'f_name'      => $request->f_name,
                 'l_name'      => $request->l_name,
                 'f_read'      => $request->f_read,
@@ -51,7 +65,7 @@ class MedicalRecordController extends Controller
                 'pref21'      => $request->pref21,
                 'addr21'      => $request->addr21,
                 'strt21'      => $request->strt21,
-                'question1'   => implode(',', $request->question1),
+                'question1'   => $question1,
                 'comment'     => $request->comment,
                 'register_flow'=> 1,
                 ]
@@ -70,6 +84,15 @@ class MedicalRecordController extends Controller
             return redirect()->back();    // 前の画面へ戻る
         }
     }
+
+    public function _getMemberNumber($request)
+    {
+        $shop = Shop::find($request->shop_id);
+        $customer = Customer::orderBy('TOKKAI_no', 'desc')->first();
+        $TOKKAI_shop = $shop->tokkai_shop;
+        return [$TOKKAI_shop, $customer->TOKKAI_no + 1];
+    }
+
 
     /**
      * Show the form for creating a new resource.

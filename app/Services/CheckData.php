@@ -6,25 +6,19 @@ class CheckData
 {
 
     public static function set_authority_names($data){
-        if( $data->authority_id == 1 ){
-            $data->authority_id == $data->authority_name = "オーナー";
-        }else if( $data->authority_id == 2 ){
-            $data->authority_id == $data->authority_name = "管理者";
-        }else if( $data->authority_id == 3 ){
-            $data->authority_id == $data->authority_name = "マネージャー";
-        }else if( $data->authority_id == 4 ){
-            $data->authority_id == $data->authority_name = "店長";
-        }else if( $data->authority_id == 5 ){
-            $data->authority_id == $data->authority_name = "トップスタイリスト";
-        }else if( $data->authority_id == 6 ){
-            $data->authority_id == $data->authority_name = "ミドルスタイリスト";
-        }else if( $data->authority_id == 7 ){
-            $data->authority_id == $data->authority_name = "スタイリスト";
-        }else if( $data->authority_id == 8 ){
-            $data->authority_id == $data->authority_name = "レセプション";
-        }else if( $data->authority_id == 9 ){
-            $data->authority_id == $data->authority_name = "なし";
+        foreach($data as $datum){
+            $datum = CheckData::set_authority_name($datum);
         }
+        return $data;
+    }
+    public static function set_authority_name($data){
+        $authorityList = config('ur.authorityList');
+        foreach($authorityList as $authority){
+            if($data->authority_id == $authority['authorityId'] ){
+                $data->authority_name = $authority['authorityName'];
+            }
+        }
+
         return $data;
     }
 

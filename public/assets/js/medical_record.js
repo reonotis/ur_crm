@@ -34,6 +34,7 @@ function registerConfilm(){
 
     return true;
 }
+
 function validation_email(){
     if( email.value== '' ){  // 日付か時間が入力されていなかったら
         errMSG = errMSG  + "・メールアドレスは必須入力です。\n"

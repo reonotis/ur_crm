@@ -57,6 +57,8 @@ class SettingController extends Controller
     public function changeEmail()
     {
         //
+        $user = \Auth::user();
+        return view('setting.index',compact('user'));
     }
 
     /**
@@ -89,6 +91,8 @@ class SettingController extends Controller
     public function changePassword()
     {
         //
+        $user = \Auth::user();
+        return view('setting.index',compact('user'));
     }
     /**
      * Remove the specified resource from storage.

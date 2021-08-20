@@ -1,3 +1,8 @@
+<?php
+// dd($shops);
+// $json_shops = json_encode($shops);
+?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -36,7 +41,7 @@
                             <tr>
                                 <th>店舗</th>
                                 <td>
-                                    <select class="formInput" name="shop_id" onchange="aaa()" id="check" >
+                                    <select class="formInput" name="shop_id" onchange="change_shops()" id="shop_id" >
                                         <option value="" >選択しない</option>
                                         @foreach($shops as $shop)
                                             <option value="<?= $shop->id ?>" <?php if(\Auth::user()->shop_id == $shop->id)echo" selected"; ?> ><?= $shop->shop_name ?></option>
@@ -47,10 +52,10 @@
                             <tr>
                                 <th>担当</th>
                                 <td>
-                                    <select class="formInput" name="staff_id" >
+                                    <select class="formInput" name="staff_id" id="staff_id" >
                                         <option value="" >選択しない</option>
-                                        @foreach($shops as $shop)
-                                            <option><?= $shop->shop_name ?></option>
+                                        @foreach($users as $user)
+                                            <option value="<?= $user->id ?>" ><?= $user->name ?></option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -80,11 +85,11 @@
                                         <input class="formInput inputZip" type="text" name="zip21" placeholder="150" >-
                                         <input class="formInput inputZip" type="text" name="zip22" placeholder="0022" >
                                     </div>
-                                    <div class="inputAddrs">
+                                    <div class="inputAddress">
                                         <input class="formInput inputAddr" type="text" name="pref21" placeholder="東京都" >
                                         <input class="formInput inputAddr" type="text" name="addr21" placeholder="渋谷区" >
                                     </div>
-                                    <input class="formInput inputStrt" type="text" name="strt21" placeholder="恵比寿南1丁目マンション名1101号室" >
+                                    <input class="formInput inputStreet" type="text" name="strt21" placeholder="恵比寿南1丁目マンション名1101号室" >
                                     <!-- この機能まだ -->
                                 </td>
                             </tr>
@@ -99,14 +104,35 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection
 
 
 
 <script>
-    function aaa(){
-        console.log(1);
+    let users = JSON.parse('<?= $users; ?>');
+
+    function change_shops(){
+        const shops = document.getElementById('shop_id');
+        const usersSelectList = document.getElementById( "staff_id" ) ;
+        const length = usersSelectList.length ;
+
+        // セレクトボックスから「選択しない」以外削除
+        for (let index = 1 ; index < length ; index++ ) {
+            usersSelectList.remove( 1 ) ;
+        }
+
+        // スタイリストをセット
+        for (let index = 0 ; index <users.length ; index++ ) {
+            // 選択していた場合
+            if(shops.value){
+                if(users[index]['shop_id']== shops.value){
+                    usersSelectList.add( new Option( users[index]['name'], users[index]['id'] ) ) ;
+                }
+            }else{
+            // 選択していなかった場合
+                usersSelectList.add( new Option( users[index]['name'], users[index]['id'] ) ) ;
+            }
+        }
     }
 </script>

@@ -91,7 +91,7 @@
                     スタイリスト<span class="caret"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{route('stylist.index')}}">検索</a>
+                    <a class="dropdown-item" href="{{route('stylist.index')}}">一覧</a>
                     <a class="dropdown-item" href="{{route('stylist.index')}}">登録</a>
                 </div>
             </li>

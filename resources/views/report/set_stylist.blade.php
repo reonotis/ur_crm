@@ -20,10 +20,12 @@
                     <form action="{{route('report.setting_stylist',['id'=> $customer->id ])}}" method="post" >
                         @csrf
                         @foreach($users as $user)
-                            <input type="radio" name="staff_id" value="<?= $user->id ?>"><?= $user->name ?>
+                            <input id="item-<?= $user->id ?>" class="selectUsersInput" type="radio" name="staff_id" value="<?= $user->id ?>" >
+                            <label class="selectUsersLabel" for="item-<?= $user->id ?>"><?= $user->name ?></label>
                         @endforeach
                         <div class="itemsRow" >
-                            <input type="submit" name="" value="決定する" class="button" >
+                            <input type="submit" name="setStylist" value="スタイリストのみ決定する" class="button" >
+                            <input type="submit" name="stylistAndVisitHistory" value="スタイリストを決めて本日の来店履歴を登録する" class="button" >
                         </div>
                     </form>
                 </div>

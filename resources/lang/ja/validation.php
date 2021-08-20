@@ -67,7 +67,7 @@ return [
     'not_in'               => ':attributeには:valuesのうちいずれとも異なる値を指定してください。',
     'numeric'              => ':attributeには数値を指定してください。',
     'present'              => ':attributeには現在時刻を指定してください。',
-    'regex'                => '正しい形式の:attributeを指定してください。',
+    'regex'                => ':attributeを正しい形式で入力してください。',
     'required'             => ':attributeは必須で入力してください。',
     'required_if'          => ':otherが:valueの時:attributeは必須です。',
     'required_unless'      => ':otherが:values以外の時:attributeは必須です。',
@@ -120,6 +120,17 @@ return [
         'old_pass'=>'現在パスワード',
         'new_pass1'=>'新しいパスワード',
         'new_pass2'=>'新しいパスワード(確認用)',
+
+        'member_number'=>'会員番号',
+        'f_name'=>'苗字',
+        'l_name'=>'名前',
+        'f_read'=>'ミョウジ',
+        'l_read'=>'ナマエ',
+        'shop_id'=>'店舗',
+        'staff_id'=>'担当',
+        'tel'=>'電話番号',
+        'email'=>'メールアドレス',
+        'zip21'=>'郵便番号',
 
 
     ],

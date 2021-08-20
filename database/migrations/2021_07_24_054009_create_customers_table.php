@@ -15,7 +15,9 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id')               ->comment('ID');
-            $table->string('member_number','20')->nullable()->comment('会員番号');
+            $table->string('TOKKAI_shop','5')->nullable()->comment('ショップ記号');
+            $table->integer('TOKKAI_no')->nullable()  ->comment('登録順序');
+            $table->string('member_number','20')->nullable()->comment('会員番号　※TOKKAI_SHOP + TOKKAI_number');
             $table->string('f_name')                  ->comment('苗字');
             $table->string('f_read')                  ->comment('ミョウジ');
             $table->string('l_name')                  ->comment('名前');
