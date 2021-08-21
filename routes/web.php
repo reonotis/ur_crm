@@ -72,8 +72,11 @@ Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
 // 設定関連
 Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('index', 'SettingController@index')->name('setting.index');
-    Route::get('changeEmail', 'SettingController@changeEmail')->name('setting.changeEmail');
-    Route::get('changePassword', 'SettingController@changePassword')->name('setting.changePassword');
+    Route::get('Email', 'SettingController@Email')->name('setting.Email');
+    Route::get('ChangeEmail', 'SettingController@ChangeEmail')->name('setting.ChangeEmail');
+    Route::post('updateEmail', 'SettingController@updateEmail')->name('setting.updateEmail');
+    Route::get('EditPassword', 'SettingController@EditPassword')->name('setting.EditPassword');
+    Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
 });
 
 

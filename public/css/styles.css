@@ -817,8 +817,27 @@ input:disabled {
 	border-bottom: solid 1px var(--mainColor2);
 }
 
-
-
+/* メールアドレス更新用に使用 */
+.tableClass_008{
+	width: 100%;
+	border-spacing: 0px 6px;
+    border-collapse: separate;
+}
+.tableClass_008 td:last-child {
+    width: 100%;
+	margin-bottom: 10px;
+}
+.tableClass_008 th,
+.tableClass_008 td{
+	width: 100%;
+	padding:10px;
+    display: block;
+	border: solid 1px var(--editColor);
+}
+.tableClass_008 th{
+	background: var(--editColor);
+	color: #fff;
+}
 
 
 
