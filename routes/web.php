@@ -37,9 +37,21 @@ Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
     Route::post('setting_stylist/{id}', 'ReportController@setting_stylist')->name('report.setting_stylist');
 });
 
+// 過去日報
+Route::group(['prefix'=>'oldReport', 'middleware'=>'auth'], function(){
+    Route::get('index', 'OldReportController@index')->name('oldReport.index');
+    Route::get('daily', 'OldReportController@daily')->name('oldReport.daily');
+    Route::get('getDayRecord', 'OldReportController@getDayRecord')->name('oldReport.getDayRecord');
+    Route::get('getMonthRecord', 'OldReportController@getMonthRecord')->name('oldReport.getMonthRecord');
+    Route::get('weekly', 'OldReportController@weekly')->name('oldReport.weekly');
+    Route::get('monthly', 'OldReportController@monthly')->name('oldReport.monthly');
+});
+
 // スタイリスト関係
 Route::group(['prefix'=>'stylist', 'middleware'=>'auth'], function(){
     Route::get('index', 'StylistController@index')->name('stylist.index');
+    Route::get('create', 'StylistController@create')->name('stylist.create');
+    Route::post('store', 'StylistController@store')->name('stylist.store');
     Route::get('show/{id}', 'StylistController@show')->name('stylist.show');
     Route::get('edit/{id}', 'StylistController@edit')->name('stylist.edit');
     Route::post('update/{id}', 'StylistController@update')->name('stylist.update');

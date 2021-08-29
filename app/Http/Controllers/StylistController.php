@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Shop;
 use App\Services\CheckData;
 use App\User;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,9 +43,9 @@ class StylistController extends Controller
         $users = CheckData::set_authority_names($users);
 
         $shops = Shop::get();
-        $defaultHopId = $this->_user->shop_id;
+        $defaultShopId = $this->_user->shop_id;
 
-        return view('stylist.index', compact('users', 'shops', 'defaultHopId'));
+        return view('stylist.index', compact('users', 'shops', 'defaultShopId'));
     }
 
     /**
@@ -54,7 +55,14 @@ class StylistController extends Controller
      */
     public function create()
     {
-        //
+        $user = User::select('users.*', 'shops.shop_name')
+        ->where('authority_id', '>=', 2)
+        ->where('authority_id', '<=', 7)
+        ->join('shops', 'shops.id', '=', 'users.shop_id' )
+        ->first();
+        $authorityList = config('ur.authorityList');
+        $shops = Shop::get();
+        return view('stylist.create', compact('user', 'authorityList', 'shops'));
     }
 
     /**
@@ -65,7 +73,47 @@ class StylistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->store_validate($request);
+        try {
+            DB::beginTransaction();
+
+            // TODO 店長が既に登録されている場合はエラーにする
+
+            User::insert([[
+                'name'         => $request->name,
+                'email'        => $request->email,
+                'shop_id'      => $request->shop_id,
+                'password'     => Hash::make($request->email),
+                'authority_id' => $request->authority_id,
+            ]]);
+            $user_id = DB::getPdo()->lastInsertId();
+
+            DB::commit();
+            session()->flash('msg_success', 'スタイリストを登録しました。');
+            return redirect()->action('StylistController@show',['id'=>$user_id]);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->back()->withInput();    // 前の画面へ戻る
+        }
+    }
+
+    /**
+     * 顧客登録時のバリデーションチェック
+     */
+    public function store_validate($request)
+    {
+        $request->validate(
+            [
+                'name' => 'required',
+                'email' => 'unique:users,email|regex:/^([a-zA-Z0-9])+([a-zA-Z0-9._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9._-]+)+$/',
+                'shop_id' => 'required',
+                'authority_id' => 'required',
+            ],[
+                // 'zip21.size' => '郵便番号は 3桁 - 4桁 で入力してください',
+                // 'zip22.size' => '郵便番号は 3桁 - 4桁 で入力してください',
+            ]
+        );
     }
 
     /**

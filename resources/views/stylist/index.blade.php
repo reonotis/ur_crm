@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <select id="shops" class="formInput inputShop" >
                         @foreach($shops as $shop)
-                            <option value="<?= $shop->id ?>" <?php if( $shop->id == $defaultHopId) echo " selected" ; ?> ><?= $shop->shop_name ?></option>
+                            <option value="<?= $shop->id ?>" <?php if( $shop->id == $defaultShopId) echo " selected" ; ?> ><?= $shop->shop_name ?></option>
                         @endforeach
                     </select>
                     <table class="tableClass_006">
@@ -22,7 +22,7 @@
                                 <th>確認</th>
                             </tr>
                             @foreach($users as $user)
-                                <tr style="<?php if($user->shop_id <> $defaultHopId) echo 'display:none;' ?>" class="user_row user_row<?= $user->shop_id ?> " >
+                                <tr style="<?php if($user->shop_id <> $defaultShopId) echo 'display:none;' ?>" class="user_row user_row<?= $user->shop_id ?> " >
                                     <td><?= $user->name ?></td>
                                     <td><?= $user->shop_name ?></td>
                                     <td><?= $user->authority_name ?></td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\VisitType;
 use App\Models\VisitHistory;
 use App\Models\VisitHistoryImage;
 use App\Models\Menu;
@@ -10,12 +11,13 @@ use InterventionImage;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class VisitHistoryController extends Controller
 {
-
     private $_fileExtntion = ['jpg', 'jpeg', 'png'];
-    private $_resize = '300';
+    private $_resize_maxWidth = '300';
+    private $_resize_maxHeight = '400';
     private $_user;                 //Auth::user()
     private $_auth_authority_id ;   //権限
 
@@ -130,15 +132,16 @@ class VisitHistoryController extends Controller
         $visit_histories = VisitHistory::select('visit_histories.*', 'customers.f_name', 'customers.l_name' )
         ->where('visit_histories.shop_id', $this->_user->shop_id)
         ->where('vis_date', date('Y-m-d'))
+        ->where('visit_histories.delete_flag', 0)
         ->join('customers', 'customers.id', '=', 'visit_histories.customer_id' )
         ->get();
 
         $users = User::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
         $menus = Menu::where('delete_flag', 0)->where('hidden_flag', 0)->orderBy('rank')->get();
+        $visitTypes = VisitType::get_visitList();
 
-        return view('report.edit',compact('visit_histories', 'users', 'menus' ));
+        return view('report.edit',compact('visit_histories', 'users', 'menus', 'visitTypes' ));
 
-        //
     }
 
     /**
@@ -185,7 +188,6 @@ class VisitHistoryController extends Controller
                 }
             }
 
-
             $users = User::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
             $menus = Menu::where('delete_flag', 0)->where('hidden_flag', 0)->orderBy('rank')->get();
             return view('customer.single_edit',compact('VisitHistory', 'users', 'menus' ));
@@ -202,7 +204,7 @@ class VisitHistoryController extends Controller
     {
         try {
             $customer_id = $request->customer_id;
-            if($request->image1) $this->_fileUpload($customer_id, $id, $request->image1, 1 );
+            if($request->image1) $this->_fileUpload($customer_id, $id, $request->file('image1'), 1 );
             if($request->image2) $this->_fileUpload($customer_id, $id, $request->image2, 2 );
             if($request->image3) $this->_fileUpload($customer_id, $id, $request->image3, 3 );
 
@@ -229,8 +231,8 @@ class VisitHistoryController extends Controller
     }
 
     /**
-     *
      * アングル毎に画像をアップロードする
+     *
      */
     public function _fileUpload($customer_id, $id, $file, $angle)
     {
@@ -252,6 +254,11 @@ class VisitHistoryController extends Controller
         // 画像を保存する
         $file->storeAs('public/customer_img', $this->BaseFileName);
 
+        // リサイズして保存する
+        $resizeImg = InterventionImage::make($file);
+        $resizeImg->fit($this->_resize_maxWidth, $this->_resize_maxHeight)->encode();
+        Storage::put('public/customer_img_resize/'.$this->BaseFileName, $resizeImg );
+
         // VisitHistoryImage
         VisitHistoryImage::updateOrInsert(
             [
@@ -263,10 +270,7 @@ class VisitHistoryController extends Controller
                 'img_pass' => $this->BaseFileName,
             ]
         );
-
-        // TODO 画像サイズを横幅500の比率にして保存する。
     }
-
 
     /**
      * 渡されたファイルが登録可能な拡張子か確認するしてOKなら拡張子を返す
@@ -279,33 +283,6 @@ class VisitHistoryController extends Controller
             throw new \Exception("登録できる画像の拡張子は". $fileExtntion ."のみです。");
         }
         return $file->extension();
-    }
-
-    /**
-     * 渡された画像ファイルをリサイズして保存する
-     */
-    public function makeImgFile($file, $BaseFileName){
-        if(empty($file)) throw new \Exception("ファイルがありません。");
-        if(empty($BaseFileName)) throw new \Exception("ファイル名が決まっていません。");
-
-        $image = InterventionImage::make($file)->exif();
-        $width  = $image['COMPUTED']['Width'];
-        $height = $image['COMPUTED']['Height'];
-        if($width < $height){
-            $length = $width;
-        }else{
-            $length = $height;
-        }
-
-        dd(1);
-        // 正方形の画像を作成
-        $square_image = InterventionImage::make($file)
-            ->crop($length, $length);
-
-        // リサイズして保存
-        $image = InterventionImage::make($square_image)
-            ->resize($this->_resize, null, function ($constraint) {$constraint->aspectRatio();})
-            ->save(public_path('../storage/app/public/mainImages/' . $BaseFileName ) );
     }
 
 
@@ -342,6 +319,7 @@ class VisitHistoryController extends Controller
             $visitHistory->vis_time = $_GET['time'];
             $visitHistory->staff_id = $_GET['user'];
             $visitHistory->menu_id = $_GET['menu'];
+            $visitHistory->visit_type_id = $_GET['visitType'];
             $visitHistory->save();
             DB::commit();
 

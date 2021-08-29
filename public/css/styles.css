@@ -427,10 +427,23 @@ input:disabled {
 .report_index_report_area{
 	width: 270px;
 	margin-right: 15px;
-	padding: 10px;
+	margin-bottom: 15px;
+	padding: 25px 10px;
     background-color: #fff;
     border: 1px solid var(--mainColor);
     border-radius: 1rem;
+}
+.report_index_report_wrapper{
+    padding-left: 15px;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--mainColor);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
 }
 .report_index_contents_area{
 	width: calc(100% - 270px);
@@ -438,7 +451,7 @@ input:disabled {
 
 .report_index_register_customer_area{
     position: relative;
-	margin: 0 0 30px;
+	margin: 0 0 15px;
 	padding:0 30px 30PX;
     background-color: #fff;
     border: 1px solid var(--mainColor);
@@ -795,6 +808,12 @@ input:disabled {
 .tableClass_006 td{
 	padding: 10px ;
 }
+@media (max-width: 768px) {
+	.tableClass_006 th,
+	.tableClass_006 td{
+		padding: 8px 3px ;
+	}
+}
 
 /* スタイリスト詳細に使用 */
 .tableClass_007 {
@@ -838,6 +857,114 @@ input:disabled {
 	background: var(--editColor);
 	color: #fff;
 }
+
+/* 日報の集計に使用 */
+.tableClass_009{
+	width: 100%;
+    font-family: cursive;
+	margin: 0 0 20px;
+	border-spacing: 0px 6px;
+    border-collapse: separate;
+}
+.tableClass_009 th{
+	position: relative;
+	width: 130px;
+	height: 26px;
+	font-size: 13px;
+	background: var(--mainColor2);
+	color: var(--mainColor2_string);
+	text-align: center;
+	vertical-align: middle;
+	border-bottom: solid 1px var(--mainColor2);
+}
+.tableClass_009 td{
+	padding: 0px 3px 0px 18px;
+	border-bottom: solid 1px var(--mainColor2);
+	vertical-align: middle;
+}
+.tableClass_009 th::after {
+    content: '';
+    position: absolute;
+	top: 0;
+    right: -10px;
+	width: 0;
+	height: 0;
+	border-top: 13px solid transparent;
+	border-left: 13px solid var(--mainColor2);
+	border-bottom: 13px solid transparent;
+}
+
+/* スタイリスト詳細に使用 */
+.tableClass_010 {
+	width: calc(100% - 20px);
+	margin: 10px;
+}
+.tableClass_010 th{
+	padding: 5px;
+	background: var(--mainColor2);
+	color: var(--mainColor2_string);
+}
+.tableClass_010 td{
+	padding: 5px;
+	border-bottom: solid 1px var(--mainColor2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* 過去日報確認 */
+.setDayRecode{
+	margin: 15px 0 ;
+}
+.changeRecodeBtn{
+	font-size:0.8em;
+	padding: 2px 15px;
+	background: var(--mainColor);
+	color: #fff;
+	border: solid 1px var(--mainColor);
+	border-radius: 15px;
+	transition: 0.2s;
+}
+.changeRecodeBtn:hover{
+	background: #fff;
+	color: var(--mainColor);
+}
+
+
+
+.selectRadioChoice {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+.selectRadiosLabel {
+    display: inline-block;
+	text-align: center;
+    padding: 0.5rem 1rem;
+	margin: 0px ;
+	width: calc(100% / 3 - 3px );
+	border : solid 1px var(--mainColor);
+    border-radius: 5px;
+    transition: all .2s;
+}
+.selectRadioChoice:checked + .selectRadiosLabel {
+    background: var(--mainColor);
+    color: #fff;
+}
+.selectRadioChoice:focus + .selectRadiosLabel {
+    outline-color: var(--mainColor);
+}
+.selectRadiosLabel.selectRadiosLabel2{
+	width: calc(100% / 2 - 3px );
+}
+
 
 
 

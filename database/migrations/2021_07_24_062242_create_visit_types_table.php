@@ -16,6 +16,7 @@ class CreateVisitTypesTable extends Migration
         Schema::create('visit_types', function (Blueprint $table) {
             $table->bigIncrements('id')               ->comment('ID');
             $table->string('type_name','20')->nullable()->comment('来店タイプ');
+            $table->boolean('delete_flag')->default('0')->comment('削除フラグ');
         });
     }
 

@@ -36,35 +36,17 @@ class ReportController extends Controller
      */
     public function index()
     {
+        // レポートデータの取得
+        list($reportData , $visTypeData) = VisitHistory::get_todayReport($this->_user->shop_id);
 
-        $visit_histories = VisitHistory::select('visit_histories.*', 'customers.f_name', 'customers.l_name' , 'users.name', 'menus.menu_name' )
-        ->where('visit_histories.shop_id', $this->_user->shop_id)
-        ->where('vis_date', date('Y-m-d'))
-        ->where('visit_histories.delete_flag', 0)
-        ->join('customers', 'customers.id', '=', 'visit_histories.customer_id' )
-        ->leftJoin('users', 'users.id', '=', 'visit_histories.staff_id' )
-        ->leftJoin('menus', 'menus.id', '=', 'visit_histories.menu_id' )
-        ->get();
+        // 来店者情報を取得
+        $visit_histories = VisitHistory::get_todayVisitHistory($this->_user->shop_id);
 
-        $customers = Customer::select('customers.*', 'users.name as user_name', 'visit_histories.id as visit_history_id')
-        ->whereDate('customers.created_at', date('Y-m-d'))
-        ->where('customers.register_flow', 1)
-        ->where('customers.delete_flag', 0)
-        ->where('customers.shop_id', $this->_user->shop_id)
-        // ->leftJoin('visit_histories', 'visit_histories.customer_id', '=', 'customers.id')
-        // 来店履歴を作成していたら削除できないという判定をするためにJOIN
-
-        ->leftJoin('visit_histories', function ($join) {
-            $join->on('customers.id', '=', 'visit_histories.customer_id')
-                ->where('visit_histories.delete_flag', '0');
-        })
-
-        ->leftJoin('users', 'users.id', '=', 'customers.staff_id')
-        ->get();
+        // 本日来店時に登録された顧客を取得
+        $customers = Customer::get_todayRegisterCustomer($this->_user->shop_id);
         $customers = CheckData::set_sex_names($customers);
 
-
-        return view('report.index',compact('visit_histories', 'customers'));
+        return view('report.index',compact('visit_histories', 'customers', 'reportData', 'visTypeData'));
     }
 
     /**

@@ -3,7 +3,35 @@
 @section('content')
 <div class="report_index_area">
     <div class="report_index_report_area">
-        来店人数や対応内容の集計が入ります。
+        <div class="report_index_report_wrapper" >基本レポート</div>
+        <table class="tableClass_009" >
+            <tr>
+                <th>来店客数</th>
+                <td>{{array_sum(array_column( $reportData, 'numberOfVisitors'))}}人</td>
+            </tr>
+            <tr>
+                <th>稼働スタイリスト</th>
+                <td>{{ count($reportData) }}人</td>
+            </tr>
+        </table>
+        <div class="report_index_report_wrapper" >スタイリスト別 担当顧客人数</div>
+        <table class="tableClass_009" >
+            @foreach($reportData as $data)
+                <tr>
+                    <th>{{ $data['name'] }}</th>
+                    <td>{{ $data['numberOfVisitors'] }}人</td>
+                </tr>
+            @endforeach
+        </table>
+        <div class="report_index_report_wrapper" >来店種別 顧客人数</div>
+        <table class="tableClass_009" >
+            @foreach($visTypeData as $data)
+                <tr>
+                    <th>{{ $data['type_name'] }}</th>
+                    <td>{{ $data['numberOfVisitors'] }}人</td>
+                </tr>
+            @endforeach
+        </table>
     </div>
     <div class="report_index_contents_area">
         <div class="report_index_register_customer_area">
@@ -32,8 +60,8 @@
                             <td><a href="{{route('customer.show', ['id' => $visit_history->customer_id ])}}"><?= $visit_history->f_name.$visit_history->l_name ?> 様</a></td>
                             <td><?= $visit_history->name ?></td>
                             <td><?= $visit_history->menu_name ?></td>
-                            <td><?= '' ?></td>
-                            <td><a href="{{ route('VisitHistory.destroy', ['id'=>$visit_history->id ]) }}" >削除</a></td>
+                            <td><?= $visit_history->type_name ?></td>
+                            <td><a href="{{ route('VisitHistory.destroy', ['id'=>$visit_history->id ]) }}" onclick="return confirmVisHisDelete();" >削除</a></td>
                         </tr>
                     @endforeach
                 </table>
@@ -85,6 +113,10 @@
 <script>
     function confirmDelete(){
         var result = confirm('このお客様データを削除しますか？\nこの操作は取り消せません。');
+        return result;
+    }
+    function confirmVisHisDelete(){
+        var result = confirm('この来店情報を削除しますか？\nこの操作は取り消せません。');
         return result;
     }
 </script>

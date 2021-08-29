@@ -86,7 +86,7 @@ $json_array = json_encode($visitHistories);
                     <td>
                         @if($visitHistory->img_pass1)
                             <div class="customer_img" >
-                                <img src="{{asset('storage/customer_img/'.$visitHistory->img_pass1)}}" >
+                                <img src="{{asset('storage/customer_img_resize/'.$visitHistory->img_pass1)}}" >
                             </div>
                         @else
                             -
@@ -95,7 +95,7 @@ $json_array = json_encode($visitHistories);
                     <td>
                         @if($visitHistory->img_pass2)
                             <div class="customer_img" >
-                                <img src="{{asset('storage/customer_img/'.$visitHistory->img_pass2)}}" >
+                                <img src="{{asset('storage/customer_img_resize/'.$visitHistory->img_pass2)}}" >
                             </div>
                         @else
                             -
@@ -104,7 +104,7 @@ $json_array = json_encode($visitHistories);
                     <td>
                         @if($visitHistory->img_pass3)
                             <div class="customer_img" >
-                                <img src="{{asset('storage/customer_img/'.$visitHistory->img_pass3)}}" >
+                                <img src="{{asset('storage/customer_img_resize/'.$visitHistory->img_pass3)}}" >
                             </div>
                         @else
                             -

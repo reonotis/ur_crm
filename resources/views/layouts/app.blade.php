@@ -76,6 +76,7 @@
         <ul class="navi-links">
             <li><a href="{{route('home')}}">TOPお知らせ</a></li>
             <li><a href="{{route('report.index')}}">日報</a></li>
+            <li><a href="{{route('oldReport.index')}}">過去日報確認</a></li>
 
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -92,7 +93,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{route('stylist.index')}}">一覧</a>
-                    <a class="dropdown-item" href="{{route('stylist.index')}}">登録</a>
+                    <a class="dropdown-item" href="{{route('stylist.create')}}">登録</a>
                 </div>
             </li>
             <li><a href="{{route('setting.index')}}">設定</a></li>
@@ -112,14 +113,13 @@
 
 
 <script type="text/javascript">
-    // {{--成功時--}}
+
     @if (session('msg_success'))
         $(function () {
             toastr.success('{{ session('msg_success') }}');
         });
     @endif
 
-    // {{--失敗時--}}
     @if (session('msg_danger'))
         $(function () {
             toastr.warning('{{ session('msg_danger') }}');

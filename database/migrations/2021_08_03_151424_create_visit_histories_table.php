@@ -20,8 +20,8 @@ class CreateVisitHistoriesTable extends Migration
             $table->integer('customer_id')            ->comment('来店顧客');
             $table->tinyInteger('shop_id')            ->comment('来店店舗');
             $table->tinyInteger('staff_id')           ->comment('担当スタイリスト');
-            $table->tinyInteger('menu_id')->nullable()->comment('メニュー');
-            $table->tinyInteger('visit_type_id')->nullable()->comment('来店タイプ');
+            $table->tinyInteger('menu_id')->default('0')->comment('メニュー');
+            $table->tinyInteger('visit_type_id')->default('0')->comment('来店タイプ');
             $table->string('memo','1000') ->nullable()->comment('メモ');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;

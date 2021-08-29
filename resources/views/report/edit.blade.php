@@ -15,6 +15,7 @@
                         </div>
                     @endif
                     <div id="aaaaaaaaaa"></div>
+                    ※注意 : 変更した内容はリアルタイムで保存されます。
                     <table class="tableClass_003" >
                         <tr>
                             <th>来店時間</th>
@@ -29,7 +30,7 @@
                                 <td><?= $visit_history->f_name.$visit_history->l_name ?></td>
                                 <td>
                                     <select name="" id="user_<?= $visit_history->id ?>" onchange="updateVisHis(<?= $visit_history->id ?>)"  >
-                                        <option value="" >選択してください</option>
+                                        <option value="NULL" >選択してください</option>
                                         @foreach($users as $user )
                                             <option value="<?= $user->id ?>" id="" <?php if($visit_history->staff_id == $user->id) echo ' selected' ;?> ><?= $user->name ?></option>
                                         @endforeach
@@ -37,8 +38,17 @@
                                 </td>
                                 <td>
                                     <select name="" value="" id="menu_<?= $visit_history->id ?>" onchange="updateVisHis(<?= $visit_history->id ?>)"  >
+                                    <option value="NULL" >選択してください</option>
                                         @foreach($menus as $menu )
                                             <option value="<?= $menu->id ?>" id="" <?php if($visit_history->menu_id == $menu->id) echo ' selected' ;?> ><?= $menu->menu_name ?></option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="" value="" id="visitType_<?= $visit_history->id ?>" onchange="updateVisHis(<?= $visit_history->id ?>)"  >
+                                        <option value="" >選択してください</option>
+                                        @foreach($visitTypes as $visitType )
+                                            <option value="<?= $visitType->id ?>" id="" <?php if($visit_history->visit_type_id == $visitType->id) echo ' selected' ;?> ><?= $visitType->type_name ?></option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -60,6 +70,7 @@
         var time = document.getElementById("time_" + id).value
         var user = document.getElementById("user_" + id).value
         var menu = document.getElementById("menu_" + id).value
+        var visitType = document.getElementById("visitType_" + id).value
 
         $.get({
             url:  "/VisitHistory/updates/" + id,
@@ -69,6 +80,7 @@
                 'time' : time,
                 'user' : user,
                 'menu' : menu,
+                'visitType' : visitType,
             }
         }).done(function (data) { // ajaxが成功したときの処理
             if(data[0] == 'fail'){ // 結果が失敗したときの処理

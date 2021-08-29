@@ -20,4 +20,26 @@ class Customer extends Model
         if(!$customer) throw new \Exception("データがありません");
         return($customer);
     }
+
+    /**
+     * 本日来店時に登録した顧客を取得する
+     * @param [type] $shop_id
+     * @return void
+     */
+    public static function get_todayRegisterCustomer($shop_id)
+    {
+        $result = self::select('customers.*', 'users.name as user_name', 'visit_histories.id as visit_history_id')
+        ->whereDate('customers.created_at', date('Y-m-d'))
+        ->where('customers.register_flow', 1)
+        ->where('customers.delete_flag', 0)
+        ->where('customers.shop_id', $shop_id)
+        ->leftJoin('visit_histories', function ($join) {
+            $join->on('customers.id', '=', 'visit_histories.customer_id')
+                ->where('visit_histories.delete_flag', '0');
+        })
+        ->leftJoin('users', 'users.id', '=', 'customers.staff_id')
+        ->get();
+        return($result);
+    }
+
 }

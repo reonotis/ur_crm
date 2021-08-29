@@ -122,6 +122,7 @@ return [
         'new_pass2'=>'新しいパスワード(確認用)',
 
         'member_number'=>'会員番号',
+        'name'=>'名前',
         'f_name'=>'苗字',
         'l_name'=>'名前',
         'f_read'=>'ミョウジ',

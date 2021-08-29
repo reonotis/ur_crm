@@ -98,7 +98,7 @@ class SettingController extends Controller
     }
 
     /**
-     *
+     * パスワードをアップデートする
      * @return \Illuminate\Http\Response
      */
     public function updatePassword(Request $request)
@@ -114,7 +114,6 @@ class SettingController extends Controller
                 throw new \Exception("現在のパスワードが合っていません");
             }
             if($request->new_password1 <> $request->new_password2 ) throw new \Exception("新しいパスワードが一致していません");
-
 
             $user->password = Hash::make($request->new_password1);
             $user->save();
