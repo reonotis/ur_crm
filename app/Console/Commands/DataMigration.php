@@ -183,7 +183,7 @@ class DataMigration extends Command
     public function get_data_visitHistoryImg(){
         Log::info('DataMigration :   データ取得 : '. $this->_loopNo .'回目');
         $this->_style_imgs = [];
-        $sql = 'SELECT * FROM sys_styleImg
+        $sql = 'SELECT * FROM sys_styleIMG
                 WHERE deleted_at <> 1
                 LIMIT 100';
         $this->_style_imgs = DB::connection('mysql_2')->select($sql);
@@ -214,7 +214,7 @@ class DataMigration extends Command
     public function update_oldDB_visitHistoryImg(){
         foreach($this->_style_imgs as $style_img ){
             Log::info('DataMigration :       データ更新 : id = '. $style_img->id );
-            $sql = 'UPDATE sys_styleImg
+            $sql = 'UPDATE sys_styleIMG
                     SET deleted_at = 1
                     WHERE id =  '.$style_img->id ;
             $this->_customers = DB::connection('mysql_2')->update($sql);
