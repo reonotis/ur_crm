@@ -38,6 +38,7 @@ class OldReportController extends Controller
      */
     public function daily()
     {
+        $LOCAL_ENVIRONMENT = env('LOCAL_ENVIRONMENT');
 
         // 対象日がセッションに残っているか確認
         if(session('oldReport_day_setData')){
@@ -47,8 +48,6 @@ class OldReportController extends Controller
             // デフォルトの対象日を本日にする
             $setData = date('Y-m-d');
         }
-
-
 
         $shops = Shop::get_shopList();
         // ショップを選択していたセッションが残っているか確認
@@ -79,6 +78,8 @@ class OldReportController extends Controller
      */
     public function monthly()
     {
+        $LOCAL_ENVIRONMENT = env('LOCAL_ENVIRONMENT');
+
         session(['oldReport_displayType' => 3]);   //月別表示
 
         // session(['oldReport_month_selectChoice' => $selectChoice]);   //月別表示時の表示方法
