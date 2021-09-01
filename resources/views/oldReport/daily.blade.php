@@ -36,5 +36,8 @@
 
     </div>
 </div>
-
 @endsection
+
+<script type="text/javascript">
+    var LOCAL_ENVIRONMENT = "<?= $LOCAL_ENVIRONMENT ?>";
+</script>

@@ -68,7 +68,7 @@ class OldReportController extends Controller
             $defaultSelectChoice = 1;
         }
 
-        return view('oldReport.daily',compact('setData', 'shops', 'defaultShopId', 'defaultSelectChoice' ));
+        return view('oldReport.daily',compact('setData', 'shops', 'defaultShopId', 'defaultSelectChoice', 'LOCAL_ENVIRONMENT' ));
     }
 
     /**
@@ -113,7 +113,7 @@ class OldReportController extends Controller
         }
 
 
-        return view('oldReport.monthly',compact('shops', 'defaultShopId', 'defaultSelectChoice', 'months' ));
+        return view('oldReport.monthly',compact('shops', 'defaultShopId', 'defaultSelectChoice', 'months', 'LOCAL_ENVIRONMENT' ));
     }
 
     /**

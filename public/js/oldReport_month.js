@@ -47,9 +47,8 @@ function getMonthRecord(){
      var targetMonth = $('#targetMonth').val();
      var shopChoice = $('input:radio[name="shopChoice"]:checked').val();
      var selectChoice = $('input:radio[name="selectChoice"]:checked').val();
-     console.log(targetMonth, shopChoice, selectChoice);
      $.get({
-          url:  "/oldReport/getMonthRecord",
+          url: LOCAL_ENVIRONMENT + "oldReport/getMonthRecord",
           method: 'GET',
           dataType: 'json',
           data: {

@@ -63,8 +63,9 @@ function getDayRecord(){
      var setDate = $('#selectedDay').val();
      var shopChoice = $('input:radio[name="shopChoice"]:checked').val();
      var selectChoice = $('input:radio[name="selectChoice"]:checked').val();
+
      $.get({
-          url:  "/oldReport/getDayRecord",
+          url: LOCAL_ENVIRONMENT + "oldReport/getDayRecord",
           method: 'GET',
           dataType: 'json',
           data: {
