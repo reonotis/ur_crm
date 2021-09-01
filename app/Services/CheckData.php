@@ -38,6 +38,8 @@ class CheckData
             $data->sex_name = "その他";
         }else if($data->sex == 4 ){
             $data->sex_name = "未回答";
+        }else{
+            $data->sex_name = "不明";
         }
         return $data;
     }

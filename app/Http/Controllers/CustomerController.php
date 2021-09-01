@@ -38,17 +38,8 @@ class CustomerController extends Controller
      */
     public function search()
     {
-        $shops = Shop::select()
-        ->where('hidden_flag','0')
-        ->where('delete_flag','0');
-        if($this->_auth_authority_id >= 5){
-            $shops = $shops->where('id', $this->_user->shop_id );
-        }
-        $shops = $shops->get();
-
-        $users = User::where('authority_id','<=', 7)
-        ->where('authority_id','>=', 3)
-        ->get();
+        $shops = Shop::get_shopList();
+        $users = User::get_userList();
 
         return view('customer.search',compact('shops', 'users'));
     }
@@ -136,18 +127,13 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        $shops = Shop::select()
-        ->where('hidden_flag','0')
-        ->where('delete_flag','0');
         if($this->_auth_authority_id >= 5){
-            $shops = $shops->where('id', $this->_user->shop_id );
+            $shopsId = $this->_user->shop_id;
+        }else{
+            $shopsId = NULL;
         }
-        $shops = $shops->get();
-
-        $users = User::where('authority_id','<=', 7)
-        ->where('authority_id','>=', 3)
-        ->get();
-
+        $shops = Shop::get_shopList($shopsId);
+        $users = User::get_userList($shopsId);
         return view('customer.create',compact('shops', 'users' ));
     }
 
@@ -391,13 +377,11 @@ class CustomerController extends Controller
         try {
             if($this->_auth_authority_id >= 5) throw new \Exception("編集権限がありません");
 
-            $customer = $this->_customerOBJ->get_customer($id);
-            $shops = Shop::select()
-            ->where('hidden_flag','0')
-            ->where('delete_flag','0')
-            ->get();
+            $customer = Customer::get_customer($id);
+            $shops = Shop::get_shopList();
+            $users = User::get_userList();
 
-            return view('customer.edit', compact('customer','shops'));
+            return view('customer.edit', compact('customer', 'shops', 'users'));
         } catch (\Throwable $e) {
             session()->flash('msg_danger',$e->getMessage() );
             return redirect()->back();    // 前の画面へ戻る
@@ -415,6 +399,10 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            if($request->cancel){
+                session()->flash('msg_success', 'キャンセルしました');
+                return redirect()->action('CustomerController@show', ['id' => $id]);
+            }
             DB::beginTransaction();
 
             $customer = Customer::find($id);

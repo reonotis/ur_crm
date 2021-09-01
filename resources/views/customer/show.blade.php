@@ -119,9 +119,8 @@ $json_array = json_encode($visitHistories);
                     </td>
                     <td>
                         @if($visitHistory->vis_date->format('Ymd') == date('Ymd'))
-                        <a href="{{ route('VisitHistory.single_edit', ['id' => $visitHistory->id ]) }}" class="" >編集</a>
+                            <a href="{{ route('VisitHistory.single_edit', ['id' => $visitHistory->id ]) }}" class="" >編集</a>
                         @else
-                        -
                         @endif
                     </td>
                 </tr>

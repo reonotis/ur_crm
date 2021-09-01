@@ -315,7 +315,7 @@ label {
 .inputZip{
 	width :80px;
 }
-.inputAddress{
+.inputAddresses{
 	margin-bottom :5px;
 	width : 250px;
 	display       : flex;
@@ -323,7 +323,7 @@ label {
 	justify-content: space-between;
 	align-items: center;
 }
-.inputAddr{
+.inputAddress{
 	width : 120px;
 }
 .inputStreet{
@@ -497,7 +497,6 @@ input:disabled {
 .customer_show_area{
     position: relative;
 	width: 98%;
-	/* max-width: 1600px; */
 	margin: 0 auto;
 	padding: 10px;
 	background: var(--mainColor3);
@@ -505,11 +504,25 @@ input:disabled {
     border-radius: 0.25rem;
     display: flex;
 }
+@media screen and (max-width: 1000px) {
+	.customer_show_area{
+		width: 100%;
+		display: block;
+	}
+}
 .customer_show_customer_area{
 	width: 200px;
 	min-height: 500px;
 	background: #fff;
 	margin-right: 10px;
+}
+@media screen and (max-width: 1000px) {
+	.customer_show_customer_area{
+		width: 100%;
+		padding: 5px 5px 20px;
+		min-height: auto;
+
+	}
 }
 .customer_show_customer_img{
 	width: 180px;
@@ -522,6 +535,18 @@ input:disabled {
 	height: 180px;
 	object-fit: cover;
 }
+@media screen and (max-width: 1000px) {
+	.customer_show_customer_img{
+		width: 150px;
+		height: 150px;
+		float: left;
+	}
+	.customer_show_customer_img > img{
+		width: 150px;
+		height: 150px;
+	}
+}
+
 .customer_show_customer_member_number,
 .customer_show_customer_name,
 .customer_show_customer_birthday,
@@ -534,12 +559,30 @@ input:disabled {
 	margin: 5px;
 	border-bottom:solid 1px var(--gainsboro);
 }
+@media screen and (max-width: 1000px) {
+	.customer_show_customer_member_number,
+	.customer_show_customer_name,
+	.customer_show_customer_birthday,
+	.customer_show_customer_sex{
+		width: calc(100% - 160px );
+		display: inline-block;
+		padding: 3px 6px ;
+		margin: 5px;
+		border-bottom:solid 1px var(--gainsboro);
+	}
+}
 .customer_show_customer_name{
 	line-height: 100%;
 }
 
 .customer_show_contents_area{
 	width: calc(100% - 200px);
+}
+@media screen and (max-width: 1000px) {
+	.customer_show_contents_area{
+		width: 100%;
+		margin: 40px 0 0;
+	}
 }
 .customer_show_basicData_area,
 .customer_show_visitHistory_area{
@@ -601,26 +644,28 @@ input:disabled {
 
 .editRow_01{
 	margin-bottom: 5px;
-	border-bottom: solid 1px var(--editColor);
 	display: flex;
 	flex-flow: wrap;
 }
-.editTitle_01{
+.editTitle_01,
+.editTitle_01_2{
 	width: 160px;
 	padding: 10px;
     font-size: 1.2em;
     font-weight: bold;
 	background: var(--editColor);
 	color: var(--white);
-	border: solid 1px var(--editColor);
+	border-bottom: solid 1px var(--editColor);
 	float: left;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.editContent_01{
+.editContent_01,
+.editContent_01_2{
 	padding: 10px;
 	width: calc(100% - 160px);
+	border-bottom: solid 1px var(--editColor);
 }
 .customer_img{
 	width: 100px;
@@ -630,6 +675,25 @@ input:disabled {
     width: 100px;
     height: 130px;
 	object-fit: cover;
+}
+@media screen and (max-width: 1000px) {
+	.editTitle_01{
+		width: 110px;
+		padding: 7px 2px;
+		font-size: 1em;
+	}
+	.editContent_01{
+		padding: 7px 2px;
+		width: calc(100% - 110px);
+	}
+	.editTitle_01_2{
+		width: 100%;
+	}
+	.editContent_01_2{
+		width: 100%;
+		padding: 7px;
+		border: solid 1px var(--editColor);
+	}
 }
 
 
@@ -772,20 +836,74 @@ input:disabled {
 .tableClass_005 {
 	width: 100%;
 }
+.tableClass_005 tr{
+	border-bottom: solid 1px var(--mainColor2);
+}
 .tableClass_005 th{
 	padding: 5px ;
 	font-size: 1em;
 	background: var(--mainColor2);
 	color: var(--mainColor2_string);
-	border-bottom: solid 1px #fff;
 }
 .tableClass_005 td{
 	padding: 5px ;
-	border-bottom: solid 1px var(--mainColor2);
 }
 .tableClass_005 th.id,
 .tableClass_005 td.id{
 	font-size: 0.8em;
+}
+@media screen and (max-width: 1000px) {
+	.tableClass_005 th{
+		display: none;
+	}
+	.tableClass_005 td.id{
+		display: none;
+	}
+	.tableClass_005 td{
+		display: inline-flex;
+		width: 100%;
+		padding: 3px 0 0;
+	}
+	.tableClass_005 td:nth-child(2):before {
+		content: "【来店日時】";
+	}
+	.tableClass_005 td:nth-child(3):before {
+		content: "【担当者】";
+	}
+	.tableClass_005 td:nth-child(4):before {
+		content: "【 予約タイプ 】";
+	}
+	.tableClass_005 td:nth-child(5):before {
+		content: "【 メニュー 】";
+	}
+	.tableClass_005 td:nth-child(6) {
+		display: block;
+		float: left;
+	}
+	.tableClass_005 td:nth-child(6),
+	.tableClass_005 td:nth-child(7),
+	.tableClass_005 td:nth-child(8) {
+		position: relative;
+		top: 0;
+		width: 33%;
+		flex-direction: column;
+		padding-top: 20px;
+	}
+	.tableClass_005 td:nth-child(6):before {
+		position: absolute;
+		top: 0;
+		content: "【画像】";
+	}
+	.tableClass_005 td:nth-child(9) {
+		flex-direction: column;
+	}
+	.tableClass_005 td:nth-child(9):before {
+		content: "【コメント】";
+	}
+	.tableClass_005 td:nth-child(10) {
+		justify-content: center;
+		padding: 10px 0 0;
+	}
 }
 
 /* スタイリスト一覧に使用 */

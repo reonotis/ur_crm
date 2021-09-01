@@ -128,6 +128,10 @@
 @endsection
 
 <script>
+    window.onload = function () {
+        change_shops()
+    };
+
     let users = JSON.parse('<?= $users; ?>');
 
     function change_shops(){

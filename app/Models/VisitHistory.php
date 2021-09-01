@@ -96,7 +96,7 @@ class VisitHistory extends Model
             'visit_histories.staff_id,
             visit_histories.visit_type_id,
             visit_types.type_name,
-            count(*) as numberOfVisitors',
+            count(*) as numberOfVisitors'
         ))
         ->leftJoin('visit_types', 'visit_types.id', '=', 'visit_histories.visit_type_id'  )
         ->where('visit_histories.vis_date', $date)
