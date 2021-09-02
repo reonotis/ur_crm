@@ -104,7 +104,11 @@ function setPayment(data){
                html = html + '<tr>';
                     html = html + '<td>' + value['vis_time'] + '</td>';
                     html = html + '<td>' + value['name'] + '</td>';
-                    html = html + '<td>' + value['f_name'] + ' ' + value['l_name'] +  ' 様</td>';
+                    html = html + '<td>';
+                         html = html + '<a href="../customer/show/' + value["customer_id"] + '">';
+                              html = html + value['f_name'] + ' ' + value['l_name'];
+                         html = html + '</a>';
+                    html = html + '</td>';
                     html = html + '<td>';
                          if(value['type_name']){
                               html = html + value['type_name'] ;

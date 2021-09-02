@@ -40,6 +40,7 @@ class OldReportController extends Controller
     {
         $LOCAL_ENVIRONMENT = env('LOCAL_ENVIRONMENT');
 
+        session(['oldReport_displayType' => 1]);   //日別表示
         // 対象日がセッションに残っているか確認
         if(session('oldReport_day_setData')){
             // デフォルトの対象日をセッションの値にする
@@ -81,7 +82,6 @@ class OldReportController extends Controller
         $LOCAL_ENVIRONMENT = env('LOCAL_ENVIRONMENT');
 
         session(['oldReport_displayType' => 3]);   //月別表示
-
         // session(['oldReport_month_selectChoice' => $selectChoice]);   //月別表示時の表示方法
 
         if(session('oldReport_displayMonth')){
@@ -89,7 +89,7 @@ class OldReportController extends Controller
         }elseif(date('Y-m-d') >= date('Y-m-21')){
             $months = date('Y-m-21',strtotime("+1 month"));
         }else{
-            $months = date('Y-m-21');
+            $months = date('Y-m-21',strtotime("-1 month"));
         }
         session(['oldReport_displayMonth' => $months]);
 
