@@ -263,6 +263,7 @@ class VisitHistoryController extends Controller
         ->resize($this->_resize_maxWidth, null, function ($constraint) {
             $constraint->aspectRatio();
         })
+        ->orientate()
         ->save(storage_path('app/public/customer_img_resize/') . $this->BaseFileName);
 
         // VisitHistoryImage
