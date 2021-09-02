@@ -255,9 +255,15 @@ class VisitHistoryController extends Controller
         $file->storeAs('public/customer_img', $this->BaseFileName);
 
         // リサイズして保存する
-        $resizeImg = InterventionImage::make($file);
-        $resizeImg->fit($this->_resize_maxWidth, $this->_resize_maxHeight)->encode();
-        Storage::put('public/customer_img_resize/'.$this->BaseFileName, $resizeImg );
+        // $resizeImg = InterventionImage::make($file);
+        // $resizeImg->fit($this->_resize_maxWidth, $this->_resize_maxHeight)->encode();
+        // Storage::put('public/customer_img_resize/'.$this->BaseFileName, $resizeImg );
+
+        $resizeImg = InterventionImage::make($file)
+        ->resize($this->_resize_maxWidth, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })
+        ->save(storage_path('app/public/customer_img_resize/') . $this->BaseFileName);
 
         // VisitHistoryImage
         VisitHistoryImage::updateOrInsert(
