@@ -11,7 +11,7 @@ $json_array = json_encode($visitHistories);
     <div class="customer_show_customer_area" >
         <div class="customer_show_customer_img" >
             @if($userImgPass)
-                <img src="{{asset('storage/customer_img/'.$userImgPass)}}" >
+                <img src="{{asset('storage/customer_img_resize/'.$userImgPass)}}" >
             @else
                 画像はありません。<br><br>
                 来店履歴のデータに画像を挿入した場合に自動的に更新されます。
