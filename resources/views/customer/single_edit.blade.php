@@ -26,8 +26,13 @@
                         <div class="editRow_02" >
                             <div class="editTitle_02" >来店日時</div>
                             <div class="editContent_02" >
-                                {{ $VisitHistory->vis_date->format('Y年 m月 d日') }}<br>
-                                <input type="time" name="vis_time" class="formInput" value="<?= date('H:i', strtotime($VisitHistory->vis_time)) ?>" >
+                                <div class="editContent_02_date" >
+                                    {{ $VisitHistory->vis_date->format('Y年 m月 d日') }}<br>
+                                </div>
+                                <div class="editContent_02_time" >
+                                    <input type="time" name="vis_time" class="formInput" value="<?= date('H:i', strtotime($VisitHistory->vis_time)) ?>" >
+                                </div>
+
                             </div>
                         </div>
                         <div class="editRow_02" >
@@ -53,11 +58,11 @@
                             </div>
                         </div>
                         <div class="editRow_02" >
-                            <div class="editTitle_02" >画像</div>
-                            <div class="editContent_02" >
+                            <div class="editTitle_02_2" >画像</div>
+                            <div class="editContent_02_2" >
                                 <div class="visHisImgs" >
                                     <div class="visHisImg" >
-                                    <div class="visHisImgAngleName" >正面</div>
+                                        <div class="visHisImgAngleName" >正面</div>
                                         @if($VisitHistory->img_pass1)
                                             <div class="customer_img" >
                                                 <img src="{{asset('storage/customer_img/'.$VisitHistory->img_pass1)}}" >
@@ -69,7 +74,7 @@
                                         @endif
                                     </div>
                                     <div class="visHisImg" >
-                                    <div class="visHisImgAngleName" >側面</div>
+                                        <div class="visHisImgAngleName" >側面</div>
                                         @if($VisitHistory->img_pass2)
                                             <div class="customer_img" >
                                                 <img src="{{asset('storage/customer_img/'.$VisitHistory->img_pass2)}}" >
@@ -81,7 +86,7 @@
                                         @endif
                                     </div>
                                     <div class="visHisImg" >
-                                    <div class="visHisImgAngleName" >背面</div>
+                                        <div class="visHisImgAngleName" >背面</div>
                                         @if($VisitHistory->img_pass3)
                                             <div class="customer_img" >
                                                 <img src="{{asset('storage/customer_img/'.$VisitHistory->img_pass3)}}" >
@@ -96,8 +101,8 @@
                             </div>
                         </div>
                         <div class="editRow_02" >
-                            <div class="editTitle_02" >メモ</div>
-                            <div class="editContent_02" >
+                            <div class="editTitle_02_2" >メモ</div>
+                            <div class="editContent_02_2" >
                                 <textarea class="formInput" name="memo" ><?= $VisitHistory->memo ?></textarea>
                             </div>
                         </div>
