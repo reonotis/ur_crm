@@ -80,7 +80,6 @@ function getDayRecord(){
                if(selectChoice == 1){
                     setPayment(data)
                }else if(selectChoice == 2){
-                    console.log(data)
                     setMenu(data)
                }else if(selectChoice == 3){
                     setStylist(data)

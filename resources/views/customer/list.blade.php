@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -27,8 +26,8 @@
                                 </td>
                                 <td><?= $customer->shop_name ?></td>
                                 <td><?= $customer->name ?></td>
-                                <td></td>
-                                <td></td>
+                                <td>-</td>
+                                <td>-</td>
                                 <td><a href="{{route('customer.show', ['id' => $customer->id ])}}" >確認</a></td>
                             </tr>
                         @endforeach
@@ -39,6 +38,5 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 

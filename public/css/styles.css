@@ -314,6 +314,11 @@ label {
 .inputZip{
 	width :80px;
 }
+.inputAddressArea{
+	width : 100%;
+	display : flex;
+	flex-flow : wrap;
+}
 .inputAddresses{
 	margin-bottom :5px;
 	width : 250px;
@@ -833,7 +838,7 @@ input:disabled {
 	height: 50px;
 	line-height: 50px;
 	margin: 0 2px 0 0;
-	padding: 0 10px;
+	padding: 0 5px;
 	text-align: center;
 	background: var(--mainColor2);
 	border: solid 1px var(--mainColor);
@@ -885,6 +890,36 @@ a > .setting_navigation:hover{
 .tableClass_001 td.id{
 	font-size: 0.8em;
 }
+@media screen and (max-width: 1000px) {
+	.tableClass_001 th,
+	.tableClass_001 td.id{
+		display: none;
+	}
+	.tableClass_001 td{
+		display: inline-flex;
+		width: 100%;
+		padding: 0 10px;
+	}
+	.tableClass_001 td:nth-child(2) {
+		padding: 10px 10px 0;
+	}
+	.tableClass_001 td:nth-child(2):before {
+		content: "【 顧客番号 】";
+	}
+	.tableClass_001 td:nth-child(3):before {
+		content: "【 顧客名 】";
+	}
+	.tableClass_001 td:nth-child(4):before {
+		content: "【 所属店舗 】";
+	}
+	.tableClass_001 td:nth-child(5):before {
+		content: "【 担当者 】";
+	}
+	.tableClass_001 td:nth-child(8) {
+		justify-content: center;
+		padding: 0 0 10px;
+	}
+}
 
 /* 顧客検索・顧客詳細画面 */
 .tableClass_002 {
@@ -904,7 +939,24 @@ a > .setting_navigation:hover{
 	padding: 5px 10px ;
 	border-bottom: solid 1px var(--mainColor2);
 }
-
+@media screen and (max-width: 1000px) {
+	.tableClass_002{
+		display: inline-flex;
+		border-collapse: separate;
+		border-spacing: 0 10px;
+	}
+	.tableClass_002 th{
+		display: inline-flex;
+		width: calc(100% );
+		border: solid 1px var(--mainColor2);
+	}
+	.tableClass_002 td{
+		display: inline-flex;
+		width: calc(100% );
+		padding: 5px;
+		border: solid 1px var(--mainColor2);
+	}
+}
 /* 日報の来店顧客一覧に使用 */
 .tableClass_003 {
 	width: 100%;
@@ -1039,6 +1091,7 @@ a > .setting_navigation:hover{
 	.tableClass_006 th,
 	.tableClass_006 td{
 		padding: 8px 3px ;
+		font-size: 12px;
 	}
 }
 
@@ -1088,7 +1141,7 @@ a > .setting_navigation:hover{
 /* 日報の集計に使用 */
 .tableClass_009{
 	width: 100%;
-    font-family: cursive;
+    font-family: -webkit-pictograph;
 	margin: 0 0 20px;
 	border-spacing: 0px 6px;
     border-collapse: separate;

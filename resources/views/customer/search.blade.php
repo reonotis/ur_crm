@@ -6,11 +6,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-
     <div class="row justify-content-center">
 
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="card">
                 <div class="card-header">顧客検索</div>
                 <div class="card-body">
@@ -81,16 +79,17 @@
                             <tr>
                                 <th>住所</th>
                                 <td>
-                                    <div class="inputZips">
-                                        <input class="formInput inputZip" type="text" name="zip21" placeholder="150" >-
-                                        <input class="formInput inputZip" type="text" name="zip22" placeholder="0022" >
+                                    <div class="inputAddressArea">
+                                        <div class="inputZips">
+                                            <input class="formInput inputZip" type="text" name="zip21" placeholder="150" >-
+                                            <input class="formInput inputZip" type="text" name="zip22" placeholder="0022" >
+                                        </div>
+                                        <div class="inputAddresses">
+                                            <input class="formInput inputAddress" type="text" name="pref21" placeholder="東京都" >
+                                            <input class="formInput inputAddress" type="text" name="addr21" placeholder="渋谷区" >
+                                        </div>
+                                        <input class="formInput inputStreet" type="text" name="strt21" placeholder="恵比寿南1丁目マンション名1101号室" >
                                     </div>
-                                    <div class="inputAddress">
-                                        <input class="formInput inputAddr" type="text" name="pref21" placeholder="東京都" >
-                                        <input class="formInput inputAddr" type="text" name="addr21" placeholder="渋谷区" >
-                                    </div>
-                                    <input class="formInput inputStreet" type="text" name="strt21" placeholder="恵比寿南1丁目マンション名1101号室" >
-                                    <!-- この機能まだ -->
                                 </td>
                             </tr>
                             <tr>
@@ -104,7 +103,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 
