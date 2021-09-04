@@ -44,6 +44,7 @@ $('.selectChoice').on('click', function() {
  * 渡された日付からデータを取得する
  */
 function getMonthRecord(){
+     displayArea('更新中です...')
      var targetMonth = $('#targetMonth').val();
      var shopChoice = $('input:radio[name="shopChoice"]:checked').val();
      var selectChoice = $('input:radio[name="selectChoice"]:checked').val();
@@ -75,13 +76,14 @@ function getMonthRecord(){
 
 function setMonthAndMenu(data){
      var html = '';
-     var html = html + '<div >抽出期間 : ' + data['$fromMonth'] + ' ～ ' + data['$toMonth'] + '</div>';
-     var html = html + '<div >メニュー別</div>';
+     var html = html + '<div >抽出期間 : ' + data['fromMonth'] + ' ～ ' + data['toMonth'] + '</div>';
+     var html = html + '<div >店舗 : ' + data['shop_name'] + '</div>';
+     var html = html + '<div >表示方法 : メニュー別</div>';
      html = html + '<table class="tableClass_010" >';
           html = html + '<th>メニュー</th>';
           html = html + '<th>対応客数</th>';
 
-          data['$visitHistory'].forEach(value => {
+          data['visitHistory'].forEach(value => {
                html = html + '<tr>';
                     html = html + '<td>';
                          if(value['menu_name'] == null){
@@ -100,8 +102,9 @@ function setMonthAndMenu(data){
 function setMonthAndStylist(data){
      // var html = '<div >会計別</div>';
      var html = '';
-     var html = html + '<div >抽出期間 : ' + data['$fromMonth'] + ' ～ ' + data['$toMonth'] + '</div>';
-     var html = html + '<div >スタイリスト別</div>';
+     var html = html + '<div >抽出期間 : ' + data['fromMonth'] + ' ～ ' + data['toMonth'] + '</div>';
+     var html = html + '<div >店舗 : ' + data['shop_name'] + '</div>';
+     var html = html + '<div >表示方法 : スタイリスト別</div>';
      html = html + '<table class="tableClass_010" >';
           html = html + '<th>担当スタッフ</th>';
           html = html + '<th>対応客数</th>';
@@ -111,7 +114,7 @@ function setMonthAndStylist(data){
           html = html + '<th>F_フリー</th>';
           html = html + '<th>D_代理</th>';
 
-          data['$visitHistory'].forEach(value => {
+          data['visitHistory'].forEach(value => {
                html = html + '<tr>';
                     html = html + '<td>' + value['name'] + '</td>';
                     html = html + '<td>' + value['total_NINNZUU'] + '名</td>';

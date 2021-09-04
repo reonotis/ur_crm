@@ -80,7 +80,8 @@ function getDayRecord(){
                if(selectChoice == 1){
                     setPayment(data)
                }else if(selectChoice == 2){
-                    displayArea("作成中")
+                    console.log(data)
+                    setMenu(data)
                }else if(selectChoice == 3){
                     setStylist(data)
                }
@@ -93,6 +94,9 @@ function getDayRecord(){
 function setPayment(data){
      // var html = '<div >会計別</div>';
      var html = '';
+     var html = html + '<div >対象日 : ' + data['setDate'] + '</div>';
+     var html = html + '<div >店舗 : ' + data['shop_name'] + '</div>';
+     var html = html + '<div >表示方法 : 会計別</div>';
      html = html + '<table class="tableClass_010" >';
           html = html + '<th>来店時間</th>';
           html = html + '<th>担当スタッフ</th>';
@@ -100,7 +104,7 @@ function setPayment(data){
           html = html + '<th>来店種別</th>';
           html = html + '<th>メニュー</th>';
 
-          data.forEach(value => {
+          data['visitHistory'].forEach(value => {
                html = html + '<tr>';
                     html = html + '<td>' + value['vis_time'] + '</td>';
                     html = html + '<td>' + value['name'] + '</td>';
@@ -129,9 +133,32 @@ function setPayment(data){
      displayArea(html)
 }
 
-function setStylist(data){
-     // var html = '<div >会計別</div>';
+function setMenu(data){
      var html = '';
+     var html = html + '<div >対象日 : ' + data['setDate'] + '</div>';
+     var html = html + '<div >店舗 : ' + data['shop_name'] + '</div>';
+     var html = html + '<div >表示方法 : メニュー別</div>';
+     html = html + '<table class="tableClass_010" >';
+          html = html + '<tr>';
+               html = html + '<th>担当スタッフ</th>';
+               html = html + '<th>人数</th>';
+          html = html + '</tr>';
+
+          data['visitHistory'].forEach(value => {
+               html = html + '<tr>';
+                    html = html + '<td>' + value['menu_name'] + '</td>';
+                    html = html + '<td>' + value['numberOfVisitors'] + '名</td>';
+               html = html + '</tr>';
+          });
+     html = html + '</table>';
+     displayArea(html)
+}
+
+function setStylist(data){
+     var html = '';
+     var html = html + '<div >対象日 : ' + data['setDate'] + '</div>';
+     var html = html + '<div >店舗 : ' + data['shop_name'] + '</div>';
+     var html = html + '<div >表示方法 : 会計別</div>';
      html = html + '<table class="tableClass_010" >';
           html = html + '<th>担当スタッフ</th>';
           html = html + '<th>対応客数</th>';
@@ -141,7 +168,7 @@ function setStylist(data){
           html = html + '<th>F_フリー</th>';
           html = html + '<th>D_代理</th>';
 
-          data.forEach(value => {
+          data['visitHistory'].forEach(value => {
                html = html + '<tr>';
                     html = html + '<td>' + value['name'] + '</td>';
                     html = html + '<td>' + value['total_NINNZUU'] + '名</td>';

@@ -130,16 +130,20 @@ class OldReportController extends Controller
             session(['oldReport_day_setData' => $setDate]);
             session(['oldReport_day_shopChoice' => $shopChoice]);   //月別表示時のショップ選択
             session(['oldReport_day_selectChoice' => $selectChoice]);   //月別表示時の表示方法
+            $shops = Shop::get_shopList($shopChoice);
+            $return['shop_name'] = $shops[0]->shop_name;
+            $return['setDate'] = $setDate;
 
             if($selectChoice == 1){
                 $visitHistory = VisitHistory::get_dayAndPayment($setDate, $shopChoice);
                 $visitHistory = $this->change_formatTime($visitHistory);
-                $return = $visitHistory;
+                $return['visitHistory'] = $visitHistory;
             }elseif($selectChoice == 2){
-                $return = "作成中";
+                $visitHistory = VisitHistory::get_dayAndMenu($setDate, $shopChoice);
+                $return['visitHistory'] = $visitHistory;
             }elseif($selectChoice == 3){
                 $visitHistory = VisitHistory::get_dayAndStylist($setDate, $shopChoice);
-                $return = $visitHistory;
+                $return['visitHistory'] = $visitHistory;
             }
 
             // throw new \Exception("強制終了");
@@ -168,20 +172,22 @@ class OldReportController extends Controller
             session(['oldReport_displayMonth' => $targetMonth]);
             session(['oldReport_month_shopChoice' => $shopChoice]);   //月別表示時のショップ選択
             session(['oldReport_month_selectChoice' => $selectChoice]);   //月別表示時の表示方法
+            $shops = Shop::get_shopList($shopChoice);
+            $return['shop_name'] = $shops[0]->shop_name;
 
             if($selectChoice == 1){
                 $return = "作成中1";
             }elseif($selectChoice == 2){
                 list($visitHistory, $fromMonth, $toMonth) = VisitHistory::get_monthAndMenu($targetMonth, $shopChoice);
                 // $visitHistory = $this->change_formatTime($visitHistory);
-                $return['$visitHistory'] = $visitHistory;
-                $return['$fromMonth'] = $fromMonth;
-                $return['$toMonth'] = $toMonth;
+                $return['visitHistory'] = $visitHistory;
+                $return['fromMonth'] = $fromMonth;
+                $return['toMonth'] = $toMonth;
             }elseif($selectChoice == 3){
                 list($visitHistory, $fromMonth, $toMonth) = VisitHistory::get_monthAndStylist($targetMonth, $shopChoice);
-                $return['$visitHistory'] = $visitHistory;
-                $return['$fromMonth'] = $fromMonth;
-                $return['$toMonth'] = $toMonth;
+                $return['visitHistory'] = $visitHistory;
+                $return['fromMonth'] = $fromMonth;
+                $return['toMonth'] = $toMonth;
             }
 
             // throw new \Exception("強制終了");

@@ -85,6 +85,29 @@ class VisitHistory extends Model
     }
 
     /**
+     * 指定日と指定ショップの来店履歴をメニュー別に取得
+     * @param [type] $shop_id
+     * @return void
+     */
+    public static function get_dayAndMenu($date, $shop_id){
+
+        // サブクエリを作成 店舗・スタッフ・来店タイプでグループ化する
+        $query = self::select(DB::raw(
+            'visit_histories.*,
+            count(*) as numberOfVisitors,
+            ifnull(menus.menu_name,"未設定") as menu_name'
+        ))
+        ->leftJoin('menus', 'menus.id', '=', 'visit_histories.menu_id' )
+        ->where('visit_histories.vis_date', $date)
+        ->where('visit_histories.shop_id', $shop_id)
+        ->where('visit_histories.delete_flag', 0)
+        ->groupBy('menu_id')->get();
+
+
+        return $query ;
+    }
+
+    /**
      * 指定日と指定ショップの来店履歴をスタイリスト別に取得
      * @param [type] $shop_id
      * @return void
@@ -98,7 +121,7 @@ class VisitHistory extends Model
             visit_types.type_name,
             count(*) as numberOfVisitors'
         ))
-        ->leftJoin('visit_types', 'visit_types.id', '=', 'visit_histories.visit_type_id'  )
+        ->leftJoin('visit_types', 'visit_types.id', '=', 'visit_histories.visit_type_id' )
         ->where('visit_histories.vis_date', $date)
         ->where('visit_histories.delete_flag', 0)
         ->groupBy('shop_id')

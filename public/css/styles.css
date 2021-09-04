@@ -108,7 +108,6 @@ navi{
 }
 
 /* responsive */
-
 @media screen and (max-width: 1000px) {
 	.navi-links {
 		flex-direction: column;
@@ -119,7 +118,7 @@ navi{
 		height: 100%;
 		background: var(--mainColor);
 		margin-top: var(--nav-height);
-		transition: 0.5s ease-out;
+		transition: 0.2s ease-out;
 	}
 	.navi-links li {
 		height: var(--nav-height);
@@ -449,12 +448,10 @@ input:disabled {
     border-radius: 5px;
     display: flex;
     align-items: center;
-
 }
 .report_index_contents_area{
 	width: calc(100% - 270px);
 }
-
 .report_index_register_customer_area{
     position: relative;
 	margin: 0 0 15px;
@@ -463,11 +460,6 @@ input:disabled {
     border: 1px solid var(--mainColor);
     border-radius: 1rem;
 }
-
-
-
-
-
 .selectUsersInput {
     clip: rect(1px, 1px, 1px, 1px);
     position: absolute !important;
@@ -488,6 +480,61 @@ input:disabled {
 .selectUsersInput:focus + .selectUsersLabel {
     outline-color: var(--mainColor);
 }
+
+
+
+
+
+/* 過去日報確認 */
+.setDayRecode{
+	margin: 15px 0 ;
+}
+.changeRecodeBtn{
+	font-size:0.8em;
+	padding: 2px 15px;
+	background: var(--mainColor);
+	color: #fff;
+	border: solid 1px var(--mainColor);
+	border-radius: 15px;
+	transition: 0.2s;
+}
+.changeRecodeBtn:hover{
+	background: #fff;
+	color: var(--mainColor);
+}
+.selectRadioChoice {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+.selectRadiosLabel {
+    display: inline-block;
+	text-align: center;
+    padding: 0.5rem 0;
+	margin: 0px ;
+	width: calc(100% / 3 - 3px );
+	border : solid 1px var(--mainColor);
+    border-radius: 5px;
+    transition: all .2s;
+}
+.selectRadioChoice:checked + .selectRadiosLabel {
+    background: var(--mainColor);
+    color: #fff;
+}
+.selectRadioChoice:focus + .selectRadiosLabel {
+    outline-color: var(--mainColor);
+}
+.selectRadiosLabel.selectRadiosLabel2{
+	width: calc(100% / 2 - 3px );
+}
+#displayArea{
+	padding: 20px;
+	background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+
+
 
 
 
@@ -773,6 +820,42 @@ input:disabled {
 
 
 
+/* 設定画面 */
+.setting_navigation_area{
+	background : var(--mainColor3);
+	width: 100%;
+}
+.setting_navigation_area > .LeftBOX{
+	max-width: 800px;
+	margin: 0 auto 10px;
+}
+.setting_navigation{
+	height: 50px;
+	line-height: 50px;
+	margin: 0 2px 0 0;
+	padding: 0 10px;
+	text-align: center;
+	background: var(--mainColor2);
+	border: solid 1px var(--mainColor);
+	color: var(--mainColor2_string);
+	transition: 0.2s;
+}
+.setting_navigation.active{
+	background: var(--mainColor3);
+	color: var(--mainColor3_string);
+}
+a > .setting_navigation:hover{
+    text-decoration: none;
+	background: var(--mainColor3);
+	color: var(--mainColor3_string);
+}
+
+
+
+
+
+
+
 
 
 
@@ -1040,8 +1123,7 @@ input:disabled {
 
 /* スタイリスト詳細に使用 */
 .tableClass_010 {
-	width: calc(100% - 20px);
-	margin: 10px;
+	width: 100%;
 }
 .tableClass_010 th{
 	padding: 5px;
@@ -1062,85 +1144,3 @@ input:disabled {
 
 
 
-
-
-/* 過去日報確認 */
-.setDayRecode{
-	margin: 15px 0 ;
-}
-.changeRecodeBtn{
-	font-size:0.8em;
-	padding: 2px 15px;
-	background: var(--mainColor);
-	color: #fff;
-	border: solid 1px var(--mainColor);
-	border-radius: 15px;
-	transition: 0.2s;
-}
-.changeRecodeBtn:hover{
-	background: #fff;
-	color: var(--mainColor);
-}
-
-
-
-.selectRadioChoice {
-    clip: rect(1px, 1px, 1px, 1px);
-    position: absolute !important;
-}
-.selectRadiosLabel {
-    display: inline-block;
-	text-align: center;
-    padding: 0.5rem 1rem;
-	margin: 0px ;
-	width: calc(100% / 3 - 3px );
-	border : solid 1px var(--mainColor);
-    border-radius: 5px;
-    transition: all .2s;
-}
-.selectRadioChoice:checked + .selectRadiosLabel {
-    background: var(--mainColor);
-    color: #fff;
-}
-.selectRadioChoice:focus + .selectRadiosLabel {
-    outline-color: var(--mainColor);
-}
-.selectRadiosLabel.selectRadiosLabel2{
-	width: calc(100% / 2 - 3px );
-}
-
-
-
-
-
-
-
-/* 設定画面 */
-.setting_navigation_area{
-	background : var(--mainColor3);
-	width: 100%;
-}
-.setting_navigation_area > .LeftBOX{
-	max-width: 800px;
-	margin: 0 auto 10px;
-}
-.setting_navigation{
-	height: 50px;
-	line-height: 50px;
-	margin: 0 2px 0 0;
-	padding: 0 10px;
-	text-align: center;
-	background: var(--mainColor2);
-	border: solid 1px var(--mainColor);
-	color: var(--mainColor2_string);
-	transition: 0.2s;
-}
-.setting_navigation.active{
-	background: var(--mainColor3);
-	color: var(--mainColor3_string);
-}
-a > .setting_navigation:hover{
-    text-decoration: none;
-	background: var(--mainColor3);
-	color: var(--mainColor3_string);
-}
