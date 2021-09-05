@@ -1,0 +1,30 @@
+
+
+
+table {
+	border-collapse: collapse;
+}
+
+
+.pdf_table_001 {
+	width: 100%;
+}
+.pdf_table_001 tr{
+	border-bottom: solid 1px #82c2f7;
+}
+.pdf_table_001 th{
+	padding: 10px ;
+	font-size: 1.2em;
+	background: #82c2f7;
+	color: #fff;
+}
+.pdf_table_001 td{
+	padding: 10px ;
+}
+.pdf_table_001 tr:nth-child(odd) td {
+	background: #ecf5fb;
+}
+.pdf_table_001 th.id,
+.pdf_table_001 td.id{
+	font-size: 0.8em;
+}

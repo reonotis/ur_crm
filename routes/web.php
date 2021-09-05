@@ -89,6 +89,15 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::post('updateEmail', 'SettingController@updateEmail')->name('setting.updateEmail');
     Route::get('EditPassword', 'SettingController@EditPassword')->name('setting.EditPassword');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
+    Route::get('lecture', 'SettingController@lecture')->name('setting.lecture');
+});
+
+
+
+// 設定関連
+Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
+    Route::get('index', 'PDFController@index')->name('pdf.index');
+    Route::get('show_pdfFile/{file_name}', 'PDFController@show_pdfFile')->name('pdf.show_pdfFile');
 });
 
 

@@ -129,6 +129,14 @@ class SettingController extends Controller
     }
 
     /**
+     *
+     */
+    public function lecture()
+    {
+        return view('setting.lecture');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

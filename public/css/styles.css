@@ -836,10 +836,11 @@ input:disabled {
 }
 .setting_navigation{
 	height: 50px;
+	min-width: 100px;
 	line-height: 50px;
 	margin: 0 2px 0 0;
 	padding: 0 5px;
-	text-align: center;
+    justify-content: center;
 	background: var(--mainColor2);
 	border: solid 1px var(--mainColor);
 	color: var(--mainColor2_string);
@@ -1016,26 +1017,32 @@ a > .setting_navigation:hover{
 @media screen and (max-width: 1000px) {
 	.tableClass_005 th{
 		display: none;
+		flex-direction: column;
 	}
 	.tableClass_005 td.id{
 		display: none;
 	}
 	.tableClass_005 td{
 		display: inline-flex;
+		flex-direction: column;
 		width: 100%;
 		padding: 3px 0 0;
 	}
 	.tableClass_005 td:nth-child(2):before {
 		content: "【来店日時】";
+		display: contents;
 	}
 	.tableClass_005 td:nth-child(3):before {
 		content: "【担当者】";
+		display: contents;
 	}
 	.tableClass_005 td:nth-child(4):before {
 		content: "【 予約タイプ 】";
+		display: contents;
 	}
 	.tableClass_005 td:nth-child(5):before {
 		content: "【 メニュー 】";
+		display: contents;
 	}
 	.tableClass_005 td:nth-child(6) {
 		display: block;
@@ -1047,7 +1054,6 @@ a > .setting_navigation:hover{
 		position: relative;
 		top: 0;
 		width: 33%;
-		flex-direction: column;
 		padding-top: 20px;
 	}
 	.tableClass_005 td:nth-child(6):before {
@@ -1137,6 +1143,34 @@ a > .setting_navigation:hover{
 	background: var(--editColor);
 	color: #fff;
 }
+
+/* 使い方 */
+.lectureSection{
+	width: 100%;
+	padding: 30px 0 ;
+    background: var(--mainColor3);
+}
+.lectureArea{
+	width: 800px;
+	min-height: 250px;
+	padding: 20px 10px ;
+	margin: 0 auto;
+    background: #fff;
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+}
+.lectureContent{
+	display: inline;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+.lectureLink{
+	padding: 10px;
+}
+
+
 
 /* 日報の集計に使用 */
 .tableClass_009{
