@@ -63,6 +63,8 @@ $json_array = json_encode($visitHistories);
                     <a href="{{route('VisitHistory.register', ['id' => $customer->id ])}}" class="customer_show_contents_title_btn" >本日の来店履歴を登録する</a>
                 @endif
             </div>
+
+
             <table class="tableClass_005">
                 <tr>
                     <th class="id">ID</th>

@@ -964,7 +964,7 @@ a > .setting_navigation:hover{
 }
 
 /* 顧客検索・顧客詳細画面 */
-.tableClass_002 {
+/* .tableClass_002 {
 	width: 100%;
 }
 .tableClass_002 th{
@@ -1001,7 +1001,7 @@ a > .setting_navigation:hover{
 		padding: 5px;
 		border: solid 1px var(--mainColor2);
 	}
-}
+} */
 /* 日報の来店顧客一覧に使用 */
 .tableClass_003 {
 	width: 100%;
@@ -1066,8 +1066,14 @@ a > .setting_navigation:hover{
 	.tableClass_005 td.id{
 		display: none;
 	}
+	.tableClass_005,
+	.tableClass_005 tr,
+	.tableClass_005 tbody,
 	.tableClass_005 td{
-		display: inline-flex;
+		display: block;
+	}
+	.tableClass_005 td{
+		display: block;
 		flex-direction: column;
 		width: 100%;
 		padding: 3px 0 0;
