@@ -90,6 +90,7 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('EditPassword', 'SettingController@EditPassword')->name('setting.EditPassword');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
     Route::get('lecture', 'SettingController@lecture')->name('setting.lecture');
+    Route::get('notice', 'SettingController@notice')->name('setting.notice');
 });
 
 

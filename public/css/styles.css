@@ -829,10 +829,11 @@ input:disabled {
 .setting_navigation_area{
 	background : var(--mainColor3);
 	width: 100%;
+	border-bottom: solid 1px var(--mainColor);
 }
 .setting_navigation_area > .LeftBOX{
 	max-width: 800px;
-	margin: 0 auto 10px;
+	margin: 0 auto;
 }
 .setting_navigation{
 	height: 50px;
@@ -861,6 +862,46 @@ a > .setting_navigation:hover{
 
 
 
+/* customer search */
+.searchRow{
+    width: 100%;
+    display: flex;
+    margin-bottom: 5px;
+    flex-flow: wrap;
+}
+.searchRow_title{
+    width: 150px;
+	padding: 10px;
+    background: var(--mainColor2);
+	color: #fff;
+    border-bottom: solid 1px var(--mainColor2);
+    font-size: 1em;
+	font-weight: bold;
+	float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.searchRow_value{
+	width: calc( 100% - 150px);
+	padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    border-bottom: solid 1px var(--mainColor2);
+}
+@media screen and (max-width: 1000px) {
+	.searchRow{
+		margin-bottom: 10px;
+	}
+	.searchRow_title{
+		width: 100%;
+		border: solid 1px var(--mainColor2);
+	}
+	.searchRow_value{
+		width: 100%;
+		border: solid 1px var(--mainColor2);
+	}
+}
 
 
 

@@ -21,7 +21,7 @@
         <a href="{{route('setting.Email')}}"    ><div class="setting_navigation LeftBOX <?php if($active == 2) echo "active"; ?>" >メールアドレス変更</div></a>
         <a href="{{route('setting.EditPassword')}}" ><div class="setting_navigation LeftBOX <?php if($active == 3) echo "active"; ?>" >パスワード変更</div></a>
         @if(1==1)
-            <a href="{{route('setting.lecture')}}" ><div class="setting_navigation LeftBOX <?php if($active == 4) echo "active"; ?>" >お知らせ</div></a>
+            <a href="{{route('setting.notice')}}" ><div class="setting_navigation LeftBOX <?php if($active == 4) echo "active"; ?>" >お知らせ</div></a>
         @endif
         <a href="{{route('setting.lecture')}}" ><div class="setting_navigation LeftBOX <?php if($active == 5) echo "active"; ?>" >使い方</div></a>
     </div>
