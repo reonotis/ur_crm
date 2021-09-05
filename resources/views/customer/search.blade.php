@@ -6,10 +6,14 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
+
     <div class="row justify-content-center">
 
-        <div class="col-md-7">
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header">顧客検索</div>
+                <div class="card-body">
                     <form method="get" action="{{route('customer.searching')}}" class="form-inline my-2 my-lg-0">
                         <table class="tableClass_002">
                             <tr>
@@ -98,8 +102,10 @@
                         <button class=" button" type="submit">検索する</button>
                     </form>
                 </div>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 
 

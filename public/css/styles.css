@@ -951,9 +951,6 @@ a > .setting_navigation:hover{
 	.tableClass_002{
 		border-collapse: separate;
 	}
-	.tableClass_002 tr{
-		border-spacing: 0 10px;
-	}
 	.tableClass_002 th{
 		width: calc(100% );
 		border: solid 1px var(--mainColor2);
