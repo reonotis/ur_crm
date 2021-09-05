@@ -947,12 +947,12 @@ a > .setting_navigation:hover{
 		border-spacing: 0 10px;
 	}
 	.tableClass_002 th{
-		display: inline-flex;
+		display: flex;
 		width: calc(100% );
 		border: solid 1px var(--mainColor2);
 	}
 	.tableClass_002 td{
-		display: inline-flex;
+		display: flex;
 		width: calc(100% );
 		padding: 5px;
 		border: solid 1px var(--mainColor2);
