@@ -941,6 +941,12 @@ a > .setting_navigation:hover{
 	border-bottom: solid 1px var(--mainColor2);
 }
 @media screen and (max-width: 1000px) {
+	.tableClass_002 tbody,
+	.tableClass_002 tr,
+	.tableClass_002 th,
+	.tableClass_002 td {
+		display:block; width:100%;
+	}
 	.tableClass_002{
 		display: block;
 		border-collapse: separate;
