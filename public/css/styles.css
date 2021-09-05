@@ -942,17 +942,16 @@ a > .setting_navigation:hover{
 }
 @media screen and (max-width: 1000px) {
 	.tableClass_002{
-		display: inline-flex;
 		border-collapse: separate;
 		border-spacing: 0 10px;
 	}
 	.tableClass_002 th{
-		display: flex;
+		display: block;
 		width: calc(100% );
 		border: solid 1px var(--mainColor2);
 	}
 	.tableClass_002 td{
-		display: flex;
+		display: block;
 		width: calc(100% );
 		padding: 5px;
 		border: solid 1px var(--mainColor2);
