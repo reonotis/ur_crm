@@ -1059,10 +1059,8 @@ a > .setting_navigation:hover{
 	font-size: 0.8em;
 }
 @media screen and (max-width: 1000px) {
-	.tableClass_005 th{
-		display: none;
-		flex-direction: column;
-	}
+	.tableClass_005 th,
+	.tableClass_005 th.id,
 	.tableClass_005 td.id{
 		display: none;
 	}
@@ -1073,7 +1071,6 @@ a > .setting_navigation:hover{
 		display: block;
 	}
 	.tableClass_005 td{
-		display: block;
 		flex-direction: column;
 		width: 100%;
 		padding: 3px 0 0;
