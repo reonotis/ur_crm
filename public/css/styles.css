@@ -944,10 +944,10 @@ a > .setting_navigation:hover{
 	.tableClass_002{
 		display: block;
 		border-collapse: separate;
-		border-spacing: 0 10px;
 	}
 	.tableClass_002 tr{
 		display: block;
+		border-spacing: 0 10px;
 	}
 	.tableClass_002 th{
 		display: block;
