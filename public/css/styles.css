@@ -945,23 +945,20 @@ a > .setting_navigation:hover{
 	.tableClass_002 tr,
 	.tableClass_002 th,
 	.tableClass_002 td {
-		display:block; width:100%;
+		display: block;
+		width: 100%;
 	}
 	.tableClass_002{
-		display: block;
 		border-collapse: separate;
 	}
 	.tableClass_002 tr{
-		display: block;
 		border-spacing: 0 10px;
 	}
 	.tableClass_002 th{
-		display: block;
 		width: calc(100% );
 		border: solid 1px var(--mainColor2);
 	}
 	.tableClass_002 td{
-		display: block;
 		width: calc(100% );
 		padding: 5px;
 		border: solid 1px var(--mainColor2);
