@@ -267,7 +267,19 @@ class VisitHistory extends Model
 
     }
 
-
+    /**
+     * 対象顧客の本日の来店履歴を取得
+     * @param int $customer_id
+     * @return void
+     */
+    public static function checkTodayHistory($customer_id){
+        $result = self::select()
+        ->where('customer_id', $customer_id)
+        ->where('vis_date', date('Y-m-d'))
+        ->where('delete_flag', 0)
+        ->get();
+        return $result;
+    }
 
 
 

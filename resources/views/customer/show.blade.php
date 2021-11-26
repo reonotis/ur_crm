@@ -64,10 +64,11 @@ $json_array = json_encode($visitHistories);
                 @endif
             </div>
 
+            safariでバグるので
+            テーブルではなく、divにしようかな。
 
             <table class="tableClass_005">
                 <tr>
-                    <th class="id">ID</th>
                     <th>来店日時</th>
                     <th>担当スタイリスト</th>
                     <th>予約タイプ</th>
@@ -80,7 +81,6 @@ $json_array = json_encode($visitHistories);
                 </tr>
                 @foreach($visitHistories as $visitHistory)
                 <tr>
-                    <td class="id">{{ $visitHistory->id }}</td>
                     <td>{{ $visitHistory->vis_date->format('y年m月d日') ."  ". date('H:i', strtotime($visitHistory->vis_time)) }}</td>
                     <td>{{ $visitHistory->name }}</td>
                     <td>{{ $visitHistory->type_name }}</td>

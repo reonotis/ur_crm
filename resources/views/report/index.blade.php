@@ -35,6 +35,16 @@
     </div>
     <div class="report_index_contents_area">
         <div class="report_index_register_customer_area">
+            <h5>本日の来店予約をされている客様</h5>
+            @if(!empty($reserve))
+                <div>
+                </div>
+            @else
+                本日の予約はありません。
+            @endif
+
+        </div>
+        <div class="report_index_register_customer_area">
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {{ session('status') }}

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notice;
+use App\Models\NoticesStatus;
+use App\User;
 use App\Services\CheckData;
 use Illuminate\Http\Request;
 use Hash;
@@ -147,11 +150,219 @@ class SettingController extends Controller
     }
 
     /**
-     *
+     * 過去のお知らせ一覧を取得してリストを表示させます。
      */
-    public function notice()
+    public function noticeList()
+    {
+        // 権限が無ければTOP画面に遷移
+        if( \Auth::user()->authority_id > config('ur.authorityList')[3]['authorityId']){
+            session()->flash('msg_danger', 'お知らせ登録をする権限がありません' );
+            return view('home');
+        }
+
+        $notices = Notice::select()
+        ->where('delete_flag', 0)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return view('setting.noticeList', compact('notices'));
+    }
+
+    /**
+     * 過去のお知らせ一覧を取得してリストを表示させます。
+     */
+    public function noticeCreate()
     {
         //
-        return view('setting.notice');
+        return view('setting.noticeCreate');
     }
+
+    /**
+     * お知らせ内容をセッションに格納して確認画面を表示する
+     */
+    public function noticeRegisterConfirm(Request $request)
+    {
+        try {
+            // バリデーションチェック
+            $notice = $this->noticeValidationCheck($request);
+
+            // お知らせ内容をセッションに保存
+            $request->session()->put('notice.title', $notice['title']);
+            $request->session()->put('notice.comment', $notice['comment']);
+
+            return view('setting.noticeRegisterConfirm', compact('notice'));
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->action('SettingController@noticeList');
+        }
+
+    }
+
+    /**
+     * 過去のお知らせ一覧を取得してリストを表示させます。
+     */
+    public function noticeRegister(Request $request)
+    {
+        try {
+
+            $notice = $request->session()->get('notice', array());
+            if(empty($notice)){
+                throw new \Exception("セッションが無効です。やり直してください。");
+            }
+
+            \DB::beginTransaction();
+
+            // お知らせを登録
+            Notice::insert([[
+                'user_id'     => \Auth::user()->id,
+                'title'       => $notice['title'],
+                'comment'     => $notice['comment'],
+                'hidden_flag' => 0,
+                ]
+            ]);
+            $notices_id = \DB::getPdo()->lastInsertId();
+
+            // お知らせを通知するユーザーを取得
+            $users = User::select()
+            ->where('authority_id', '>=', 2)
+            ->where('authority_id', '<=', 7)
+            ->get();
+
+            // 各ユーザー用に未読状態で登録する
+            foreach($users as $user){
+                NoticesStatus::insert([[
+                    'notice_id' => $notices_id,
+                    'user_id' => $user->id,
+                    'notice_status' => 0,
+                    'hidden_flag' => 0,
+                ]]);
+            }
+
+            // セッションを削除
+            $notice = $request->session()->forget('notice');
+
+            \DB::commit();
+            session()->flash('msg_success', 'お知らせを登録しました');
+            return redirect()->action('SettingController@noticeList');
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            // return redirect()->back()->withInput();    // 前の画面へ戻る
+            return redirect()->action('SettingController@noticeList');
+        }
+
+    }
+
+    public function noticeValidationCheck($request){
+        // タイトルのバリデーションチェック
+        if(empty($request->title)){
+            throw new \Exception("タイトルが入力されていません。");
+        }
+
+        // コメントのバリデーションチェック
+        if(empty($request->comment)){
+            throw new \Exception("コメントが入力されていません。");
+        }
+
+        $notice = [
+            'title' => $request->title,
+            'comment' => $request->comment,
+        ];
+
+        return $notice;
+    }
+
+    /**
+     * 対象のお知らせを確認する。
+     */
+    public function noticeConfirm($id)
+    {
+        try {
+            $notice = Notice::select()
+            ->where('delete_flag', 0)
+            ->find($id);
+
+            if(empty($notice)){
+                throw new \Exception("対象のお知らせはありません");
+            }
+
+            return view('setting.noticeConfirm', compact('notice'));
+        } catch (\Throwable $e) {
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->action('SettingController@noticeList');
+        }
+    }
+
+    /**
+     * 対象のお知らせを削除する
+     */
+    public function noticeDelete($id)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $notice = Notice::select()
+            ->where('delete_flag', 0)
+            ->find($id);
+
+            if(empty($notice)){
+                throw new \Exception("対象のお知らせはありません");
+            }
+            $notice->delete_flag = 1;
+            $notice->save();
+
+            $dateTime = new \DateTime();
+            NoticesStatus::where('notice_id', $id)
+            ->update([
+                'notice_status' => 9,
+                'del_user_id' => \Auth::user()->id,
+                'del_at' => $dateTime->format('Y-m-d H:i:s'),
+                'delete_flag' => 1,
+            ]);
+
+            \DB::commit();
+            session()->flash('msg_success', 'お知らせを削除しました。');
+            return redirect()->action('SettingController@noticeList');
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->action('SettingController@noticeList');
+        }
+    }
+
+    /**
+     * 対象のお知らせを表示する
+     */
+    public function noticeShow($id)
+    {
+        try {
+            \DB::beginTransaction();
+            $notice = NoticesStatus::select()
+            ->join('notices', 'notices.id', '=', 'notices_statuses.notice_id')
+            ->where('notices_statuses.delete_flag', 0)
+            ->where('notices_statuses.user_id', \Auth::user()->id)
+            ->find($id);
+
+            if(empty($notice)){
+                throw new \Exception("対象のお知らせはありません。不正な画面遷移です。");
+            }
+
+            // 未読だった場合は既読にする
+            $noticesStatus = NoticesStatus::find($id);
+            if($noticesStatus->notice_status == 0){
+                $noticesStatus->notice_status = 1;
+                $noticesStatus->read_at = date('Y-m-d H:i:s');
+                $noticesStatus->save();
+            }
+
+            \DB::commit();
+            return view('setting.noticeShow', compact('notice'));
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            session()->flash('msg_danger',$e->getMessage() );
+            return redirect()->action('HomeController@index');
+        }
+    }
+
 }

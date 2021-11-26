@@ -90,7 +90,13 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('EditPassword', 'SettingController@EditPassword')->name('setting.EditPassword');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
     Route::get('lecture', 'SettingController@lecture')->name('setting.lecture');
-    Route::get('notice', 'SettingController@notice')->name('setting.notice');
+    Route::get('noticeList', 'SettingController@noticeList')->name('setting.noticeList');
+    Route::get('noticeCreate', 'SettingController@noticeCreate')->name('setting.noticeCreate');
+    Route::post('noticeRegisterConfirm', 'SettingController@noticeRegisterConfirm')->name('setting.noticeRegisterConfirm');
+    Route::post('noticeRegister', 'SettingController@noticeRegister')->name('setting.noticeRegister');
+    Route::get('noticeConfirm/{id}', 'SettingController@noticeConfirm')->name('setting.noticeConfirm');
+    Route::get('noticeDelete/{id}', 'SettingController@noticeDelete')->name('setting.noticeDelete');
+    Route::get('noticeShow/{id}', 'SettingController@noticeShow')->name('setting.noticeShow');
 });
 
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notice;
+use App\Models\NoticesStatus;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Services\CheckData;
@@ -38,6 +40,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $notices = NoticesStatus::select('notices.title', 'notices_statuses.id', 'notices_statuses.notice_status', 'notices_statuses.created_at')
+        ->join('notices', 'notices.id', 'notices_statuses.notice_id')
+        ->where('notices_statuses.user_id', $this->_user->id)
+        ->where('notices.delete_flag', 0)
+        ->where('notices_statuses.delete_flag', 0)
+        ->orderBy('notices.created_at', 'desc')
+        ->get();
+
+        return view('home', compact('notices'));
     }
 }

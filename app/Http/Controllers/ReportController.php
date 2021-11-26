@@ -79,31 +79,38 @@ class ReportController extends Controller
         try {
             DB::beginTransaction();
 
+            // 担当スタイリストを設定する
             $customer = Customer::find($id);
+            if(!empty($customer->staff_id)){
+                throw new \Exception("既にスタイリストが登録されています。");
+            }
             $customer->staff_id = $request->staff_id;
             $customer->save();
 
             // 来店履歴を登録する
             if( $request->stylistAndVisitHistory){
-                VisitHistory::insert([[
-                    'vis_date'    => date('Y-m-d'),
-                    'vis_time'    => date('H:i'),
-                    'customer_id' => $id,
-                    'shop_id'     => $customer->shop_id,
-                    'staff_id'    => $request->staff_id,
-                    ]
-                ]);
+                // 既に本日の来店履歴が登録されていないか確認する
+                $todayRecord = VisitHistory::checkTodayHistory($id);
+                if($todayRecord->isEmpty()){
+                    VisitHistory::insert([[
+                        'vis_date'    => date('Y-m-d'),
+                        'vis_time'    => date('H:i'),
+                        'customer_id' => $id,
+                        'shop_id'     => $customer->shop_id,
+                        'staff_id'    => $request->staff_id,
+                        ]
+                    ]);
+                }
             }
 
             // throw new \Exception("強制終了");
             DB::commit();
             session()->flash('msg_success', 'スタイリストを設定しました。');
             return redirect()->action('ReportController@index');
-            return view('report.set_stylist',compact('customer', 'users' ));
         } catch (\Throwable $e) {
             DB::rollback();
             session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->back();    // 前の画面へ戻る
+            return redirect()->action('ReportController@index');
         }
     }
 
