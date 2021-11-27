@@ -416,6 +416,7 @@ class DataMigration extends Command
                 'addr21'      => $customer->addr21,
                 'strt21'      => $customer->strt21,
                 'memo'        => $customer->comment,
+                'created_at'  => $customer->created_at,
             ]]);
         }
     }

@@ -1094,6 +1094,7 @@ a > .setting_navigation:hover{
 /* 来店履歴に使用 */
 .tableClass_005 {
 	width: 100%;
+	display: table;
 }
 .tableClass_005 tr{
 	border-bottom: solid 1px var(--mainColor2);
@@ -1122,48 +1123,48 @@ a > .setting_navigation:hover{
 		width: 100%;
 		padding: 3px 0 0;
 	}
-	.tableClass_005 td:nth-child(2):before {
+	.tableClass_005 td:nth-child(1):before {
 		content: "【来店日時】";
 		display: contents;
 	}
-	.tableClass_005 td:nth-child(3):before {
+	.tableClass_005 td:nth-child(2):before {
 		content: "【担当者】";
 		display: contents;
 	}
-	.tableClass_005 td:nth-child(4):before {
+	.tableClass_005 td:nth-child(3):before {
 		content: "【 予約タイプ 】";
 		display: contents;
 	}
-	.tableClass_005 td:nth-child(5):before {
+	.tableClass_005 td:nth-child(4):before {
 		content: "【 メニュー 】";
 		display: contents;
 	}
-	.tableClass_005 td:nth-child(6) {
-		display: block;
-		float: left;
+	.tableClass_005 td:nth-child(5):before {
+		position: absolute;
+		top: 0;
+		content: "【画像】";
 	}
+	.tableClass_005 td:nth-child(5),
 	.tableClass_005 td:nth-child(6),
-	.tableClass_005 td:nth-child(7),
-	.tableClass_005 td:nth-child(8) {
+	.tableClass_005 td:nth-child(7) {
 		position: relative;
 		top: 0;
 		width: 33%;
 		padding-top: 20px;
 	}
-	.tableClass_005 td:nth-child(6):before {
-		position: absolute;
-		top: 0;
-		content: "【画像】";
+	.tableClass_005 td:nth-child(5) {
+		display: block;
+		float: left;
 	}
-	.tableClass_005 td:nth-child(9) {
+	.tableClass_005 td:nth-child(8) {
 		flex-direction: column;
 	}
-	.tableClass_005 td:nth-child(9):before {
+	.tableClass_005 td:nth-child(8):before {
 		content: "【コメント】";
 	}
-	.tableClass_005 td:nth-child(10) {
+	.tableClass_005 td:nth-child(9) {
 		justify-content: center;
-		padding: 10px 0 0;
+		padding: 10px 0 ;
 	}
 }
 

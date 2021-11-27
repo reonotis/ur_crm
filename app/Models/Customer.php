@@ -11,7 +11,7 @@ class Customer extends Model
     public static function get_customer($id)
     {
         $customer = Customer::select('customers.*', 'shops.shop_name', 'users.name AS staff_name')
-        ->join('shops', 'shops.id', 'shop_id')
+        ->leftJoin('shops', 'shops.id', 'shop_id')
         ->leftJoin('users', 'customers.staff_id', '=', 'users.id')
         ->where('customers.id', $id)
         ->where('customers.delete_flag', '0')
