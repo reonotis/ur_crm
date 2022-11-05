@@ -1,0 +1,470 @@
+:root {
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-400: #60a5fa;
+    --blue-600: #2563eb;
+    --blue-700: #1D4ED8;
+
+    --red-100: #fff5f5;
+    --red-200: #fed7d7;
+    --red-300: #feb2b2;
+    --red-400: #fc8181;
+    --red-500: #f56565;
+    --red-600: #e53e3e;
+    --red-700: #c53030;
+
+    --teal-100: #e6fffa;
+    --teal-200: #b2f5ea;
+    --teal-300: #81e6d9;
+    --teal-400: #4fd1c5;
+    --teal-500: #38b2ac;
+    --teal-600: #319795;
+    --teal-700: #2c7a7b;
+    --teal-800: #285e61;
+    --teal-900: #234e52;
+
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-400: #4ade80;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+    --green-900: #14532d;
+
+
+    --mainColor: #3a4269;
+    --mainColor_string: var(--light);
+    --mainColor2: var(--cyan);
+    --mainColor2_string: var(--light);
+    --mainColor3:  #d1eaff;
+    --mainColor3_string: var(--blue);
+    --editColor: var(--green);
+    --editColor_string: var(--white);
+    --base-transition: 0.2s;
+    --transition-hover: 0.3s;
+    --active-color: #3a4269;
+    --sucsess-color: #c2deff;
+}
+p {
+    margin-bottom: 0;
+}
+label {
+    margin-bottom: 0;
+}
+.flex {
+    display: flex;
+}
+.main {
+    position: relative;
+}
+
+
+
+.mt-0 {
+    margin-top: 0px;
+}
+.mt-1 {
+    margin-top: 0.25rem;
+}
+.mt-2 {
+    margin-top: 0.5rem;
+}
+.mt-3 {
+    margin-top: 0.75rem;
+}
+.mt-4 {
+    margin-top: 1rem;
+}
+.mt-5 {
+    margin-top: 1.25rem;
+}
+.mt-6 {
+    margin-top: 1.5rem;
+}
+.mt-8 {
+    margin-top: 2rem;
+}
+.mt-10 {
+    margin-top: 2.5rem;
+}
+.mt-12 {
+    margin-top: 3rem;
+}
+
+
+
+
+
+/*************************
+* サイドメニュー
+*************************/
+.sideMenu {
+    position: fixed;
+    width: 40px;
+    height: 100vh;
+    background: var(--mainColor3);
+    z-index: 100;
+    transition: var(--base-transition);
+}
+.sideMenu.open{
+    width: 200px;
+}
+.sideMenuContents {
+    width: 100%;
+}
+.menuOpenButton {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    right: -20px;
+    background: var(--mainColor3);
+    border: solid 1px white;
+    border-radius: 50%;
+    font-weight: 800;
+    color: var(--mainColor);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--base-transition);
+}
+.menuOpenButton:hover {
+    background: var(--mainColor);
+    color: white;
+}
+
+.sideMenu.open > .menuOpenButton{
+    transform:rotate(180deg);
+    transition: var(--base-transition);
+}
+.menuContents {
+    width: 100%;
+    transition: var(--base-transition);
+}
+.sideMenuUl,
+.childMenu {
+    list-style: none;
+    padding-inline-start: 0;
+    padding: 0;
+}
+.menuContents>ul>li a{
+}
+
+.sidebarTitle{
+    width: 100%;
+    padding: 10px 30px 10px 20px;
+    background: #e0e7ec;
+    border-bottom: solid 1px #ccc;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.sidebarTitleIn{
+    width: 100%;
+    display: block;
+    padding: 5px 30px 5px 40px;
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+}
+.sidebarTitleIn>a{
+    width: 100%;
+    display: block;
+}
+.sidebarTitleIn>a>span{
+    width: 100%;
+}
+.sidebarTitle.active,
+.sidebarTitleIn.active {
+    background: var(--active-color);
+    color: white;
+}
+.childMenu{
+    background: #f7fbff;
+}
+.parentMenu{
+    position: relative;
+}
+.parentMenu::after {
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    border-bottom: solid 3px #333;
+    border-left: solid 3px #333;
+    right: 20px;
+    transition: 0.1s;
+    transform: rotate(-45deg);
+}
+.parentMenu.open::after {
+    transform: rotate(135deg);
+}
+.parentMenu.active::after {
+    border-bottom: solid 3px white;
+    border-left: solid 3px white;
+}
+.sideMenu a{
+    text-decoration: none;
+    color: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*************************
+* メインコンテンツ
+*************************/
+.meinContents {
+    position: absolute;
+    width: calc(100% - 40px);
+    height: 100vh;
+    right: 0;
+    transition: var(--base-transition);
+}
+.meinContents.sideMenuOpen {
+    width: calc(100% - 200px);
+}
+
+.header {
+    background: var(--mainColor);
+    color: white;
+    height: 60px;
+    padding: 0 50px;
+    border-bottom: solid 1px #333;
+}
+.header a{
+    color: white;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    display: inline-block;
+}
+.header a:hover{
+    -webkit-animation: zoom .3s;
+    animation: zoom .3s;
+}
+@-webkit-keyframes zoom {
+    50% {
+        -webkit-transform: scale(1.1);
+    }
+}
+@keyframes zoom {
+    50% {
+        transform: scale(1.1);
+    }
+}
+.headerContent {
+    width: 70%;
+    max-width: 800px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.selectedShopName {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-right: 0.5rem;
+}
+.contentsArea {
+    padding: 1rem 1rem 7rem;
+}
+.selectShop {
+    margin: 1rem;
+    padding: 1rem 2rem;
+    background: var(--mainColor);
+    color: white;
+}
+.pageTitle {
+    padding: 0.25rem 1rem;
+    color: var(--mainColor);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: solid 2px var(--mainColor);
+}
+
+
+
+
+
+/*************************
+* flash-message
+*************************/
+.flash-message-area{
+    position: relative;
+    overflow: hidden;
+}
+.flash-message-box{
+    width: calc(100% - 1rem);
+    margin: 0.25rem auto;
+    padding: 0.25rem 1rem;
+    display: flex;
+    overflow-wrap: anywhere;
+    transition: var(--transition-hover);
+    align-items: center;
+    right: 0;
+}
+.flash-message-hidden{
+    position: relative;
+    right: -100%;
+}
+.flash-message-success{
+    background-color: var(--sucsess-color);
+    color: var(--blue-600);
+    border: solid 1px var(--blue-600);
+    border-radius: 0.5rem;
+}
+.flash-message-error{
+    background-color: var(--red-200);
+    color: var(--red-600);
+    border: solid 1px var(--red-600);
+    border-radius: 0.5rem;
+}
+.flash-message-box-close {
+    margin-right: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition-hover);
+}
+.flash-message-box-close:hover{
+    margin-right: 1.5rem;
+}
+
+
+
+
+
+/*************************
+* input関係
+*************************/
+
+
+/* ボタン関係 */
+input[type="submit"],
+.submit{
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.25rem;
+    transition: var(--transition-hover);
+    text-decoration: none;
+}
+.submit:hover {
+    text-decoration: none;
+}
+.register-btn {
+    background: var(--mainColor);
+    border: solid 1px var(--mainColor);
+    color: white;
+}
+.register-btn:hover {
+    background: #f3f4ff;
+    color: var(--mainColor);
+}
+.edit-btn{
+    background: var(--green-600);
+    border: solid 1px var(--green-600);
+    color: white;
+}
+.edit-btn:hover{
+    background: var(--green-200);
+    color: var(--green-600);
+}
+.delete-btn{
+    background: var(--red-600);
+    border: solid 1px var(--red-600);
+    color: white;
+}
+.delete-btn:hover{
+    background: var(--red-100);
+    color: var(--red-700);
+}
+.back-btn{
+    background: var(--gray-700);
+    border: solid 1px var(--gray-700);
+    color: white;
+}
+.back-btn:hover{
+    background: var(--gray-300);
+    color: var(--gray-700);
+}
+
+
+
+
+
+
+
+
+
+
+
+/*************************
+* テーブル
+*************************/
+.listTBL {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+.listTBL tbody tr td{
+    border-bottom: solid 1px var(--active-color);
+}
+.listTBL th{
+    padding: 10px;
+    font-size: 1.1em;
+    background: var(--active-color);
+    color: #fff;
+}
+.listTBL td{
+    padding: 10px;
+}
+.listTBL tr:nth-child(odd) td {
+    background: #3a42690b;
+}
+
+
+
+
+/*************************
+* エラー画面
+*************************/
+.errorContents {
+    width: 700px;
+    margin: 1rem auto;
+    padding: 2rem;
+    background: var(--red-100);
+    border: solid 1px red;
+    border-radius: 1rem;
+}
+
+.errorMessage {
+
+}
+
+.errorCode {
+    margin-top: 1rem;
+}
