@@ -22,12 +22,29 @@ Auth::routes([
     'reset'    => true,  // メールリマインダー機能ON
 ]);
 
-Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
-Route::get('/medical_record/{id}', 'MedicalRecordController@index')->name('medical_record');
-Route::post('/medical_record/confirm', 'MedicalRecordController@confirm')->name('medical_record.confirm');
-
 Route::group(['middleware'=>'auth'], function(){
+    // エラー関係
+    Route::get('/error/exclusion/{code?}', 'ErrorController@exclusionError')->name('exclusionError');
+    Route::get('/error/forbidden/{code?}', 'ErrorController@forbiddenError')->name('forbiddenError');
+
+    // TOPページ
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/myPage', 'HomeController@index')->name('myPage');
+
+    // 店舗選択関係
+    Route::get('shop/deselect', 'ShopSelectController@deselect')->name('shop.deselect');
+    Route::get('shop/selected/{id}', 'ShopSelectController@selected')->name('shop.selected');
+
+    // ユーザー関係
+    Route::get('user/belongSelect', 'UserController@belongSelect')->name('user.belongSelect');
+    Route::get('user/belongSelected/{user}', 'UserController@belongSelected')->name('user.belongSelected');
+    Route::get('user/deleteBelongShop/{user}', 'UserController@deleteBelongShop')->name('user.deleteBelongShop');
+    Route::resource('user', 'UserController');
+
+    // 顧客関係
+    Route::resource('customer', 'CustomerController');
+
+
 });
 
 // 日報
@@ -101,12 +118,16 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
 
 
 
-// 設定関連
+// PDF関連
 Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
     Route::get('index', 'PDFController@index')->name('pdf.index');
     Route::get('show_pdfFile/{file_name}', 'PDFController@show_pdfFile')->name('pdf.show_pdfFile');
 });
 
+
+Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
+Route::get('/medical_record/{id}', 'MedicalRecordController@index')->name('medical_record');
+Route::post('/medical_record/confirm', 'MedicalRecordController@confirm')->name('medical_record.confirm');
 
 
 
