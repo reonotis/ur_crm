@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 // use App\Models\CustomerCourseMapping;
 use App\Models\Shop;
 use App\Services\CheckData;
-use App\User;
+use App\UserOld;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,7 @@ class StylistController extends Controller
     public function index()
     {
 
-        $users = User::select('users.*', 'shops.shop_name')
+        $users = UserOld::select('users.*', 'shops.shop_name')
         ->where('authority_id', '>=', 2)
         ->where('authority_id', '<=', 7)
         ->join('shops', 'shops.id', '=', 'users.shop_id' )
@@ -55,7 +55,7 @@ class StylistController extends Controller
      */
     public function create()
     {
-        $user = User::select('users.*', 'shops.shop_name')
+        $user = UserOld::select('users.*', 'shops.shop_name')
         ->where('authority_id', '>=', 2)
         ->where('authority_id', '<=', 7)
         ->join('shops', 'shops.id', '=', 'users.shop_id' )
@@ -79,7 +79,7 @@ class StylistController extends Controller
 
             // TODO 店長が既に登録されている場合はエラーにする
 
-            User::insert([[
+            UserOld::insert([[
                 'name'         => $request->name,
                 'email'        => $request->email,
                 'shop_id'      => $request->shop_id,
@@ -124,7 +124,7 @@ class StylistController extends Controller
      */
     public function show($id)
     {
-        $user = User::select('users.*', 'shops.shop_name')
+        $user = UserOld::select('users.*', 'shops.shop_name')
         ->join('shops', 'shops.id', '=', 'users.shop_id')
         ->find($id);
         $user = CheckData::set_authority_name($user);
@@ -140,7 +140,7 @@ class StylistController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $user = UserOld::find($id);
         $authorityList = config('ur.authorityList');
         $shops = Shop::get();
 
@@ -159,7 +159,7 @@ class StylistController extends Controller
         try {
             DB::beginTransaction();
 
-            $user = User::find($id);
+            $user = UserOld::find($id);
             $user->name  = $request->name;
             $user->email = $request->email;
             $user->shop_id = $request->shop_id;

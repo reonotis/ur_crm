@@ -1,0 +1,208 @@
+:root {
+    --user-search-title: 170px;
+    --user-auth-title-width: 160px;
+}
+
+
+
+/*************************
+* ユーザー確認
+*************************/
+/* ユーザー検索 */
+.userSearchContents {
+    max-width: 600px;
+    margin: 1rem auto 3rem;
+}
+.userSearchRow {
+    margin-bottom: 0.25rem;
+    border-bottom: solid 1px var(--active-color);
+    display: flex;
+}
+.userSearchTitle {
+    width: var(--user-search-title);
+    min-height: 40px;
+    padding: 0.5rem 0.5rem;
+    background: var(--active-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.userSearchContent {
+    padding: 0.25rem 0.5rem;
+    width: calc(100% - var(--user-search-title));
+    display: flex;
+    align-items: center;
+}
+
+/* ユーザー一覧 */
+@media (max-width: 768px) {
+    .userListTBL th,
+    .userListTBL td{
+        padding: 8px 3px ;
+        font-size: 12px;
+    }
+}
+
+
+
+
+
+/*************************
+* ユーザー登録
+*************************/
+.userRegisterContents {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+.userRegisterRow {
+    margin-bottom: 0.25rem;
+    border-bottom: solid 1px var(--active-color);
+    display: flex;
+}
+.userRegisterTitle {
+    width: var(--user-search-title);
+    min-height: 40px;
+    padding: 0.5rem 0.5rem;
+    background: var(--active-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.userRegisterContent {
+    padding: 0.25rem 0.5rem;
+    width: calc(100% - var(--user-search-title));
+}
+.userAuthRow {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+}
+.userAuthTitle {
+    width: var(--user-auth-title-width);
+}
+.userAuthContent {
+    width: calc(100% - var(--user-auth-title-width));
+}
+
+.userRegisterContent > .userAuthRow:not(:last-child) {
+    border-bottom: solid 1px #aaa;
+}
+
+
+
+
+/*************************
+* ユーザー詳細
+*************************/
+.userShowContents {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+.userShowRow {
+    margin-bottom: 0.25rem;
+    border-bottom: solid 1px var(--active-color);
+    display: flex;
+}
+.userShowTitle {
+    width: var(--user-search-title);
+    min-height: 40px;
+    padding: 0.5rem 0.5rem;
+    background: var(--active-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.userShowContent {
+    padding: 0.25rem 0.5rem;
+    width: calc(100% - var(--user-search-title));
+    display: flex;
+    align-items: center;
+}
+.userAuthTitle {
+    width: var(--user-auth-title-width);
+}
+.userAuthContent {
+    width: calc(100% - var(--user-auth-title-width));
+}
+
+.userShowContent > div {
+    width: 100%;
+}
+.userShowContent > div > .userAuthRow:not(:last-child) {
+    border-bottom: solid 1px #aaa;
+}
+
+.belongShopRow {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+}
+.belongShopRow:not(:last-child) {
+    border-bottom: solid 1px #ccc;
+}
+.belongShopName {
+    width: 150px;
+}
+.deleteBelongShopRow {
+    width: 200px;
+}
+
+
+
+
+
+
+/*************************
+* ユーザー編集
+*************************/
+.userEditContents {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+.userEditRow {
+    margin-bottom: 0.25rem;
+    border-bottom: solid 1px var(--green-600);
+    display: flex;
+}
+.userEditTitle {
+    width: var(--user-search-title);
+    min-height: 40px;
+    padding: 0.5rem 0.5rem;
+    background: var(--green-600);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.userEditContent {
+    padding: 0.25rem 0.5rem;
+    width: calc(100% - var(--user-search-title));
+}
+.userEditContent > .userAuthRow:not(:last-child) {
+    border-bottom: solid 1px #aaa;
+}
+
+
+
+
+
+/*************************
+* 未所属スタイリスト一覧
+*************************/
+.belongSelectSupplement {
+    margin: 2rem 0 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+

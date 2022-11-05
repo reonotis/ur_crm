@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notice;
 use App\Models\NoticesStatus;
-use App\User;
+use App\UserOld;
 use App\Services\CheckData;
 use Illuminate\Http\Request;
 use Hash;
@@ -224,7 +224,7 @@ class SettingController extends Controller
             $notices_id = \DB::getPdo()->lastInsertId();
 
             // お知らせを通知するユーザーを取得
-            $users = User::select()
+            $users = UserOld::select()
             ->where('authority_id', '>=', 2)
             ->where('authority_id', '<=', 7)
             ->get();

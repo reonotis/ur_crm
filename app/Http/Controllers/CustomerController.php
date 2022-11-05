@@ -6,29 +6,20 @@ use App\Models\Customer;
 use App\Models\VisitHistory;
 use App\Models\VisitHistoryImage;
 use App\Models\Shop;
-use App\User;
 use App\Services\CheckData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CustomerController extends Controller
+class CustomerController extends UserAppController
 {
-    private $_customerOBJ;
-    private $_user;                 //Auth::user()
-    private $_auth_authority_id ;   //権限
+    public $errMsg = [];
 
-    public function __construct(){
-        $this->_customerOBJ = new Customer;
-        $this->middleware(function ($request, $next) {
-            $this->_user = \Auth::user();
-            $this->_auth_authority_id = $this->_user->authority_id;
-            // if($this->_auth_authority_id >= 8){
-            //     session()->flash('msg_danger', '権限がありません');
-            //     Auth::logout();
-            //     return redirect()->intended('/');
-            // }
-            return $next($request);
-        });
+    /**
+     * コンストラクタ
+     */
+    public function __construct()
+    {
+        parent::__construct();
     }
 
     /**
@@ -39,7 +30,7 @@ class CustomerController extends Controller
     public function search()
     {
         $shops = Shop::get_shopList();
-        $users = User::get_userList();
+        $users = UserOld::get_userList();
 
         return view('customer.search',compact('shops', 'users'));
     }
@@ -133,7 +124,7 @@ class CustomerController extends Controller
             $shopsId = NULL;
         }
         $shops = Shop::get_shopList($shopsId);
-        $users = User::get_userList($shopsId);
+        $users = UserOld::get_userList($shopsId);
         return view('customer.create',compact('shops', 'users' ));
     }
 
@@ -379,7 +370,7 @@ class CustomerController extends Controller
 
             $customer = Customer::get_customer($id);
             $shops = Shop::get_shopList();
-            $users = User::get_userList();
+            $users = UserOld::get_userList();
 
             return view('customer.edit', compact('customer', 'shops', 'users'));
         } catch (\Throwable $e) {

@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class VisitHistory extends Model
 {
-    //
+    /**
+     * 日付に変更する必要がある属性。
+     * The attributes that should be mutated to date.
+     * @var array
+     */
     protected $dates = [
         'vis_date',
     ];

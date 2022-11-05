@@ -8,7 +8,7 @@ use App\Models\VisitHistory;
 use App\Models\VisitHistoryImage;
 use App\Models\Menu;
 use InterventionImage;
-use App\User;
+use App\UserOld;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -136,7 +136,7 @@ class VisitHistoryController extends Controller
         ->join('customers', 'customers.id', '=', 'visit_histories.customer_id' )
         ->get();
 
-        $users = User::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
+        $users = UserOld::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
         $menus = Menu::where('delete_flag', 0)->where('hidden_flag', 0)->orderBy('rank')->get();
         $visitTypes = VisitType::get_visitList();
 
@@ -188,7 +188,7 @@ class VisitHistoryController extends Controller
                 }
             }
 
-            $users = User::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
+            $users = UserOld::where('shop_id', $this->_user->shop_id )->where('authority_id', '<=', '7')->where('authority_id', '>=', '3')->get();
             $menus = Menu::where('delete_flag', 0)->where('hidden_flag', 0)->orderBy('rank')->get();
             return view('customer.single_edit',compact('VisitHistory', 'users', 'menus' ));
         } catch (\Throwable $e) {

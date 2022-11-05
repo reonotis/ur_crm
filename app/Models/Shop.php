@@ -2,21 +2,45 @@
 
 namespace App\Models;
 
+use App\Consts\SessionConst;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model
 {
+
+    use SoftDeletes; // 論理削除を有効化
+
     /**
-     * 非表示や削除されていないショップリストを取得する
-     * IDが渡されたときはそのショップに限定する
+     * @return hasOne
+     */
+    public function userShopAuthorization(): hasOne
+    {
+        $userId = Auth::user()->id;
+        return $this->hasOne(UserShopAuthorization::class, 'shop_id', 'id')
+            ->where('user_id', $userId);
+    }
+
+
+
+
+
+
+
+    /**
+     * @param int $loginUserId
      * @return void
      */
-    public static function get_shopList($id = NULL){
-        $result = self::where('delete_flag', 0)->where('hidden_flag','0');
-        if($id){
-            $result = $result->where('id', $id);
-        }
-        $result = $result->get();
-        return $result ;
+    public static function getMyShop(int $loginUserId)
+    {
+        return self::select('shops.*')
+            ->join('user_shop_authorizations', 'shops.id', '=', 'user_shop_authorizations.shop_id')
+            ->where('user_shop_authorizations.user_id', $loginUserId)
+            ->whereNull('user_shop_authorizations.deleted_at')
+            ->get();
+
     }
+
 }

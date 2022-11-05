@@ -177,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        App\Providers\ShopServiceProvider::class,
 
     ],
 
@@ -230,6 +231,13 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'InterventionImage' => Intervention\Image\Facades\Image::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+
+        // original
+        'Common' =>  App\Consts\Common::class,
+        'DatabaseConst' =>  App\Consts\DatabaseConst::class,
+        'ErrorLog' =>  App\Consts\ErrorLog::class,
+        'SessionConst' =>  App\Consts\SessionConst::class,
+
     ],
 
 ];

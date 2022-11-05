@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\VisitHistory;
-use App\User;
+use App\UserOld;
 use App\Services\CheckData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +59,7 @@ class ReportController extends Controller
         try {
             $customer = Customer::find($id);
             if($customer->staff_id) throw new \Exception("このお客様には既にスタイリストが設定されています。");
-            $users = User::where('shop_id', $customer->shop_id)
+            $users = UserOld::where('shop_id', $customer->shop_id)
             ->where('authority_id', '>=', 3 )->where('authority_id', '<=', 7 )->get();
 
             return view('report.set_stylist',compact('customer', 'users' ));

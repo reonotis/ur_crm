@@ -40,12 +40,21 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception $exception
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @throws Exception
      */
     public function render($request, Exception $exception)
     {
+        // どの例外クラスが発生したかによって処理を分ける
+        if ($exception instanceof ExclusionException) {
+            return redirect()->route('exclusionError', ['code'=>$exception->errorCode]);
+        }
+        if ($exception instanceof ForbiddenException) {
+            return redirect()->route('forbiddenError', ['code'=>$exception->authName]);
+        }
+
         return parent::render($request, $exception);
     }
 }

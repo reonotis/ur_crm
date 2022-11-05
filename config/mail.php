@@ -59,7 +59,10 @@ return [
     //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
     //     'name' => env('MAIL_FROM_NAME', 'Example'),
     // ],
-    'from' => ['address' => "info@paralymbics.jp", 'name' => "パラリンビクス協会 事務局"],
+    'from' => [
+        'address' => 'info@hairmake_ur.co.jp',
+        'name' => 'HAIR MAKE UR RABBIT'
+    ],
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol
@@ -131,9 +134,8 @@ return [
     |
     */
 
-    'log_channel' => env('MAIL_LOG_CHANNEL'),
-
+    'log_channel' => env('LOG_CHANNEL', 'stack'),
     'toInfo'  => env('MAIL_TO_INFO'),
-    'toReon'  => env('MAIL_TO_REON'),
+    'toFujisawa'  => env('MAIL_TO_FUJISAWA'),
 
 ];

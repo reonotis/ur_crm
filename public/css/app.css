@@ -9,14 +9,6 @@
  */
 
 :root {
-	--mainColor:var(--blue);
-	--mainColor_string:var(--light);
-	--mainColor2:var(--cyan);
-	--mainColor2_string:var(--light);
-	--mainColor3: #e9f5ff;
-	--mainColor3_string:var(--blue);
-	--editColor:var(--green);
-	--editColor_string:var(--white);
   --blue: #3490dc;
   --indigo: #6574cd;
   --purple: #9561e2;
