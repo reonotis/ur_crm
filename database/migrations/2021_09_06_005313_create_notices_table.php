@@ -22,7 +22,7 @@ class CreateNoticesTable extends Migration
             $table->boolean('hidden_flag')->default('0')->comment('非表示フラグ');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
-            $table->boolean('delete_flag')->default('0')->comment('削除フラグ');
+            $table->softDeletes();
         });
     }
 

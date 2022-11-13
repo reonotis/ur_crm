@@ -1,138 +1,142 @@
-@extends('layouts.app')
+@extends('layouts.customer')
+@section('pageTitle', '顧客編集')
 
 @section('content')
-<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-
-            <div class="card">
-                <div class="card-header">顧客情報編集</div>
+        <div class="col-md-10">
+            <div class="customerEditContents" >
                 <div class="card-body">
-                    <form action="{{route('customer.update', ['id' => $customer->id ])}}" method="post">
+                    <form action="{{route('customer.update', ['customer' => $customer->id ])}}" method="post">
+                        @method('put')
                         @csrf
-                        <div class="editRow_01" >
-                            <div class="editTitle_01" >会員番号</div>
-                            <div class="editContent_01" >
-                                <input class="formInput" type="text" name="member_number" value="<?= $customer->member_number ?>" placeholder="PAR200525001" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="customer_no">会員番号</label></div>
+                            <div class="customerEditContent" >
+                                <input type="text" name="customer_no" id="customer_no" class="form-control" value="{{ (old('customer_no'))? old('customer_no'): $customer->customer_no }}" placeholder="CA123456" >
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01" >名前</div>
-                            <div class="editContent_01" >
-                                <div class="CenterBOX" >
-                                    <input class="formInput formInput_2" type="text" name="f_name" value="<?= $customer->f_name ?>" placeholder="藤澤" >
-                                    <input class="formInput formInput_2" type="text" name="l_name" value="<?= $customer->l_name ?>" placeholder="怜臣" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="customer_no">名前</label></div>
+                            <div class="customerEditContent" >
+                                <div class="flex" >
+                                    <div class="w-48" style="margin-right: 0.5rem;">
+                                        <input type="text" name="f_name" id="f_name" class="form-control" value="{{ (old('f_name'))? old('f_name'): $customer->f_name }}" placeholder="田中" >
+                                    </div>
+                                    <div class="w-48" >
+                                        <input type="text" name="l_name" id="l_name" class="form-control" value="{{ (old('l_name'))? old('l_name'): $customer->l_name }}" placeholder="太郎" >
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01" >ヨミ</div>
-                            <div class="editContent_01" >
-                                <div class="CenterBOX" >
-                                    <input class="formInput formInput_2" type="text" name="f_read" value="<?= $customer->f_read ?>" placeholder="フジサワ" >
-                                    <input class="formInput formInput_2" type="text" name="l_read" value="<?= $customer->l_read ?>" placeholder="レオン" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="customer_no">ヨミ</label></div>
+                            <div class="customerEditContent" >
+                                <div class="flex" >
+                                    <div class="w-48" style="margin-right: 0.5rem;">
+                                        <input type="text" name="f_read" id="f_read" class="form-control" value="{{ (old('f_read'))? old('f_read'): $customer->f_read }}" placeholder="タナカ" >
+                                    </div>
+                                    <div class="w-48" >
+                                        <input type="text" name="l_read" id="l_read" class="form-control" value="{{ (old('l_read'))? old('l_read'): $customer->l_read }}" placeholder="タロウ" >
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01" >店舗</div>
-                            <div class="editContent_01" >
-                                <?php $select_shop_id = old('shop_id') ? old('shop_id') : \Auth::user()->shop_id ; ?>
-                                <select class="formInput" name="shop_id" onchange="change_shops()" id="shop_id" >
-                                    <option value="" >選択しない</option>
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="customer_no">店舗</label></div>
+                            <div class="customerEditContent" >
+                                <select name="shop_id" class="form-control" onchange="change_shops()" >
+                                    {{ $shopId = old('shop_id')? old('shop_id'): $customer->shop_id }}
                                     @foreach($shops as $shop)
-                                        <option value="<?= $shop->id ?>" <?php if( $shop->id == $select_shop_id )echo" selected"; ?> ><?= $shop->shop_name ?></option>
+                                        <option class="shop_id_{{ $shop->id }}" value="{{ $shop->id }}" {{ ($shop->id == $shopId)? " selected": "" }} >{{ $shop->shop_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01" >担当</div>
-                            <div class="editContent_01" >
-                                <?php $select_staff_id = old('staff_id') ? old('staff_id') :  $customer->staff_id ; ?>
-                                <select class="formInput" name="staff_id" id="staff_id" >
-                                    <option value="" >選択しない</option>
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" >担当</div>
+                            <div class="customerEditContent" >
+                                <select name="staff_id" id="staff_id" class="form-control" >
+                                    {{ $staffId = old('staff_id')? old('staff_id'): $customer->staff_id }}
                                     @foreach($users as $user)
-                                        <option value="<?= $user->id ?>" <?php if( $user->id == $select_staff_id )echo" selected"; ?> ><?= $user->name ?></option>
+                                        <option class="shop_id_{{ $user->shop_id }}" value="{{ $user->id }}" {{ ($user->id == $staffId)? " selected": "" }} >{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01_2" >生年月日</div>
-                            <div class="editContent_01_2" >
-                                <div class="inputBirthday" >
-                                    <input class="formInput inputYear" type="num" name="birthday_year" value="<?= $customer->birthday_year ?>" placeholder="年" > /
-                                    <input class="formInput inputMonth" type="num" name="birthday_month" value="<?= $customer->birthday_month ?>" placeholder="月" > /
-                                    <input class="formInput inputDay" type="num" name="birthday_day" value="<?= $customer->birthday_day ?>" placeholder="日" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" >生年月日</div>
+                            <div class="customerEditContent" >
+                                <div class="w-32" style="margin-right: 0.5rem;">
+                                    <input type="num" class="form-control"  name="birthday_year" value="{{ old('birthday_year')? old('birthday_year'): $customer->birthday_year }}" placeholder="年" >
+                                </div>
+                                /
+                                <div class="w-20" style="margin: 0 0.5rem;">
+                                    <input type="num" class="form-control" name="birthday_month" value="{{ old('birthday_month')? old('birthday_month'): $customer->birthday_month }}" placeholder="月" >
+                                </div>
+                                /
+                                <div class="w-20" style="margin-left: 0.5rem;">
+                                    <input type="num" class="form-control" name="birthday_day" value="{{ old('birthday_day')? old('birthday_day'): $customer->birthday_day }}" placeholder="日" >
                                 </div>
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01_2" >電話番号</div>
-                            <div class="editContent_01_2" ><input class="formInput" type="text" name="tel" value="<?= $customer->tel ?>" placeholder="090-1234-5678" ></div>
-                        </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01_2" >メールアドレス</div>
-                            <div class="editContent_01_2" ><input class="formInput" type="text" name="email" value="<?= $customer->email ?>" placeholder="sample@exsample.com" ></div>
-                        </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01_2" >住所</div>
-                            <div class="editContent_01_2" >
-                                <div class="inputZips">
-                                    <input class="formInput inputZip" type="text" name="zip21" value="<?= $customer->zip21 ?>" placeholder="150" >-
-                                    <input class="formInput inputZip" type="text" name="zip22" value="<?= $customer->zip22 ?>" placeholder="0022" >
-                                </div>
-                                <div class="inputAddresses">
-                                    <input class="formInput inputAddress" type="text" name="pref21" value="<?= $customer->pref21 ?>" placeholder="東京都" >
-                                    <input class="formInput inputAddress" type="text" name="addr21" value="<?= $customer->addr21 ?>" placeholder="渋谷区" >
-                                </div>
-                                <input class="formInput inputStrt" type="text" name="strt21" value="<?= $customer->strt21 ?>" placeholder="恵比寿南1丁目マンション名1101号室" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" >電話番号</div>
+                            <div class="customerEditContent" >
+                                <input type="text" name="tel" id="tel" class="form-control" value="{{ old('tel')? old('tel'): $customer->tel }}" placeholder="090-1234-5678" >
                             </div>
                         </div>
-                        <div class="editRow_01" >
-                            <div class="editTitle_01_2" >メモ</div>
-                            <div class="editContent_01_2" >
-                                <textarea class="formInput" name="memo" ><?= $customer->memo ?></textarea>
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="email">メールアドレス</label></div>
+                            <div class="customerEditContent" >
+                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email')? old('email'): $customer->email }}" placeholder="sample@exsample.com" >
                             </div>
                         </div>
-                        <input type="submit" name="" value="更新する" class="button" >
-                        <input type="submit" name="cancel" value="キャンセル" class="button cancel" >
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" >住所</div>
+                            <div class="customerEditContent" >
+                                <div class="w-full">
+                                    <div class="flex w-full items-center" >
+                                        <div class="w-20" style="padding-right: 0.5rem;">
+                                            <input class="form-control" type="text" name="zip21" value="{{ old('zip21')? old('zip21'): $customer->zip21 }}" placeholder="150" >
+                                        </div>
+                                        -
+                                        <div class="w-24" style="padding-left: 0.5rem;" >
+                                            <input class="form-control" type="text" name="zip22" value="{{ old('zip22')? old('zip22'): $customer->zip22 }}" placeholder="0022" >
+                                        </div>
+                                    </div>
+                                    <div class="flex w-full mt-1" >
+                                        <div class="w-40" style="padding-right: 0.5rem;" >
+                                            <input class="form-control" type="text" name="pref21" value="{{ old('pref21')? old('pref21'): $customer->pref21 }}" placeholder="東京都" >
+                                        </div>
+                                        <div class="w-48" >
+                                            <input class="form-control" type="text" name="address21" value="{{ old('address21')? old('address21'): $customer->address21 }}" placeholder="渋谷区" >
+                                        </div>
+                                    </div>
+                                    <div class="flex w-full mt-1" >
+                                        <input class="form-control" type="text" name="street21" value="{{ old('street21')? old('street21'): $customer->street21 }}" placeholder="恵比寿南1丁目マンション名1101号室" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="customerEditRow" >
+                            <div class="customerEditTitle" ><label for="memo">メモ</label></div>
+                            <div class="customerEditContent" >
+                                <textarea name="memo" id="memo" class="form-control" >{{ old('memo')? old('memo'): $customer->memo }}</textarea>
+                            </div>
+                        </div>
+                        <div class="flex mt-4" >
+                            <a href="javascript:history.back()" class="submit back-btn" >戻る</a>
+                            <input type="submit" name="" value="更新する" class="edit-btn" >
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-</div>
 @endsection
 
 <script>
-
-
-    let users = JSON.parse('<?= $users; ?>');
-
-    function change_shops(){
-        const shops = document.getElementById('shop_id');
-        const usersSelectList = document.getElementById( "staff_id" ) ;
-        const length = usersSelectList.length ;
-
-        // セレクトボックスから「選択しない」以外削除
-        for (let index = 1 ; index < length ; index++ ) {
-            usersSelectList.remove( 1 ) ;
-        }
-
-        // スタイリストをセット
-        for (let index = 0 ; index <users.length ; index++ ) {
-            // 選択していた場合
-            if(shops.value){
-                if(users[index]['shop_id']== shops.value){
-                    usersSelectList.add( new Option( users[index]['name'], users[index]['id'] ) ) ;
-                }
-            }else{
-            // 選択していなかった場合
-                usersSelectList.add( new Option( users[index]['name'], users[index]['id'] ) ) ;
-            }
-        }
-    }
+    window.addEventListener('load', function(){
+        reset_users()
+    });
 </script>

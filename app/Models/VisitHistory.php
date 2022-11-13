@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class VisitHistory extends Model
 {
+    use SoftDeletes; // 論理削除を有効化
+
     /**
      * 日付に変更する必要がある属性。
      * The attributes that should be mutated to date.
@@ -280,11 +283,23 @@ class VisitHistory extends Model
         $result = self::select()
         ->where('customer_id', $customer_id)
         ->where('vis_date', date('Y-m-d'))
-        ->where('delete_flag', 0)
         ->get();
         return $result;
     }
 
-
+    /**
+     * 対象顧客の本日の来店履歴を取得
+     * @param int $customerId
+     * @return mixed
+     */
+    public static function getByCustomerId(int $customerId)
+    {
+        $result = self::select('visit_histories.*', 'users.name', 'menus.menu_name')
+        ->where('customer_id', $customerId)
+        ->leftJoin('users', 'users.id', 'visit_histories.user_id')
+        ->join('menus', 'menus.id', 'visit_histories.menu_id')
+        ->get();
+        return $result;
+    }
 
 }

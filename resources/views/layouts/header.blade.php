@@ -1,4 +1,8 @@
 
+<?php
+    $auths = Auth::user();
+?>
+
 <div class="headerContent" >
     <div class="selectedShopArea" >
         @if(!empty(session()->get(App\Consts\SessionConst::SELECTED_SHOP)->shop_name))

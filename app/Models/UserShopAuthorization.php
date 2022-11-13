@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Consts\DatabaseConst;
+use App\Consts\{Common, DatabaseConst};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,6 +57,46 @@ class UserShopAuthorization extends Model
             dd($e->getMessage(), 'getShopByUserId');
             return false;
         }
+    }
+
+    /**
+     *
+     * @param int $userId
+     * @return object
+     */
+    public static function getSelectableUsers(int $shopId = NULL): object
+    {
+        $query = self::select('users.id', 'users.name', 'user_shop_authorizations.shop_id')
+            ->join('users', function ($join) {
+                $join->on('users.id', '=', 'user_shop_authorizations.user_id')
+                    ->where('users.display_flag', DatabaseConst::FLAG_ON)
+                    ->where('users.authority_level', '<>', Common::AUTHORITY_RETIREMENT)
+                    ->whereNull('users.deleted_at');
+            });
+        if($shopId){
+            $query->where('user_shop_authorizations.shop_id', $shopId);
+        }
+
+        return $query;
+    }
+
+    /**
+     * 対象店舗に属するスタッフを
+     * @param int $shopId
+     * @return object
+     */
+    public static function getSelectableUsersByShopId(int $shopId): object
+    {
+        $query = self::select('users.id', 'users.name', 'user_shop_authorizations.shop_id')
+            ->join('users', function ($join) {
+                $join->on('users.id', '=', 'user_shop_authorizations.user_id')
+                    ->where('users.display_flag', DatabaseConst::FLAG_ON)
+                    ->where('users.authority_level', '<>', Common::AUTHORITY_RETIREMENT)
+                    ->whereNull('users.deleted_at');
+            })
+        ->where('user_shop_authorizations.shop_id', $shopId);
+
+        return $query;
     }
 
 }

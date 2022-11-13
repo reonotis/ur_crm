@@ -16,7 +16,6 @@ use App\Models\{
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\{RedirectResponse, Request};
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -62,7 +61,7 @@ class UserController extends UserAppController
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->session()->regenerateToken(); // 重複クリック対策
+        $request->session()->regenerateToken(); // 二重クリック防止
         try {
             $this->checkValid($request);
             $this->checkAuthValid($request);
@@ -313,23 +312,22 @@ class UserController extends UserAppController
      */
     private function checkAuthValid(Request $r): void
     {
-        $myAuthorization = Auth::user()->userShopAuthorization;
-        if($r->user_edit > $myAuthorization->user_edit){
+        if($r->user_edit > $this->userShopAuthorization->user_edit){
             $this->errMsg[] = 'あなたにはスタイリスト編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->user_edit > $myAuthorization->user_delete){
+        if($r->user_edit > $this->userShopAuthorization->user_delete){
             $this->errMsg[] = 'あなたにはスタイリスト削除権限が無い為、削除権限があるユーザーを作成できません';
         }
-        if($r->customer_edit > $myAuthorization->customer_edit){
+        if($r->customer_edit > $this->userShopAuthorization->customer_edit){
             $this->errMsg[] = 'あなたには顧客編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->customer_delete > $myAuthorization->customer_delete){
+        if($r->customer_delete > $this->userShopAuthorization->customer_delete){
             $this->errMsg[] = 'あなたには顧客削除権限が無い為、削除権限があるユーザーを作成できません';
         }
-        if($r->reserve_edit > $myAuthorization->reserve_edit){
+        if($r->reserve_edit > $this->userShopAuthorization->reserve_edit){
             $this->errMsg[] = 'あなたには予約編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->reserve_delete > $myAuthorization->reserve_delete){
+        if($r->reserve_delete > $this->userShopAuthorization->reserve_delete){
             $this->errMsg[] = 'あなたには予約削除権限が無い為、削除権限があるユーザーを作成できません';
         }
 

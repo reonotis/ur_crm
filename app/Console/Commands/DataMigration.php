@@ -2,22 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Base;
+use App\Models\Customer;
+use App\Models\CustomerNoCounter;
 use App\Models\Menu;
 use App\Models\Shop;
 use App\Models\User;
-use App\Models\UserShop;
 use App\Models\UserShopAuthorization;
-use Carbon\Carbon;
+use App\Models\VisitHistory;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Customer;
-use App\Models\VisitHistory;
 use App\Models\VisitHistoryImage;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-class DataMigration extends Command
+class DataMigration extends Base
 {
     /**
      * The name and signature of the console command.
@@ -48,30 +46,19 @@ class DataMigration extends Command
      * @return mixed
      */
     public function handle(){
-        Log::info('--------------------------------------------');
-        Log::info('DataMigration : batch開始');
-        $this->info('batch start.');
+        $this->writeConsoleAndLog('info', '--------------------------------------------');
+        $this->writeConsoleAndLog('info', $this->name . ' start...');
 
-//        $this->shopImport();
+        $this->shopImport();
         $this->userImport();
         $this->menuImport();
         $this->customerImport();
         $this->historyImport();
 
-//        // 顧客データの移行
-//        $this->migration_CustomerData();
-//
-//        // 来店履歴の移行
-//        $this->migration_visitHistoryData();
-//
-//        // 顧客の画像レコードを移行
-//        $this->migration_visitHistoryImgData();
-
         // TODO 顧客の画像データを移行
 
-        $this->info('batch finish.');
-        Log::info('DataMigration : batch終了');
-        Log::info('--------------------------------------------');
+        $this->writeConsoleAndLog('info', $this->name . ' finish.');
+        $this->writeConsoleAndLog('info', '--------------------------------------------');
     }
 
     /**
@@ -81,7 +68,7 @@ class DataMigration extends Command
      */
     public function shopImport()
     {
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : shopImport start...');
+        $this->writeConsoleAndLog('info', 'shopImport start...');
         try{
             $shops = DB::connection('mysql_2')->select("SELECT * FROM shop WHERE deleted_at IS NULL");
             if(empty($shops)){
@@ -107,11 +94,11 @@ class DataMigration extends Command
 
             Shop::insert($insertData);
         } catch (Exception $e) {
-            Log::error( ' errorMsg : ' . $e->getMessage());
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
             throw new Exception('shop登録に失敗しました urhair_ur.shop.id=' . $shop->shop_id );
         }
 
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : shopImport end');
+        $this->writeConsoleAndLog('info', 'shopImport end');
     }
 
     /**
@@ -121,7 +108,7 @@ class DataMigration extends Command
      */
     public function userImport()
     {
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : UserImport start...');
+        $this->writeConsoleAndLog('info', 'UserImport start...');
         try{
             $users = DB::connection('mysql_2')->select('select * from user');
 
@@ -180,10 +167,10 @@ class DataMigration extends Command
                 ]);
             }
         } catch (Exception $e) {
-            Log::error( ' errorMsg : ' . $e->getMessage());
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
             throw new Exception('ユーザー登録に失敗しました urhair_ur.user.id=' . $user->user_id );
         }
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : UserImport end');
+        $this->writeConsoleAndLog('info', 'UserImport end');
     }
 
     /**
@@ -193,7 +180,7 @@ class DataMigration extends Command
      */
     public function menuImport()
     {
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : menuImport start...');
+        $this->writeConsoleAndLog('info', 'menuImport start...');
         try{
             $menus = DB::connection('mysql_2')->select("SELECT * FROM menu WHERE deleted_at IS NULL");
             if(empty($menus)){
@@ -216,10 +203,10 @@ class DataMigration extends Command
 
             Menu::insert($insertData);
         } catch (Exception $e) {
-            Log::error( ' errorMsg : ' . $e->getMessage());
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
             throw new Exception('メニュー登録に失敗しました urhair_ur.menu.id=' .  $menu->menu_id);
         }
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : menuImport end');
+        $this->writeConsoleAndLog('info', 'menuImport end');
     }
 
     /**
@@ -229,7 +216,7 @@ class DataMigration extends Command
      */
     public function customerImport()
     {
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : CustomerImport start...');
+        $this->writeConsoleAndLog('info', 'CustomerImport start...');
         try{
             $lastId = 1;
             while(true){ // 無限ループ
@@ -244,7 +231,7 @@ class DataMigration extends Command
                     break; // データが無ければ繰返しの強制終了
                 }
 
-                $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : CustomerImport insertLastId:' . $lastId . '...');
+                $this->writeConsoleAndLog('info', 'CustomerImport:insertLastId:' . $lastId . '...');
 
                 $insertData = [];
                 foreach($sysCustomers AS $sysCustomer){
@@ -273,11 +260,17 @@ class DataMigration extends Command
                 }
                 Customer::insert($insertData);
             }
+
+            $newId = Customer::select('id')->orderBy('id', 'desc')->first()->id;
+            CustomerNoCounter::create([
+                'id' => $newId,
+            ]);
+
         } catch (Exception $e) {
-            Log::error( ' errorMsg : ' . $e->getMessage());
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
             throw new Exception('顧客登録に失敗しました urhair_ur.sys_customer.id=' . $lastId );
         }
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : CustomerImport end');
+        $this->writeConsoleAndLog('info', 'CustomerImport end');
     }
 
     /**
@@ -286,7 +279,7 @@ class DataMigration extends Command
      */
     public function historyImport()
     {
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : historyImport start...');
+        $this->writeConsoleAndLog('info', 'historyImport start...');
         try{
             $lastId = 0;
             while(true){ // 無限ループ
@@ -301,7 +294,7 @@ class DataMigration extends Command
                 if(empty($sysVisitHistory)){
                     break; // データが無ければ繰返しの強制終了
                 }
-                $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : historyImport insertLastId:' . $lastId . '...');
+                $this->writeConsoleAndLog('info', 'historyImport insertLastId:' . $lastId . '...');
 
                 $insertData = [];
                 foreach($sysVisitHistory AS $visitHistory){
@@ -325,313 +318,15 @@ class DataMigration extends Command
                 VisitHistory::insert($insertData);
             }
         } catch (Exception $e) {
-            Log::error( ' errorMsg : ' . $e->getMessage());
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
             throw new Exception('来店履歴の登録に失敗しました urhair_ur.sys_visitHistory.visit_id=' . $visitHistory->visit_id);
         }
-        $this->info(Carbon::now()->format('Y-m-d H:i:s') . ' : historyImport end');
+        $this->writeConsoleAndLog('info', 'historyImport end');
     }
 
 
-    /**
-     * 来店履歴画像データを移行する
-     *
-     * @return void
-     */
-    public function migration_visitHistoryImgData(){
-        Log::info('DataMigration : 来店履歴画像データ移行開始');
-        $this->info('来店履歴画像データ移行開始');
-        try {
-            $this->_loopNo = 1;
-
-            while(true){
-                $this->info($this->_loopNo."回目のループ開始");
-
-                // 旧DBからデータを取得
-                $this->get_data_visitHistoryImg();
-                //移行前のデータがなければループを終了させる
-                if(empty($this->_style_imgs)) break;
-
-                // TODO 取得したデータをCSVに書き出しておく
-
-                DB::connection('mysql')->beginTransaction();
-                DB::connection('mysql_2')->beginTransaction();
-                // 新DBにデータを登録
-                $this->insert_newDB_visitHistoryImg();
-                // 旧DBのデータを移行済みに更新する
-                $this->update_oldDB_visitHistoryImg();
-
-                $this->_loopNo ++ ;
-                // if( $this->_loopNo == 3 ) break; // TODO 作成中は1回でループ終了させる
-                DB::connection('mysql')->commit();
-                DB::connection('mysql_2')->commit();
-            }
-        } catch(Exception $e) {
-            DB::connection('mysql')->rollback();
-            DB::connection('mysql_2')->rollback();
-            $this->error($e->getMessage());
-            Log::alert('DataMigration', ['memo' => $e->getMessage()]);
-        }
-        $this->info('来店履歴画像データ移行完了');
-        Log::info('DataMigration : 来店履歴画像データ移行完了');
-    }
-
-    /**
-     * 来店履歴画像データを取得する
-     *
-     */
-    public function get_data_visitHistoryImg(){
-        Log::info('DataMigration :   データ取得 : '. $this->_loopNo .'回目');
-        $this->_style_imgs = [];
-        $sql = 'SELECT * FROM sys_styleIMG
-                WHERE deleted_at <> 1
-                LIMIT 100';
-        $this->_style_imgs = DB::connection('mysql_2')->select($sql);
-
-        if( empty($this->_style_imgs)) $this->info("登録するデータが1件もありません。");
-    }
-
-    /**
-     * 新しいDBに来店履歴画像データを登録する
-     *
-     */
-    public function insert_newDB_visitHistoryImg(){
-        foreach($this->_style_imgs as $style_img ){
-            Log::info('DataMigration :     データ登録 : id = '. $style_img->id );
-            VisitHistoryImage::insert([[
-                'id'           => $style_img->id,
-                'customer_id'  => $style_img->customer_id,
-                'visit_history_id' => $style_img->visit_id,
-                'angle'        => $style_img->angle,
-                'img_pass'     => $style_img->img_pass,
-            ]]);
-        }
-    }
-
-    /**
-     * 古いDBの来店履歴画像データを移行済みする
-     */
-    public function update_oldDB_visitHistoryImg(){
-        foreach($this->_style_imgs as $style_img ){
-            Log::info('DataMigration :       データ更新 : id = '. $style_img->id );
-            $sql = 'UPDATE sys_styleIMG
-                    SET deleted_at = 1
-                    WHERE id =  '.$style_img->id ;
-            $this->_customers = DB::connection('mysql_2')->update($sql);
-        }
-    }
-
-    /**
-     * 来店履歴データを移行する
-     *
-     * @return void
-     */
-    public function migration_visitHistoryData(){
-        Log::info('DataMigration : 来店履歴データ移行開始');
-        $this->info('来店履歴データ移行開始');
-        try {
-            $this->_loopNo = 1;
-
-            while(true){
-                $this->info($this->_loopNo."回目のループ開始");
-
-                // 旧DBからデータを取得
-                $this->get_data_visitHistory();
-                //移行前のデータがなければループを終了させる
-                if(empty($this->_visit_histories)) break;
-
-                // TODO 取得したデータをCSVに書き出しておく
-                DB::connection('mysql')->beginTransaction();
-                DB::connection('mysql_2')->beginTransaction();
-                // 新DBにデータを登録
-                $this->insert_newDB_visitHistory();
-                // 旧DBのデータを移行済みに更新する
-                $this->update_oldDB_visitHistory();
 
 
-                $this->_loopNo ++ ;
-                DB::connection('mysql')->commit();
-                DB::connection('mysql_2')->commit();
-                // if( $this->_loopNo == 3 ) break; // TODO 作成中は1回でループ終了させる
-            }
-
-            // throw new \Exception("強制終了");
-        } catch(Exception $e) {
-            DB::connection('mysql')->rollback();
-            DB::connection('mysql_2')->rollback();
-            $this->error($e->getMessage());
-            Log::alert('DataMigration', ['memo' => $e->getMessage()]);
-        }
-        $this->info('来店履歴データ移行完了');
-        Log::info('DataMigration : 来店履歴データ移行完了');
-    }
-
-    /**
-     * 来店履歴データを取得する
-     *
-     */
-    public function get_data_visitHistory(){
-        Log::info('DataMigration :   データ取得 : '. $this->_loopNo .'回目');
-        $this->_visit_histories = [];
-        $sql = 'SELECT *
-                FROM sys_visitHistory
-                WHERE deleted_at <> 1
-                LIMIT 100';
-        $this->_visit_histories = DB::connection('mysql_2')->select($sql);
-
-        if( empty($this->_visit_histories)) $this->info("登録するデータが1件もありません。");
-    }
-
-    /**
-     * 新しいDBに来店履歴データを登録する
-     */
-    public function insert_newDB_visitHistory(){
-        foreach($this->_visit_histories as $visit_history ){
-            Log::info('DataMigration :     データ登録 : id = '. $visit_history->visit_id );
-            VisitHistory::insert([[
-                'id'           => $visit_history->visit_id,
-                'vis_date'     => $visit_history->visit_date,
-                'vis_time'     => $visit_history->visit_time,
-                'customer_id'  => $visit_history->customer_id,
-                'shop_id'      => $visit_history->shop_id,
-                'staff_id'     => $visit_history->user_id,
-                'menu_id'      => $visit_history->menu_id,
-                'visit_type_id'=> $visit_history->correspondence_id,
-                'memo'         => $visit_history->visit_comment,
-            ]]);
-        }
-    }
-
-    /**
-     * 古いDBの来店履歴データを移行済みする
-     */
-    public function update_oldDB_visitHistory(){
-        foreach($this->_visit_histories as $visit_history ){
-            Log::info('DataMigration :       データ更新 : id = '. $visit_history->visit_id );
-            $sql = 'UPDATE sys_visitHistory
-                    SET deleted_at = 1
-                    WHERE visit_id =  '.$visit_history->visit_id ;
-            $this->_customers = DB::connection('mysql_2')->update($sql);
-        }
-    }
-
-    /**
-     * 顧客データを移行する
-     *
-     * @return void
-     */
-    public function migration_CustomerData(){
-        Log::info('DataMigration : 顧客データ移行開始');
-        $this->info('顧客データ移行開始');
-        try {
-            $this->_loopNo = 1;
-
-            while(true){
-                $this->info($this->_loopNo."回目のループ開始");
-
-                // 旧DBからデータを取得
-                $this->get_data();
-                //移行前のデータがなければループを終了させる
-                if(empty($this->_customers)) break;
-
-                // TODO 取得したデータをCSVに書き出しておく
-
-                DB::connection('mysql')->beginTransaction();
-                DB::connection('mysql_2')->beginTransaction();
-                // 新DBにデータを登録
-                $this->insert_newDB();
-                // 旧DBのデータを移行済みに更新する
-                $this->update_oldDB();
-
-                DB::connection('mysql')->commit();
-                DB::connection('mysql_2')->commit();
-                $this->_loopNo ++ ;
-                // if( $this->_loopNo == 3 ) break; // TODO 作成中は1回でループ終了させる
-            }
-
-            // throw new \Exception("強制終了");
-        } catch(Exception $e) {
-            DB::connection('mysql')->rollback();
-            DB::connection('mysql_2')->rollback();
-            $this->error($e->getMessage());
-            Log::alert('DataMigration', ['memo' => $e->getMessage()]);
-        }
-        $this->info('顧客データ移行完了');
-        Log::info('DataMigration : 顧客データ移行完了');
-    }
-
-    /**
-     * 対象データを取得する
-     */
-    public function get_data(){
-        Log::info('DataMigration :   データ取得 : '. $this->_loopNo .'回目');
-        $this->_customers = [];
-        $sql = 'SELECT *
-                FROM sys_customer
-                WHERE derete_flag = 0
-                LIMIT 100';
-        $this->_customers = DB::connection('mysql_2')->select($sql);
-
-        if( empty($this->_customers)) $this->info("登録するデータが1件もありません。");
-    }
-
-    /**
-     * 新しいDBに登録する
-     */
-    public function insert_newDB(){
-        foreach($this->_customers as $customer ){
-            Log::info('DataMigration :     データ登録 : id = '. $customer->id );
-            // 登録する誕生日を設定する
-            if($customer->birthday == NULL){
-                $birthday_year = NULL;
-                $birthday_month = NULL;
-                $birthday_day = NULL;
-            }else{
-                $birthday_year = substr($customer->birthday, 0, 4);
-                $birthday_month = substr($customer->birthday, 5, 2);
-                $birthday_day = substr($customer->birthday, 8, 2);
-            }
-
-            Customer::insert([[
-                'id'          => $customer->id,
-                'TOKKAI_shop' => $customer->TOKKAI_shop,
-                'TOKKAI_no'   => $customer->TOKKAI_no,
-                'member_number' => $customer->TOKKAI_number,
-                'f_name'      => $customer->customer_fName,
-                'l_name'      => $customer->customer_lName,
-                'f_read'      => $customer->customer_fNameRead,
-                'l_read'      => $customer->customer_lNameRead,
-                'staff_id'    => $customer->person_staff,
-                'sex'         => $customer->sex,
-                'tel'         => $customer->tel,
-                // TODO 'tel_home'         => $customer->tel_home,
-                'email'       => $customer->email,
-                'birthday_year'  => $birthday_year,
-                'birthday_month' => $birthday_month,
-                'birthday_day'   => $birthday_day,
-                'shop_id'     => $customer->goToShop,
-                'zip21'       => $customer->zip1,
-                'zip22'       => $customer->zip2,
-                'pref21'      => $customer->pref21,
-                'addr21'      => $customer->addr21,
-                'strt21'      => $customer->strt21,
-                'memo'        => $customer->comment,
-                'created_at'  => $customer->created_at,
-            ]]);
-        }
-    }
-
-    /**
-     * 古いDBを移行済みする
-     */
-    public function update_oldDB(){
-        foreach($this->_customers as $customer ){
-            Log::info('DataMigration :       データ更新 : id = '. $customer->id );
-            $sql = 'UPDATE sys_customer
-                    SET derete_flag = 1
-                    WHERE id =  '.$customer->id ;
-            $this->_customers = DB::connection('mysql_2')->update($sql);
-        }
-    }
 
 }
 

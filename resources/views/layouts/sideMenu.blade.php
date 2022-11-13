@@ -28,9 +28,9 @@
 ?>
 
 
-<div class="sideMenu" >
+<div class="sideMenu open" >
     <div class="menuOpenButton" >>></div>
-    <div class="menuContents" style="display: none;">
+    <div class="menuContents" >
         <ul class="sideMenuUl" >
             <li><a href="{{ route('myPage') }}" class="sidebarTitle <?= ($routeNum === 1) ? "active": ""; ?>" >ホーム</a></li>
             @if (session()->get(SessionConst::SELECTED_SHOP))
@@ -39,30 +39,30 @@
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 4) ? "active open": ""; ?>" id="parentMenu_4">顧客管理</div>
                     <ul class="childMenu" id="childMenu_4" <?= ($routeNum <> 4) ? 'style="overflow: hidden; display: none;"': ""; ?> >
-
                         <?php $subRoute = (request()->routeIs('customer.index') || request()->routeIs('customer.list') || request()->routeIs('customer.show') )? true : false; ?>
                         @if ($myShop->userShopAuthorization->customer_read)
                             <li><a href="{{ route('customer.index') }}" class="sidebarTitleIn <?= ($subRoute) ? 'active': ''; ?>" >顧客確認</a></li>
                         @endif
-
-                        <li><a href="{{ route('customer.create') }}" class="sidebarTitleIn <?= (request()->routeIs('customer.create')) ? 'active': ''; ?>" >顧客登録</a></li>
+                        @if ($myShop->userShopAuthorization->customer_create)
+                            <li><a href="{{ route('customer.create') }}" class="sidebarTitleIn <?= (request()->routeIs('customer.create')) ? 'active': ''; ?>" >顧客登録</a></li>
+                        @endif
                     </ul>
                 </li>
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 5) ? "active open": ""; ?>" id="parentMenu_5">スタイリスト管理</div>
                     <ul class="childMenu" id="childMenu_5" <?= ($routeNum <> 5) ? 'style="overflow: hidden; display: none;"': ""; ?> >
-                        <?php $subRoute = (request()->routeIs('user.index') || request()->routeIs('user.search') )? true : false; ?>
+                        <?php $subRoute = (request()->routeIs('user.index') || request()->routeIs('user.show') )? true : false; ?>
                         @if ($myShop->userShopAuthorization->user_read)
                             <li><a href="{{ route('user.index') }}" class="sidebarTitleIn <?= ($subRoute) ? 'active': ''; ?>" >スタイリスト確認</a></li>
                         @endif
-
                         @if ($myShop->userShopAuthorization->user_create)
                             <li><a href="{{ route('user.create') }}" class="sidebarTitleIn <?= (request()->routeIs('user.create')) ? 'active': ''; ?>" >スタイリスト登録</a></li>
                         @endif
-
                     </ul>
                 </li>
-                <li><a href="" class="sidebarTitle <?= ($routeNum === 6) ? "active": ""; ?>" >カルテ登録QR</a></li>
+                @if (session()->get(SessionConst::SELECTED_SHOP))
+                    <li><a href="{{ route('medical.index') }}" class="sidebarTitle <?= ($routeNum === 6) ? "active": ""; ?>" >カルテ登録QR</a></li>
+                @endif
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 7) ? "active open": ""; ?>" id="parentMenu_7"><p class="">各種設定</p></div>
                     <ul class="childMenu" id="childMenu_7"  <?= ($routeNum <> 7) ? 'style="overflow: hidden; display: none;"': ""; ?>>

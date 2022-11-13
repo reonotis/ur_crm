@@ -1,24 +1,42 @@
+window.addEventListener('DOMContentLoaded', function(){
+    var windowWidth = $(window).width();
+    var windowSm = 768;
+    if (windowWidth <= windowSm) {
+        openSideMenu();
+    } else {
+        closeSideMenu();
+    }
+});
 
 //　サイドメニューの開閉
 $(".menuOpenButton").click(function () {
     const sideMenu = $(".sideMenu");
-    const meinContents = $(".meinContents");
-
     if (sideMenu.hasClass('open')) {
-        $('.menuContents').css({
-            display : 'none',
-        });
-        sideMenu.removeClass('open')
-        meinContents.removeClass('sideMenuOpen')
+        openSideMenu();
     } else {
-        sideMenu.addClass('open')
-        meinContents.addClass('sideMenuOpen')
-        $('.menuContents').css({
-                display : 'block',
-        });
+        closeSideMenu();
     }
 });
+function openSideMenu(){
+    const sideMenu = $(".sideMenu");
+    const meinContents = $(".meinContents");
 
+    $('.menuContents').css({
+        display : 'none',
+    });
+    sideMenu.removeClass('open')
+    meinContents.removeClass('sideMenuOpen')
+}
+function closeSideMenu(){
+    const sideMenu = $(".sideMenu");
+    const meinContents = $(".meinContents");
+
+    sideMenu.addClass('open')
+    meinContents.addClass('sideMenuOpen')
+    $('.menuContents').css({
+        display : 'block',
+    });
+}
 
 // サイドメニューのコンテンツをクリックした時
 $(".parentMenu").click(function() {
@@ -32,6 +50,14 @@ $(".parentMenu").click(function() {
         $('#' + childId).slideToggle(200, function() {});
     }
 })
+
+// フラッシュメッセージを削除する時
+$('.flash-message-box-close').click(function() {
+    $(this).parent().toggleClass('flash-message-hidden').slideUp();
+})
+
+
+
 
 
 

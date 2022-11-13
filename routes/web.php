@@ -44,7 +44,6 @@ Route::group(['middleware'=>'auth'], function(){
     // 顧客関係
     Route::resource('customer', 'CustomerController');
 
-
 });
 
 // 日報
@@ -75,16 +74,16 @@ Route::group(['prefix'=>'stylist', 'middleware'=>'auth'], function(){
 });
 
 // 顧客関係
-Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
-    Route::get('search', 'CustomerController@search')->name('customer.search');
-    Route::get('searching', 'CustomerController@searching')->name('customer.searching');
-    Route::get('create', 'CustomerController@create')->name('customer.create');
-    Route::get('show/{id}', 'CustomerController@show')->name('customer.show');
-    Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
-    Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
-    Route::post('store', 'CustomerController@store')->name('customer.store');
-    Route::get('delete/{id}', 'CustomerController@delete')->name('customer.delete');
-});
+//Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
+//    Route::get('search', 'CustomerController@search')->name('customer.search');
+//    Route::get('searching', 'CustomerController@searching')->name('customer.searching');
+//    Route::get('create', 'CustomerController@create')->name('customer.create');
+//    Route::get('show/{id}', 'CustomerController@show')->name('customer.show');
+//    Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
+//    Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
+//    Route::post('store', 'CustomerController@store')->name('customer.store');
+//    Route::get('delete/{id}', 'CustomerController@delete')->name('customer.delete');
+//});
 
 // 来店履歴関係
 Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
@@ -128,6 +127,9 @@ Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
 Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
 Route::get('/medical_record/{id}', 'MedicalRecordController@index')->name('medical_record');
 Route::post('/medical_record/confirm', 'MedicalRecordController@confirm')->name('medical_record.confirm');
+
+
+Route::resource('medical', 'MedicalController');
 
 
 

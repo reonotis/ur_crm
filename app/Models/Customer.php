@@ -2,44 +2,166 @@
 
 namespace App\Models;
 
+use App\Consts\DatabaseConst;
+use App\Consts\SessionConst;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    protected $fillable = ['f_name', 'l_name', 'f_read', 'l_read', 'shop_id']; //保存したいカラム名が複数の場合
+    use SoftDeletes; // 論理削除を有効化
 
-    public static function get_customer($id)
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'f_name',
+        'l_name',
+        'f_read',
+        'l_read',
+        'sex',
+        'tel',
+        'email',
+        'birthday_year',
+        'birthday_month',
+        'birthday_day',
+        'zip21',
+        'zip22',
+        'pref21',
+        'address21',
+        'street21',
+        'shop_id',
+        'staff_id',
+        'question1',
+        'comment',
+        'memo',
+    ];
+
+    /**
+     * @return hasOne
+     */
+    public function shop(): hasOne
     {
-        $customer = Customer::select('customers.*', 'shops.shop_name', 'users.name AS staff_name')
-        ->leftJoin('shops', 'shops.id', 'shop_id')
-        ->leftJoin('users', 'customers.staff_id', '=', 'users.id')
-        ->where('customers.id', $id)
-        ->where('customers.delete_flag', '0')
-        ->first();
-
-        if(!$customer) throw new \Exception("データがありません");
-        return($customer);
+        return $this->hasOne(Shop::class, 'id', 'shop_id');
     }
 
     /**
-     * 本日来店時に登録した顧客を取得する
-     * @param [type] $shop_id
-     * @return void
+     * @return hasOne
      */
-    public static function get_todayRegisterCustomer($shop_id)
+    public function user(): hasOne
     {
-        $result = self::select('customers.*', 'users.name as user_name', 'visit_histories.id as visit_history_id')
-        ->whereDate('customers.created_at', date('Y-m-d'))
-        ->where('customers.register_flow', 1)
-        ->where('customers.delete_flag', 0)
-        ->where('customers.shop_id', $shop_id)
-        ->leftJoin('visit_histories', function ($join) {
-            $join->on('customers.id', '=', 'visit_histories.customer_id')
-                ->where('visit_histories.delete_flag', '0');
-        })
-        ->leftJoin('users', 'users.id', '=', 'customers.staff_id')
-        ->get();
-        return($result);
+        return $this->hasOne(User::class, 'id', 'staff_id');
+    }
+
+
+    /**
+     * @param array $condition
+     * @return object
+     */
+    public static function getCustomers(array $condition): object
+    {
+        $query = self::select('customers.*', 'users.name', 'shops.shop_name');
+        $query = self::setCondition($query, $condition);
+
+        $query->leftJoin('users', function ($join) {
+            $join->on('users.id', '=', 'customers.staff_id')
+                ->whereNull('users.deleted_at');
+        });
+        $query->leftJoin('shops', function ($join) {
+            $join->on('shops.id', '=', 'customers.shop_id')
+                ->whereNull('shops.deleted_at');
+        });
+        return $query;
+    }
+
+    /**
+     * @param object $query
+     * @param array $condition
+     * @return object
+     */
+    public static function setCondition(object $query, array $condition): object
+    {
+        if (!empty($condition['customer_no'])){
+            $query = self::setWhereLike($query, 'customer_no', $condition['customer_no']);
+        }
+        if (!empty($condition['f_name'])){
+            $query = self::setWhereLike($query, 'f_name', $condition['f_name']);
+        }
+        if (!empty($condition['l_name'])){
+            $query = self::setWhereLike($query, 'l_name', $condition['l_name']);
+        }
+        if (!empty($condition['f_read'])){
+            $query = self::setWhereLike($query, 'f_read', $condition['f_read']);
+        }
+        if (!empty($condition['l_read'])){
+            $query = self::setWhereLike($query, 'l_read', $condition['l_read']);
+        }
+        if (!empty($condition['shop_id'])){
+            $query = $query->where('shop_id', $condition['shop_id']);
+        }
+        if (!empty($condition['staff_id'])){
+            $query = $query->where('staff_id', $condition['staff_id']);
+        }
+        if (!empty($condition['birthday_year'])){
+            $query = $query->where('birthday_year', $condition['birthday_year']);
+        }
+        if (!empty($condition['birthday_month'])){
+            $query = $query->where('birthday_month', $condition['birthday_month']);
+        }
+        if (!empty($condition['birthday_day'])){
+            $query = $query->where('birthday_day', $condition['birthday_day']);
+        }
+        if (!empty($condition['tel'])){
+            $query = self::setWhereLike($query, 'tel', $condition['tel']);
+        }
+        if (!empty($condition['email'])){
+            $query = self::setWhereLike($query, 'email', $condition['email']);
+        }
+
+
+        if (!empty($condition['zip21'])){
+            $query = self::setWhereLike($query, 'zip21', $condition['zip21']);
+        }
+        if (!empty($condition['zip22'])){
+            $query = self::setWhereLike($query, 'zip22', $condition['zip22']);
+        }
+        if (!empty($condition['pref21'])){
+            $query = self::setWhereLike($query, 'pref21', $condition['pref21']);
+        }
+        if (!empty($condition['address21'])){
+            $query = self::setWhereLike($query, 'address21', $condition['address21']);
+        }
+        if (!empty($condition['street21'])){
+            $query = self::setWhereLike($query, 'street21', $condition['street21']);
+        }
+
+        if (empty($condition['hidden_flag'])){
+            $query = $query->where('hidden_flag', DatabaseConst::FLAG_OFF);
+        }
+        return $query;
+    }
+
+    /**
+     * @param object $query
+     * @param string $columName
+     * @param string $values
+     * @return object
+     */
+    public static function setWhereLike(object $query, string $columName, string $values): object
+    {
+        // 全角スペースを半角スペースに変換
+        $HANKAKUValues = mb_convert_kana($values, 's');
+
+        // 半角スペース区切りで配列にする
+        $valueArray = explode (' ' , $HANKAKUValues);
+
+        foreach($valueArray AS $value){
+            $query = $query->where($columName, 'LIKE', '%' . $value . '%');
+        }
+        return $query;
     }
 
 }

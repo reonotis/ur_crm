@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('pageTitle', '操作店舗選択画面')
 
 @section('content')
     <div class="" >

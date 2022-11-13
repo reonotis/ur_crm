@@ -27,8 +27,6 @@ class HomeController extends UserAppController
         $notices = NoticesStatus::select('notices.title', 'notices_statuses.id', 'notices_statuses.notice_status', 'notices_statuses.created_at')
         ->join('notices', 'notices.id', 'notices_statuses.notice_id')
         ->where('notices_statuses.user_id', $this->loginUser->id)
-        ->where('notices.delete_flag', 0)
-        ->where('notices_statuses.delete_flag', 0)
         ->orderBy('notices.created_at', 'desc')
         ->get();
 

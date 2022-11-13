@@ -77,13 +77,20 @@ class User extends Authenticatable
         return $this->hasMany(userShopAuthorization::class);
     }
 
+    public function checkAuthByShopId(int $shopId = null)
+    {
+        return $this->hasOne(UserShopAuthorization::class)
+            ->where('shop_id', $shopId)->first();
+    }
+
     /**
      * @param array $condition
      * @return mixed
      */
     public static function getUsersByShopId(array $condition)
     {
-        $query = self::select('users.*');
+        $query = self::select('users.*')
+            ->where('display_flag', DatabaseConst::FLAG_ON);
 
         if (!empty($condition['shopId'])){
             $query = $query->join('user_shop_authorizations', function ($join) {

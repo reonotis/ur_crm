@@ -26,7 +26,7 @@
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
         <link href="{{ asset('css/common.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
-        <link href="{{ asset('css/user.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
+        <link href="{{ asset('css/customer.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
 
     </head>
 
@@ -62,7 +62,8 @@
                 </div>
             </main>
 
-            <script src="{{ asset('js/common.js') }}"></script>
+            <script src="{{ asset('js/common.js') }}?<?= date('Ymdhi') ?>"></script>
+            <script src="{{ asset('js/customer.js') }}?<?= date('Ymdhi') ?>"></script>
         @endguest
 
 

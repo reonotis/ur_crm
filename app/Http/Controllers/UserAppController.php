@@ -22,6 +22,7 @@ class UserAppController extends Controller
 
     public $shopId;
     public $loginUser;
+    public $userShopAuthorization;
 
     /**
      * Create a new controller instance.
@@ -68,6 +69,9 @@ class UserAppController extends Controller
 
         // ルーティングに対する権限があればチェック完了
         $authName = Common::ROUTE_AUTH_LIST[$routeName];
+        if (empty($this->userShopAuthorization)){
+            Redirect::route('myPage')->send();
+        }
         if($this->userShopAuthorization->{$authName}){
             return;
         }

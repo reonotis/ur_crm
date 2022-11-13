@@ -7,6 +7,10 @@ class Common
     // 画像ディレクトリ
     public const PRODUCT_IMG_DIR = 'public/images/product/';
 
+    // 顧客関係
+    public const CUSTOMER_NO_LENGTH = 6;
+
+
     // 性別
     public const SEX_MEN = 1;
     public const SEX_WOMAN = 2;
@@ -14,7 +18,7 @@ class Common
     public const SEX_LIST = [
         self::SEX_MEN => '男性',
         self::SEX_WOMAN => '女性',
-        self::SEX_OTHER => 'その他',
+        self::SEX_OTHER => 'etc',
     ];
     public const SEX_SYMBOL = [
         self::SEX_MEN => '♂',
@@ -61,6 +65,10 @@ class Common
         self::NONE_MASK => 'しない',
     ];
 
+    // バリデーション関連
+    public const VALIDATE_TEL = '/^0[0-9]{1,4}-[0-9]{1,4}-[0-9]{3,4}\z/';
+    public const VALIDATE_EMAIL = '/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/';
+
     // ルートに対して必要な権限名
     public const ROUTE_AUTH_LIST = [
         'user.index' => 'user_read',
@@ -73,6 +81,12 @@ class Common
         'user.belongSelected' => 'user_edit',
         'user.deleteBelongShop' => 'user_edit',
         'user.destroy' => 'user_delete',
+        'customer.index' => 'customer_read',
+        'customer.show' => 'customer_read',
+        'customer.create' => 'customer_create',
+        'customer.store' => 'customer_create',
+        'customer.edit' => 'customer_edit',
+        'customer.update' => 'customer_edit',
     ];
 
 }
