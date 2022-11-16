@@ -97,6 +97,7 @@ class MedicalController extends Controller
     public function complete($id)
     {
         //
+
     }
 
     /**
