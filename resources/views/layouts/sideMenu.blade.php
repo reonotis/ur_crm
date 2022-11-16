@@ -61,7 +61,7 @@
                     </ul>
                 </li>
                 @if (session()->get(SessionConst::SELECTED_SHOP))
-                    <li><a href="{{ route('medical.index') }}" class="sidebarTitle <?= ($routeNum === 6) ? "active": ""; ?>" >カルテ登録QR</a></li>
+                    <li><a href="{{ route('medical.index', ['shop'=>session()->get(SessionConst::SELECTED_SHOP)->id]) }}" target="_blank" class="sidebarTitle <?= ($routeNum === 6) ? "active": ""; ?>" >カルテ登録QR</a></li>
                 @endif
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 7) ? "active open": ""; ?>" id="parentMenu_7"><p class="">各種設定</p></div>

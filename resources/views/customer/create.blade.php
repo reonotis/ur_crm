@@ -4,15 +4,6 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-10">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
             <div class="customer-register-contents" >
                 <div class="card-body">
                     <form method="post" action="{{route('customer.store')}}">

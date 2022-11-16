@@ -1,0 +1,526 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body{
+	background: #eee;
+	background-image: url("../assets/img/1596446097.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: rgba(255, 255, 255, 0.6);
+    background-blend-mode: lighten;
+}
+:root {
+	--nav-height: 60px;
+	--register-color: #eeecc3e1;
+	--register-border-color: #746e0de1;
+	--register-string-color: #8b8313;
+    --medical-title-width: 150px;
+}
+
+.medical-header {
+	background: #fff;
+	text-align: center;
+	height: var(--nav-height);
+	line-height: var(--nav-height);
+}
+.medical-page-title {
+    min-height: var(--nav-height);
+    line-height: var(--nav-height);
+    text-align: center;
+    background: #fff;
+    color: var(--mainColor);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: solid 2px var(--mainColor);
+}
+.medical-contents-area {
+    max-width: 600px;
+    width: 90%;
+    margin: 1rem auto;
+    padding: 1rem;
+    background: #fffc;
+    border: solid 1px #fff;
+    border-radius: 1rem;
+}
+.welcome-sentence {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 .5rem;
+}
+.welcome-sentence-support {
+    font-size: .9rem;
+    font-weight: 500;
+    color: #666;
+    margin: 0 0 .5rem;
+    line-height: 1rem;
+}
+.medical-row {
+    display: flex;
+    border-bottom: solid 1px var(--mainColor);
+    margin-bottom: .5rem;
+}
+.medical-title {
+    position: relative;
+    width: var(--medical-title-width);
+    padding: .25rem;
+    background: #dde0ff;
+    color: var(--mainColor);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.medical-title.required::before {
+    content: "*必須";
+    height: 100%;
+    color: #d31f1f;
+    position: absolute;
+    text-align: right;
+    left: 0;
+    top: 0;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+.medical-contents {
+    width: calc(100% - var(--medical-title-width));
+    padding: .25rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.question-support {
+    margin-bottom: .5rem;
+    line-height: 1rem;
+}
+.pc-hidden {
+    display: none;
+}
+
+/* スマホ */
+@media screen and (max-width: 480px) {
+    .medical-contents-area {
+        max-width: 600px;
+        width: 98%;
+        margin: 1rem auto;
+        padding: 1rem .5rem;
+        background: #fffc;
+        border: solid 1px #fff;
+        border-radius: 1rem;
+    }
+    .medical-row {
+        flex-flow: column;
+        margin-bottom: 1rem;
+    }
+    .medical-title {
+        width: 100%;
+        border-top: solid 1px var(--mainColor);
+        border-right: solid 1px var(--mainColor);
+        border-left: solid 1px var(--mainColor);
+    }
+    .medical-contents {
+        width: 100%;
+        border-right: solid 1px var(--mainColor);
+        border-left: solid 1px var(--mainColor);
+    }
+    .pc-hidden {
+        display: block;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+.LeftBOX{
+	display       : flex ;
+	flex-flow     : wrap ;
+}
+.CenterBOX{
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-around;
+}
+.BOXin{
+	float         : left ;
+}
+
+
+
+.button{
+	padding: 10px 50px;
+	margin: 30px auto 0;
+	border: solid 1px var(--indigo);
+	border-radius: 25px;
+	background:  #fff;
+	color: var(--indigo);
+	font-weight: 500;
+	transition: 0.2s;
+}
+.button:hover{
+	background: var(--indigo);
+	color:  #fff;
+}
+.button.cancel{
+	border: solid 1px var(--orange);
+	color: var(--orange);
+}
+.button.cancel:hover{
+	background: var(--orange);
+	color:  #fff;
+}
+
+
+
+/* comment関連 */
+.support{
+	color :var(--secondary);
+	padding :0 2px;
+	font-size :0.9em;
+	display:inline-block;
+}
+
+
+
+
+/* 入力エリア */
+.formArea{
+	padding: 50px 20px;
+	margin: 50px auto 0;
+	max-width: 800px;
+	border-radius: 20px;
+	background: #ffffffc9;
+}
+.supportMessage{
+	margin: 0 0 30px;
+	text-align: center;
+}
+.supportMessage2{
+	margin: 60px 0 0 ;
+	text-align: center;
+}
+.itemsRow{
+	margin-bottom: 10px;
+	display: flex;
+}
+.itemsTitle{
+	width: 160px;
+	padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+	background: var(--register-color);
+	border-bottom: solid 1px var(--register-border-color);
+	color: var(--register-string-color);
+	float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.itemsTitle.required::before {
+    content: "*必須";
+    height: 100%;
+    color: #d31f1f;
+    position: absolute;
+    text-align: right;
+    left: 0px;
+    top: 0;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+}
+.itemsContent{
+	padding: 10px;
+	width: calc(100% - 160px);
+	border-bottom: solid 1px var(--register-border-color);
+}
+.itemsContent_label{
+	height: 100%;
+	align-items: center;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: start;
+}
+
+.itemsContent_label label{
+	margin: 0 22px 0 0;
+}
+.itemsContent_checkbox{
+	align-items: center;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: start;
+}
+.itemsContent_checkbox label{
+	margin: 0 22px 0 0;
+}
+
+
+
+
+
+/* form関連 */
+.input-name {
+    width: 12rem;
+}
+
+/* スマホ */
+@media screen and (max-width: 480px) {
+    .input-name {
+        width: 50%;
+    }
+
+}
+
+
+.formInput{
+	display: block;
+	width: 100%;
+	height: calc(1.6em + 0.75rem + 2px);
+	padding: 5px 10px;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.formInput:focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #a1cbef;
+	outline: 0;
+	box-shadow: 0 0 0 0.2rem rgb(52 144 220 / 25%);
+}
+.formInput::placeholder {
+	color: #ddd;
+}
+.formInput_2 {
+	width: 48%;
+	margin-right: 2%;
+}
+
+.inputUnits{
+	width : 200px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputUnit{
+	width :180px;
+}
+.inputDatatimeLocal{
+	width :220px;
+}
+.inputData{
+	width :150px;
+	margin-right :10px;
+	float: left;
+}
+.inputBirthday{
+	min-width :300px;
+	max-width :300px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputYear{
+	width :100px;
+}
+.inputMonth, .inputDay{
+	width :70px;
+}
+.inputYearMonths{
+	margin-bottom :10px;
+	padding :0 15px;
+	width : 340px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputYearMonth{
+	width :170px;
+}
+.inputZips{
+	margin-bottom :5px;
+	width : 180px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputZip{
+	width :80px;
+}
+.inputAddrs{
+	margin-bottom :5px;
+	width : 250px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputAddr{
+	width : 120px;
+}
+.inputStrt{
+	width : 100%;
+}
+.inputDate{
+	margin-bottom :5px;
+	width : 150px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputPrice{
+	margin-bottom :5px;
+	width : 100px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputDateTime{
+	margin-bottom :5px;
+	width : 300px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputOpenDateTime{
+	margin-bottom :5px;
+	width : 350px;
+	display       : flex;
+	flex-flow     : wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputRowErea {
+	min-width  : 70% ;
+	width     :100%;
+	margin     :  0 0 15px ;
+	padding-bottom:5px;
+	border-bottom :solid 1px var(--green);
+	display    : flex ;
+	flex-flow  : wrap;
+	align-items: center;
+}
+.inputRowEreaTitle {
+	width           : 150px ;
+	padding         : 3px 15px ;
+	text-align      : center ;
+	font-size       : 17px ;
+	font-weight     : bold;
+	background      : #fff ;
+	color           : var(--green);
+	justify-content : center;
+	display         : flex;
+	align-items     : center;
+}
+.inputRowEreaValue{
+	width : calc( 100% -  150px ) ;
+}
+textarea.formInput{
+	height :150px;
+	padding :5px;
+}
+textarea.mailformInput{
+	height :500px;
+	padding :5px;
+	line-height:15px;
+	font-size: 12px;
+}
+select{
+	padding :10px 15px;
+	width :100%;
+}
+select.parent,
+select.children
+{
+	margin :10px 20px;
+	width :calc(100% - 40px);
+}
+input:disabled {
+	background: #ccc;
+}
+
+
+
+
+
+
+/* customer */
+.name_read{
+	font-size: 0.5em;
+}
+.customer_navigation{
+	max-width: 120px;
+	height: 50px;
+	line-height: 50px;
+	margin: 0 2px 0 0;
+	padding: 0 10px;
+	text-align: center;
+	background: var(--mainColor2);
+	border: solid 1px var(--mainColor);
+	color: var(--mainColor2_string);
+	transition: 0.2s;
+}
+.customer_navigation.active{
+	background: var(--mainColor3);
+	color: var(--mainColor3_string);
+}
+a > .customer_navigation:hover{
+    text-decoration: none;
+	background: var(--mainColor3);
+	color: var(--mainColor3_string);
+}
+
+.editRow_01{
+	margin-bottom: 5px;
+	border-bottom: solid 1px var(--editColor);
+	display: flex;
+	flex-flow: wrap;
+}
+.editTitle_01{
+	width: 160px;
+	padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+	background: var(--editColor);
+	color: var(--white);
+	border: solid 1px var(--editColor);
+	float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.editContent_01{
+	padding: 10px;
+	width: calc(100% - 160px);
+}
+
+
+
+
+
+
+

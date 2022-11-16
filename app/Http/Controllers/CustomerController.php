@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use app\Common\CustomerCheck;
 use App\Exceptions\ExclusionException;
 use App\Consts\{Common, ErrorCode, SessionConst};
 use App\Models\{Customer, CustomerNoCounter, UserShopAuthorization, VisitHistory};
@@ -143,6 +144,7 @@ class CustomerController extends UserAppController
         } else {
             $customerNo = $this->_checkCustomerNo($request->customer_no); // 確認
         }
+
         $this->_checkValidate($request);
         if (count($this->errMsg)){
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
@@ -187,63 +189,20 @@ class CustomerController extends UserAppController
      */
     public function _checkValidate(Request $request): void
     {
-        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
-        if (empty($request->f_name)) $this->errMsg[] = '苗字は必須入力です';
-        if (empty($request->l_name)) $this->errMsg[] = '名前は必須入力です';
-        if (empty($request->f_read)) $this->errMsg[] = 'ミョウジは必須入力です';
-        if (empty($request->l_read)) $this->errMsg[] = 'ナマエは必須入力です';
+        $customerCheck = new CustomerCheck;
+        $checkResult = $customerCheck->registerCheckValidation($request);
+        if(!$checkResult){
+            $this->errMsg[] = $customerCheck->getErrMsg();
+        }
+
         if (empty($request->staff_id)){
             $this->errMsg[] = '担当スタッフが選択されていません';
         } else {
+            $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
             $users = UserShopAuthorization::getSelectableUsers($shopId)->get()->toArray();
             $myShopUsersIdList = array_column( $users, 'id');
             if (!in_array($request->staff_id , $myShopUsersIdList)){
                 $this->errMsg[] = '選択した担当スタッフは店舗に所属していません';
-            }
-        }
-
-        if (!empty($request->sex)){
-            if(!array_key_exists($request->sex, Common::SEX_LIST)){
-                $this->errMsg[] = '性別の値が不正です';
-            }
-        }
-
-        if (!empty($request->birthday_year)){
-            if(!(1900 <= $request->birthday_year) || !($request->birthday_year <= date('Y'))){
-                $this->errMsg[] = '誕生年が不正です';
-            }
-        }
-        if (!empty($request->birthday_month)){
-            if(!(1 <= $request->birthday_month) || !($request->birthday_month <= 12)){
-                $this->errMsg[] = '誕生月が不正です';
-            }
-        }
-        if (!empty($request->birthday_day)){
-            if(!(1 <= $request->birthday_day) || !($request->birthday_day <= 31)){
-                $this->errMsg[] = '誕生日が不正です';
-            }
-        }
-        if(!empty($request->birthday_year) && !empty($request->birthday_month) && !empty($request->birthday_day)){
-            if(!checkdate($request->birthday_month, $request->birthday_day, $request->birthday_year)) {
-                $this->errMsg[] = '誕生日が不正な年月日です';
-            }
-        }
-
-        if (!empty($request->tel)){
-            $pattern = Common::VALIDATE_TEL;
-            if (!preg_match($pattern, $request->tel) ) {
-                $this->errMsg[] = '電話番号はハイフンを含む半角数字で入力してください';
-            }
-        }
-        if (!empty($request->email)){
-            $pattern = Common::VALIDATE_EMAIL;
-            if (!preg_match($pattern, $request->email) ) {
-                $this->errMsg[] = 'メールアドレスの形式が不正です';
-            }
-        }
-        if (!empty($request->zip21) || !empty($request->zip22)){
-            if(!strlen($request->zip21) == 3  || !strlen($request->zip22) == 4){
-                $this->errMsg[] = '郵便番号は3桁-4桁で入力してください';
             }
         }
     }

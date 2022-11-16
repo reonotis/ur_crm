@@ -115,22 +115,19 @@ Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
     Route::get('noticeShow/{id}', 'SettingController@noticeShow')->name('setting.noticeShow');
 });
 
-
-
 // PDF関連
 Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
     Route::get('index', 'PDFController@index')->name('pdf.index');
     Route::get('show_pdfFile/{file_name}', 'PDFController@show_pdfFile')->name('pdf.show_pdfFile');
 });
 
+//Route::resource('medical', 'MedicalController');
+Route::get('/medical/{shop}', 'MedicalController@index')->name('medical.index');
+Route::get('/medical/create/{shop}', 'MedicalController@create')->name('medical.create');
+Route::post('/medical/store', 'MedicalController@store')->name('medical.store');
+
 
 Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
 Route::get('/medical_record/{id}', 'MedicalRecordController@index')->name('medical_record');
 Route::post('/medical_record/confirm', 'MedicalRecordController@confirm')->name('medical_record.confirm');
-
-
-Route::resource('medical', 'MedicalController');
-
-
-
 

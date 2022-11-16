@@ -65,6 +65,22 @@ class Common
         self::NONE_MASK => 'しない',
     ];
 
+    // アンケート
+    public const Q1_A1 = 1;
+    public const Q1_A2 = 2;
+    public const Q1_A3 = 3;
+    public const Q1_A4 = 4;
+    public const Q1_A5 = 5;
+    public const Q1_A6 = 6;
+    public const QUESTION_1_LIST = [
+        self::Q1_A1 => 'ホームページ',
+        self::Q1_A2 => 'ホットペッパー',
+        self::Q1_A3 => '街で声をかけられて',
+        self::Q1_A4 => '知人の紹介',
+        self::Q1_A5 => 'TV雑誌',
+        self::Q1_A6 => '以前URを利用したことがある',
+    ];
+
     // バリデーション関連
     public const VALIDATE_TEL = '/^0[0-9]{1,4}-[0-9]{1,4}-[0-9]{3,4}\z/';
     public const VALIDATE_EMAIL = '/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/';

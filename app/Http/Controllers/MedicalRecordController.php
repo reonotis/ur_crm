@@ -17,10 +17,9 @@ class MedicalRecordController extends Controller
      */
     public function index($id)
     {
-        $shop = Shop::where('delete_flag', 0)->find($id);
+        $shop = Shop::find($id);
         if(empty($shop)) dd("URLの値が不正です。");
-        $questions = Questions::where('delete_flag', 0)
-        ->orderby('rank')
+        $questions = Questions::orderby('rank')
         ->get();
         return view('medical_record.index',compact('shop','questions'));
     }
