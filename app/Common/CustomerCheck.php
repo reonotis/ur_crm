@@ -3,13 +3,27 @@
 namespace app\Common;
 
 use App\Consts\Common;
+use App\Models\CustomerNoCounter;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class CustomerCheck
 {
     public $errMsg = [];
 
-    public function registerCheckValidation(Request $r): bool
+    /**
+     * @return array
+     */
+    public function getErrMsg(): array
+    {
+        return $this->errMsg;
+    }
+
+    /**
+     * @param Request $r
+     * @return void
+     */
+    public function registerCheckValidation(Request $r): void
     {
         if (empty($r->f_name)) $this->errMsg[] = '苗字は必須入力です';
         if (empty($r->l_name)) $this->errMsg[] = '名前は必須入力です';
@@ -52,14 +66,12 @@ class CustomerCheck
         }
 
         if (!empty($r->tel)){
-            $pattern = Common::VALIDATE_TEL;
-            if (!preg_match($pattern, $r->tel) ) {
+            if (!preg_match(Common::VALIDATE_TEL, $r->tel) ) {
                 $this->errMsg[] = '電話番号はハイフンを含む半角数字で入力してください';
             }
         }
         if (!empty($r->email)){
-            $pattern = Common::VALIDATE_EMAIL;
-            if (!preg_match($pattern, $r->email) ) {
+            if (!preg_match(Common::VALIDATE_EMAIL, $r->email) ) {
                 $this->errMsg[] = 'メールアドレスの形式が不正です';
             }
         }
@@ -68,13 +80,27 @@ class CustomerCheck
                 $this->errMsg[] = '郵便番号は3桁-4桁で入力してください';
             }
         }
-        return false;
     }
 
-    public function getErrMsg(): array
+    /**
+     * ショップシンボルを先頭にした顧客番号を生成する
+     * 数次は6桁
+     * 例) CA999999
+     * @param int $shopId
+     * @return string
+     */
+    public function _makeCustomerNo(int $shopId): string
     {
-        return $this->errMsg;
+        $lastId = CustomerNoCounter::select('id')->latest('id')->first();
+        $newId = $lastId->id + 1;
+        $customerNoCounter = CustomerNoCounter::create([
+            'id' => $newId,
+        ]);
+
+        $shop = Shop::find($shopId);
+        return $shop->shop_symbol . str_pad($customerNoCounter->id, Common::CUSTOMER_NO_LENGTH, 0, STR_PAD_LEFT);
     }
+
 }
 
 

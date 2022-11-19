@@ -20,6 +20,9 @@
         case str_starts_with($routeName, 'medical'):
             $routeNum = 6;
             break;
+        case str_starts_with($routeName, 'setting'):
+            $routeNum = 7;
+            break;
         case '':
             break;
     }
@@ -67,7 +70,7 @@
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 7) ? "active open": ""; ?>" id="parentMenu_7"><p class="">各種設定</p></div>
                     <ul class="childMenu" id="childMenu_7"  <?= ($routeNum <> 7) ? 'style="overflow: hidden; display: none;"': ""; ?>>
                         {{-- <li><a href="" class="sidebarTitleIn" >ショップ基本情報</a></li> --}}
-                        {{-- <li><a href="" class="sidebarTitleIn" >個人情報編集</a></li> --}}
+                         <li><a href="{{ route('setting.index') }}" class="sidebarTitleIn <?= (request()->routeIs('setting.index')) ? 'active': ''; ?>"    >アカウント情報</a></li>
                         {{-- <li><a href="" class="sidebarTitleIn" >税率設定</a></li> --}}
                         {{-- <li><a href="" class="sidebarTitleIn" >メール設定</a></li> --}}
                     </ul>

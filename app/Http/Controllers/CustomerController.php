@@ -190,8 +190,8 @@ class CustomerController extends UserAppController
     public function _checkValidate(Request $request): void
     {
         $customerCheck = new CustomerCheck;
-        $checkResult = $customerCheck->registerCheckValidation($request);
-        if(!$checkResult){
+        $customerCheck->registerCheckValidation($request);
+        if(count($customerCheck->getErrMsg())){
             $this->errMsg[] = $customerCheck->getErrMsg();
         }
 

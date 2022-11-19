@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Notice;
 use App\Models\NoticesStatus;
-use App\UserOld;
 use App\Services\CheckData;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Hash;
 
@@ -17,16 +17,16 @@ class SettingController extends Controller
      *
      * @return view
      */
-    public function index()
+    public function index(): view
     {
-        $user_id = \Auth::user()->id;
-        $user = \DB::table('users')->select('users.*', 'shops.shop_name')
-        ->where('users.id', $user_id)
-        ->join('shops', 'shops.id', '=', 'users.shop_id')
-        ->first();
-
-        $user = CheckData::set_authority_name($user);
-        return view('setting.index',compact('user'));
+//        $user_id = \Auth::user()->id;
+//        $user = \DB::table('users')->select('users.*', 'shops.shop_name')
+//        ->where('users.id', $user_id)
+//        ->join('shops', 'shops.id', '=', 'users.shop_id')
+//        ->first();
+//
+//        $user = CheckData::set_authority_name($user);
+        return view('setting.index');
     }
 
     /**

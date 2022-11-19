@@ -91,9 +91,6 @@ body{
 .medical-contents {
     width: calc(100% - var(--medical-title-width));
     padding: .25rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
 }
 .question-support {
     margin-bottom: .5rem;

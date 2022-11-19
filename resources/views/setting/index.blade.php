@@ -14,26 +14,25 @@
                         <tbody>
                             <tr>
                                 <th>名前</th>
-                                <td>{{ $user->name }}</td>
+                                <td>{{ \Auth::user()->name }}</td>
                             </tr>
                             <tr>
                                 <th>メールアドレス</th>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ \Auth::user()->email }}</td>
                             </tr>
                             <tr>
                                 <th>店舗</th>
-                                <td>{{ $user->shop_name }}</td>
-                            </tr>
-                            <tr>
-                                <th>権限</th>
-                                <td>{{ $user->authority_name }}</td>
+                                <td>
+                                    @foreach(\Auth::user()->userShopAuthorizations AS $shopAuthorization)
+                                        <p>{{ $shopAuthorization->shop->shop_name }}</p>
+                                    @endforeach
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 

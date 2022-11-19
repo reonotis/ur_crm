@@ -20,22 +20,22 @@ class MedicalController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return view
+     * @return View
      */
-    public function index(Shop $shop): view
+    public function index(Shop $shop): View
     {
         $createURL = route('medical.create', ['shop'=>$shop->id ]);
-        return view('medical.index', compact('shop', 'createURL'));
+        return View('medical.index', compact('shop', 'createURL'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function create(Shop $shop): view
+    public function create(Shop $shop): View
     {
-        return view('medical.create', compact('shop'));
+        return View('medical.create', compact('shop'));
     }
 
     /**
@@ -46,17 +46,23 @@ class MedicalController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->session()->regenerateToken(); // 二重クリック防止
         $customerCheck = new CustomerCheck;
-        $checkResult = $customerCheck->registerCheckValidation($request);
-        if(!$checkResult){
+        $customerCheck->registerCheckValidation($request);
+        if(count($customerCheck->getErrMsg())){
             return redirect()->back()
                 ->with(SessionConst::FLASH_MESSAGE_ERROR, $customerCheck->getErrMsg())
                 ->withInput();
         }
 
+        if (!empty($request->question_1)){
+            $question1 = implode(",", $request->question_1);
+        } else {
+            $question1 = null;
+        }
+
         $shopId = $request->shop_id;
-        dd($shopId);
-        $customerNo = $this->_makeCustomerNo($shopId);
+        $customerNo = $customerCheck->_makeCustomerNo($shopId);
         try {
             DB::beginTransaction();
             $customer = Customer::create([
@@ -78,11 +84,12 @@ class MedicalController extends Controller
                 'pref21' => $request->pref21,
                 'address21' => $request->address21,
                 'street21' => $request->street21,
+                'question1' => $question1,
                 'memo' => $request->memo,
             ]);
 
             DB::commit();
-            return redirect()->route('customer.show', ['customer'=>$customer->id])->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['顧客情報を登録しました']);
+            return redirect()->route('medical.complete', ['customer'=>$customer->id]);
         } catch (\Throwable $e) {
             DB::rollback();
             Log::error( ' msg:' . $e->getMessage());
@@ -92,12 +99,11 @@ class MedicalController extends Controller
 
     /**
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function complete($id)
+    public function complete(Customer $customer): View
     {
-        //
-
+        return View('medical.complete', compact('customer'));
     }
 
     /**

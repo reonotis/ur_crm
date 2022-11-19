@@ -125,6 +125,7 @@ Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
 Route::get('/medical/{shop}', 'MedicalController@index')->name('medical.index');
 Route::get('/medical/create/{shop}', 'MedicalController@create')->name('medical.create');
 Route::post('/medical/store', 'MedicalController@store')->name('medical.store');
+Route::get('/medical/complete/{customer}', 'MedicalController@complete')->name('medical.complete');
 
 
 Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
