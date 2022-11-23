@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Consts\DatabaseConst;
 use App\Consts\SessionConst;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,6 +19,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
+        'customer_no',
         'f_name',
         'l_name',
         'f_read',
@@ -161,6 +163,24 @@ class Customer extends Model
         foreach($valueArray AS $value){
             $query = $query->where($columName, 'LIKE', '%' . $value . '%');
         }
+        return $query;
+    }
+
+    /**
+     * @return object
+     */
+    public static function getTodayCustomers(int $shopId): object
+    {
+        $today = new Carbon('today');
+
+        $query = self::select('customers.*', 'users.name')
+            ->where('customers.shop_id', $shopId)
+            ->where('customers.created_at', '>=', $today->format('Y-m-d'))
+        ;
+        $query->leftJoin('users', function ($join) {
+            $join->on('users.id', '=', 'customers.staff_id');
+        });
+
         return $query;
     }
 

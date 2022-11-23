@@ -126,7 +126,7 @@
             </div>
             <div >
                 {{ $customers->appends(request()->input())->links() }}
-                <table class="listTBL userListTBL">
+                <table class="list-tbl userListTBL">
                     <thead>
                         <tr>
                             <th>顧客番号</th>

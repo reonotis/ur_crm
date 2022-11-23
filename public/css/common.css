@@ -590,26 +590,28 @@ input[type="submit"],
 /*************************
 * テーブル
 *************************/
-.listTBL {
+.list-tbl {
     width: 100%;
     border-spacing: 0;
     border-collapse: separate;
 }
-.listTBL tbody tr td{
+.list-tbl tbody tr td{
     border-bottom: solid 1px var(--active-color);
 }
-.listTBL th{
+.list-tbl th{
     padding: 10px;
     font-size: 1.1em;
     background: var(--active-color);
     color: #fff;
 }
-.listTBL td{
+.list-tbl td{
     padding: 10px;
 }
-.listTBL tr:nth-child(odd) td {
+.list-tbl tr:nth-child(odd) td {
     background: #3a42690b;
 }
+
+
 
 
 
@@ -652,6 +654,13 @@ input[type="submit"],
     align-items: center;
     justify-content: flex-start;
 }
+
+.support-comment {
+    color :var(--secondary);
+    font-size: .8rem;
+}
+
+
 
 
 

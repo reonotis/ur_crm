@@ -1,39 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.setting')
+@section('pageTitle', '各種設定')
 
 @section('content')
-
-@include('setting.navigation')
-
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">アカウント情報</div>
-                <div class="card-body">
-                    <table class="tableClass_007">
-                        <tbody>
-                            <tr>
-                                <th>名前</th>
-                                <td>{{ \Auth::user()->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>メールアドレス</th>
-                                <td>{{ \Auth::user()->email }}</td>
-                            </tr>
-                            <tr>
-                                <th>店舗</th>
-                                <td>
-                                    @foreach(\Auth::user()->userShopAuthorizations AS $shopAuthorization)
-                                        <p>{{ $shopAuthorization->shop->shop_name }}</p>
-                                    @endforeach
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                @include('setting.navigation')
+                <div class="setting-basic-contents" >
+                    <div class="setting-row" >
+                        <div class="setting-title" >名前</div>
+                        <div class="setting-contents" >{{ \Auth::user()->name }}</div>
+                    </div>
+                    <div class="setting-row" >
+                        <div class="setting-title" >メールアドレス</div>
+                        <div class="setting-contents" >{{ \Auth::user()->email }}</div>
+                    </div>
+                    <div class="setting-row" >
+                        <div class="setting-title" >所属店舗</div>
+                        <div class="setting-contents" >
+                            <div class="" >
+                                @foreach(\Auth::user()->userShopAuthorizations AS $shopAuthorization)
+                                    <p>{{ $shopAuthorization->shop->shop_name }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 @endsection

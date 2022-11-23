@@ -2,78 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Consts\SessionConst;
 use App\Models\Notice;
 use App\Models\NoticesStatus;
-use App\Services\CheckData;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SettingController extends Controller
 {
+    public $errMsg = [];
 
     /**
      * アカウント情報を表示する
      *
-     * @return view
+     * @return View
      */
-    public function index(): view
+    public function index(): View
     {
-//        $user_id = \Auth::user()->id;
-//        $user = \DB::table('users')->select('users.*', 'shops.shop_name')
-//        ->where('users.id', $user_id)
-//        ->join('shops', 'shops.id', '=', 'users.shop_id')
-//        ->first();
-//
-//        $user = CheckData::set_authority_name($user);
-        return view('setting.index');
-    }
-
-    /**
-     * Emailを表示する
-     * @return \Illuminate\Http\Response
-     */
-    public function Email()
-    {
-        $user = \Auth::user();
-        return view('setting.email',compact('user'));
+        return View('setting.index');
     }
 
     /**
      * Email編集画面を表示する
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function ChangeEmail()
+    public function changeEmail(): View
     {
-        $user = \Auth::user();
-        return view('setting.changeEmail',compact('user'));
+        return View('setting.changeEmail');
     }
 
     /**
-     *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function updateEmail(Request $request)
+    public function updateEmail(Request $request): RedirectResponse
     {
-
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
-            $user = \Auth::user();
-            if(empty($request->email) || empty($request->new_email1) || empty($request->new_email2) )throw new \Exception("入力項目は全て必須です");
-            if($request->email <> $user->email ) throw new \Exception("現在のメールアドレスが合っていません");
-            if($request->new_email1 <> $request->new_email2 ) throw new \Exception("新しいメールアドレスが一致していません");
-            if($request->new_email1 == $user->email ) throw new \Exception("新しいメールアドレスが現在のメールアドレスと変わっていません");
+            $user = Auth::user();
+            if(empty($request->email) || empty($request->new_email1) || empty($request->new_email2) ) $this->errMsg[] = "入力項目は全て必須です";
+            if($request->email <> Auth::user()->email ) $this->errMsg[] = "現在のメールアドレスが合っていません";
+            if($request->new_email1 <> $request->new_email2 ) $this->errMsg[] = "新しいメールアドレスが一致していません";
+            if($request->new_email1 == Auth::user()->email ) $this->errMsg[] = "新しいメールアドレスが現在のメールアドレスと変わっていません";
+            if(count($this->errMsg)){
+                return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
+            }
+
             $user->email = $request->new_email1;
             $user->save();
 
-            \DB::commit();
-            session()->flash('msg_success', 'メールアドレスを更新しました');
-            return redirect()->action('SettingController@index');
+            DB::commit();
+            return redirect()->route('setting.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['メールアドレスを更新しました']);
         } catch (\Throwable $e) {
-            \DB::rollback();
-            session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->back()->withInput();    // 前の画面へ戻る
+            DB::rollback();
+            Log::error( ' msg:' . $e->getMessage());
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['メールアドレスの更新に失敗しました'])->withInput();
         }
     }
 
@@ -92,9 +81,9 @@ class SettingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function EditPassword()
+    public function changePassword()
     {
-        $user = \Auth::user();
+        $user = Auth::user();
 
         return view('setting.editPassword',compact('user'));
     }
@@ -108,7 +97,7 @@ class SettingController extends Controller
 
         try {
             \DB::beginTransaction();
-            $user = \Auth::user();
+            $user = Auth::user();
             if(empty($request->password) || empty($request->new_password1) || empty($request->new_password2) )throw new \Exception("入力項目は全て必須です");
 
             // 現在のパスワードが合っているかcheck
@@ -155,7 +144,7 @@ class SettingController extends Controller
     public function noticeList()
     {
         // 権限が無ければTOP画面に遷移
-        if( \Auth::user()->authority_id > config('ur.authorityList')[3]['authorityId']){
+        if( Auth::user()->authority_id > config('ur.authorityList')[3]['authorityId']){
             session()->flash('msg_danger', 'お知らせ登録をする権限がありません' );
             return view('home');
         }
@@ -215,7 +204,7 @@ class SettingController extends Controller
 
             // お知らせを登録
             Notice::insert([[
-                'user_id'     => \Auth::user()->id,
+                'user_id'     => Auth::user()->id,
                 'title'       => $notice['title'],
                 'comment'     => $notice['comment'],
                 'hidden_flag' => 0,
@@ -316,7 +305,7 @@ class SettingController extends Controller
             NoticesStatus::where('notice_id', $id)
             ->update([
                 'notice_status' => 9,
-                'del_user_id' => \Auth::user()->id,
+                'del_user_id' => Auth::user()->id,
                 'del_at' => $dateTime->format('Y-m-d H:i:s'),
                 'delete_flag' => 1,
             ]);
@@ -341,7 +330,7 @@ class SettingController extends Controller
             $notice = NoticesStatus::select()
             ->join('notices', 'notices.id', '=', 'notices_statuses.notice_id')
             ->where('notices_statuses.delete_flag', 0)
-            ->where('notices_statuses.user_id', \Auth::user()->id)
+            ->where('notices_statuses.user_id', Auth::user()->id)
             ->find($id);
 
             if(empty($notice)){

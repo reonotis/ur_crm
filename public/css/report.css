@@ -1,0 +1,146 @@
+:root {
+    --basic-report-area: 250px;
+}
+
+/*************************
+* レポート画面
+*************************/
+.basic-report-area {
+    width: var(--basic-report-area);
+    margin: 0 1rem 1rem 0;
+}
+.vis-history-area {
+    width: calc(100% - var(--basic-report-area) - 1rem);
+}
+.report-contents-area {
+    position: relative;
+    margin: 0 0 1rem;
+    padding: 0;
+    background-color: #fff;
+}
+.report-title {
+    position: relative;
+    width: 100%;
+    padding: .5rem 1rem;
+    margin: 0;
+    background: var(--active-color);
+    color: white;
+    border: solid 1px var(--active-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.report-title::after {
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    border-bottom: solid 3px #fff;
+    border-left: solid 3px #fff;
+    right: 20px;
+    transition: var(--transition-hover);
+    transform: rotate(135deg);
+}
+.report-title-close::after {
+    transform: rotate(-45deg);
+}
+.report-contents {
+    padding: 1rem .5rem;
+    border: 1px solid var(--mainColor);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* 基本レポートで利用するテーブル */
+.basic-report-tbl {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+.basic-report-tbl th,
+.basic-report-tbl td {
+    padding: .25rem;
+    text-align: center;
+    border-bottom: solid 1px var(--active-color);
+}
+.basic-report-tbl th {
+    width: 130px;
+    background: var(--mainColor3);
+    color: var(--mainColor);
+}
+
+
+/* 当日登録したお客様のリストテーブル */
+.report-tbl th,
+.report-tbl td {
+    padding: 5px;
+}
+.report-tbl .tbl-id {
+    font-size: .7rem;
+}
+
+/*************************
+* スタイリスト設定画面
+*************************/
+.setting-stylist-area {
+    width: 95%;
+    max-width: 700px;
+    margin: 1rem auto;
+    padding: 1rem;
+    border: solid 1px var(--mainColor);
+    border-radius: 1rem;
+}
+.select-user-input {
+    display: none;
+}
+.select-user-label {
+    display: inline-block;
+    background: var(--mainColor3);
+    padding: .5rem 1rem;
+    margin: 5px 5px 5px 0;
+    border : solid 1px var(--mainColor);
+    border-radius: 5px;
+    transition: all .2s;
+    cursor: pointer;
+}
+.select-user-label:focus {
+    outline-color: var(--mainColor);
+    background: white;
+}
+.select-user-input:checked + .select-user-label {
+    background: var(--mainColor);
+    color: #fff;
+}
+.set-stylist-row {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-bottom: solid 1px var(--mainColor);
+    display: flex;
+}
+.set-stylist-title {
+    width: 150px;
+    background: var(--mainColor);
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.set-stylist-contents {
+    width: calc(100% - 150px);
+    padding: .5rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

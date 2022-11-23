@@ -32,7 +32,7 @@
                 </form>
             </div>
             <div >
-                <table class="listTBL userListTBL">
+                <table class="list-tbl userListTBL">
                     <thead>
                         <tr>
                             <th>スタイリスト名</th>

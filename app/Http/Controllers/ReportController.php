@@ -2,115 +2,135 @@
 
 namespace App\Http\Controllers;
 
+use App\Consts\ErrorCode;
+use App\Consts\SessionConst;
+use App\Exceptions\ExclusionException;
 use App\Models\Customer;
+use App\Models\UserShopAuthorization;
 use App\Models\VisitHistory;
-use App\UserOld;
 use App\Services\CheckData;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-class ReportController extends Controller
+class ReportController extends UserAppController
 {
-    private $_user;                 //Auth::user()
-    private $_auth_id ;             //Auth::user()->id;
-    private $_auth_authority_id ;   //権限
+    public $errMsg = [];
 
-    public function __construct(){
-        $this->middleware(function ($request, $next) {
-            $this->_user = \Auth::user();
-            $this->_auth_id = $this->_user->id;
-            $this->_auth_authority_id = $this->_user->authority_id;
-            if($this->_auth_authority_id >= 8){
-                session()->flash('msg_danger', '権限がありません');
-                Auth::logout();
-                return redirect()->intended('/');
-            }
-            return $next($request);
-        });
+    /**
+     * コンストラクタ
+     */
+    public function __construct()
+    {
+        parent::__construct();
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        // レポートデータの取得
-        list($reportData , $visTypeData) = VisitHistory::get_todayReport($this->_user->shop_id);
+        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
 
         // 来店者情報を取得
-        $visit_histories = VisitHistory::get_todayVisitHistory($this->_user->shop_id);
+        $visitHistories = VisitHistory::getTodayVisitHistory($shopId)->get();
 
         // 本日来店時に登録された顧客を取得
-        $customers = Customer::get_todayRegisterCustomer($this->_user->shop_id);
-        $customers = CheckData::set_sex_names($customers);
+        $todayCustomers = Customer::getTodayCustomers($shopId)->get();
 
-        return view('report.index',compact('visit_histories', 'customers', 'reportData', 'visTypeData'));
+        // 基本レポートを作成
+        $basicReport = $this->_makeBasicReport(count($visitHistories), $shopId);
+
+        return view('report.index', compact('todayCustomers', 'visitHistories', 'basicReport'));
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return View
+     * @throws ExclusionException
      */
-    public function set_stylist($id)
+    public function setStylist(Customer $customer): View
     {
-        try {
-            $customer = Customer::find($id);
-            if($customer->staff_id) throw new \Exception("このお客様には既にスタイリストが設定されています。");
-            $users = UserOld::where('shop_id', $customer->shop_id)
-            ->where('authority_id', '>=', 3 )->where('authority_id', '<=', 7 )->get();
-
-            return view('report.set_stylist',compact('customer', 'users' ));
-        } catch (\Throwable $e) {
-            session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->back();    // 前の画面へ戻る
+        // 閲覧して良いかチェック
+        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+        if ($customer->shop_id <> $shopId){
+            $this->goToExclusionErrorPage(ErrorCode::CL_030011, [
+                $customer->shop_id,
+                $customer->id,
+                $this->loginUser->id,
+            ]);
         }
+        if($customer->staff_id){
+            $this->goToExclusionErrorPage(ErrorCode::CL_030012, [
+                $customer->shop_id,
+                $customer->id,
+                $this->loginUser->id,
+            ]);
+        }
+
+        $users = UserShopAuthorization::getSelectableUsers($shopId)->get();
+
+        return view('report.setStylist',compact('customer', 'users' ));
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Customer $customer
+     * @return RedirectResponse
+     * @throws ExclusionException
      */
-    public function setting_stylist(Request $request, $id)
+    public function settingStylist(Request $request, Customer $customer): RedirectResponse
     {
+        $request->session()->regenerateToken(); // 二重クリック防止
+        // 更新して良いかチェック
+        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+        if ($customer->shop_id <> $shopId){
+            $this->goToExclusionErrorPage(ErrorCode::CL_030013, [
+                $customer->shop_id,
+                $customer->id,
+                $this->loginUser->id,
+            ]);
+        }
+        if($customer->staff_id){
+            $this->goToExclusionErrorPage(ErrorCode::CL_030014, [
+                $customer->shop_id,
+                $customer->id,
+                $this->loginUser->id,
+            ]);
+        }
         try {
             DB::beginTransaction();
 
             // 担当スタイリストを設定する
-            $customer = Customer::find($id);
-            if(!empty($customer->staff_id)){
-                throw new \Exception("既にスタイリストが登録されています。");
-            }
             $customer->staff_id = $request->staff_id;
             $customer->save();
 
             // 来店履歴を登録する
-            if( $request->stylistAndVisitHistory){
-                // 既に本日の来店履歴が登録されていないか確認する
-                $todayRecord = VisitHistory::checkTodayHistory($id);
-                if($todayRecord->isEmpty()){
-                    VisitHistory::insert([[
-                        'vis_date'    => date('Y-m-d'),
-                        'vis_time'    => date('H:i'),
-                        'customer_id' => $id,
-                        'shop_id'     => $customer->shop_id,
-                        'staff_id'    => $request->staff_id,
-                        ]
-                    ]);
-                }
+            if( $request->vis_history){
+                // TODO 既に本日の来店履歴が登録されていないか確認する
+                // $todayRecord = VisitHistory::checkTodayHistory($id);
+                VisitHistory::insert([[
+                    'vis_date' => Carbon::now()->format('Y-m-d'),
+                    'vis_time' => Carbon::now()->format('H:i'),
+                    'customer_id' => $customer->id,
+                    'shop_id' => $shopId,
+                    'user_id' => $request->staff_id,
+                ]]);
             }
 
-            // throw new \Exception("強制終了");
             DB::commit();
-            session()->flash('msg_success', 'スタイリストを設定しました。');
-            return redirect()->action('ReportController@index');
-        } catch (\Throwable $e) {
+            return redirect()->route('report.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタイリストを設定しました']);
+        } catch (Exception $e) {
             DB::rollback();
-            session()->flash('msg_danger',$e->getMessage() );
-            return redirect()->action('ReportController@index');
+            Log::error( ' msg:' . $e->getMessage());
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタイリストの設定に失敗しました'])->withInput();
         }
     }
 
@@ -179,4 +199,19 @@ class ReportController extends Controller
     {
         //
     }
+
+    /**
+     * 基本レポート用の配列を生成して返却
+     * @param int $todayCount
+     * @param int $shopId
+     * @return array
+     */
+    private function _makeBasicReport(int $todayCount, int $shopId): array
+    {
+        $basicReport = [];
+        $basicReport['todayCount'] = $todayCount;
+        $basicReport['opeMembers'] = VisitHistory::getTodayOpeMemberByShopId($shopId)->get();
+        return $basicReport;
+    }
+
 }

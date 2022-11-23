@@ -5,7 +5,7 @@
         case 'myPage':
             $routeNum = 1;
             break;
-        case 'report':
+        case str_starts_with($routeName, 'report'):
             $routeNum = 2;
             break;
         case 'reserve.list':
@@ -38,7 +38,7 @@
             <li><a href="{{ route('myPage') }}" class="sidebarTitle <?= ($routeNum === 1) ? "active": ""; ?>" >ホーム</a></li>
             @if (session()->get(SessionConst::SELECTED_SHOP))
                 <li><a href="{{ route('report.index') }}" class="sidebarTitle <?= ($routeNum === 2) ? "active": ""; ?>" >日報</a></li>
-                <li><a href="" class="sidebarTitle <?= ($routeNum === 3) ? "active": ""; ?>" >予約</a></li>
+{{--                <li><a href="" class="sidebarTitle" >予約</a></li>--}}
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum == 4) ? "active open": ""; ?>" id="parentMenu_4">顧客管理</div>
                     <ul class="childMenu" id="childMenu_4" <?= ($routeNum <> 4) ? 'style="overflow: hidden; display: none;"': ""; ?> >

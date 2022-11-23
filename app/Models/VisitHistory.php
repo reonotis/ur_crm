@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -50,20 +51,46 @@ class VisitHistory extends Model
 
     /**
      * 本日の来店者情報を取得
-     * @param [type] $shop_id
-     * @return void
+     * @param int $shop_id
+     * @return object
      */
-    public static function get_todayVisitHistory($shop_id){
-        $result = self::select('visit_histories.*', 'customers.f_name', 'customers.l_name' , 'users.name', 'menus.menu_name', 'visit_types.type_name' )
-        ->where('visit_histories.shop_id', $shop_id)
-        ->where('vis_date', date('Y-m-d'))
-        ->where('visit_histories.delete_flag', 0)
-        ->join('customers', 'customers.id', '=', 'visit_histories.customer_id' )
-        ->leftJoin('users', 'users.id', '=', 'visit_histories.staff_id' )
-        ->leftJoin('menus', 'menus.id', '=', 'visit_histories.menu_id' )
-        ->leftJoin('visit_types', 'visit_types.id', '=', 'visit_histories.visit_type_id' )
-        ->get();
-        return $result ;
+    public static function getTodayVisitHistory(int $shop_id): object
+    {
+        $date = Carbon::now()->format('Y-m-d');
+        $select = [
+            'visit_histories.*',
+            'customers.customer_no',
+            'customers.f_name',
+            'customers.l_name',
+            'users.name',
+            'menus.menu_name',
+            'visit_types.type_name',
+        ];
+        return self::select($select)
+            ->where('visit_histories.shop_id', $shop_id)
+            ->where('vis_date', $date)
+            ->join('customers', 'customers.id', '=', 'visit_histories.customer_id')
+            ->leftJoin('users', 'users.id', '=', 'visit_histories.user_id')
+            ->leftJoin('menus', 'menus.id', '=', 'visit_histories.menu_id')
+            ->leftJoin('visit_types', 'visit_types.id', '=', 'visit_histories.visit_type_id');
+    }
+
+    /**
+     * 本日の来店者をスタイリスト別にカウントする
+     * @param int $shop_id
+     * @return object
+     */
+    public static function getTodayOpeMemberByShopId(int $shop_id): object
+    {
+        $date = Carbon::now()->format('Y-m-d');
+        return self::select(DB::raw('
+                users.name,
+                COUNT(user_id) AS count
+            '))
+            ->leftJoin('users', 'users.id', 'visit_histories.user_id')
+            ->where('visit_histories.shop_id', $shop_id)
+            ->where('visit_histories.vis_date', $date)
+            ->groupBy('visit_histories.user_id');
     }
 
     /**

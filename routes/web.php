@@ -44,13 +44,18 @@ Route::group(['middleware'=>'auth'], function(){
     // 顧客関係
     Route::resource('customer', 'CustomerController');
 
-});
+    // 日報
+    Route::get('report', 'ReportController@index')->name('report.index');
+    Route::get('report/setStylist/{customer}', 'ReportController@setStylist')->name('report.setStylist');
+    Route::post('report/settingStylist/{customer}', 'ReportController@settingStylist')->name('report.settingStylist');
 
-// 日報
-Route::group(['prefix'=>'report', 'middleware'=>'auth'], function(){
-    Route::get('index', 'ReportController@index')->name('report.index');
-    Route::get('set_stylist/{id}', 'ReportController@set_stylist')->name('report.set_stylist');
-    Route::post('setting_stylist/{id}', 'ReportController@setting_stylist')->name('report.setting_stylist');
+    // 設定関連
+    Route::get('setting/index', 'SettingController@index')->name('setting.index');
+    Route::get('setting/changeEmail', 'SettingController@changeEmail')->name('setting.changeEmail');
+    Route::post('setting/updateEmail', 'SettingController@updateEmail')->name('setting.updateEmail');
+    Route::get('changePassword', 'SettingController@changePassword')->name('setting.changePassword');
+    Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
+
 });
 
 // 過去日報
@@ -63,27 +68,6 @@ Route::group(['prefix'=>'oldReport', 'middleware'=>'auth'], function(){
     Route::get('monthly', 'OldReportController@monthly')->name('oldReport.monthly');
 });
 
-// スタイリスト関係
-Route::group(['prefix'=>'stylist', 'middleware'=>'auth'], function(){
-    Route::get('index', 'StylistController@index')->name('stylist.index');
-    Route::get('create', 'StylistController@create')->name('stylist.create');
-    Route::post('store', 'StylistController@store')->name('stylist.store');
-    Route::get('show/{id}', 'StylistController@show')->name('stylist.show');
-    Route::get('edit/{id}', 'StylistController@edit')->name('stylist.edit');
-    Route::post('update/{id}', 'StylistController@update')->name('stylist.update');
-});
-
-// 顧客関係
-//Route::group(['prefix'=>'customer', 'middleware'=>'auth'], function(){
-//    Route::get('search', 'CustomerController@search')->name('customer.search');
-//    Route::get('searching', 'CustomerController@searching')->name('customer.searching');
-//    Route::get('create', 'CustomerController@create')->name('customer.create');
-//    Route::get('show/{id}', 'CustomerController@show')->name('customer.show');
-//    Route::get('edit/{id}', 'CustomerController@edit')->name('customer.edit');
-//    Route::post('update/{id}', 'CustomerController@update')->name('customer.update');
-//    Route::post('store', 'CustomerController@store')->name('customer.store');
-//    Route::get('delete/{id}', 'CustomerController@delete')->name('customer.delete');
-//});
 
 // 来店履歴関係
 Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
@@ -97,24 +81,6 @@ Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
 });
 
 
-// 設定関連
-Route::group(['prefix'=>'setting', 'middleware'=>'auth'], function(){
-    Route::get('index', 'SettingController@index')->name('setting.index');
-    Route::get('Email', 'SettingController@Email')->name('setting.Email');
-    Route::get('ChangeEmail', 'SettingController@ChangeEmail')->name('setting.ChangeEmail');
-    Route::post('updateEmail', 'SettingController@updateEmail')->name('setting.updateEmail');
-    Route::get('EditPassword', 'SettingController@EditPassword')->name('setting.EditPassword');
-    Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
-    Route::get('lecture', 'SettingController@lecture')->name('setting.lecture');
-    Route::get('noticeList', 'SettingController@noticeList')->name('setting.noticeList');
-    Route::get('noticeCreate', 'SettingController@noticeCreate')->name('setting.noticeCreate');
-    Route::post('noticeRegisterConfirm', 'SettingController@noticeRegisterConfirm')->name('setting.noticeRegisterConfirm');
-    Route::post('noticeRegister', 'SettingController@noticeRegister')->name('setting.noticeRegister');
-    Route::get('noticeConfirm/{id}', 'SettingController@noticeConfirm')->name('setting.noticeConfirm');
-    Route::get('noticeDelete/{id}', 'SettingController@noticeDelete')->name('setting.noticeDelete');
-    Route::get('noticeShow/{id}', 'SettingController@noticeShow')->name('setting.noticeShow');
-});
-
 // PDF関連
 Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
     Route::get('index', 'PDFController@index')->name('pdf.index');
@@ -126,9 +92,4 @@ Route::get('/medical/{shop}', 'MedicalController@index')->name('medical.index');
 Route::get('/medical/create/{shop}', 'MedicalController@create')->name('medical.create');
 Route::post('/medical/store', 'MedicalController@store')->name('medical.store');
 Route::get('/medical/complete/{customer}', 'MedicalController@complete')->name('medical.complete');
-
-
-Route::get('/medical_record/complete/{id}', 'MedicalRecordController@complete')->name('medical_record.complete');
-Route::get('/medical_record/{id}', 'MedicalRecordController@index')->name('medical_record');
-Route::post('/medical_record/confirm', 'MedicalRecordController@confirm')->name('medical_record.confirm');
 
