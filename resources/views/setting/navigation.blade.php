@@ -16,6 +16,14 @@
 ?>
 
 <div class="setting-navigation-area">
-    <a href="{{route('setting.changeEmail')}}" ><div class="setting-navigation <?php if($active == 2) echo "active"; ?>" >メールアドレス変更</div></a>
-    <a href="{{route('setting.changePassword')}}" ><div class="setting-navigation <?php if($active == 3) echo "active"; ?>" >パスワード変更</div></a>
+    <a href="{{route('setting.changeEmail')}}" >
+        <div class="setting-navigation {{ ($active == 2)?  "active": "" }}" >
+            メールアドレス変更
+        </div>
+    </a>
+    <a href="{{route('setting.changePassword')}}" >
+        <div class="setting-navigation {{ ($active == 3)?  "active": "" }}" >
+            パスワード変更
+        </div>
+    </a>
 </div>

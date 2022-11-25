@@ -255,6 +255,7 @@ class DataMigration extends Base
                         'shop_id' => $sysCustomer->goToShop,
                         'staff_id' => $sysCustomer->person_staff,
                         'memo' => $sysCustomer->comment,
+                        'created_at' => $sysCustomer->created_at,
                     ];
 
                 }

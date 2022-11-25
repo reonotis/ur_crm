@@ -8,7 +8,7 @@
         </div>
         <div class="medical-contents-area" >
             <div class="" >
-                <p>お客様の携帯電話等の端末で入力していただく場合は、下記QRコードを読み込んでいただく様、お客様にお伝えください</p>
+                <p>お客様の携帯電話等の端末で入力していただく場合は、<br>下記QRコードを読み込んでいただく様、お客様にお伝えください</p>
                 <br>
                 <div class="" style="width: 250px;margin: 0 auto;" >
                     {{ QrCode::size(250)->generate($createURL) }}

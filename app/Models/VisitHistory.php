@@ -59,9 +59,11 @@ class VisitHistory extends Model
         $date = Carbon::now()->format('Y-m-d');
         $select = [
             'visit_histories.*',
+            'customers.id AS customer_id',
             'customers.customer_no',
             'customers.f_name',
             'customers.l_name',
+            'customers.sex',
             'users.name',
             'menus.menu_name',
             'visit_types.type_name',
@@ -204,7 +206,6 @@ class VisitHistory extends Model
         })
         ->groupBy('visit_histories.staff_id')
         ->get();
-        // dd($result);
         return $result ;
 
     }
@@ -296,7 +297,6 @@ class VisitHistory extends Model
         })
         ->groupBy('visit_histories.staff_id')
         ->get();
-        // dd($result);
         return [$result, $fromMonth, $toMonth] ;
 
     }
@@ -324,8 +324,7 @@ class VisitHistory extends Model
         $result = self::select('visit_histories.*', 'users.name', 'menus.menu_name')
         ->where('customer_id', $customerId)
         ->leftJoin('users', 'users.id', 'visit_histories.user_id')
-        ->join('menus', 'menus.id', 'visit_histories.menu_id')
-        ->get();
+        ->leftJoin('menus', 'menus.id', 'visit_histories.menu_id');
         return $result;
     }
 

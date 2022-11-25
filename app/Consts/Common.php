@@ -66,6 +66,7 @@ class Common
     ];
 
     // アンケート
+    public const Q1_MESSAGE = "お店を知ったきっかけを教えてください。";
     public const Q1_A1 = 1;
     public const Q1_A2 = 2;
     public const Q1_A3 = 3;

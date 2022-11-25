@@ -224,7 +224,7 @@ class CustomerController extends UserAppController
         if(!$this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read_none_mask){
             $customer = $this->_customerMask($customer);
         }
-        $visitHistories = VisitHistory::getByCustomerId($customer->id);
+        $visitHistories = VisitHistory::getByCustomerId($customer->id)->get();
 
         return view('customer.show', compact('customer', 'visitHistories'));
     }

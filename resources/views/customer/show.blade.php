@@ -17,7 +17,9 @@
             </div >
             <div class="customer-sex" >性別&nbsp;:&nbsp;
                 @if($customer->sex)
-                    {{ Common::SEX_LIST[$customer->sex] }}&nbsp;{{ Common::SEX_SYMBOL[$customer->sex] }}
+                    <span class="sex-{{ $customer->sex }}" >
+                        {{ Common::SEX_LIST[$customer->sex] }}&nbsp;{{ Common::SEX_SYMBOL[$customer->sex] }}
+                    </span>
                 @endif
             </div >
             <div class="customer-birthday" ></div >
@@ -54,7 +56,17 @@
             </div>
             <div class="customer-detail-row" >
                 <div class="customer-detail-title" >アンケート</div>
-                <div class="customer-detail-content" >{!! nl2br(e($customer->question1)) !!}</div>
+                <div class="customer-detail-content" >
+                    <p class="question-title" >{{ Common::Q1_MESSAGE }}</p>
+                    @if(!empty($customer->question1))
+                        @php
+                            $answers1 = explode (",", $customer->question1);
+                        @endphp
+                        @foreach($answers1 AS $answer)
+                            <span class="question-answer" >{{ Common::QUESTION_1_LIST[$answer] }}</span>
+                        @endforeach
+                    @endif
+                </div>
             </div>
             <div class="customer-detail-row" >
                 <div class="customer-detail-title" >来店時のコメント</div>
@@ -105,13 +117,17 @@
                 <tbody>
                     @foreach ($visitHistories AS $visitHistory)
                         <tr>
-                            <td>{{ $visitHistory->id }}</td>
+                            <td class="tbl-id" >{{ $visitHistory->id }}</td>
                             <td>
                                 {{ \Carbon\Carbon::parse($visitHistory->vis_date)->format("Y/m/d") }}
                                 {{ substr($visitHistory->vis_time, 0, 5) }}
                             </td>
                             <td>{{ $visitHistory->name }}</td>
-                            <td>{{ $visitHistory->visit_type_id }}</td>
+                            <td>
+                                @if($visitHistory->visit_type_id)
+                                    {{ $visitHistory->visit_type_id }}
+                                @endif
+                            </td>
                             <td>{{ $visitHistory->menu_name }}</td>
                             <td>
                                 <div class="customer-image">

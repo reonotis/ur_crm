@@ -78,14 +78,11 @@ class SettingController extends Controller
     }
 
     /**
-     *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function changePassword()
+    public function changePassword(): View
     {
-        $user = Auth::user();
-
-        return view('setting.editPassword',compact('user'));
+        return View('setting.editPassword');
     }
 
     /**

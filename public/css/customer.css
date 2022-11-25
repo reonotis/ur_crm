@@ -196,7 +196,14 @@
     width: 100px;
 }
 
-
+.question-title {
+    border-left: solid 5px var(--mainColor);
+    padding-left: .25em;
+}
+.question-answer {
+    margin: .5em;
+    border-bottom: solid 1px #ccc;
+}
 
 
 

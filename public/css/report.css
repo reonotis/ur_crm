@@ -52,6 +52,11 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
+.report-index-report-wrapper {
+    margin-bottom: .25rem;
+    padding-left: .5rem;
+    border-left: solid 5px var(--mainColor);
+}
 
 /* 基本レポートで利用するテーブル */
 .basic-report-tbl {
@@ -70,14 +75,15 @@
     color: var(--mainColor);
 }
 
-
+/* 本日来店されたお客様 */
 /* 当日登録したお客様のリストテーブル */
+.report-tbl th {
+    background: var(--mainColor3);
+    color: var(--mainColor);
+}
 .report-tbl th,
 .report-tbl td {
     padding: 5px;
-}
-.report-tbl .tbl-id {
-    font-size: .7rem;
 }
 
 /*************************

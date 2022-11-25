@@ -33,7 +33,7 @@ Route::group(['middleware'=>'auth'], function(){
 
     // 店舗選択関係
     Route::get('shop/deselect', 'ShopSelectController@deselect')->name('shop.deselect');
-    Route::get('shop/selected/{id}', 'ShopSelectController@selected')->name('shop.selected');
+    Route::get('shop/selected/{shop}', 'ShopSelectController@selected')->name('shop.selected');
 
     // ユーザー関係
     Route::get('user/belongSelect', 'UserController@belongSelect')->name('user.belongSelect');
@@ -87,7 +87,6 @@ Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
     Route::get('show_pdfFile/{file_name}', 'PDFController@show_pdfFile')->name('pdf.show_pdfFile');
 });
 
-//Route::resource('medical', 'MedicalController');
 Route::get('/medical/{shop}', 'MedicalController@index')->name('medical.index');
 Route::get('/medical/create/{shop}', 'MedicalController@create')->name('medical.create');
 Route::post('/medical/store', 'MedicalController@store')->name('medical.store');

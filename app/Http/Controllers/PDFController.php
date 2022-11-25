@@ -14,7 +14,6 @@ class PDFController extends Controller
     public static function index(){
 
         list($visitHistorys, $fromMonth, $toMonth) = VisitHistory::get_monthAndStylist('2021-08-21', 1);
-        // dd($visitHistorys);
         $pdf = PDF::loadView('pdf.index', compact('visitHistorys', 'fromMonth', 'toMonth' ));
 
         // PDFを表示

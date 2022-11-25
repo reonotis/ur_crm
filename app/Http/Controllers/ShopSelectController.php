@@ -3,19 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Consts\SessionConst;
-use App\Models\User;
 use App\Models\Shop;
 use App\Models\UserShopAuthorization;
-use App\Models\Customer;
-use App\Services\CheckData;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class ShopSelectController extends Controller
 {
-    private $_auth_id ;             //Auth::user()->id;
-    private $_auth_authority_id ;   //権限
 
     /**
      * コンストラクタ
@@ -25,44 +20,60 @@ class ShopSelectController extends Controller
     }
 
     /**
+     * 作業店舗を選択しなおす画面に遷移する
+     * @return RedirectResponse|View
      */
     public function deselect()
     {
+        // セッションから選択可能店舗を削除
         session()->forget(SessionConst::SELECTABLE_SHOP);
         session()->forget(SessionConst::SELECTED_SHOP);
 
-        $selectableShops = UserShopAuthorization::getShopByUserId(Auth::user()->id);
+        // ユーザーに紐づくショップを取得する
+        $selectableShops = UserShopAuthorization::getShopByUserId(Auth::user()->id)->get();
 
         if(count($selectableShops) == 0){
-            dd('選択できる店舗がありません');
+            return redirect()->route('setting.index')->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できる店舗がありません']);
         }
 
         if(count($selectableShops) == 1){
-            dd('1店舗しか選択できないためリダイレクトします');
+            return redirect()->route('myPage')->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できる店舗は1店舗しかありません']);
         }
 
         return view('shopSelect.index', compact('selectableShops'));
     }
 
     /**
+     * 作業する店舗を選択してマイページに移動する
+     * @param Shop $shop
+     * @return RedirectResponse
      */
-    public function selected(int $id)
+    public function selected(Shop $shop): RedirectResponse
     {
-        // 選択して良い店舗かチェック
+        // 選択可能な店舗かチェック
+        if(!$this->_checkMyShop($shop)){
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できない店舗を指定しています'])->withInput();
+        }
+        return redirect()->route('myPage')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['操作店舗を選択しました'])->withInput();
+    }
+
+    /**
+     * 指定された店舗が、ログインユーザーが選択して良い店舗であればセッションに格納する
+     * @param Shop $shop
+     * @return bool
+     */
+    private function _checkMyShop(Shop $shop): bool
+    {
+        // 操作可能な店舗を取得
         $selectableShops = Auth::user()->userShopAuthorizations()->get();
-        $check = false;
-        foreach($selectableShops AS $userShopAuthorization ){
-            if($userShopAuthorization->shop_id == $id){
-                $shop = Shop::find($id);
+        foreach($selectableShops AS $userShopAuthorization){
+            // 操作可能な店舗であれば、セッションに格納してリターンする
+            if($userShopAuthorization->shop_id == $shop->id){
                 session()->put(SessionConst::SELECTED_SHOP, $shop);
-                $check = true;
-                break;
+                return true;
             }
         }
-        if(!$check){
-            dd('選択できない店舗です');
-        }
-
-        return redirect()->route('myPage',)->with('flash-message-success', ['選択しました'])->withInput();
+        return false;
     }
+
 }

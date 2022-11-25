@@ -6,7 +6,7 @@
         <p >操作する店舗を選択して下さい</p>
         <div class="flex" >
             @foreach($selectableShops AS $shop)
-                <a href="{{ route('shop.selected', ['id' => $shop->id]) }}" >
+                <a href="{{ route('shop.selected', ['shop' => $shop->id]) }}" >
                     <div class="selectShop" >
                         {{ $shop->shop_name }}
                     </div>

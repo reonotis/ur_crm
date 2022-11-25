@@ -48,15 +48,9 @@ class UserShopAuthorization extends Model
      */
     public static function getShopByUserId(int $userId): object
     {
-        try {
-            return self::select('shops.*')
-                ->join('shops', 'shops.id', '=', 'user_shop_authorizations.shop_id')
-                ->where('user_shop_authorizations.user_id', $userId)
-                ->get();
-        } catch (Exception $e) {
-            dd($e->getMessage(), 'getShopByUserId');
-            return false;
-        }
+        return self::select('shops.*')
+            ->join('shops', 'shops.id', '=', 'user_shop_authorizations.shop_id')
+            ->where('user_shop_authorizations.user_id', $userId);
     }
 
     /**

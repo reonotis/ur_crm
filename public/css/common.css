@@ -384,8 +384,6 @@ form {
 
 
 
-
-
 /*************************
 * メインコンテンツ
 *************************/
@@ -461,8 +459,6 @@ form {
 
 
 
-
-
 /*************************
 * flash-message
 *************************/
@@ -508,12 +504,9 @@ form {
 
 
 
-
-
 /*************************
 * input関係
 *************************/
-
 .form-control::placeholder {
     color: #e0e0e0;
 }
@@ -607,8 +600,11 @@ input[type="submit"],
 .list-tbl td{
     padding: 10px;
 }
-.list-tbl tr:nth-child(odd) td {
-    background: #3a42690b;
+.list-tbl tr:nth-child(even) td {
+    background: #bbc3ea1f;
+}
+.tbl-id {
+    font-size: .7rem;
 }
 
 
@@ -660,8 +656,21 @@ input[type="submit"],
     font-size: .8rem;
 }
 
+.honorific-title {
+    font-size: .8em;
+}
 
+.customer-anchor {
+    color: #333333;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
 
+.sex-1 {
+    color: #3f67d7;
+}
 
-
+.sex-2 {
+    color: red;
+}
 

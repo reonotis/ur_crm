@@ -14,12 +14,12 @@ class CreateVisitHistoriesTable extends Migration
     public function up()
     {
         Schema::create('visit_histories', function (Blueprint $table) {
-            $table->bigIncrements('id')               ->comment('ID');
-            $table->date('vis_date')                  ->comment('来店日');
-            $table->time('vis_time')                  ->comment('来店時間');
-            $table->integer('customer_id')            ->comment('来店顧客');
-            $table->tinyInteger('shop_id')            ->comment('来店店舗');
-            $table->tinyInteger('user_id')           ->comment('担当スタイリスト');
+            $table->bigIncrements('id')->comment('ID');
+            $table->date('vis_date')->comment('来店日');
+            $table->time('vis_time')->comment('来店時間');
+            $table->integer('customer_id')->comment('来店顧客')->index();
+            $table->tinyInteger('shop_id')->comment('来店店舗')->index();
+            $table->tinyInteger('user_id')->comment('担当スタイリスト')->index();
             $table->tinyInteger('menu_id')->default('0')->comment('メニュー');
             $table->tinyInteger('visit_type_id')->default('0')->comment('来店タイプ');
             $table->unsignedInteger('visit_reserve_id')->nullable()->comment('予約していた場合の予約ID');

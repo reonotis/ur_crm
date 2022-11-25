@@ -120,7 +120,7 @@
                         <div class="medical-title" >アンケート1</div>
                         <div class="medical-contents" >
                             <div class="" >
-                                <p class="question-support">お店を知ったきっかけを教えてください。<br class="pc-hidden"><span class="welcome-sentence-support" >※複数回答可</span></p>
+                                <p class="question-support">{{ Common::Q1_MESSAGE }}<br class="pc-hidden"><span class="welcome-sentence-support" >※複数回答可</span></p>
                                 <div class="flex" style="flex-wrap: wrap;">
                                     @foreach(Common::QUESTION_1_LIST AS $key => $question1)
                                         <label>

@@ -1,7 +1,5 @@
 window.addEventListener('DOMContentLoaded', function(){
-    var windowWidth = $(window).width();
-    var windowSm = 768;
-    if (windowWidth <= windowSm) {
+    if ($(window).width() <= 768) {
         openSideMenu();
     } else {
         closeSideMenu();
