@@ -4,19 +4,19 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="customerSearchContents" >
+            <div class="customer-search-contents" >
                 <form action="" method="get" >
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" ><label for="customer_no">会員番号</label></div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" ><label for="customer_no">会員番号</label></div>
+                        <div class="search-row-contents" >
                             <div class="w-48">
                                 <input type="text" name="customer_no" id="customer_no" class="form-control" placeholder="CA20046" value="{{ request('customer_no') }}" >
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" ><label for="f_name">名前</label></div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" ><label for="f_name">名前</label></div>
+                        <div class="search-row-contents" >
                             <div class="flex" >
                                 <div class="w-48" style="margin-right: 0.5rem;">
                                     <input class="form-control" type="text" name="f_name" id="f_name" placeholder="田中" value="{{ request('f_name') }}" >
@@ -27,9 +27,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" ><label for="f_read">ヨミ</label></div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" ><label for="f_read">ヨミ</label></div>
+                        <div class="search-row-contents" >
                             <div class="w-48" style="margin-right: 0.5rem;">
                                 <input class="form-control" type="text" name="f_read" id="f_read" placeholder="タナカ" value="{{ request('f_read') }}" >
                             </div>
@@ -38,55 +38,55 @@
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >店舗</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >店舗</div>
+                        <div class="search-row-contents" >
                             <label>
                                 <input class="" type="checkbox" name="other_shop" <?= (request('other_shop') == 'on')? ' checked': ''; ?>>他店舗の顧客を含める
                             </label>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >担当スタイリスト</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >担当スタイリスト</div>
+                        <div class="search-row-contents" >
                             <label>
                                 <input class="" type="checkbox" name="other_staff" <?= (request('other_staff') == 'on')? ' checked': ''; ?>>他スタイリストの顧客を含める
                             </label>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >生年月日</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >生年月日</div>
+                        <div class="search-row-contents" >
                             <div class="w-32" style="margin-right: 0.5rem;">
-                                <input class="form-control inputYear" type="num" name="birthday_year" placeholder="年" value="{{ request('birthday_year') }}" >
+                                <input class="form-control inputYear" type="number" name="birthday_year" placeholder="年" value="{{ request('birthday_year') }}" >
                             </div>
                             /
                             <div class="w-20" style="margin: 0 0.5rem;">
-                                <input class="form-control inputMonth" type="num" name="birthday_month" placeholder="月" value="{{ request('birthday_month') }}" >
+                                <input class="form-control inputMonth" type="number" name="birthday_month" placeholder="月" value="{{ request('birthday_month') }}" >
                             </div>
                             /
                             <div class="w-20" style="margin-left: 0.5rem;">
-                                <input class="form-control inputDay" type="num" name="birthday_day" placeholder="日" value="{{ request('birthday_day') }}" >
+                                <input class="form-control inputDay" type="number" name="birthday_day" placeholder="日" value="{{ request('birthday_day') }}" >
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >電話番号</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >電話番号</div>
+                        <div class="search-row-contents" >
                             <div class="w-56" >
                                 <input class="form-control" type="text" name="tel" placeholder="090-1234-5678" value="{{ request('tel') }}" >
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >メールアドレス</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >メールアドレス</div>
+                        <div class="search-row-contents" >
                             <input class="form-control" type="text" name="email" placeholder="sample@exsample.com" value="{{ request('email') }}" >
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >住所</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >住所</div>
+                        <div class="search-row-contents" >
                             <div class="w-full">
                                 <div class="flex w-full items-center" >
                                     <div class="w-20" style="padding-right: 0.5rem;">
@@ -111,9 +111,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="searchRow" >
-                        <div class="searchRowTitle" >非表示</div>
-                        <div class="searchRowContents" >
+                    <div class="search-row" >
+                        <div class="search-row-title" >非表示</div>
+                        <div class="search-row-contents" >
                             <label>
                                 <input class="" type="checkbox" name="hidden_flag" <?= (request('hidden_flag') == 'on')? ' checked': ''; ?>>非表示にした顧客を含める
                             </label>

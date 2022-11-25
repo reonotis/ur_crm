@@ -46,7 +46,6 @@
     --green-800: #166534;
     --green-900: #14532d;
 
-
     --mainColor: #3a4269;
     --mainColor_string: var(--light);
     --mainColor2: var(--cyan);
@@ -256,10 +255,6 @@ form {
 .w-screen {
     width: 100vw;
 }
-.error-message {
-    color: red;
-    padding-left: .5rem;
-}
 
 
 /*************************
@@ -274,7 +269,7 @@ form {
     z-index: 100;
     transition: var(--base-transition);
 }
-.sideMenu.open{
+.sideMenu.open {
     left: 0;
 }
 .sideMenuContents {
@@ -302,7 +297,7 @@ form {
     color: white;
 }
 
-.sideMenu.open > .menuOpenButton{
+.sideMenu.open > .menuOpenButton {
     transform:rotate(180deg);
     transition: var(--base-transition);
 }
@@ -316,10 +311,10 @@ form {
     padding-inline-start: 0;
     padding: 0;
 }
-.menuContents>ul>li a{
+.menuContents>ul>li a {
 }
 
-.sidebarTitle{
+.sidebarTitle {
     width: 100%;
     padding: 10px 30px 10px 20px;
     background: #e0e7ec;
@@ -328,14 +323,14 @@ form {
     align-items: center;
     cursor: pointer;
 }
-.sidebarTitleIn{
+.sidebarTitleIn {
     width: 100%;
     display: block;
     padding: 5px 30px 5px 40px;
     border-bottom: solid 1px #ccc;
     cursor: pointer;
 }
-.sidebarTitleIn>a{
+.sidebarTitleIn>a {
     width: 100%;
     display: block;
 }
@@ -347,10 +342,10 @@ form {
     background: var(--active-color);
     color: white;
 }
-.childMenu{
+.childMenu {
     background: #f7fbff;
 }
-.parentMenu{
+.parentMenu {
     position: relative;
 }
 .parentMenu::after {
@@ -371,7 +366,7 @@ form {
     border-bottom: solid 3px white;
     border-left: solid 3px white;
 }
-.sideMenu a{
+.sideMenu a {
     text-decoration: none;
     color: inherit;
 }
@@ -406,13 +401,13 @@ form {
     padding: 0 50px;
     border-bottom: solid 1px #333;
 }
-.header a{
+.header a {
     color: white;
     text-decoration: underline;
     text-underline-offset: 3px;
     display: inline-block;
 }
-.header a:hover{
+.header a:hover {
     -webkit-animation: zoom .3s;
     animation: zoom .3s;
 }
@@ -462,11 +457,11 @@ form {
 /*************************
 * flash-message
 *************************/
-.flash-message-area{
+.flash-message-area {
     position: relative;
     overflow: hidden;
 }
-.flash-message-box{
+.flash-message-box {
     width: calc(100% - 1rem);
     margin: 0.25rem auto;
     padding: 0.25rem 1rem;
@@ -476,17 +471,17 @@ form {
     align-items: center;
     right: 0;
 }
-.flash-message-hidden{
+.flash-message-hidden {
     position: relative;
     right: -100%;
 }
-.flash-message-success{
+.flash-message-success {
     background-color: var(--sucsess-color);
     color: var(--blue-600);
     border: solid 1px var(--blue-600);
     border-radius: 0.5rem;
 }
-.flash-message-error{
+.flash-message-error {
     background-color: var(--red-200);
     color: var(--red-600);
     border: solid 1px var(--red-600);
@@ -498,7 +493,7 @@ form {
     cursor: pointer;
     transition: var(--transition-hover);
 }
-.flash-message-box-close:hover{
+.flash-message-box-close:hover {
     margin-right: 1.5rem;
 }
 
@@ -517,7 +512,7 @@ form {
 
 /* ボタン関係 */
 input[type="submit"],
-.submit{
+.submit {
     position: relative;
     display: inline-block;
     margin: 0 auto;
@@ -538,30 +533,30 @@ input[type="submit"],
     background: #f3f4ff;
     color: var(--mainColor);
 }
-.edit-btn{
+.edit-btn {
     background: var(--green-600);
     border: solid 1px var(--green-600);
     color: white;
 }
-.edit-btn:hover{
+.edit-btn:hover {
     background: var(--green-200);
     color: var(--green-600);
 }
-.delete-btn{
+.delete-btn {
     background: var(--red-600);
     border: solid 1px var(--red-600);
     color: white;
 }
-.delete-btn:hover{
+.delete-btn:hover {
     background: var(--red-100);
     color: var(--red-700);
 }
-.back-btn{
+.back-btn {
     background: var(--gray-700);
     border: solid 1px var(--gray-700);
     color: white;
 }
-.back-btn:hover{
+.back-btn:hover {
     background: var(--gray-300);
     color: var(--gray-700);
 }
@@ -569,7 +564,7 @@ input[type="submit"],
     margin-right: 1rem;
     padding: .25rem .5rem;
 }
-.sex-lavel > input{
+.sex-lavel > input {
     margin-right: .25rem;
 }
 
@@ -588,16 +583,16 @@ input[type="submit"],
     border-spacing: 0;
     border-collapse: separate;
 }
-.list-tbl tbody tr td{
+.list-tbl tbody tr td {
     border-bottom: solid 1px var(--active-color);
 }
-.list-tbl th{
+.list-tbl th {
     padding: 10px;
     font-size: 1.1em;
     background: var(--active-color);
     color: #fff;
 }
-.list-tbl td{
+.list-tbl td {
     padding: 10px;
 }
 .list-tbl tr:nth-child(even) td {
@@ -615,7 +610,7 @@ input[type="submit"],
 /*************************
 * エラー画面
 *************************/
-.errorContents {
+.error-contents {
     width: 700px;
     margin: 1rem auto;
     padding: 2rem;
@@ -623,12 +618,11 @@ input[type="submit"],
     border: solid 1px red;
     border-radius: 1rem;
 }
-
-.errorMessage {
-
+.error-message {
+    color: red;
+    padding-left: .5rem;
 }
-
-.errorCode {
+.error-code {
     margin-top: 1rem;
 }
 
@@ -673,4 +667,3 @@ input[type="submit"],
 .sex-2 {
     color: red;
 }
-

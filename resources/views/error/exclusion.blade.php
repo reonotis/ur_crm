@@ -2,15 +2,12 @@
 @section('pageTitle', '警告')
 
 @section('content')
-    <div class="errorContents">
-        <div class="errorMessage">
+    <div class="error-contents">
+        <div class="error-message">
             {!! nl2br(e($errorData['errorMessage'])) !!}
         </div>
-        <div class="errorCode">
+        <div class="error-code">
             エラーコード : {{ $errorData['errorCode'] }}
         </div>
     </div>
-{{--    <div class="flex mt-12" >--}}
-{{--        <a href="javascript:history.back()" class="submit back-btn" >戻る</a>--}}
-{{--    </div>--}}
 @endsection

@@ -4,20 +4,20 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="customerEditContents" >
+            <div class="customer-edit-contents" >
                 <div class="card-body">
                     <form action="{{route('customer.update', ['customer' => $customer->id ])}}" method="post">
                         @method('put')
                         @csrf
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="customer_no">会員番号</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="customer_no">会員番号</label></div>
+                            <div class="customer-edit-content" >
                                 <input type="text" name="customer_no" id="customer_no" class="form-control" value="{{ (old('customer_no'))? old('customer_no'): $customer->customer_no }}" placeholder="CA123456" >
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="customer_no">名前</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="customer_no">名前</label></div>
+                            <div class="customer-edit-content" >
                                 <div class="flex" >
                                     <div class="w-48" style="margin-right: 0.5rem;">
                                         <input type="text" name="f_name" id="f_name" class="form-control" value="{{ (old('f_name'))? old('f_name'): $customer->f_name }}" placeholder="田中" >
@@ -28,9 +28,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="customer_no">ヨミ</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="customer_no">ヨミ</label></div>
+                            <div class="customer-edit-content" >
                                 <div class="flex" >
                                     <div class="w-48" style="margin-right: 0.5rem;">
                                         <input type="text" name="f_read" id="f_read" class="form-control" value="{{ (old('f_read'))? old('f_read'): $customer->f_read }}" placeholder="タナカ" >
@@ -41,9 +41,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="customer_no">店舗</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="customer_no">店舗</label></div>
+                            <div class="customer-edit-content" >
                                 <select name="shop_id" class="form-control" onchange="change_shops()" >
                                     {{ $shopId = old('shop_id')? old('shop_id'): $customer->shop_id }}
                                     @foreach($shops as $shop)
@@ -52,9 +52,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" >担当</div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" >担当</div>
+                            <div class="customer-edit-content" >
                                 <select name="staff_id" id="staff_id" class="form-control" >
                                     {{ $staffId = old('staff_id')? old('staff_id'): $customer->staff_id }}
                                     @foreach($users as $user)
@@ -63,9 +63,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" >生年月日</div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" >生年月日</div>
+                            <div class="customer-edit-content" >
                                 <div class="w-32" style="margin-right: 0.5rem;">
                                     <input type="num" class="form-control"  name="birthday_year" value="{{ old('birthday_year')? old('birthday_year'): $customer->birthday_year }}" placeholder="年" >
                                 </div>
@@ -79,21 +79,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" >電話番号</div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" >電話番号</div>
+                            <div class="customer-edit-content" >
                                 <input type="text" name="tel" id="tel" class="form-control" value="{{ old('tel')? old('tel'): $customer->tel }}" placeholder="090-1234-5678" >
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="email">メールアドレス</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="email">メールアドレス</label></div>
+                            <div class="customer-edit-content" >
                                 <input type="email" name="email" id="email" class="form-control" value="{{ old('email')? old('email'): $customer->email }}" placeholder="sample@exsample.com" >
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" >住所</div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" >住所</div>
+                            <div class="customer-edit-content" >
                                 <div class="w-full">
                                     <div class="flex w-full items-center" >
                                         <div class="w-20" style="padding-right: 0.5rem;">
@@ -118,9 +118,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="customerEditRow" >
-                            <div class="customerEditTitle" ><label for="memo">メモ</label></div>
-                            <div class="customerEditContent" >
+                        <div class="customer-edit-row" >
+                            <div class="customer-edit-title" ><label for="memo">メモ</label></div>
+                            <div class="customer-edit-content" >
                                 <textarea name="memo" id="memo" class="form-control" >{{ old('memo')? old('memo'): $customer->memo }}</textarea>
                             </div>
                         </div>
