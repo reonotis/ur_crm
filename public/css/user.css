@@ -9,7 +9,7 @@
 * ユーザー確認
 *************************/
 /* ユーザー検索 */
-.userSearchContents {
+.user-search-contents {
     max-width: 600px;
     margin: 1rem auto 3rem;
 }

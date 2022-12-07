@@ -21,9 +21,9 @@
             メールアドレス変更
         </div>
     </a>
-    <a href="{{route('setting.changePassword')}}" >
-        <div class="setting-navigation {{ ($active == 3)?  "active": "" }}" >
-            パスワード変更
-        </div>
-    </a>
+{{--    <a href=" route('setting.changePassword') " >--}}
+{{--        <div class="setting-navigation {{ ($active == 3)?  "active": "" }}" >--}}
+{{--            パスワード変更--}}
+{{--        </div>--}}
+{{--    </a>--}}
 </div>

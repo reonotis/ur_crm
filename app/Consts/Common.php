@@ -5,11 +5,11 @@ namespace App\Consts;
 class Common
 {
     // 画像ディレクトリ
-    public const PRODUCT_IMG_DIR = 'public/images/product/';
+    public const CUSTOMER_IMG_DIR = 'storage/images/customer';
+    public const CUSTOMER_IMG_RESIZE_DIR = 'storage/images/customer/resize';
 
     // 顧客関係
     public const CUSTOMER_NO_LENGTH = 6;
-
 
     // 性別
     public const SEX_MEN = 1;
@@ -63,6 +63,16 @@ class Common
     public const MASK_CHECK = [
         self::DO_MASK => 'する',
         self::NONE_MASK => 'しない',
+    ];
+
+    // 画像
+    public const ANGLE_1  = 1;
+    public const ANGLE_2  = 2;
+    public const ANGLE_3  = 3;
+    public const ANGLE_LIST = [
+        self::ANGLE_1 => '正面',
+        self::ANGLE_2 => '側面',
+        self::ANGLE_3 => '背面',
     ];
 
     // アンケート

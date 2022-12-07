@@ -22,6 +22,7 @@ Auth::routes([
     'reset'    => true,  // メールリマインダー機能ON
 ]);
 
+// ログイン必須な処理
 Route::group(['middleware'=>'auth'], function(){
     // エラー関係
     Route::get('/error/exclusion/{code?}', 'ErrorController@exclusionError')->name('exclusionError');
@@ -43,6 +44,7 @@ Route::group(['middleware'=>'auth'], function(){
 
     // 顧客関係
     Route::resource('customer', 'CustomerController');
+    Route::post('customer/destroyReport/{customer}', 'CustomerController@destroyReport')->name('customer.destroyReport');
 
     // 日報
     Route::get('report', 'ReportController@index')->name('report.index');
@@ -56,6 +58,11 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('changePassword', 'SettingController@changePassword')->name('setting.changePassword');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
 
+    // 来店履歴関係
+    Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
+    Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
+    Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
+        Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
 });
 
 // 過去日報
@@ -70,8 +77,7 @@ Route::group(['prefix'=>'oldReport', 'middleware'=>'auth'], function(){
 
 
 // 来店履歴関係
-Route::group(['prefix'=>'VisitHistory', 'middleware'=>'auth'], function(){
-    Route::get('register/{id}', 'VisitHistoryController@register')->name('VisitHistory.register');
+Route::group(['prefix'=>'visitHistory', 'middleware'=>'auth'], function(){
     Route::get('edit', 'VisitHistoryController@edit')->name('VisitHistory.edit');
     Route::get('updates/{id}', 'VisitHistoryController@updates')->name('VisitHistory.updates');
     Route::get('single_edit/{id}', 'VisitHistoryController@single_edit')->name('VisitHistory.single_edit');
@@ -87,6 +93,8 @@ Route::group(['prefix'=>'pdf', 'middleware'=>'auth'], function(){
     Route::get('show_pdfFile/{file_name}', 'PDFController@show_pdfFile')->name('pdf.show_pdfFile');
 });
 
+
+// ログイン不要な処理
 Route::get('/medical/{shop}', 'MedicalController@index')->name('medical.index');
 Route::get('/medical/create/{shop}', 'MedicalController@create')->name('medical.create');
 Route::post('/medical/store', 'MedicalController@store')->name('medical.store');

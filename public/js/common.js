@@ -54,7 +54,10 @@ $('.flash-message-box-close').click(function() {
     $(this).parent().toggleClass('flash-message-hidden').slideUp();
 })
 
-
+// コンフィルムダイアログ
+function confirmDialog(msg) {
+    return (window.confirm(msg));
+}
 
 
 

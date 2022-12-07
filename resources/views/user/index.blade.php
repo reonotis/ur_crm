@@ -4,7 +4,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="userSearchContents" >
+            <div class="user-search-contents" >
                 <form action="" method="get" >
                     <div class="userSearchRow" >
                         <div class="userSearchTitle" ><label for="name">名前</label></div>

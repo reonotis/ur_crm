@@ -26,7 +26,7 @@ function change_shops(){
 
 }
 
-//
+// 選択できるスタイリストを設定する
 function reset_users(){
     var shop_id = $('select[name="shop_id"] option:selected').attr("class");
 
@@ -47,3 +47,7 @@ function reset_users(){
     }
 }
 
+// 来店履歴を登録する時のコンフィルムダイアログ
+function registerConfirm(){
+    return (window.confirm('本日の来店履歴を登録します。宜しいでしょうか？'));
+}

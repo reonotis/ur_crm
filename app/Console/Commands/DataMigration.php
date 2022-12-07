@@ -10,9 +10,9 @@ use App\Models\Shop;
 use App\Models\User;
 use App\Models\UserShopAuthorization;
 use App\Models\VisitHistory;
+use App\Models\VisitHistoryImage;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use App\Models\VisitHistoryImage;
 use Illuminate\Support\Facades\DB;
 
 class DataMigration extends Base
@@ -54,8 +54,7 @@ class DataMigration extends Base
         $this->menuImport();
         $this->customerImport();
         $this->historyImport();
-
-        // TODO 顧客の画像データを移行
+        $this->styleIMGImport();
 
         $this->writeConsoleAndLog('info', $this->name . ' finish.');
         $this->writeConsoleAndLog('info', '--------------------------------------------');
@@ -313,6 +312,7 @@ class DataMigration extends Base
                         'status' => 1,
                         'menu_id' => $visitHistory->menu_id,
                         'memo' => $visitHistory->visit_comment,
+                        'created_at' => $visitHistory->created_at,
                     ];
 
                 }
@@ -325,9 +325,50 @@ class DataMigration extends Base
         $this->writeConsoleAndLog('info', 'historyImport end');
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function styleIMGImport()
+    {
+        $this->writeConsoleAndLog('info', 'styleIMGImport start...');
+        try{
+            $lastId = 0;
+            while(true){ // 無限ループ
+                $sql = "SELECT *
+                        FROM sys_styleIMG
+                        WHERE id > {$lastId}
+                        AND deleted_at = 0
+                        ORDER BY id ASC
+                        LIMIT 1000";
 
+                $styleIMGs = DB::connection('mysql_2')->select($sql);
+                if(empty($styleIMGs)){
+                    break; // データが無ければ繰返しの強制終了
+                }
+                $this->writeConsoleAndLog('info', 'historyImport insertLastId:' . $lastId . '...');
 
+                $insertData = [];
+                foreach($styleIMGs AS $styleIMG){
+                    $lastId = $styleIMG->id;
 
+                    $insertData[] = [
+                        'id' => $styleIMG->id,
+                        'visit_history_id' => $styleIMG->visit_id,
+                        'customer_id' => $styleIMG->customer_id,
+                        'angle' => $styleIMG->angle,
+                        'img_pass' => $styleIMG->img_pass,
+                        'status' => $styleIMG->status,
+                    ];
+                }
+                VisitHistoryImage::insert($insertData);
+            }
+        } catch (Exception $e) {
+            $this->writeConsoleAndLog('error', 'errorMsg : ' . $e->getMessage());
+            throw new Exception('来店履歴の登録に失敗しました urhair_ur.sys_styleIMG.id=' . $styleIMG->visit_id);
+        }
+        $this->writeConsoleAndLog('info', 'styleIMGImport end');
+    }
 
 }
 

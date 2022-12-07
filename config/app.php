@@ -239,6 +239,7 @@ return [
         'DatabaseConst' =>  App\Consts\DatabaseConst::class,
         'ErrorLog' =>  App\Consts\ErrorLog::class,
         'SessionConst' =>  App\Consts\SessionConst::class,
+        'ConfirmMessage' =>  App\Consts\ConfirmMessage::class,
 
     ],
 

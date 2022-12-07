@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use app\Common\CustomerCheck;
+use App\Common\CustomerCheck;
 use App\Exceptions\ExclusionException;
 use App\Consts\{Common, ErrorCode, SessionConst};
 use App\Models\{Customer, CustomerNoCounter, UserShopAuthorization, VisitHistory};
@@ -40,6 +40,7 @@ class CustomerController extends UserAppController
     }
 
     /**
+     * 顧客検索用のコンディションを設定する
      * @return array
      */
     private function _setConditions(): array
@@ -221,12 +222,18 @@ class CustomerController extends UserAppController
                 $this->loginUser->id,
             ]);
         }
+
+        // 権限が無ければ顧客情報にマスクをかける
         if(!$this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read_none_mask){
             $customer = $this->_customerMask($customer);
         }
-        $visitHistories = VisitHistory::getByCustomerId($customer->id)->get();
 
-        return view('customer.show', compact('customer', 'visitHistories'));
+        // 来店履歴
+        $visitHistories = VisitHistory::getByCustomerId($customer->id)->get();
+        // 来店履歴から最初の画像を取得する
+        $customerImgPass = $this->_getCustomerImg($visitHistories);
+
+        return view('customer.show', compact('customer', 'visitHistories', 'customerImgPass'));
     }
 
     /**
@@ -332,7 +339,7 @@ class CustomerController extends UserAppController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function destroy(Customer $customer): RedirectResponse
     {
@@ -350,6 +357,39 @@ class CustomerController extends UserAppController
             $customer->delete();
             DB::commit();
             return redirect()->route('customer.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['顧客を削除しました']);
+        } catch (Exception $e) {
+            Log::error( ' msg:' . $e->getMessage());
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['顧客の削除に失敗しました'])->withInput();
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroyReport(Customer $customer): RedirectResponse
+    {
+        // このショップに対して削除権限があるかチェック
+        if(empty($this->loginUser->checkAuthByShopId($customer->shop_id)->customer_delete)){
+            $this->goToExclusionErrorPage(ErrorCode::CL_030005, [
+                $customer->shop_id,
+                $customer->id,
+                $this->loginUser->id,
+            ]);
+        }
+
+        //来店履歴がある場合はエラー処理
+        if(count(VisitHistory::getByCustomerId($customer->id)->get())){
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店データがあるため削除出来ません。先に来店履歴を削除してください'])->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+            $customer->delete();
+            DB::commit();
+            return redirect()->route('report.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['顧客を削除しました']);
         } catch (Exception $e) {
             Log::error( ' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['顧客の削除に失敗しました'])->withInput();
@@ -428,6 +468,25 @@ class CustomerController extends UserAppController
 
         $shop = Shop::find($shopId);
         return $shop->shop_symbol . str_pad($customerNoCounter->id, Common::CUSTOMER_NO_LENGTH, 0, STR_PAD_LEFT);
+    }
+
+    /**
+     * 全ての来店履歴のに紐づく画像をループし、一番最初に登録されている画像を返却する
+     * @param object $visitHistories
+     * @return string
+     */
+    private function _getCustomerImg(object $visitHistories): string
+    {
+        foreach($visitHistories AS $visitHistory){
+            if(count($visitHistory->VisitHistoryImages)){
+                foreach($visitHistory->VisitHistoryImages AS $images){
+                    if(!empty($images->img_pass)){
+                        return $images->img_pass;
+                    }
+                }
+            }
+        }
+        return '';
     }
 
 }

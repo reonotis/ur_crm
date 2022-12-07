@@ -46,6 +46,7 @@
                                 <th>顧客名</th>
                                 <th>メニュー</th>
                                 <th>スタイリスト</th>
+                                <th>編集</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -60,7 +61,7 @@
                                                 <span class="honorific-title" >&nbsp;様</span>
                                             </a>
                                         @else
-                                            <p class="sex-{{ $todayCustomer->sex }}" >
+                                            <p class="sex-{{ $visitHistory->sex }}" >
                                                 {{ $visitHistory->f_name . " " . $visitHistory->l_name }}
                                                 <span class="honorific-title" >&nbsp;様</span>
                                             </p>
@@ -68,6 +69,15 @@
                                     </td>
                                     <td>{{ $visitHistory->menu_name }}</td>
                                     <td>{{ $visitHistory->name }}</td>
+                                    <td>
+                                        <div class="">
+                                            <form action="{{ route('visitHistory.destroy', ['visitHistory'=>$visitHistory->id]) }}" method="POST" onsubmit="return confirmDialog({{ ConfirmMessage::VISIT_HISTORY_DELETE }});" >
+                                                @method('POST')
+                                                @csrf
+                                                <input type="submit" name="" value="削除" class="delete-btn min-btn" >
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -88,6 +98,7 @@
                                     <th>顧客番号</th>
                                     <th>顧客名</th>
                                     <th>スタイリスト</th>
+                                    <th>編集</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,6 +126,17 @@
                                                 <a href="{{ route('report.setStylist', ['customer'=>$todayCustomer->id]) }}" >スタイリストを設定する</a>
                                             @endif
                                         </td>
+                                        <td>
+                                            <div class="">
+                                                @if(Auth::user()->userShopAuthorization->customer_delete)
+                                                    <form action="{{ route('customer.destroyReport', ['customer'=>$todayCustomer->id]) }}" method="POST" onsubmit="return confirmDialog({{ ConfirmMessage::CUSTOMER_DELETE }});" >
+                                                        @method('POST')
+                                                        @csrf
+                                                        <input type="submit" name="" value="削除" class="delete-btn min-btn" >
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -138,4 +160,5 @@
     </script>
 
 @endsection
+
 

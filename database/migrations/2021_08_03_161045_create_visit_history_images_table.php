@@ -14,11 +14,12 @@ class CreateVisitHistoryImagesTable extends Migration
     public function up()
     {
         Schema::create('visit_history_images', function (Blueprint $table) {
-            $table->bigIncrements('id')               ->comment('ID');
-            $table->integer('customer_id')            ->comment('顧客ID');
-            $table->integer('visit_history_id')       ->comment('来店履歴ID');
-            $table->tinyInteger('angle')              ->comment('角度 1:正面 2:横 3:背面 ');
-            $table->string('img_pass')                ->comment('画像パス');
+            $table->bigIncrements('id')->comment('ID');
+            $table->integer('customer_id')->comment('顧客ID');
+            $table->integer('visit_history_id')->comment('来店履歴ID');
+            $table->tinyInteger('angle')->comment('角度 1:正面 2:横 3:背面');
+            $table->tinyInteger('status')->comment('ステータス 0:未掲載 1:掲載中');
+            $table->string('img_pass')->comment('画像パス');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');

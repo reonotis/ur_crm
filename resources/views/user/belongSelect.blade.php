@@ -6,7 +6,7 @@
         <div class="col-md-10">
             <div class="" >
                 <p class="belongSelectSupplement" >{{ session()->get(App\Consts\SessionConst::SELECTED_SHOP)->shop_name }}&nbsp;に紐づけたいスタイリストを下記から選択してください</p>
-                <table class="listTBL userListTBL">
+                <table class="list-tbl userListTBL">
                     <thead>
                         <tr>
                             <th>スタイリスト名</th>
@@ -19,12 +19,13 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>
-                                    @if( !count($user->userShopAuthorizations))
+                                    @if (!count($user->userShopAuthorizations))
                                         -
+                                        @else
+                                        @foreach ($user->userShopAuthorizations AS $userShopAuthorization)
+                                            <p>{{ $userShopAuthorization->shop->shop_name }}</p>
+                                        @endforeach
                                     @endif
-                                    @foreach($user->userShopAuthorizations AS $userShopAuthorization)
-                                        <p>{{ $userShopAuthorization->shop->shop_name }}</p>
-                                    @endforeach
                                 </td>
                                 <td><a href="{{ route('user.belongSelected', ['user'=>$user->id]) }}" >登録する</a></td>
                             </tr>

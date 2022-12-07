@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Common;
+namespace App\Common;
 
 use App\Consts\Common;
 use App\Models\CustomerNoCounter;

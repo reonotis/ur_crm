@@ -5,8 +5,11 @@
     <div class="customer-info-area" >
         <div class="customer-basic-infos customer-contents-box" >
             <div class="customer-img" >
-                画像はありません。<br><br>
-                来店履歴のデータに画像を挿入した場合に自動的に更新されます。
+                @if(empty($customerImgPass))
+                    画像はありません。
+                @else
+                    <img src="{{ asset(Common::CUSTOMER_IMG_RESIZE_DIR . '/' . $customerImgPass) }}" alt="" >
+                @endif
             </div>
             <div class="customer-no" >{{ $customer->customer_no }}</div>
             <div class="customer-name" >
@@ -95,7 +98,13 @@
         </div>
     </div>
     <div class="customer-history-area customer-contents-box" >
-        <div class="customer-show-title" >来店履歴</div>
+        <div class="customer-show-title" >
+            来店履歴
+            @if(count($visitHistories) == 0 || !\Carbon\Carbon::parse($visitHistories[0]->vis_date)->isToday())
+                {{-- 来店履歴が存在しない。もしくは最終来店日が過去であれば登録ボタンを配置 --}}
+                <a href="{{ route('visitHistory.register', ['customer'=>$customer->id]) }}" class="inline-anker" onclick="return registerConfirm();" >本日の来店履歴を登録</a>
+            @endif
+        </div>
 
         @if (!count($visitHistories))
             来店履歴はありません
@@ -106,8 +115,9 @@
                     <tr>
                         <th>id</th>
                         <th>来店日時</th>
+                        <th>店舗</th>
                         <th>担当</th>
-                        <th>予約タイプ</th>
+                        {{-- <th>予約タイプ</th>--}}
                         <th>メニュー</th>
                         <th>画像</th>
                         <th>コメント</th>
@@ -122,20 +132,29 @@
                                 {{ \Carbon\Carbon::parse($visitHistory->vis_date)->format("Y/m/d") }}
                                 {{ substr($visitHistory->vis_time, 0, 5) }}
                             </td>
+                            <td>{{ $visitHistory->shop_name }}</td>
                             <td>{{ $visitHistory->name }}</td>
-                            <td>
-                                @if($visitHistory->visit_type_id)
-                                    {{ $visitHistory->visit_type_id }}
-                                @endif
-                            </td>
+                            {{-- <td></td>--}}
                             <td>{{ $visitHistory->menu_name }}</td>
                             <td>
-                                <div class="customer-image">
-                                    <img src="" >
+                                <div class="flex" >
+                                    @foreach($visitHistory->VisitHistoryImages AS $image)
+                                        <div class="customer-image">
+                                            <img src="{{ asset(Common::CUSTOMER_IMG_RESIZE_DIR . '/' . $image->img_pass) }}" alt="{{ Common::ANGLE_LIST[$image->angle] }}" >
+                                            <span >{{ Common::ANGLE_LIST[$image->angle] }}</span>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </td>
                             <td class="comment" >{!! nl2br(e(mb_strimwidth($visitHistory->memo, 0, 50, "..."))) !!}</td>
-                            <td>編集</td>
+                            <td>
+                                {{-- 本日の履歴なら編集可能にする --}}
+                                @if(\Carbon\Carbon::parse($visitHistory->vis_date)->isToday())
+                                    <a href="{{ route('visitHistory.edit', ['visitHistory'=>$visitHistory->id]) }}" >編集</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -144,20 +163,9 @@
     </div>
 @endsection
 
-
-
 <script>
     function deleteConfirm() {
         return (window.confirm('この顧客を削除します。宜しいでしょうか？'));
     }
 </script>
-
-
-
-
-
-
-
-
-
 
