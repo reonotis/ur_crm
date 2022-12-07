@@ -123,7 +123,6 @@ class Customer extends Model
             $query = self::setWhereLike($query, 'email', $condition['email']);
         }
 
-
         if (!empty($condition['zip21'])){
             $query = self::setWhereLike($query, 'zip21', $condition['zip21']);
         }
@@ -161,7 +160,7 @@ class Customer extends Model
         $valueArray = explode (' ' , $HANKAKUValues);
 
         foreach($valueArray AS $value){
-            $query = $query->where($columName, 'LIKE', '%' . $value . '%');
+            $query = $query->where('customers.' . $columName, 'LIKE', '%' . $value . '%');
         }
         return $query;
     }
