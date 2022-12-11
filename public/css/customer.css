@@ -32,9 +32,6 @@
 .search-row-contents {
     padding: 0.25rem 0.5rem;
     width: calc(100% - var(--search-title));
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
 }
 
 

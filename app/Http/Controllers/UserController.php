@@ -8,7 +8,6 @@ use App\Consts\{
         ErrorCode,
         SessionConst
     };
-use Illuminate\Support\Facades\Mail;
 use App\Models\{
         User,
         UserShopAuthorization
@@ -19,6 +18,7 @@ use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends UserAppController
 {
@@ -70,14 +70,20 @@ class UserController extends UserAppController
             }
             DB::beginTransaction();
 
-            $randomPass = uniqid();
+            $randomPass = $request->password;
+
             $user = $this->_insertUser($request, $randomPass);
             $userShopAuthorization = $this->_insertUserShopAuthorization($user, $request);
 
-            $this->_sendFirstUserRegistMail($user, $randomPass);
+            $res = $this->_sendFirstUserRegistMail($user, $randomPass);
+            if($res){
+                $resMsg = 'スタッフ情報を登録しました';
+            } else {
+                $resMsg = 'スタッフ情報を登録しましたが、メール送信に失敗しました';
+            }
 
             DB::commit();
-            return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタッフ情報を登録しました']);
+            return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, [$resMsg]);
         } catch (Exception $e) {
             Log::error( ' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタッフ情報の登録に失敗しました'])->withInput();
@@ -409,26 +415,32 @@ class UserController extends UserAppController
     }
 
     /**
-     * @return void
+     *
+     * @return bool
      */
-    private function _sendFirstUserRegistMail(object $user, string $password)
+    private function _sendFirstUserRegistMail(object $user, string $password): bool
     {
-        $this->_toFujisawa = config('mail.toFujisawa');
-        $this->_toInfo = config('mail.toInfo');
-        $this->_toUserEmail = $user->email;
+        try {
+            $this->_toFujisawa = config('mail.toFujisawa');
+            $this->_toInfo = config('mail.toInfo');
+            $this->_toUserEmail = $user->email;
 
-        $data = [
-            "name"  => $user->name,
-            "email"  => $user->email,
-            "password"  => $password,
-            "url"         => url('').'/myPage'
-        ];
-        Mail::send('emails.userRegister', $data, function($message){
-            $message->to($this->_toUserEmail)
-                ->cc($this->_toInfo)
-                ->bcc($this->_toFujisawa)
-                ->subject('スタイリストとして登録されました');
-        });
+            $data = [
+                "name" => $user->name,
+                "email" => $user->email,
+                "password" => $password,
+                "url" => url('').'/myPage'
+            ];
+            Mail::send('emails.userRegister', $data, function($message){
+                $message->to($this->_toUserEmail)
+                    ->cc($this->_toInfo)
+                    ->bcc($this->_toFujisawa)
+                    ->subject('スタイリストとして登録されました');
+            });
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**

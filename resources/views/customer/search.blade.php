@@ -30,11 +30,13 @@
                     <div class="search-row" >
                         <div class="search-row-title" ><label for="f_read">ヨミ</label></div>
                         <div class="search-row-contents" >
-                            <div class="w-48" style="margin-right: 0.5rem;">
-                                <input class="form-control" type="text" name="f_read" id="f_read" placeholder="タナカ" value="{{ request('f_read') }}" >
-                            </div>
-                            <div class="w-48" >
-                                <input class="form-control" type="text" name="l_read" id="l_read" placeholder="タロウ" value="{{ request('l_read') }}" >
+                            <div class="flex" >
+                                <div class="w-48" style="margin-right: 0.5rem;">
+                                    <input class="form-control" type="text" name="f_read" id="f_read" placeholder="タナカ" value="{{ request('f_read') }}" >
+                                </div>
+                                <div class="w-48" >
+                                    <input class="form-control" type="text" name="l_read" id="l_read" placeholder="タロウ" value="{{ request('l_read') }}" >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -49,24 +51,36 @@
                     <div class="search-row" >
                         <div class="search-row-title" >担当スタイリスト</div>
                         <div class="search-row-contents" >
-                            <label>
-                                <input class="" type="checkbox" name="other_staff" <?= (request('other_staff') == 'on')? ' checked': ''; ?>>他スタイリストの顧客を含める
-                            </label>
+                            <div class="">
+                                <label>
+                                    <input class="" type="checkbox" name="other_staff" <?= (request('other_staff') == 'on')? ' checked': ''; ?>>他スタイリストの顧客を含める
+                                </label>
+                            </div>
+                            <div class="">
+                                <select class="form-control" name="user" >
+                                    <option value="" >選択しない</option>
+                                    @foreach($users AS $user)
+                                        <option value="{{ $user->id }}" {{ (request('user') == $user->id)? ' selected': '' }} >{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="search-row" >
                         <div class="search-row-title" >生年月日</div>
                         <div class="search-row-contents" >
-                            <div class="w-32" style="margin-right: 0.5rem;">
-                                <input class="form-control inputYear" type="number" name="birthday_year" placeholder="年" value="{{ request('birthday_year') }}" >
-                            </div>
-                            /
-                            <div class="w-20" style="margin: 0 0.5rem;">
-                                <input class="form-control inputMonth" type="number" name="birthday_month" placeholder="月" value="{{ request('birthday_month') }}" >
-                            </div>
-                            /
-                            <div class="w-20" style="margin-left: 0.5rem;">
-                                <input class="form-control inputDay" type="number" name="birthday_day" placeholder="日" value="{{ request('birthday_day') }}" >
+                            <div class="flex">
+                                <div class="w-32" style="margin-right: 0.5rem;">
+                                    <input class="form-control inputYear" type="number" name="birthday_year" placeholder="年" value="{{ request('birthday_year') }}" >
+                                </div>
+                                /
+                                <div class="w-20" style="margin: 0 0.5rem;">
+                                    <input class="form-control inputMonth" type="number" name="birthday_month" placeholder="月" value="{{ request('birthday_month') }}" >
+                                </div>
+                                /
+                                <div class="w-20" style="margin-left: 0.5rem;">
+                                    <input class="form-control inputDay" type="number" name="birthday_day" placeholder="日" value="{{ request('birthday_day') }}" >
+                                </div>
                             </div>
                         </div>
                     </div>

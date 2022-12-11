@@ -107,6 +107,10 @@ class Customer extends Model
         if (!empty($condition['staff_id'])){
             $query = $query->where('staff_id', $condition['staff_id']);
         }
+        if (!empty($condition['user'])){
+            $query = $query->where('staff_id', $condition['user']);
+        }
+
         if (!empty($condition['birthday_year'])){
             $query = $query->where('birthday_year', $condition['birthday_year']);
         }

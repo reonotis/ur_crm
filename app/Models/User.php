@@ -72,9 +72,10 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function userShopAuthorizations()
+    public function userShopAuthorizations(): HasMany
     {
-        return $this->hasMany(userShopAuthorization::class);
+        return $this->HasMany('App\Models\UserShopAuthorization');
+//        return $this->HasMany(userShopAuthorization::class);
     }
 
     public function checkAuthByShopId(int $shopId = null)

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Common\CustomerCheck;
 use App\Exceptions\ExclusionException;
 use App\Consts\{Common, ErrorCode, SessionConst};
-use App\Models\{Customer, CustomerNoCounter, UserShopAuthorization, VisitHistory};
+use App\Models\{Customer, CustomerNoCounter, User, UserShopAuthorization, VisitHistory};
 use App\Models\Shop;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -36,7 +36,8 @@ class CustomerController extends UserAppController
         $condition = $this->_setConditions();
         $customersQuery = Customer::getCustomers($condition);
         $customers = $customersQuery->paginate(50);
-        return view('customer.search', compact('customers'));
+        $users = User::get();
+        return view('customer.search', compact('customers', 'users'));
     }
 
     /**
@@ -69,11 +70,12 @@ class CustomerController extends UserAppController
         if(empty(request('other_shop'))){
             $condition['shop_id'] = session()->get(SessionConst::SELECTED_SHOP)->id;
         }
-
         if(empty(request('other_staff'))){
             $condition['staff_id'] = $this->loginUser->id;
         }
-
+        if(!empty(request('user'))){
+            $condition['user'] = request('user');
+        }
 
         // 誕生日
         if(!empty(request('birthday_year'))){

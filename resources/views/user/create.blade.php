@@ -20,6 +20,12 @@
                         </div>
                     </div>
                     <div class="userRegisterRow" >
+                        <div class="userRegisterTitle" ><label for="password">初回パスワード</label></div>
+                        <div class="userRegisterContent" >
+                            <input type="password" name="password" id="password" class="form-control" value="{{ old('email') }}"  >
+                        </div>
+                    </div>
+                    <div class="userRegisterRow" >
                         <div class="userRegisterTitle" >在籍状況</div>
                         <div class="userRegisterContent" >
                             <select name="authority" class="form-control" >
