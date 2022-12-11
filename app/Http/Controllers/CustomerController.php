@@ -299,7 +299,11 @@ class CustomerController extends UserAppController
             if (empty($request->customer_no)){
                 $customerNo = $this->_makeCustomerNo($customer->shop_id); // 作成
             } else {
-                $customerNo = $this->_checkCustomerNo($request->customer_no, $customer->id); // 確認
+                if( $request->customer_no <> $customer->customer_no){
+                    $customerNo = $this->_checkCustomerNo($request->customer_no, $customer->id); // 確認
+                } else {
+                    $customerNo = $request->customer_no;
+                }
             }
             if (!$customerNo){
                 return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
