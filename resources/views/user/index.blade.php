@@ -64,7 +64,7 @@
                 @if (Auth::user()->userShopAuthorization->user_create)
                     <a href="{{ route('user.create') }}" class="submit register-btn" >新しいスタイリストを登録する</a>
                 @endif
-                @if (Auth::user()->userShopAuthorization->user_create)
+                @if (Auth::user()->userShopAuthorization->user_edit)
                     <a href="{{ route('user.belongSelect') }}" class="submit register-btn" >未所属のスタイリストを&nbsp;{{ session()->get(App\Consts\SessionConst::SELECTED_SHOP)->shop_name }}&nbsp;に所属させる</a>
                 @endif
             </div>
