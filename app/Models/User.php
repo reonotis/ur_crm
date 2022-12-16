@@ -136,4 +136,66 @@ class User extends Authenticatable
         return $query;
     }
 
+    /**
+     * 退職したユーザーを取得する
+     * @return object
+     */
+    public static function getRetireUsers(): object
+    {
+        $query = self::select('users.*')
+            ->where('display_flag', DatabaseConst::FLAG_ON)
+            ->where('authority_level', Common::AUTHORITY_RETIREMENT)
+            ;
+
+        return $query;
+    }
+
+    /**
+     * 対象店舗のユーザーを取得する
+     * @param int $shopId
+     * @param bool $retireFlg tureの場合、退職したユーザーを含める
+     * @return object
+     */
+    public static function getMyShopUsers(int $shopId, bool $retireFlg = false): object
+    {
+        $query = self::select('users.*')
+            ->where('display_flag', DatabaseConst::FLAG_ON)
+            ->join('user_shop_authorizations', function ($join) {
+                $join->on('users.id', '=', 'user_shop_authorizations.user_id')
+                    ->whereNull('user_shop_authorizations.deleted_at');
+            })
+            ->where('shop_id', $shopId)
+        ;
+
+        if (!$retireFlg) {
+            $query->where('authority_level', '<>', Common::AUTHORITY_RETIREMENT);
+        }
+
+        return $query;
+    }
+
+    /**
+     * 対象店舗以外のユーザーを取得する
+     * @param int $shopId
+     * @param bool $retireFlg tureの場合、退職したユーザーを含める
+     * @return object
+     */
+    public static function getOtherShopUsers(int $shopId, bool $retireFlg = false): object
+    {
+        $query = self::select('users.*')
+            ->where('display_flag', DatabaseConst::FLAG_ON)
+            ->join('user_shop_authorizations', function ($join) {
+                $join->on('users.id', '=', 'user_shop_authorizations.user_id')
+                    ->whereNull('user_shop_authorizations.deleted_at');
+            })
+            ->where('shop_id', '<>', $shopId)
+        ;
+
+        if (!$retireFlg) {
+            $query->where('authority_level', '<>', Common::AUTHORITY_RETIREMENT);
+        }
+
+        return $query;
+    }
+
 }

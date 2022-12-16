@@ -36,7 +36,7 @@ class CustomerController extends UserAppController
         $condition = $this->_setConditions();
         $customersQuery = Customer::getCustomers($condition);
         $customers = $customersQuery->paginate(50);
-        $users = User::get();
+        $users = $this->_getSelectUsers();
         return view('customer.search', compact('customers', 'users'));
     }
 
@@ -493,6 +493,67 @@ class CustomerController extends UserAppController
             }
         }
         return '';
+    }
+
+    /**
+     * 選択可能なユーザーを返却する
+     * @return array
+     */
+    private function _getSelectUsers(): array
+    {
+        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+
+        // 自店舗のユーザー
+        $myShopUsers = User::getMyShopUsers($shopId)->get()->toArray();
+
+        // 自店舗以外のユーザー
+        $otherShopUsers = User::getOtherShopUsers($shopId)->get()->toArray();
+
+        // 退職したユーザー
+        $retireUsers = User::getRetireUsers()->get()->toArray();
+
+        // 取得したユーザーを結合する
+        $users = $this->_mergeUsers($myShopUsers, $otherShopUsers, $retireUsers);
+
+        return $users;
+    }
+
+    /**
+     * 渡されたユーザーをマージする
+     * @param array $myShopUsers
+     * @param array $otherShopUsers
+     * @param array $retireUsers
+     * @return array
+     */
+    private function _mergeUsers(array $myShopUsers, array $otherShopUsers, array $retireUsers): array
+    {
+        // $myShopUsers の中に存在しない$otherShopUsersのユーザーを追加していく
+        foreach ($otherShopUsers AS $otherShopUser) {
+            $mergeFlg = true;
+            foreach ($myShopUsers AS $user) {
+                if ($user['id'] == $otherShopUser['id']) {
+                    $mergeFlg = false;
+                }
+            }
+            if ($mergeFlg) {
+                array_push($myShopUsers, $otherShopUser);
+            }
+        }
+
+        // 退職したユーザーを追加する
+        foreach ($retireUsers AS $retireUser) {
+            $mergeFlg = true;
+            foreach ($myShopUsers AS $user) {
+                if ($user['id'] == $retireUser['id']) {
+                    $mergeFlg = false;
+                }
+            }
+            if ($mergeFlg) {
+                array_push($myShopUsers, $retireUser);
+            }
+        }
+
+        return $myShopUsers;
     }
 
 }

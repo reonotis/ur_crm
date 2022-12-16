@@ -36,7 +36,7 @@ class UserShopAuthorization extends Model
     /**
      * @return hasOne
      */
-    public function shop()
+    public function shop(): hasOne
     {
         return $this->hasOne(Shop::class, 'id', 'shop_id');
     }
@@ -54,8 +54,8 @@ class UserShopAuthorization extends Model
     }
 
     /**
-     *
-     * @param int $userId
+     * 選択可能なユーザーを取得する
+     * @param int|null $shopId
      * @return object
      */
     public static function getSelectableUsers(int $shopId = NULL): object
@@ -71,24 +71,11 @@ class UserShopAuthorization extends Model
             $query->where('user_shop_authorizations.shop_id', $shopId);
         }
 
-        return $query;
-    }
-
-    /**
-     * 対象店舗に属するスタッフを
-     * @param int $shopId
-     * @return object
-     */
-    public static function getSelectableUsersByShopId(int $shopId): object
-    {
-        $query = self::select('users.id', 'users.name', 'user_shop_authorizations.shop_id')
-            ->join('users', function ($join) {
-                $join->on('users.id', '=', 'user_shop_authorizations.user_id')
-                    ->where('users.display_flag', DatabaseConst::FLAG_ON)
-                    ->where('users.authority_level', '<>', Common::AUTHORITY_RETIREMENT)
-                    ->whereNull('users.deleted_at');
-            })
-        ->where('user_shop_authorizations.shop_id', $shopId);
+        $query->orderByRaw("
+            authority_level = " . Common::AUTHORITY_ENROLLED . " DESC,
+            authority_level ASC,
+            id ASC
+        ");
 
         return $query;
     }

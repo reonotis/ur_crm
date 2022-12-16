@@ -60,7 +60,7 @@
                                 <select class="form-control" name="user" >
                                     <option value="" >選択しない</option>
                                     @foreach($users AS $user)
-                                        <option value="{{ $user->id }}" {{ (request('user') == $user->id)? ' selected': '' }} >{{ $user->name }}</option>
+                                        <option value="{{ $user['id'] }}" {{ (request('user') == $user['id'])? ' selected': '' }} >{{ $user['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
