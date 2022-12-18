@@ -64,7 +64,6 @@ class UserShopAuthorization extends Model
             ->join('users', function ($join) {
                 $join->on('users.id', '=', 'user_shop_authorizations.user_id')
                     ->where('users.display_flag', DatabaseConst::FLAG_ON)
-                    ->where('users.authority_level', '<>', Common::AUTHORITY_RETIREMENT)
                     ->whereNull('users.deleted_at');
             });
         if($shopId){
