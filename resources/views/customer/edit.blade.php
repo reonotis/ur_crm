@@ -97,11 +97,11 @@
                                 <div class="w-full">
                                     <div class="flex w-full items-center" >
                                         <div class="w-20" style="padding-right: 0.5rem;">
-                                            <input class="form-control" type="text" name="zip21" value="{{ old('zip21')? old('zip21'): $customer->zip21 }}" placeholder="150" >
+                                            <input class="form-control" type="text" name="zip21" value="{{ old('zip21')? old('zip21'): $customer->zip21 }}" placeholder="150" onKeyUp="AjaxZip3.zip2addr('zip21','zip22','pref21','address21','street21');" >
                                         </div>
                                         -
                                         <div class="w-24" style="padding-left: 0.5rem;" >
-                                            <input class="form-control" type="text" name="zip22" value="{{ old('zip22')? old('zip22'): $customer->zip22 }}" placeholder="0022" >
+                                            <input class="form-control" type="text" name="zip22" value="{{ old('zip22')? old('zip22'): $customer->zip22 }}" placeholder="0022" onKeyUp="AjaxZip3.zip2addr('zip21','zip22','pref21','address21','street21');" >
                                         </div>
                                     </div>
                                     <div class="flex w-full mt-1" >

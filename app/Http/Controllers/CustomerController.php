@@ -296,15 +296,17 @@ class CustomerController extends UserAppController
         }
 
         try {
-            if (empty($request->customer_no)){
+            if (empty($request->customer_no)) {
+                // 顧客番号が入力されていない場合は作成する
                 $customerNo = $this->_makeCustomerNo($customer->shop_id); // 作成
+            } else if ( $request->customer_no == $customer->customer_no) {
+                // 元々の顧客番号から変更していない場合はそのままで良い
+                $customerNo = $request->customer_no;
             } else {
-                if( $request->customer_no <> $customer->customer_no){
-                    $customerNo = $this->_checkCustomerNo($request->customer_no, $customer->id); // 確認
-                } else {
-                    $customerNo = $request->customer_no;
-                }
+                // 正しい番号かチェックする
+                $customerNo = $this->_checkCustomerNo($request->customer_no, $customer->id); // 確認
             }
+
             if (!$customerNo){
                 return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
             }
@@ -442,6 +444,11 @@ class CustomerController extends UserAppController
         $shopSymbolCheck = Shop::where('shop_symbol', $symbol)->first();
         if (!$shopSymbolCheck){
             $this->errMsg[] = '顧客番号の先頭2文字が不正です';
+            return false;
+        }
+
+        if (preg_match("/[a-z]/", $symbol)){
+            $this->errMsg[] = '顧客番号の先頭2文字は大文字にしてください';
             return false;
         }
 
