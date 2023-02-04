@@ -299,7 +299,7 @@ class CustomerController extends UserAppController
             if (empty($request->customer_no)) {
                 // 顧客番号が入力されていない場合は作成する
                 $customerNo = $this->_makeCustomerNo($customer->shop_id); // 作成
-            } else if ( $request->customer_no == $customer->customer_no) {
+            } else if ($request->customer_no == $customer->customer_no) {
                 // 元々の顧客番号から変更していない場合はそのままで良い
                 $customerNo = $request->customer_no;
             } else {

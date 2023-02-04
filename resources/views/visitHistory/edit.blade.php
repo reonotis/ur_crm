@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="customer-edit-row" >
-                            <div class="customer-edit-title" ><label for="">スタイリスト</label></div>
+                            <div class="customer-edit-title" ><label for="">メモ</label></div>
                             <div class="customer-edit-content" >
                                 <textarea name="memo" class="form-control" >{{ $visitHistory->memo }}</textarea>
                             </div>
