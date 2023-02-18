@@ -73,9 +73,14 @@ class ReportController extends UserAppController
             ]);
         }
 
+        // 既に本日の来店履歴が登録されているか確認する
+        $his = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
+        $historyFlg = count($his)? true: false;
+
+        // 選択可能なスタイリストを取得
         $users = UserShopAuthorization::getSelectableUsers($shopId)->get();
 
-        return view('report.setStylist',compact('customer', 'users' ));
+        return view('report.setStylist',compact('customer', 'users', 'historyFlg' ));
     }
 
     /**
@@ -105,6 +110,18 @@ class ReportController extends UserAppController
                 $this->loginUser->id,
             ]);
         }
+
+        // 既に本日の来店履歴が登録されているのに、新しく登録しようとした場合のエラー
+        if ($request->vis_history) {
+            $todayHistory = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
+            if ($todayHistory) {
+                $this->goToExclusionErrorPage(ErrorCode::CL_030015, [
+                    $customer->shop_id,
+                    $customer->id,
+                ]);
+            }
+        }
+
         try {
             DB::beginTransaction();
 
@@ -113,9 +130,7 @@ class ReportController extends UserAppController
             $customer->save();
 
             // 来店履歴を登録する
-            if( $request->vis_history){
-                // TODO 既に本日の来店履歴が登録されていないか確認する
-                // $todayRecord = VisitHistory::checkTodayHistory($id);
+            if ($request->vis_history) {
                 VisitHistory::insert([[
                     'vis_date' => Carbon::now()->format('Y-m-d'),
                     'vis_time' => Carbon::now()->format('H:i'),

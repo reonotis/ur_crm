@@ -45,7 +45,7 @@ class CheckData
     }
 
     public static function mask_tel($data){
-        $vowels = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+        $vowels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
         $data->tel = str_replace($vowels, "*", $data->tel);
         return $data;
     }
