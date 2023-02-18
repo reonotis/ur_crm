@@ -62,7 +62,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
     Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
     Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
-        Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
+    Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
 });
 
 // 過去日報

@@ -50,25 +50,25 @@ class Common
     ];
 
     // 作業権限
-    public const AUTHORIZATION_NOT_AVAILABLE  = 0;
-    public const AUTHORIZATION_AVAILABLE  = 1;
+    public const AUTHORIZATION_NOT_AVAILABLE = 0;
+    public const AUTHORIZATION_AVAILABLE = 1;
     public const AUTHORIZATION_LIST = [
         self::AUTHORIZATION_NOT_AVAILABLE => '権限なし',
         self::AUTHORIZATION_AVAILABLE => '権限あり',
     ];
 
     // 在籍権限
-    public const DO_MASK  = 0;
-    public const NONE_MASK  = 1;
+    public const DO_MASK = 0;
+    public const NONE_MASK = 1;
     public const MASK_CHECK = [
         self::DO_MASK => 'する',
         self::NONE_MASK => 'しない',
     ];
 
     // 画像
-    public const ANGLE_1  = 1;
-    public const ANGLE_2  = 2;
-    public const ANGLE_3  = 3;
+    public const ANGLE_1 = 1;
+    public const ANGLE_2 = 2;
+    public const ANGLE_3 = 3;
     public const ANGLE_LIST = [
         self::ANGLE_1 => '正面',
         self::ANGLE_2 => '側面',
@@ -83,13 +83,16 @@ class Common
     public const Q1_A4 = 4;
     public const Q1_A5 = 5;
     public const Q1_A6 = 6;
+    public const Q1_A7 = 7;
+    public const Q1_A8 = 8;
     public const QUESTION_1_LIST = [
         self::Q1_A1 => 'ホームページ',
         self::Q1_A2 => 'ホットペッパー',
-        self::Q1_A3 => '街で声をかけられて',
         self::Q1_A4 => '知人の紹介',
         self::Q1_A5 => 'TV雑誌',
         self::Q1_A6 => '以前URを利用したことがある',
+        self::Q1_A7 => 'SNS',
+        self::Q1_A8 => 'その他',
     ];
 
     // バリデーション関連

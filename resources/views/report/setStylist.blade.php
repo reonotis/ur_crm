@@ -23,8 +23,11 @@
                         <div class="set-stylist-contents" >
                             <p class="support-comment" >お客様の本日の来店履歴を登録する場合は下記にチェックを入れてください。</p>
                             <label>
-                                <input type="checkbox" name="vis_history" >登録する
+                                <input type="checkbox" name="vis_history" @if($historyFlg) disabled="disabled" @endif >登録する
                             </label>
+                            @if ($historyFlg)
+                                <p class="support-comment" >既に本日の来店履歴が登録されているため、チェック出来ません</p>
+                            @endif
                         </div>
                     </div>
                     <div class="flex" >

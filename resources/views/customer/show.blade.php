@@ -6,7 +6,7 @@
         <div class="customer-basic-infos customer-contents-box" >
             <div class="customer-img" >
                 @if(empty($customerImgPass))
-                    画像はありません。
+                    画像はありません
                 @else
                     <img src="{{ asset(Common::CUSTOMER_IMG_RESIZE_DIR . '/' . $customerImgPass) }}" alt="" >
                 @endif

@@ -96,6 +96,9 @@
     width: calc(var(--customer-basic-info-width) - 2rem);
     min-height: var(--customer-basic-info-width);
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .customer-img > img {
     width: calc(var(--customer-basic-info-width) - 2rem);
