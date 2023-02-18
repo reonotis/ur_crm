@@ -114,7 +114,7 @@ class ReportController extends UserAppController
         // 既に本日の来店履歴が登録されているのに、新しく登録しようとした場合のエラー
         if ($request->vis_history) {
             $todayHistory = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
-            if ($todayHistory) {
+            if (count($todayHistory)) {
                 $this->goToExclusionErrorPage(ErrorCode::CL_030015, [
                     $customer->shop_id,
                     $customer->id,
