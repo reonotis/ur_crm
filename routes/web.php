@@ -42,14 +42,14 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('user/deleteBelongShop/{user}', 'UserController@deleteBelongShop')->name('user.deleteBelongShop');
     Route::resource('user', 'UserController');
 
-    // 顧客関係
-    Route::resource('customer', 'CustomerController');
-    Route::post('customer/destroyReport/{customer}', 'CustomerController@destroyReport')->name('customer.destroyReport');
-
     // 日報
     Route::get('report', 'ReportController@index')->name('report.index');
     Route::get('report/setStylist/{customer}', 'ReportController@setStylist')->name('report.setStylist');
     Route::post('report/settingStylist/{customer}', 'ReportController@settingStylist')->name('report.settingStylist');
+
+    // 顧客関係
+    Route::resource('customer', 'CustomerController');
+    Route::post('customer/destroyReport/{customer}', 'CustomerController@destroyReport')->name('customer.destroyReport');
 
     // 設定関連
     Route::get('setting/index', 'SettingController@index')->name('setting.index');
