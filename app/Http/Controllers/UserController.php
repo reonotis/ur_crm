@@ -433,6 +433,7 @@ class UserController extends UserAppController
             ];
             Mail::send('emails.userRegister', $data, function($message){
                 $message->to($this->_toUserEmail)
+                    ->from('info@reonotis.jp')
                     ->cc($this->_toInfo)
                     ->bcc($this->_toFujisawa)
                     ->subject('スタイリストとして登録されました');
