@@ -58,7 +58,7 @@ class VisitHistoryController extends UserAppController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -73,7 +73,7 @@ class VisitHistoryController extends UserAppController
      */
     public function register(Customer $customer): RedirectResponse
     {
-        if(count(VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get())){
+        if (count(VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get())) {
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['既に本日の来店履歴が登録されています']);
         }
 
@@ -91,7 +91,7 @@ class VisitHistoryController extends UserAppController
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['本日の来店履歴を登録しました']);
         } catch (Exception $e) {
             DB::rollback();
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の登録に失敗しました']);
         }
     }
@@ -144,7 +144,7 @@ class VisitHistoryController extends UserAppController
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['来店履歴を更新しました']);
         } catch (Exception $e) {
             DB::rollback();
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の更新に失敗しました'])->withInput();
         }
     }
@@ -161,7 +161,7 @@ class VisitHistoryController extends UserAppController
             DB::commit();
             return redirect()->route('report.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['来店履歴を削除しました']);
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の削除に失敗しました'])->withInput();
         }
 
@@ -170,12 +170,13 @@ class VisitHistoryController extends UserAppController
     /**
      * 渡されたファイルが登録可能な拡張子か確認するしてOKなら拡張子を返す
      */
-    public function checkFileExtension($file){
+    public function checkFileExtension($file)
+    {
         // 渡された拡張子を取得
-        $extension =  $file->extension();
-        if(! in_array($extension, $this->_fileExtension)){
+        $extension = $file->extension();
+        if (!in_array($extension, $this->_fileExtension)) {
             $fileExtension = json_encode($this->_fileExtension);
-            throw new \Exception("登録できる画像の拡張子は". $fileExtension ."のみです。");
+            throw new \Exception("登録できる画像の拡張子は" . $fileExtension . "のみです。");
         }
         return $file->extension();
     }
@@ -187,7 +188,7 @@ class VisitHistoryController extends UserAppController
     private function _checkEditing(VisitHistory $visitHistory): void
     {
         // 本日の履歴ではない場合
-        if(!Carbon::parse($visitHistory->vis_date)->isToday()){
+        if (!Carbon::parse($visitHistory->vis_date)->isToday()) {
             $this->goToExclusionErrorPage(ErrorCode::CL_040004, [
                 $visitHistory->id,
                 $this->loginUser->id,
@@ -195,7 +196,6 @@ class VisitHistoryController extends UserAppController
         }
 
         // TODO 対象の店舗でない場合
-
 
 
     }
@@ -206,7 +206,7 @@ class VisitHistoryController extends UserAppController
      */
     private function _fileUpload($customer_id, $id, $file, $angle)
     {
-        if(!$file)throw new \Exception("ファイルが指定されていません");
+        if (!$file) throw new \Exception("ファイルが指定されていません");
 
         // 登録可能な拡張子か確認して取得する
         $extension = $this->checkFileExtension($file);
@@ -216,7 +216,7 @@ class VisitHistoryController extends UserAppController
             '%s_%s_%s_%s.%s',
             time(),
             str_pad($id, 7, 0, STR_PAD_LEFT),
-            str_pad($this->_user->id, 5, 0, STR_PAD_LEFT),
+            str_pad($this->loginUser->id, 5, 0, STR_PAD_LEFT),
             sha1(uniqid(mt_rand(), true)),
             $extension
         );
@@ -239,7 +239,7 @@ class VisitHistoryController extends UserAppController
                 'visit_history_id' => $id,
                 'angle' => $angle,
                 'delete_flag' => 0,
-            ],[
+            ], [
                 'img_pass' => $this->BaseFileName,
             ]
         );

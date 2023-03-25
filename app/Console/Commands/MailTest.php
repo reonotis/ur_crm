@@ -46,12 +46,12 @@ class MailTest extends Base
         $this->writeConsoleAndLog('info', $this->name . ' start...');
 
         $data = [
-            "name" => "aaaaaa",
+            'name' => 'sample',
         ];
         Mail::send('emails.sample', $data, function ($message) {
             $message->to('fujisawareon@yahoo.co.jp')
                 ->from('info@reonotis.jp')
-                ->bcc("fujisawareon@yahoo.co.jp")
+                ->bcc('fujisawareon@yahoo.co.jp')
                 ->subject('お申込みありがとうございます。');
         });
 

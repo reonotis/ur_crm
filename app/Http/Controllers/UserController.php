@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ExclusionException;
 use App\Consts\{
-        DatabaseConst,
-        ErrorCode,
-        SessionConst
-    };
+    DatabaseConst,
+    ErrorCode,
+    SessionConst
+};
 use App\Models\{
-        User,
-        UserShopAuthorization
-    };
+    User,
+    UserShopAuthorization
+};
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\{RedirectResponse, Request};
@@ -65,7 +65,7 @@ class UserController extends UserAppController
         try {
             $this->checkValid($request);
             $this->checkAuthValid($request);
-            if(count($this->errMsg)){
+            if (count($this->errMsg)) {
                 return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
             }
             DB::beginTransaction();
@@ -76,7 +76,7 @@ class UserController extends UserAppController
             $userShopAuthorization = $this->_insertUserShopAuthorization($user, $request);
 
             $res = $this->_sendFirstUserRegistMail($user, $randomPass);
-            if($res){
+            if ($res) {
                 $resMsg = 'スタッフ情報を登録しました';
             } else {
                 $resMsg = 'スタッフ情報を登録しましたが、メール送信に失敗しました';
@@ -85,7 +85,7 @@ class UserController extends UserAppController
             DB::commit();
             return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, [$resMsg]);
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタッフ情報の登録に失敗しました'])->withInput();
         }
     }
@@ -132,7 +132,7 @@ class UserController extends UserAppController
         try {
             $this->checkValid($request);
             $this->checkAuthValid($request);
-            if(count($this->errMsg)){
+            if (count($this->errMsg)) {
                 return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, $this->errMsg)->withInput();
             }
             DB::beginTransaction();
@@ -160,9 +160,9 @@ class UserController extends UserAppController
             $userShopAuth->save();
 
             DB::commit();
-            return redirect()->route('user.show', ['user'=>$user->id])->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタッフ情報を更新しました']);
+            return redirect()->route('user.show', ['user' => $user->id])->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタッフ情報を更新しました']);
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタッフ情報の更新に失敗しました'])->withInput();
         }
     }
@@ -184,7 +184,7 @@ class UserController extends UserAppController
             DB::commit();
             return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタッフを削除しました']);
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタッフの削除に失敗しました'])->withInput();
         }
     }
@@ -208,8 +208,8 @@ class UserController extends UserAppController
     {
         try {
             $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
-            foreach ($user->userShopAuthorizations AS $userShopAuth){
-                if($userShopAuth->shop_id == $shopId){
+            foreach ($user->userShopAuthorizations as $userShopAuth) {
+                if ($userShopAuth->shop_id == $shopId) {
                     throw new Exception('このユーザーは既に紐づいています $userId:' . $user->id);
                 }
             }
@@ -219,7 +219,7 @@ class UserController extends UserAppController
             DB::commit();
             return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタッフを紐づけました']);
         } catch (Exception $e) {
-            Log::error( 'msg:' . $e->getMessage());
+            Log::error('msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタッフの紐づけに失敗しました'])->withInput();
         }
 
@@ -242,7 +242,7 @@ class UserController extends UserAppController
             DB::commit();
             return redirect()->route('user.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['紐づけを解除しました']);
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['紐づけの解除に失敗しました'])->withInput();
         }
     }
@@ -261,7 +261,7 @@ class UserController extends UserAppController
             ->toArray();
 
         // 自店舗のユーザーのIDの配列を作成
-        $myShopUsersIdList = array_column( $myShopUsers, 'user_id');
+        $myShopUsersIdList = array_column($myShopUsers, 'user_id');
 
         // 自店舗に属していないユーザーを取得 TODO MODELに記載
         $otherShopUsers = User::select('*')
@@ -279,15 +279,15 @@ class UserController extends UserAppController
     {
         $condition = [];
         $condition['shopId'] = session()->get(SessionConst::SELECTED_SHOP)->id;
-        if(!empty(request('name'))){
+        if (!empty(request('name'))) {
             $condition['name'] = request('name');
         }
 
-        if(!empty(request('email'))){
+        if (!empty(request('email'))) {
             $condition['email'] = request('email');
         }
 
-        if(!empty(request('authority_level'))){
+        if (!empty(request('authority_level'))) {
             $condition['authority_level'] = request('authority_level');
         }
 
@@ -300,10 +300,10 @@ class UserController extends UserAppController
      */
     public function checkValid(Request $r): void
     {
-        if (empty($r->name)){
+        if (empty($r->name)) {
             $this->errMsg['name'] = '名前は必須入力です';
         }
-        if (empty($r->email)){
+        if (empty($r->email)) {
             $this->errMsg['email'] = 'メールアドレスは必須入力です';
         } else {
             if (!preg_match('/^[a-z0-9._+^~-]+@[a-z0-9.-]+$/i', $r->email)) {
@@ -318,52 +318,52 @@ class UserController extends UserAppController
      */
     private function checkAuthValid(Request $r): void
     {
-        if($r->user_edit > $this->userShopAuthorization->user_edit){
+        if ($r->user_edit > $this->userShopAuthorization->user_edit) {
             $this->errMsg[] = 'あなたにはスタイリスト編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->user_edit > $this->userShopAuthorization->user_delete){
+        if ($r->user_edit > $this->userShopAuthorization->user_delete) {
             $this->errMsg[] = 'あなたにはスタイリスト削除権限が無い為、削除権限があるユーザーを作成できません';
         }
-        if($r->customer_edit > $this->userShopAuthorization->customer_edit){
+        if ($r->customer_edit > $this->userShopAuthorization->customer_edit) {
             $this->errMsg[] = 'あなたには顧客編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->customer_delete > $this->userShopAuthorization->customer_delete){
+        if ($r->customer_delete > $this->userShopAuthorization->customer_delete) {
             $this->errMsg[] = 'あなたには顧客削除権限が無い為、削除権限があるユーザーを作成できません';
         }
-        if($r->reserve_edit > $this->userShopAuthorization->reserve_edit){
+        if ($r->reserve_edit > $this->userShopAuthorization->reserve_edit) {
             $this->errMsg[] = 'あなたには予約編集権限が無い為、編集権限があるユーザーを作成できません';
         }
-        if($r->reserve_delete > $this->userShopAuthorization->reserve_delete){
+        if ($r->reserve_delete > $this->userShopAuthorization->reserve_delete) {
             $this->errMsg[] = 'あなたには予約削除権限が無い為、削除権限があるユーザーを作成できません';
         }
 
-        if($r->user_read < $r->user_create ){
+        if ($r->user_read < $r->user_create) {
             $this->errMsg[] = 'スタイリスト閲覧権限がない場合、スタイリスト作成権限を与えられません';
         }
-        if($r->user_create < $r->user_edit ){
+        if ($r->user_create < $r->user_edit) {
             $this->errMsg[] = 'スタイリスト作成権限がない場合、スタイリスト編集権限を与えられません';
         }
-        if($r->user_edit < $r->user_delete ){
+        if ($r->user_edit < $r->user_delete) {
             $this->errMsg[] = 'スタイリスト編集権限がない場合、スタイリスト削除権限を与えられません';
         }
 
-        if($r->customer_read < $r->customer_create ){
+        if ($r->customer_read < $r->customer_create) {
             $this->errMsg[] = '顧客閲覧権限がない場合、顧客作成権限を与えられません';
         }
-        if($r->customer_create < $r->customer_edit ){
+        if ($r->customer_create < $r->customer_edit) {
             $this->errMsg[] = '顧客作成権限がない場合、顧客編集権限を与えられません';
         }
-        if($r->customer_edit < $r->customer_delete ){
+        if ($r->customer_edit < $r->customer_delete) {
             $this->errMsg[] = '顧客編集権限がない場合、顧客削除権限を与えられません';
         }
 
-        if($r->reserve_read < $r->reserve_create ){
+        if ($r->reserve_read < $r->reserve_create) {
             $this->errMsg[] = '予約閲覧権限がない場合、予約作成権限を与えられません';
         }
-        if($r->reserve_create < $r->reserve_edit ){
+        if ($r->reserve_create < $r->reserve_edit) {
             $this->errMsg[] = '予約作成権限がない場合、予約編集権限を与えられません';
         }
-        if($r->reserve_edit < $r->reserve_delete ){
+        if ($r->reserve_edit < $r->reserve_delete) {
             $this->errMsg[] = '予約編集権限がない場合、予約削除権限を与えられません';
         }
     }
@@ -373,7 +373,7 @@ class UserController extends UserAppController
      * @param string $randomPass
      * @return object
      */
-    private function _insertUser(Request $r, string $randomPass) :object
+    private function _insertUser(Request $r, string $randomPass): object
     {
         $insertData = [
             'name' => $r->name,
@@ -395,7 +395,7 @@ class UserController extends UserAppController
             'shop_id' => session()->get(SessionConst::SELECTED_SHOP)->id,
             'user_id' => $user->id,
         ];
-        if (!empty($r)){
+        if (!empty($r)) {
             $insertData['user_read'] = $r->user_read;
             $insertData['user_create'] = $r->user_create;
             $insertData['user_edit'] = $r->user_edit;
@@ -429,9 +429,9 @@ class UserController extends UserAppController
                 "name" => $user->name,
                 "email" => $user->email,
                 "password" => $password,
-                "url" => url('').'/myPage'
+                "url" => url('') . '/myPage'
             ];
-            Mail::send('emails.userRegister', $data, function($message){
+            Mail::send('emails.userRegister', $data, function ($message) {
                 $message->to($this->_toUserEmail)
                     ->from('info@reonotis.jp')
                     ->cc($this->_toInfo)
@@ -439,7 +439,7 @@ class UserController extends UserAppController
                     ->subject('スタイリストとして登録されました');
             });
         } catch (Exception $e) {
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return false;
         }
         return true;
@@ -454,7 +454,7 @@ class UserController extends UserAppController
      */
     private function _myShopUserCheck(User $user, string $errCode): void
     {
-        if(empty($user->userShopAuthorization)){
+        if (empty($user->userShopAuthorization)) {
             $this->goToExclusionErrorPage($errCode, [
                 session()->get(SessionConst::SELECTED_SHOP)->id,
                 $user->id,

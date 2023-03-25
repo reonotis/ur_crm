@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Consts\Common;
-use App\Consts\SessionConst;
 use App\Consts\ErrorCode;
+use App\Consts\SessionConst;
 use App\Exceptions\ExclusionException;
 use App\Exceptions\ForbiddenException;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -58,6 +56,7 @@ class UserAppController extends Controller
     /**
      * ルーティングに対してログインユーザーの権限があるか確認する
      * @return void
+     * @throws ForbiddenException
      */
     public function routeAuthCheck(): void
     {
