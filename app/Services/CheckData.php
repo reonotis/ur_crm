@@ -90,6 +90,4 @@ class CheckData
         return $data;
     }
 
-
-
 }

@@ -58,14 +58,14 @@ class ReportController extends UserAppController
     {
         // 閲覧して良いかチェック
         $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
-        if ($customer->shop_id <> $shopId){
+        if ($customer->shop_id <> $shopId) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030011, [
                 $customer->shop_id,
                 $customer->id,
                 $this->loginUser->id,
             ]);
         }
-        if($customer->staff_id){
+        if ($customer->staff_id) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030012, [
                 $customer->shop_id,
                 $customer->id,
@@ -80,7 +80,7 @@ class ReportController extends UserAppController
         // 選択可能なスタイリストを取得
         $users = UserShopAuthorization::getSelectableUsers($shopId)->get();
 
-        return view('report.setStylist',compact('customer', 'users', 'historyFlg' ));
+        return view('report.setStylist', compact('customer', 'users', 'historyFlg'));
     }
 
     /**
@@ -96,14 +96,14 @@ class ReportController extends UserAppController
         $request->session()->regenerateToken(); // 二重クリック防止
         // 更新して良いかチェック
         $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
-        if ($customer->shop_id <> $shopId){
+        if ($customer->shop_id <> $shopId) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030013, [
                 $customer->shop_id,
                 $customer->id,
                 $this->loginUser->id,
             ]);
         }
-        if($customer->staff_id){
+        if ($customer->staff_id) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030014, [
                 $customer->shop_id,
                 $customer->id,
@@ -144,7 +144,7 @@ class ReportController extends UserAppController
             return redirect()->route('report.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['スタイリストを設定しました']);
         } catch (Exception $e) {
             DB::rollback();
-            Log::error( ' msg:' . $e->getMessage());
+            Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['スタイリストの設定に失敗しました'])->withInput();
         }
     }
@@ -162,7 +162,7 @@ class ReportController extends UserAppController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -173,7 +173,7 @@ class ReportController extends UserAppController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -184,7 +184,7 @@ class ReportController extends UserAppController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -195,8 +195,8 @@ class ReportController extends UserAppController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -207,7 +207,7 @@ class ReportController extends UserAppController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

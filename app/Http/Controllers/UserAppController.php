@@ -45,6 +45,8 @@ class UserAppController extends Controller
             if(!$shopService->shopCheck($this->loginUser->id)){
                 Redirect::route('shop.deselect')->send();
             }
+            $shop = session()->get(SessionConst::SELECTED_SHOP);
+            Log::info( $shop);
             $this->shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
 
             // 権限がない操作を実行していないかチェックをする

@@ -50,7 +50,7 @@ class MailTest extends Base
         ];
         Mail::send('emails.sample', $data, function ($message) {
             $message->to('fujisawareon@yahoo.co.jp')
-                ->from('info@newbalance-campaign.jp')
+                ->from('info@reonotis.jp')
                 ->bcc("fujisawareon@yahoo.co.jp")
                 ->subject('お申込みありがとうございます。');
         });
