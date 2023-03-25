@@ -36,18 +36,17 @@ class UserAppController extends Controller
             $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
 
             // 退職している場合
-            if($this->loginUser->authority_level == Common::AUTHORITY_RETIREMENT){
+            if ($this->loginUser->authority_level == Common::AUTHORITY_RETIREMENT) {
                 throw new ExclusionException(ErrorCode::CL_010001);
             }
 
             // 操作できるショップがあるかチェックする
             $shopService = app()->make('ShopService');
-            if(!$shopService->shopCheck($this->loginUser->id)){
+            if (!$shopService->shopCheck($this->loginUser->id)) {
                 Redirect::route('shop.deselect')->send();
             }
             $shop = session()->get(SessionConst::SELECTED_SHOP);
-            Log::info( $shop);
-            $this->shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+            $this->shopId = $shop->id;
 
             // 権限がない操作を実行していないかチェックをする
             $this->routeAuthCheck();
@@ -71,14 +70,14 @@ class UserAppController extends Controller
 
         // ルーティングに対する権限があればチェック完了
         $authName = Common::ROUTE_AUTH_LIST[$routeName];
-        if (empty($this->userShopAuthorization)){
+        if (empty($this->userShopAuthorization)) {
             Redirect::route('myPage')->send();
         }
-        if($this->userShopAuthorization->{$authName}){
+        if ($this->userShopAuthorization->{$authName}) {
             return;
         }
 
-        Log::error( '不正なアクセスを行おうとしています。 route_name:' . $routeName . ', login_user_id:' . $this->loginUser->id);
+        Log::error('不正なアクセスを行おうとしています。 route_name:' . $routeName . ', login_user_id:' . $this->loginUser->id);
         throw new ForbiddenException($authName);
     }
 
