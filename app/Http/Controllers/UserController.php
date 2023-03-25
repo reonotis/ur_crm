@@ -438,6 +438,7 @@ class UserController extends UserAppController
                     ->subject('スタイリストとして登録されました');
             });
         } catch (Exception $e) {
+            Log::error( ' msg:' . $e->getMessage());
             return false;
         }
         return true;
