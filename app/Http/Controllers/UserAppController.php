@@ -18,6 +18,9 @@ use Route;
 class UserAppController extends Controller
 {
 
+    /**
+     * @var int $shopId 現在選択している店舗のID
+     */
     public $shopId;
     public $loginUser;
     public $userShopAuthorization;

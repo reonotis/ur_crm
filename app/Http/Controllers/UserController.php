@@ -75,7 +75,7 @@ class UserController extends UserAppController
             $user = $this->_insertUser($request, $randomPass);
             $userShopAuthorization = $this->_insertUserShopAuthorization($user, $request);
 
-            $res = $this->_sendFirstUserRegistMail($user, $randomPass);
+            $res = $this->_sendFirstUserRegisterMail($user, $randomPass);
             if ($res) {
                 $resMsg = 'スタッフ情報を登録しました';
             } else {
@@ -264,12 +264,11 @@ class UserController extends UserAppController
         $myShopUsersIdList = array_column($myShopUsers, 'user_id');
 
         // 自店舗に属していないユーザーを取得 TODO MODELに記載
-        $otherShopUsers = User::select('*')
+        return User::select('*')
             ->whereNotIn('id', $myShopUsersIdList)
             ->where('display_flag', DatabaseConst::FLAG_ON)
             ->get();
 
-        return $otherShopUsers;
     }
 
     /**
@@ -415,10 +414,11 @@ class UserController extends UserAppController
     }
 
     /**
-     *
+     * @param object $user
+     * @param string $password
      * @return bool
      */
-    private function _sendFirstUserRegistMail(object $user, string $password): bool
+    private function _sendFirstUserRegisterMail(object $user, string $password): bool
     {
         try {
             $this->_toFujisawa = config('mail.toFujisawa');

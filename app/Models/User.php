@@ -5,12 +5,21 @@ namespace App\Models;
 use App\Consts\DatabaseConst;
 use App\Consts\SessionConst;
 use App\Consts\Common;
+use App\Models\UserShopAuthorization;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property UserShopAuthorization userShopAuthorization
+ * @property array{int, userShopAuthorization} userShopAuthorizations
+ * @property int id
+ * @property string name
+ * @property string email
+ * @property int authority_level
+ */
 class User extends Authenticatable
 {
     use Notifiable;

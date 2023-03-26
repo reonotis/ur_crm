@@ -7,6 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int id
+ * @property int shop_id
+ * @property int user_read
+ * @property int user_create
+ * @property int user_edit
+ * @property int user_delete
+ * @property int customer_read
+ * @property int customer_read_none_mask
+ * @property int customer_create
+ * @property int customer_edit
+ * @property int customer_delete
+ * @property int reserve_read
+ * @property int reserve_create
+ * @property int reserve_edit
+ * @property int reserve_delete
+ */
 class UserShopAuthorization extends Model
 {
     use SoftDeletes; // 論理削除を有効化
