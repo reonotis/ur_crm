@@ -2,30 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Consts\ErrorCode;
-use App\Consts\Common;
-use App\Consts\SessionConst;
-use App\Models\Customer;
-use App\Models\Shop;
-use App\Models\UserShopAuthorization;
-use App\Models\VisitType;
-use App\Models\VisitHistory;
-use App\Models\VisitHistoryImage;
-use App\Models\Menu;
+use App\Consts\{Common,
+    ErrorCode,
+    SessionConst
+};
+use App\Exceptions\ExclusionException;
+use App\Models\{Customer,
+    UserShopAuthorization,
+    VisitHistory,
+    VisitHistoryImage,
+    Menu
+};
+use App\Services\ImageService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use InterventionImage;
+use Illuminate\Http\{RedirectResponse,
+    Request,
+    UploadedFile
+};
+use Illuminate\Support\Facades\{DB,
+    Log
+};
 
 class VisitHistoryController extends UserAppController
 {
-    private $_fileExtension = ['jpg', 'jpeg', 'png'];
-    private $_resize_maxWidth = '300';
-    private $_resize_maxHeight = '400';
+    /**
+     * @var ImageService $ImageService 画像処理をするためのインスタンス
+     */
+    private ImageService $ImageService;
 
     /**
      * コンストラクタ
@@ -33,37 +38,7 @@ class VisitHistoryController extends UserAppController
     public function __construct()
     {
         parent::__construct();
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $this->ImageService = new ImageService();
     }
 
     /**
@@ -98,9 +73,9 @@ class VisitHistoryController extends UserAppController
 
     /**
      * 編集画面を表示する
-     *
      * @param VisitHistory $visitHistory
      * @return View
+     * @throws ExclusionException
      */
     public function edit(VisitHistory $visitHistory): View
     {
@@ -109,30 +84,40 @@ class VisitHistoryController extends UserAppController
 
         $menus = Menu::where('hidden_flag', 0)->orderBy('rank')->get();
         $users = UserShopAuthorization::getSelectableUsers($this->shopId)->get();
+        $images = VisitHistoryImage::where('visit_history_id', $visitHistory->id)->get()->toArray();
 
-        return View('visitHistory.edit', compact('visitHistory', 'users', 'menus'));
+        return View('visitHistory.edit', compact('visitHistory', 'users', 'menus', 'images'));
     }
 
     /**
      * 来店履歴を更新する
      * @param Request $request
-     * @param visitHistory $visitHistory
+     * @param VisitHistory $visitHistory
      * @return RedirectResponse
+     * @throws ExclusionException
      */
-    public function update(Request $request, visitHistory $visitHistory)
+    public function update(Request $request, VisitHistory $visitHistory): RedirectResponse
     {
         // 編集して良いかチェック
         $this->_checkEditing($visitHistory);
 
         try {
-            // TODO
-            // $customer_id = $request->customer_id;
-            // if($request->image1) $this->_fileUpload($customer_id, $id, $request->file('image1'), 1 );
-            // if($request->image2) $this->_fileUpload($customer_id, $id, $request->image2, 2 );
-            // if($request->image3) $this->_fileUpload($customer_id, $id, $request->image3, 3 );
-
             // ここからDB更新
             DB::beginTransaction();
+
+            // ファイルを保存してDBに登録する
+            foreach (Common::ANGLE_LIST as $angleKey => $angleName) {
+                // 削除ボタンがチェックされていたら
+                if (!empty($request->imgDelete[$angleKey])) {
+                    // 論理削除
+                    $this->deleteVisitHistoryImage($visitHistory->id, $angleKey);
+                } else {
+                    // 対象のアングル画像が送信されていたら登録する
+                    if (!empty($request->image[$angleKey])) {
+                        $this->_fileUpload($request->image[$angleKey], $visitHistory->customer_id, $visitHistory->id, $angleKey);
+                    }
+                }
+            }
 
             $visitHistory->vis_time = $request->vis_time;
             $visitHistory->user_id = $request->user_id;
@@ -145,7 +130,7 @@ class VisitHistoryController extends UserAppController
         } catch (Exception $e) {
             DB::rollback();
             Log::error(' msg:' . $e->getMessage());
-            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の更新に失敗しました'])->withInput();
+            return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の更新に失敗しました', $e->getMessage()])->withInput();
         }
     }
 
@@ -164,26 +149,13 @@ class VisitHistoryController extends UserAppController
             Log::error(' msg:' . $e->getMessage());
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店履歴の削除に失敗しました'])->withInput();
         }
-
-    }
-
-    /**
-     * 渡されたファイルが登録可能な拡張子か確認するしてOKなら拡張子を返す
-     */
-    public function checkFileExtension($file)
-    {
-        // 渡された拡張子を取得
-        $extension = $file->extension();
-        if (!in_array($extension, $this->_fileExtension)) {
-            $fileExtension = json_encode($this->_fileExtension);
-            throw new \Exception("登録できる画像の拡張子は" . $fileExtension . "のみです。");
-        }
-        return $file->extension();
     }
 
     /**
      * 編集して良いかチェックする
+     * @param VisitHistory $visitHistory
      * @return void
+     * @throws ExclusionException
      */
     private function _checkEditing(VisitHistory $visitHistory): void
     {
@@ -196,53 +168,46 @@ class VisitHistoryController extends UserAppController
         }
 
         // TODO 対象の店舗でない場合
-
-
     }
 
     /**
-     * アングル毎に画像をアップロードする
-     *
+     * 画像をアップロードし、DBをアングル毎に更新すう
+     * @param UploadedFile $file
+     * @param int $customer_id
+     * @param int $visitHistoryId
+     * @param int $angle
+     * @throws Exception
      */
-    private function _fileUpload($customer_id, $id, $file, $angle)
+    private function _fileUpload(UploadedFile $file, int $customer_id, int $visitHistoryId, int $angle)
     {
-        if (!$file) throw new \Exception("ファイルが指定されていません");
-
-        // 登録可能な拡張子か確認して取得する
-        $extension = $this->checkFileExtension($file);
-
-        // ファイル名の作成 => {日時} _ {来店履歴ID(7桁に0埋め)} _ {ユーザーID(5桁に0埋め)} _ 'ユニーク文字列' . {拡張子}
-        $this->BaseFileName = sprintf(
-            '%s_%s_%s_%s.%s',
-            time(),
-            str_pad($id, 7, 0, STR_PAD_LEFT),
-            str_pad($this->loginUser->id, 5, 0, STR_PAD_LEFT),
-            sha1(uniqid(mt_rand(), true)),
-            $extension
-        );
-
         // 画像を保存する
-        $file->storeAs(Common::CUSTOMER_IMG_RESIZE_DIR, $this->BaseFileName);
-
-        // リサイズして保存する
-        $resizeImg = InterventionImage::make($file)
-            ->resize($this->_resize_maxWidth, null, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->orientate()
-            ->save(storage_path('app/public/customer_img_resize/') . $this->BaseFileName);
+        $fileName = $this->ImageService->customerImgStore($file, $visitHistoryId, $this->loginUser->id);
+        if ($fileName === '') {
+            $errMsg = $this->ImageService->getErrorMsg();
+            throw new Exception($errMsg);
+        }
 
         // VisitHistoryImage
         VisitHistoryImage::updateOrInsert(
             [
                 'customer_id' => $customer_id,
-                'visit_history_id' => $id,
+                'visit_history_id' => $visitHistoryId,
                 'angle' => $angle,
-                'delete_flag' => 0,
+                'deleted_at' => null,
             ], [
-                'img_pass' => $this->BaseFileName,
+                'img_pass' => $fileName,
             ]
         );
     }
 
+    /**
+     * 対象アングルの画像を削除する
+     * @param int $visitHistoryId
+     * @param int $angle
+     * @return void
+     */
+    private function deleteVisitHistoryImage(int $visitHistoryId, int $angle)
+    {
+        VisitHistoryImage::where('visit_history_id', $visitHistoryId)->where('angle', $angle)->delete();
+    }
 }

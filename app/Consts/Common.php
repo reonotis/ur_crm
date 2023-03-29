@@ -5,8 +5,8 @@ namespace App\Consts;
 class Common
 {
     // 画像ディレクトリ
-    public const CUSTOMER_IMG_DIR = 'storage/images/customer';
-    public const CUSTOMER_IMG_RESIZE_DIR = 'storage/images/customer/resize';
+    public const CUSTOMER_IMG_DIR = 'public/customer';
+    public const DISPLAY_CUSTOMER_IMG_RESIZE_DIR = 'customer/resize';
 
     // 顧客関係
     public const CUSTOMER_NO_LENGTH = 6;

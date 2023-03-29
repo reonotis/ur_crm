@@ -9,7 +9,4 @@ class VisitHistoryImage extends Model
 {
     use SoftDeletes; // 論理削除を有効化
 
-
-
-
 }

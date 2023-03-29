@@ -8,7 +8,7 @@
                 @if(empty($customerImgPass))
                     画像はありません
                 @else
-                    <img src="{{ asset(Common::CUSTOMER_IMG_RESIZE_DIR . '/' . $customerImgPass) }}" alt="" >
+                    <img src="{{ asset('storage/' . Common::DISPLAY_CUSTOMER_IMG_RESIZE_DIR . '/' . $customerImgPass) }}" alt="" >
                 @endif
             </div>
             <div class="customer-no" >{{ $customer->customer_no }}</div>
@@ -140,7 +140,7 @@
                                 <div class="flex" >
                                     @foreach($visitHistory->VisitHistoryImages AS $image)
                                         <div class="customer-image">
-                                            <img src="{{ asset(Common::CUSTOMER_IMG_RESIZE_DIR . '/' . $image->img_pass) }}" alt="{{ Common::ANGLE_LIST[$image->angle] }}" >
+                                            <img src="{{ asset('storage/' . Common::DISPLAY_CUSTOMER_IMG_RESIZE_DIR . '/' . $image->img_pass) }}" alt="{{ Common::ANGLE_LIST[$image->angle] }}" >
                                             <span >{{ Common::ANGLE_LIST[$image->angle] }}</span>
                                         </div>
                                     @endforeach

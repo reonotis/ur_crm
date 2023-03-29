@@ -10,6 +10,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property int id
+ * @property string vis_date
+ * @property string vis_time
+ * @property int user_id
+ * @property int menu_id
+ * @property string memo
+ */
 class VisitHistory extends Model
 {
     use SoftDeletes; // 論理削除を有効化

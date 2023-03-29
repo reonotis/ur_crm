@@ -79,7 +79,7 @@ Route::group(['prefix'=>'oldReport', 'middleware'=>'auth'], function(){
 // 来店履歴関係
 Route::group(['prefix'=>'visitHistory', 'middleware'=>'auth'], function(){
     Route::get('edit', 'VisitHistoryController@edit')->name('VisitHistory.edit');
-    Route::get('updates/{id}', 'VisitHistoryController@updates')->name('VisitHistory.updates');
+    Route::get('update/{id}', 'VisitHistoryController@update')->name('VisitHistory.update');
     Route::get('single_edit/{id}', 'VisitHistoryController@single_edit')->name('VisitHistory.single_edit');
     Route::get('destroy/{id}', 'VisitHistoryController@destroy')->name('VisitHistory.destroy');
     Route::get('delete/{id}/angle/{angle}', 'VisitHistoryController@delete')->name('VisitHistory.delete');
