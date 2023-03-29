@@ -64,7 +64,7 @@
                                             </label>
                                             <p class="img-paragraph" id="img-file{{ $angle }}-paragraph">選択されていません</p>
                                             @foreach($images as $image)
-                                                @if($image['angle'] === $angle)
+                                                @if($image['angle'] == $angle)
                                                     <div class="customer-image-box">
                                                         <img id="img{{ $angle }}" src="{{ asset('storage/' . Common::DISPLAY_CUSTOMER_IMG_RESIZE_DIR . '/' . $image['img_pass']) }}" alt="{{ Common::ANGLE_LIST[$image['angle']] }}">
                                                     </div>
