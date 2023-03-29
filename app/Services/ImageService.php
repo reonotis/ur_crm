@@ -17,9 +17,9 @@ class ImageService
      * @var array $fileExtensions 登録可能な画像の拡張子
      * @var int $resizeMaxWidth リサイズする際の幅の基準値
      */
-    private array $fileExtensions = ['jpg', 'jpeg', 'png'];
-    private int $resizeMaxWidth = 300;
-    private string $errMsg = '';
+    private $fileExtensions = ['jpg', 'jpeg', 'png'];
+    private $resizeMaxWidth = 300;
+    private $errMsg = '';
 
     /**
      * 画像を保存する
