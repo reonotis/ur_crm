@@ -30,7 +30,7 @@ class VisitHistoryController extends UserAppController
     /**
      * @var ImageService $ImageService 画像処理をするためのインスタンス
      */
-    private ImageService $ImageService;
+    private $ImageService;
 
     /**
      * コンストラクタ
