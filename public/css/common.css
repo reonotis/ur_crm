@@ -384,7 +384,8 @@ form {
     padding-inline-start: 0;
     padding: 0;
 }
-.menuContents>ul>li a {
+
+.menuContents > ul > li a {
 }
 
 .sidebarTitle {
@@ -405,12 +406,12 @@ form {
     cursor: pointer;
 }
 
-.sidebarTitleIn>a {
+.sidebarTitleIn > a {
     width: 100%;
     display: block;
 }
 
-.sidebarTitleIn>a>span{
+.sidebarTitleIn > a > span {
     width: 100%;
 }
 

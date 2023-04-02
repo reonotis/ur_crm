@@ -236,6 +236,7 @@ return [
 
         // original
         'Common' =>  App\Consts\Common::class,
+        'DataAnalyze' =>  App\Consts\DataAnalyze::class,
         'DatabaseConst' =>  App\Consts\DatabaseConst::class,
         'ErrorLog' =>  App\Consts\ErrorLog::class,
         'SessionConst' =>  App\Consts\SessionConst::class,

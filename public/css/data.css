@@ -1,0 +1,48 @@
+:root {
+}
+
+
+/*************************
+*
+*************************/
+.data-condition-title {
+    padding: .5rem;
+    width: 120px;
+    border-bottom: solid 1px var(--mainColor);
+    background: var(--mainColor);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.data-condition-content {
+    width: 350px;
+    border-bottom: solid 1px var(--mainColor);
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+}
+
+
+.data-analyzed {
+    width: 100%;
+    padding: 1rem;
+}
+
+table.data-table {
+    border: solid 1px #333;
+}
+
+table.data-table th {
+    background: var(--mainColor);
+    padding: .25rem;
+    border: 1px solid white;
+    color: white;
+}
+
+table.data-table td {
+    padding: .25rem;
+    border: solid 1px var(--mainColor);
+}

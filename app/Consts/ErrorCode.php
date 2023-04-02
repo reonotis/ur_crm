@@ -15,6 +15,7 @@ class ErrorCode
     // 共通系
     public const DEFAULT = 'CL-9900001';
     public const IRREGULAR_PROCESS = 'CL-9900002';
+    public const INVALID_DATE = 'CL-9900003';
 
     // ユーザー系
     public const CL_010001 = 'CL-010001';
@@ -62,6 +63,7 @@ class ErrorCode
         self::CL_030014 => "対象顧客は既にスタイリストが設定されている為、新たにスタイリストを設定できません\n管理者にお問い合わせください",
         self::CL_030015 => "対象顧客は既に本日の来店履歴が登録されている為、新たに来店履歴を登録することは出来ません",
         self::CL_040004 => "対象の来店履歴は本日の履歴ではないため編集できません",
+        self::INVALID_DATE => '不正な日付が選択されました',
     ];
 
     public const ERROR_LOG_LIST = [
@@ -81,6 +83,7 @@ class ErrorCode
         self::CL_030014 => '店舗(shop_id:%d)の顧客(customer_id:%d)に対して、既にスタイリストが設定されていますが、ログインユーザー(login_user_id:%d)が再度スタイリストを更新しようとしました',
         self::CL_030015 => '店舗(shop_id:%d)の顧客(customer_id:%d)に対してスタイリストを紐づける際に、既に本日の来店履歴が登録されているにも関わらず、新しく本日の来店履歴を登録しようとしました。',
         self::CL_040004 => '来店履歴(visit_history_id:%d)に対して、ログインユーザー(login_user_id:%d)が編集をしようとしました',
+        self::INVALID_DATE => '不正な日付(%d)が選択されました。 ',
     ];
 
     // ルーティングに対して不正なアクセスをしたときのエラーメッセージ

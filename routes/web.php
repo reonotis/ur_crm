@@ -47,6 +47,10 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('report/setStylist/{customer}', 'ReportController@setStylist')->name('report.setStylist');
     Route::post('report/settingStylist/{customer}', 'ReportController@settingStylist')->name('report.settingStylist');
 
+    // データ分析
+    Route::post('data/getAnalyzed', 'DataController@getAnalyzed')->name('data.getAnalyzed');
+    Route::get('data/{date?}', 'DataController@data')->name('data');
+
     // 顧客関係
     Route::resource('customer', 'CustomerController');
     Route::post('customer/destroyReport/{customer}', 'CustomerController@destroyReport')->name('customer.destroyReport');

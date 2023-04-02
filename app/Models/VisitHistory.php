@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Consts\DatabaseConst;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasMany;
@@ -14,13 +15,18 @@ use Illuminate\Support\Facades\DB;
  * @property int id
  * @property string vis_date
  * @property string vis_time
+ * @property int customer_id
+ * @property int shop_id
  * @property int user_id
  * @property int menu_id
  * @property string memo
  */
 class VisitHistory extends Model
 {
-    use SoftDeletes; // 論理削除を有効化
+    /**
+     * 論理削除を有効化
+     */
+    use SoftDeletes;
 
     /**
      * 日付に変更する必要がある属性。
@@ -116,9 +122,10 @@ class VisitHistory extends Model
 
     /**
      * @param [type] $shop_id
-     * @return void
+     * @return array
      */
-    public static function get_monthAndMenu($targetMonth, $shop_id){
+    public static function get_monthAndMenu($targetMonth, $shop_id)
+    {
         $fromMonth = $targetMonth;
         $toMonth = date("Y-m-20", strtotime($targetMonth . "+1 month"));
 
@@ -138,7 +145,8 @@ class VisitHistory extends Model
      * @param [type] $shop_id
      * @return void
      */
-    public static function get_monthAndStylist($targetMonth, $shop_id){
+    public static function get_monthAndStylist($targetMonth, $shop_id)
+    {
         // 指定期間を取得
         $fromMonth = $targetMonth;
         $toMonth = date("Y-m-20", strtotime($targetMonth . "+1 month"));
@@ -210,11 +218,12 @@ class VisitHistory extends Model
      * @param int $customer_id
      * @return void
      */
-    public static function checkTodayHistory($customer_id){
+    public static function checkTodayHistory($customer_id)
+    {
         $result = self::select()
-        ->where('customer_id', $customer_id)
-        ->where('vis_date', date('Y-m-d'))
-        ->get();
+            ->where('customer_id', $customer_id)
+            ->where('vis_date', date('Y-m-d'))
+            ->get();
         return $result;
     }
 
@@ -240,6 +249,39 @@ class VisitHistory extends Model
         ->orderBy('visit_histories.vis_time', 'desc')
         ;
         return $result;
+    }
+
+    /**
+     * @param string $fromDate
+     * @param string $endDate
+     * @param int $shopId
+     * @return mixed
+     */
+    public static function getByTargetPeriod(string $fromDate, string $endDate, int $shopId)
+    {
+        $select = [
+            'visit_histories.*',
+            'customers.f_name',
+            'customers.l_name',
+            'customers.sex',
+            'users.name',
+            'menus.menu_name',
+            'shops.shop_name',
+        ];
+        return self::select($select)
+            ->where('visit_histories.vis_date', '>=', $fromDate)
+            ->where('visit_histories.vis_date', '<=', $endDate)
+            ->where('visit_histories.shop_id', $shopId)
+            ->where('visit_histories.status', DatabaseConst::VISIT_HISTORY_STATUS_VISITED)
+            ->join('customers', function ($join) {
+                $join->on('visit_histories.customer_id', '=', 'customers.id')
+                    ->whereNull('customers.deleted_at');
+            })
+            ->leftJoin('users', 'users.id', 'visit_histories.user_id')
+            ->leftJoin('menus', 'menus.id', 'visit_histories.menu_id')
+            ->leftJoin('shops', 'shops.id', 'visit_histories.shop_id')
+            ->orderBy('visit_histories.vis_date', 'ASC')
+            ->orderBy('visit_histories.vis_time', 'ASC');
     }
 
 }

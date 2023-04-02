@@ -13,6 +13,9 @@ class DatabaseConst
     public const VISIT_RESERVES_STATUS_VISIT = 1;
     public const VISIT_RESERVES_STATUS_DELETE = 9;
 
+    // visit_histories
+    public const VISIT_HISTORY_STATUS_VISITED = 1;
+    public const VISIT_HISTORY_STATUS_CANCEL = 9;
 
 
 }
