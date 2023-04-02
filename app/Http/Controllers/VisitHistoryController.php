@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\{DB,
     Log
 };
 
+/**
+ *
+ */
 class VisitHistoryController extends UserAppController
 {
     /**

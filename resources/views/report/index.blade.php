@@ -55,7 +55,7 @@
                                     <td class="tbl-id" >{{ $visitHistory->id }}</td>
                                     <td>{{ $visitHistory->customer_no }}</td>
                                     <td>
-                                        @if(Auth::user()->userShopAuthorization->user_read)
+                                        @if($shopAuthorizationFlg->user_read)
                                             <a href="{{ route('customer.show', ['customer'=>$visitHistory->customer_id]) }}" class="customer-anchor sex-{{ $visitHistory->sex }}" >
                                                 {{ $visitHistory->f_name . " " . $visitHistory->l_name }}
                                                 <span class="honorific-title" >&nbsp;様</span>
@@ -107,7 +107,7 @@
                                         <td class="tbl-id" >{{ $todayCustomer->id }}</td>
                                         <td>{{ $todayCustomer->customer_no }}</td>
                                         <td>
-                                            @if(Auth::user()->userShopAuthorization->user_read)
+                                            @if($shopAuthorizationFlg->user_read)
                                                 <a href="{{ route('customer.show', ['customer'=>$todayCustomer->id]) }}" class="customer-anchor sex-{{ $todayCustomer->sex }}" >
                                                     {{ $todayCustomer->f_name . " " . $todayCustomer->l_name }}
                                                     <span class="honorific-title" >&nbsp;様</span>
@@ -128,7 +128,7 @@
                                         </td>
                                         <td>
                                             <div class="">
-                                                @if(Auth::user()->userShopAuthorization->customer_delete)
+                                                @if($shopAuthorizationFlg->customer_delete)
                                                     <form action="{{ route('customer.destroyReport', ['customer'=>$todayCustomer->id]) }}" method="POST" onsubmit="return confirmDialog({{ ConfirmMessage::CUSTOMER_DELETE }});" >
                                                         @method('POST')
                                                         @csrf

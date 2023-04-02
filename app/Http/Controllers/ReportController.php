@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Consts\ErrorCode;
-use App\Consts\SessionConst;
+use App\Consts\{ErrorCode, SessionConst};
 use App\Exceptions\ExclusionException;
-use App\Models\Customer;
-use App\Models\UserShopAuthorization;
-use App\Models\VisitHistory;
-use App\Services\CheckData;
+use App\Models\{Customer, UserShopAuthorization, VisitHistory};
+use App\Services\DateCheckService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -19,7 +16,10 @@ use Illuminate\Support\Facades\Log;
 
 class ReportController extends UserAppController
 {
-    public $errMsg = [];
+    /**
+     * @var DateCheckService $DateCheckService
+     */
+    public $DateCheckService;
 
     /**
      * コンストラクタ
@@ -27,6 +27,7 @@ class ReportController extends UserAppController
     public function __construct()
     {
         parent::__construct();
+        $this->DateCheckService = new DateCheckService();
     }
 
     /**
@@ -37,6 +38,7 @@ class ReportController extends UserAppController
     public function index(): View
     {
         $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+        $shopAuthorizationFlg = $this->userShopAuthorization;
 
         // 来店者情報を取得
         $visitHistories = VisitHistory::getTodayVisitHistory($shopId)->get();
@@ -45,12 +47,18 @@ class ReportController extends UserAppController
         $todayCustomers = Customer::getTodayCustomers($shopId)->get();
 
         // 基本レポートを作成
-        $basicReport = $this->_makeBasicReport(count($visitHistories), $shopId);
+        $basicReport = $this->makeBasicReport(count($visitHistories), $shopId);
 
-        return view('report.index', compact('todayCustomers', 'visitHistories', 'basicReport'));
+        return view('report.index', compact(
+            'todayCustomers',
+            'visitHistories',
+            'basicReport',
+            'shopAuthorizationFlg'
+        ));
     }
 
     /**
+     * @param Customer $customer
      * @return View
      * @throws ExclusionException
      */
@@ -75,7 +83,7 @@ class ReportController extends UserAppController
 
         // 既に本日の来店履歴が登録されているか確認する
         $his = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
-        $historyFlg = count($his)? true: false;
+        $historyFlg = count($his) ? true : false;
 
         // 選択可能なスタイリストを取得
         $users = UserShopAuthorization::getSelectableUsers($shopId)->get();
@@ -84,8 +92,6 @@ class ReportController extends UserAppController
     }
 
     /**
-     * Display a listing of the resource.
-     *
      * @param Request $request
      * @param Customer $customer
      * @return RedirectResponse
@@ -205,23 +211,12 @@ class ReportController extends UserAppController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
      * 基本レポート用の配列を生成して返却
      * @param int $todayCount
      * @param int $shopId
      * @return array
      */
-    private function _makeBasicReport(int $todayCount, int $shopId): array
+    private function makeBasicReport(int $todayCount, int $shopId): array
     {
         $basicReport = [];
         $basicReport['todayCount'] = $todayCount;

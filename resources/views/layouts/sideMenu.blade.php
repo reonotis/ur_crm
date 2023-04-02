@@ -30,7 +30,6 @@
     $myShop = session()->get(SessionConst::SELECTED_SHOP);
 ?>
 
-
 <div class="sideMenu open" >
     <div class="menuOpenButton" >>></div>
     <div class="menuContents" >

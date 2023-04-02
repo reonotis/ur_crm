@@ -7,6 +7,7 @@ use App\Consts\ErrorCode;
 use App\Consts\SessionConst;
 use App\Exceptions\ExclusionException;
 use App\Exceptions\ForbiddenException;
+use App\Models\{User, UserShopAuthorization};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -20,6 +21,8 @@ class UserAppController extends Controller
 
     /**
      * @var int $shopId 現在選択している店舗のID
+     * @var User $loginUser 現在ログインしているユーザー
+     * @var UserShopAuthorization $userShopAuthorization ログインユーザーが選択している店舗の権限
      */
     public $shopId;
     public $loginUser;

@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int id
+ * @property int shop_id
+ * @property int staff_id
  */
 class Customer extends Model
 {
@@ -89,64 +91,64 @@ class Customer extends Model
      */
     public static function setCondition(object $query, array $condition): object
     {
-        if (!empty($condition['customer_no'])){
+        if (!empty($condition['customer_no'])) {
             $query = self::setWhereLike($query, 'customer_no', $condition['customer_no']);
         }
-        if (!empty($condition['f_name'])){
+        if (!empty($condition['f_name'])) {
             $query = self::setWhereLike($query, 'f_name', $condition['f_name']);
         }
-        if (!empty($condition['l_name'])){
+        if (!empty($condition['l_name'])) {
             $query = self::setWhereLike($query, 'l_name', $condition['l_name']);
         }
-        if (!empty($condition['f_read'])){
+        if (!empty($condition['f_read'])) {
             $query = self::setWhereLike($query, 'f_read', $condition['f_read']);
         }
-        if (!empty($condition['l_read'])){
+        if (!empty($condition['l_read'])) {
             $query = self::setWhereLike($query, 'l_read', $condition['l_read']);
         }
-        if (!empty($condition['shop_id'])){
+        if (!empty($condition['shop_id'])) {
             $query = $query->where('shop_id', $condition['shop_id']);
         }
-        if (!empty($condition['staff_id'])){
+        if (!empty($condition['staff_id'])) {
             $query = $query->where('staff_id', $condition['staff_id']);
         }
-        if (!empty($condition['user'])){
+        if (!empty($condition['user'])) {
             $query = $query->where('staff_id', $condition['user']);
         }
 
-        if (!empty($condition['birthday_year'])){
+        if (!empty($condition['birthday_year'])) {
             $query = $query->where('birthday_year', $condition['birthday_year']);
         }
-        if (!empty($condition['birthday_month'])){
+        if (!empty($condition['birthday_month'])) {
             $query = $query->where('birthday_month', $condition['birthday_month']);
         }
-        if (!empty($condition['birthday_day'])){
+        if (!empty($condition['birthday_day'])) {
             $query = $query->where('birthday_day', $condition['birthday_day']);
         }
-        if (!empty($condition['tel'])){
+        if (!empty($condition['tel'])) {
             $query = self::setWhereLike($query, 'tel', $condition['tel']);
         }
-        if (!empty($condition['email'])){
+        if (!empty($condition['email'])) {
             $query = self::setWhereLike($query, 'email', $condition['email']);
         }
 
-        if (!empty($condition['zip21'])){
+        if (!empty($condition['zip21'])) {
             $query = self::setWhereLike($query, 'zip21', $condition['zip21']);
         }
-        if (!empty($condition['zip22'])){
+        if (!empty($condition['zip22'])) {
             $query = self::setWhereLike($query, 'zip22', $condition['zip22']);
         }
-        if (!empty($condition['pref21'])){
+        if (!empty($condition['pref21'])) {
             $query = self::setWhereLike($query, 'pref21', $condition['pref21']);
         }
-        if (!empty($condition['address21'])){
+        if (!empty($condition['address21'])) {
             $query = self::setWhereLike($query, 'address21', $condition['address21']);
         }
-        if (!empty($condition['street21'])){
+        if (!empty($condition['street21'])) {
             $query = self::setWhereLike($query, 'street21', $condition['street21']);
         }
 
-        if (empty($condition['hidden_flag'])){
+        if (empty($condition['hidden_flag'])) {
             $query = $query->where('hidden_flag', DatabaseConst::FLAG_OFF);
         }
         return $query;
@@ -164,9 +166,9 @@ class Customer extends Model
         $HANKAKUValues = mb_convert_kana($values, 's');
 
         // 半角スペース区切りで配列にする
-        $valueArray = explode (' ' , $HANKAKUValues);
+        $valueArray = explode(' ', $HANKAKUValues);
 
-        foreach($valueArray AS $value){
+        foreach ($valueArray as $value) {
             $query = $query->where('customers.' . $columName, 'LIKE', '%' . $value . '%');
         }
         return $query;
