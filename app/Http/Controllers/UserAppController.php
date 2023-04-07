@@ -38,7 +38,7 @@ class UserAppController extends Controller
         $this->middleware(function ($request, $next) {
             $this->loginUser = Auth::user();
             $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
-            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization->toArray(), true));
+            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization, true));
 
             // 退職している場合
             if ($this->loginUser->authority_level == Common::AUTHORITY_RETIREMENT) {
