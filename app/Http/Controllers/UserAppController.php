@@ -38,6 +38,7 @@ class UserAppController extends Controller
         $this->middleware(function ($request, $next) {
             $this->loginUser = Auth::user();
             $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
+            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization->toArray(), true));
 
             // 退職している場合
             if ($this->loginUser->authority_level == Common::AUTHORITY_RETIREMENT) {
@@ -48,8 +49,10 @@ class UserAppController extends Controller
             $shopService = app()->make('ShopService');
             if (!$shopService->shopCheck($this->loginUser->id)) {
                 Redirect::route('shop.deselect')->send();
+                return $next($request);
             }
             $shop = session()->get(SessionConst::SELECTED_SHOP);
+            Log::debug('line:' . __LINE__ . ' $shop:' . print_r($shop->toArray(), true));
             $this->shopId = $shop->id;
 
             // 権限がない操作を実行していないかチェックをする
@@ -78,6 +81,7 @@ class UserAppController extends Controller
         if (empty($this->userShopAuthorization)) {
             Redirect::route('myPage')->send();
         }
+        Log::info($this->userShopAuthorization);
         if ($this->userShopAuthorization->{$authName}) {
             return;
         }

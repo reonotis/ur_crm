@@ -2,6 +2,7 @@
 
 namespace App\Providers\ShopService;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\{Shop, UserShopAuthorization};
 use App\Consts\SessionConst;
 use Exception;
@@ -24,6 +25,7 @@ class ShopService
         // 選択できる店舗を全て取得
 //        $selectableShops = UserShopAuthorization::getShopByUserId($loginUserId);
         $selectableShops = Shop::getMyShop($loginUserId);
+        Log::debug('line:' . __LINE__ . ' $selectableShops:' . print_r($selectableShops->toArray(), true));
         if (count($selectableShops) == 0) { // 選択できる店舗がない場合、エラー処理
             session()->flash(SessionConst::FLASH_MESSAGE_ERROR, ['どの店舗も閲覧する権限がありません']);
             return false;

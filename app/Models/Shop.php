@@ -23,15 +23,9 @@ class Shop extends Model
             ->where('user_id', $userId);
     }
 
-
-
-
-
-
-
     /**
      * @param int $loginUserId
-     * @return void
+     * @return object
      */
     public static function getMyShop(int $loginUserId)
     {

@@ -24,7 +24,7 @@ class CreateVisitReservesTable extends Migration
             $table->timestamp('reserve_time')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('予約を入れた日時')	;
             $table->string('memo','1000') ->nullable()->comment('メモ');
 
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時')	;
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時');
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
             $table->softDeletes();
         });
