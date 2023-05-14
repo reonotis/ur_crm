@@ -20,12 +20,12 @@ class UserAppController extends Controller
 {
 
     /**
-     * @var int $shopId 現在選択している店舗のID
      * @var User $loginUser 現在ログインしているユーザー
+     * @var int $shopId 現在選択している店舗のID
      * @var UserShopAuthorization $userShopAuthorization ログインユーザーが選択している店舗の権限
      */
-    public $shopId;
     public $loginUser;
+    public $shopId;
     public $userShopAuthorization;
 
     /**
@@ -37,8 +37,6 @@ class UserAppController extends Controller
     {
         $this->middleware(function ($request, $next) {
             $this->loginUser = Auth::user();
-            $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
-            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization, true));
 
             // 退職している場合
             if ($this->loginUser->authority_level == Common::AUTHORITY_RETIREMENT) {
@@ -54,6 +52,8 @@ class UserAppController extends Controller
             $shop = session()->get(SessionConst::SELECTED_SHOP);
             Log::debug('line:' . __LINE__ . ' $shop:' . print_r($shop->toArray(), true));
             $this->shopId = $shop->id;
+            $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
+            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization, true));
 
             // 権限がない操作を実行していないかチェックをする
             $this->routeAuthCheck();
