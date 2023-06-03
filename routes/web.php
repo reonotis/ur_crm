@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    // return view('welcome');
-    return view('auth/login');
-});
+//Route::get('/', function () {
+//    Route::get('/home', 'HomeController@index')->name('home');
+////    return view('auth/login');
+//});
 
 Auth::routes([
     'verify'   => true, // メール確認機能（※5.7系以上のみ）
@@ -29,6 +29,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/error/forbidden/{code?}', 'ErrorController@forbiddenError')->name('forbiddenError');
 
     // TOPページ
+    Route::get('/', 'HomeController@index')->name('myPage');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/myPage', 'HomeController@index')->name('myPage');
 
