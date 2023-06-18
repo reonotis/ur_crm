@@ -63,6 +63,20 @@ function confirmDialog(msg) {
 }
 
 /**
+ * ローディング開始
+ */
+function startRoadContent() {
+    $('#loading').css('display','block');
+}
+
+/**
+ * ローディング終了
+ */
+function endRoadContent() {
+    $('#loading').css('display','none');
+}
+
+/**
  * @param {string} toFormat - 返却する日時のフォーマット
  * @param {string|null} tmpDate
  * @param {string|null} fromFormat

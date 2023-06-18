@@ -1,31 +1,17 @@
-/**
- */
-function startRoadContent() {
-    console.log('クルクル実施');
-}
-
-/**
- */
-function endRoadContent() {
-    console.log('クルクル終了');
-}
-
-/**
- */
-$("#getDataButton").click(function () {
-    displayHistoryData();
-});
-
-
 window.addEventListener('load', () => {
     let params = new URL(window.location.href).searchParams;
-
     if (params.get('back')) {
         displayHistoryData();
     }
 })
 
+$("#getDataButton").click(function () {
+    displayHistoryData();
+});
 
+/**
+ * 検索条件に伴い検索実行し、結果を表示する
+ */
 function displayHistoryData() {
     const errMsg = checkDataValid();
     if (errMsg) {
@@ -164,6 +150,11 @@ function setStylist(data) {
     $('#data-analyzed').html(html);
 }
 
+/**
+ * スタイリストの施術情報を表示する為のHTMLを作成する
+ * @param data
+ * @returns {string}
+ */
 function makeHTMLForTypeStylist(data) {
 
     const entries = Object.entries(data)
@@ -183,7 +174,12 @@ function makeHTMLForTypeStylist(data) {
         html += '<td rowspan="' + value[1].length + '">' + value[1][0]['name'] + "</td>";
         html += '<td rowspan="' + value[1].length + '">' + value[1].length + "名</td>";
         value[1].forEach(history => {
-            html += '<td>' + history['f_name'] + "</td>";
+            html += '<td>';
+
+            html += "<a href='../customer/" + history['customer_id'] + "' class='customer-anchor sex-" + history['sex'] + "' >";
+                html += history['f_name'] + " " + history['l_name'] + " 様</td>";
+            html += "</a>";
+            html += '</td>';
             html += '<td>' + changeFormat("YYYY年mm月dd日", history['vis_date']) + "</td>";
             html += '<td>' + changeFormat("HH:ii", history['vis_time'], "HH:ii:ss") + "</td>";
             html += "</tr>";

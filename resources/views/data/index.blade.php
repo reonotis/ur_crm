@@ -2,6 +2,7 @@
 @section('pageTitle', 'データ分析')
 
 @section('content')
+    <div id="loading" style="display: none"></div>
     <div class="">
         <div class="flex mb-2">
             <div class="data-condition-title">対象期間</div>
@@ -32,9 +33,7 @@
         </div>
     </div>
     <div class="flex">
-        <div class="data-analyzed" id="data-analyzed">
-            ここにデータが入ります
-        </div>
+        <div class="data-analyzed" id="data-analyzed"></div>
     </div>
 
 @endsection
