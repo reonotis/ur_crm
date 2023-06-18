@@ -1,18 +1,32 @@
 /**
  */
-function startRoadContent(){
+function startRoadContent() {
     console.log('クルクル実施');
 }
 
 /**
  */
-function endRoadContent(){
+function endRoadContent() {
     console.log('クルクル終了');
 }
 
 /**
  */
 $("#getDataButton").click(function () {
+    displayHistoryData();
+});
+
+
+window.addEventListener('load', () => {
+    let params = new URL(window.location.href).searchParams;
+
+    if (params.get('back')) {
+        displayHistoryData();
+    }
+})
+
+
+function displayHistoryData() {
     const errMsg = checkDataValid();
     if (errMsg) {
         alert(errMsg);
@@ -37,7 +51,7 @@ $("#getDataButton").click(function () {
                 setVisitHistory(data)
                 break
             case '2':
-                console.log('222222222222')
+                setStylist(data)
                 break
             case '3':
                 console.log('333333333333')
@@ -46,12 +60,12 @@ $("#getDataButton").click(function () {
         endRoadContent()
     }).fail(function (error) { // ajax失敗時の処理
         alert(error.statusText + ' : データの取得に失敗しました')
-        if(error.status === 419){
+        if (error.status === 419) {
             alert('CSRF : 画面をリロードしてから再度同様の動作を行って下さい')
         }
         endRoadContent()
     })
-});
+}
 
 /**
  * 日付の妥当性を検証し、問題がある場合はエラーメッセージを返す
@@ -60,6 +74,7 @@ $("#getDataButton").click(function () {
 function checkDataValid() {
     const from = $('#fromDate').val();
     const end = $('#endDate').val();
+    const getType = $('input:radio[name="getType"]:checked').val();
 
     if (from === '') {
         return '開始日が設定されていません';
@@ -70,6 +85,10 @@ function checkDataValid() {
     if (from > end) {
         return '開始日が終了日よりも過去に設定されています';
     }
+    if (getType === undefined) {
+        return '取得情報が設定されていません';
+    }
+
 }
 
 /**
@@ -91,15 +110,15 @@ function setVisitHistory(data) {
  * @param data
  * @returns {string}
  */
-function makeHTMLForTypeVisitHistory(data){
+function makeHTMLForTypeVisitHistory(data) {
     let html = '';
     html = "<table class='data-table'>";
-        html += "<tr>";
-        html += "<th>" + 'id' + "</th>";
-        html += "<th>" + '来店日時' + "</th>";
-        html += "<th>" + '担当者' + "</th>";
-        html += "<th>" + 'メニュー' + "</th>";
-        html += "<th>" + '顧客名' + "</th>";
+    html += "<tr>";
+    html += "<th>" + 'id' + "</th>";
+    html += "<th>" + '来店日時' + "</th>";
+    html += "<th>" + '担当者' + "</th>";
+    html += "<th>" + 'メニュー' + "</th>";
+    html += "<th>" + '顧客名' + "</th>";
     html += "</tr>";
     data.forEach(value => {
         let year = parseInt(value['vis_date'].substring(0, 4));
@@ -107,14 +126,7 @@ function makeHTMLForTypeVisitHistory(data){
         let day = parseInt(value['vis_date'].substring(8, 10));
         let hour = parseInt(value['vis_time'].substring(0, 2));
         let minute = parseInt(value['vis_time'].substring(3, 5));
-        let date = new Date(year, month, day, hour, minute)
-
-        let format_str = 'YYYY-mm-dd HH:ii';
-        format_str = format_str.replace(/YYYY/g, date.getFullYear());
-        format_str = format_str.replace(/mm/g, ("0" + date.getMonth()).slice(-2));
-        format_str = format_str.replace(/dd/g, ("0" + date.getDate()).slice(-2));
-        format_str = format_str.replace(/HH/g, ("0" + date.getHours()).slice(-2));
-        format_str = format_str.replace(/ii/g, ("0" + date.getMinutes()).slice(-2));
+        let date = changeFormat('YYYY-mm-dd HH:ii', year + '/' + month + '/' + day + ' ' + hour + ':' + minute);
 
         let manu_name = '';
         if (value['menu_name'] !== null) {
@@ -123,14 +135,59 @@ function makeHTMLForTypeVisitHistory(data){
 
         html += "<tr>";
         html += "<td>" + value['id'] + "</td>";
-        html += "<td>" + format_str + "</td>";
+        html += "<td>" + date + "</td>";
         html += "<td>" + value['name'] + "</td>";
         html += "<td>" + manu_name + "</td>";
         html += "<td>";
-            html += "<a href='../customer/" + value['customer_id'] + "' class='customer-anchor sex-" + value['sex'] + "' >";
-            html += value['f_name'] + value['l_name'];
-            html += "</a>";
+        html += "<a href='../customer/" + value['customer_id'] + "' class='customer-anchor sex-" + value['sex'] + "' >";
+        html += value['f_name'] + " " + value['l_name'] + " 様";
+        html += "</a>";
         html += "</td>";
+        html += "</tr>";
+    });
+    html += "</table>";
+
+    return html;
+}
+
+/**
+ * 分析結果にスタイリスト別の検索結果を表示する
+ * @param data
+ */
+function setStylist(data) {
+    let html;
+    if (data.length === 0) {
+        html = "データはありません";
+    } else {
+        html = makeHTMLForTypeStylist(data);
+    }
+    $('#data-analyzed').html(html);
+}
+
+function makeHTMLForTypeStylist(data) {
+
+    const entries = Object.entries(data)
+
+    let html = '';
+    html = "<table class='data-table'>";
+    html += "<tr>";
+    html += "<th>スタイリスト</th>";
+    html += "<th>施術人数</th>";
+    html += "<th>お客様名</th>";
+    html += "<th>来店日</th>";
+    html += "<th>来店時間</th>";
+    html += "</tr>";
+
+    entries.forEach(value => {
+        html += "<tr>";
+        html += '<td rowspan="' + value[1].length + '">' + value[1][0]['name'] + "</td>";
+        html += '<td rowspan="' + value[1].length + '">' + value[1].length + "名</td>";
+        value[1].forEach(history => {
+            html += '<td>' + history['f_name'] + "</td>";
+            html += '<td>' + changeFormat("YYYY年mm月dd日", history['vis_date']) + "</td>";
+            html += '<td>' + changeFormat("HH:ii", history['vis_time'], "HH:ii:ss") + "</td>";
+            html += "</tr>";
+        })
         html += "</tr>";
     });
     html += "</table>";

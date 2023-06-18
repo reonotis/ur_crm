@@ -6,20 +6,22 @@
         <div class="flex mb-2">
             <div class="data-condition-title">対象期間</div>
             <div class="data-condition-content">
-                <input type="date" id="fromDate" value="<?= date('Y-m-d'); ?>">～
-                <input type="date" id="endDate" value="<?= date('Y-m-d'); ?>">
+                <input type="date" id="fromDate" value="{{ $dataSearch['fromDate'] }}">～
+                <input type="date" id="endDate" value="{{ $dataSearch['endDate'] }}">
             </div>
         </div>
         <div class="flex mb-2">
             <div class="data-condition-title">取得情報</div>
-            <div class="data-condition-content flex">
+            <div class="data-condition-content flex analyze-radio">
                 @foreach(DataAnalyze::ANALYZE_TYPE_LIST as $analyzeTypeKye=> $analyzeType)
-                    <div class="">
-                        <label>
-                            <input type="radio" name="getType" value="{{ $analyzeTypeKye }}" checked="checked">
-                            {{ $analyzeType }}
-                        </label>
-                    </div>
+                    <label>
+                        <input type="radio" name="getType" value="{{ $analyzeTypeKye }}"
+                           @if( $analyzeTypeKye == $dataSearch['type'])
+                                checked
+                           @endif
+                        >
+                        {{ $analyzeType }}
+                    </label>
                 @endforeach
             </div>
         </div>

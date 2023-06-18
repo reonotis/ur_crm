@@ -16,14 +16,40 @@
     justify-content: center;
 }
 
-
 .data-condition-content {
     width: 350px;
     border-bottom: solid 1px var(--mainColor);
-    padding: .5rem;
+    padding: .25rem .5rem;
     display: flex;
     align-items: center;
 }
+
+
+.analyze-radio label {
+    position: relative;
+    margin-right: .4em;
+    padding: .25em .7em;
+    border: 1px solid var(--mainColor);
+    border-radius: 5px;
+    background-color: var(--mainColor3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.analyze-radio label:has(:checked) {
+    background-color: var(--mainColor);
+    color: #fff;
+}
+
+.analyze-radio input {
+    display: none;
+}
+
+
+
+
+
 
 
 .data-analyzed {
@@ -37,12 +63,15 @@ table.data-table {
 
 table.data-table th {
     background: var(--mainColor);
-    padding: .25rem;
+    padding: .5rem;
     border: 1px solid white;
     color: white;
+    text-align: center;
 }
 
 table.data-table td {
-    padding: .25rem;
+    padding: .25rem .5rem;
     border: solid 1px var(--mainColor);
 }
+
+

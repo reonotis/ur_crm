@@ -50,10 +50,8 @@ class UserAppController extends Controller
                 return $next($request);
             }
             $shop = session()->get(SessionConst::SELECTED_SHOP);
-            Log::debug('line:' . __LINE__ . ' $shop:' . print_r($shop->toArray(), true));
             $this->shopId = $shop->id;
             $this->userShopAuthorization = $this->loginUser->userShopAuthorization;
-            Log::debug('line:' . __LINE__ . ' userShopAuthorization:' . print_r($this->userShopAuthorization, true));
 
             // 権限がない操作を実行していないかチェックをする
             $this->routeAuthCheck();
