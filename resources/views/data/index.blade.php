@@ -28,8 +28,9 @@
         </div>
     </div>
     <div class="flex">
-        <div class="basic-report-area">
+        <div class="">
             <input type="button" id="getDataButton" value="取得">
+            <a href="?back=true" class="submit back-btn min-btn" >前回検索した条件で取得する</a>
         </div>
     </div>
     <div class="flex">

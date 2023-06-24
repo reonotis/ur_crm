@@ -7,6 +7,7 @@ use App\Exceptions\ExclusionException;
 use App\Consts\{Common, ErrorCode, SessionConst};
 use App\Models\{Customer, CustomerNoCounter, User, UserShopAuthorization, VisitHistory};
 use App\Models\Shop;
+use App\Services\CheckData;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -217,7 +218,7 @@ class CustomerController extends UserAppController
      */
     public function show(Customer $customer): View
     {
-        if(empty($this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read)){
+        if (empty($this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read)) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030002, [
                 $customer->shop_id,
                 $customer->id,
@@ -225,8 +226,10 @@ class CustomerController extends UserAppController
             ]);
         }
 
+        $customer = $this->setAccompanyContents($customer);
+
         // 権限が無ければ顧客情報にマスクをかける
-        if(!$this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read_none_mask){
+        if (!$this->loginUser->checkAuthByShopId($customer->shop_id)->customer_read_none_mask) {
             $customer = $this->_customerMask($customer);
         }
 
@@ -562,5 +565,19 @@ class CustomerController extends UserAppController
 
         return $myShopUsers;
     }
+
+    /**
+     * @param Customer $customer
+     * @return $customer
+     */
+    private function setAccompanyContents($customer)
+    {
+
+        $customer->birthday = CheckData::displayBirthday($customer->birthday_year, $customer->birthday_month, $customer->birthday_day);
+        $customer->age = CheckData::displayCalcAge($customer->birthday_year, $customer->birthday_month, $customer->birthday_day);
+
+        return $customer;
+    }
+
 
 }

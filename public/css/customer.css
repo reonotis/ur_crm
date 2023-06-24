@@ -108,27 +108,28 @@
     font-size: 1.2rem;
     font-weight: 600;
 }
+.rem-3\/4 {
+    font-size: 0.8rem;
+}
+.rem-1\/2 {
+    font-size: 0.5rem;
+}
 .customer-name {
     width: calc(100% - 10px);
-    margin-bottom: 1rem;
+    margin-bottom: .25rem;
     padding: 0 0 0 10px;
     font-size: 1.2rem;
     line-height: 0.9em;
 }
-.rem-3\/4 {
-    font-size: 0.8rem;
+.customer-read{
+    font-size: .8rem;
 }
-.customer-sex {
-    margin-bottom: 1rem;
-}
-.customer-birthday {
-    margin-bottom: 1rem;
-}
-.customer-shop {
-    margin-bottom: 1rem;
-}
+.customer-sex,
+.customer-age,
+.customer-birthday,
+.customer-shop,
 .customer-staff {
-    margin-bottom: 1rem;
+    margin-bottom: .25rem;
 }
 .customer-show-title {
     width: 100%;

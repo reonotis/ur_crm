@@ -13,9 +13,9 @@
             </div>
             <div class="customer-no" >{{ $customer->customer_no }}</div>
             <div class="customer-name" >
-                <p>{{ $customer->f_name }}&nbsp;{{ $customer->l_name }}&nbsp;<span class="rem-3/4">様</span></p>
+                <p>{{ $customer->f_name }}&nbsp;{{ $customer->l_name }}&nbsp;<span class="rem-1/2">様</span></p>
                 <p class="customer-read" >
-                    (&nbsp;<span class="rem-3/4">{{ $customer->f_read }}&nbsp;{{ $customer->l_read }}</span>&nbsp;)&nbsp;<span class="rem-3/4">サマ</span>
+                    (&nbsp;<span class="rem-1/2">{{ $customer->f_read }}&nbsp;{{ $customer->l_read }}</span>&nbsp;)&nbsp;<span class="rem-1/2">サマ</span>
                 </p>
             </div >
             <div class="customer-sex" >性別&nbsp;:&nbsp;
@@ -25,7 +25,14 @@
                     </span>
                 @endif
             </div >
-            <div class="customer-birthday" ></div >
+            <div class="customer-age" >
+                年齢&nbsp;:&nbsp;
+                {{ $customer->age }}
+            </div >
+            <div class="customer-birthday" >
+                生年月日&nbsp;:&nbsp;
+                {{ $customer->birthday }}
+            </div >
             <div class="customer-shop" >
                 登録店舗&nbsp;:&nbsp;
                 @if(!empty($customer->shop->shop_name))
