@@ -324,6 +324,7 @@ class CustomerController extends UserAppController
             $customer->birthday_year = $request->birthday_year;
             $customer->birthday_month = $request->birthday_month;
             $customer->birthday_day = $request->birthday_day;
+            $customer->sex = $request->sex;
             $customer->tel = $request->tel;
             $customer->email = $request->email;
             $customer->zip21 = $request->zip21;

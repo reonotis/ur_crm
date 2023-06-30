@@ -46,7 +46,7 @@
                         <div class="medical-title" >性別</div>
                         <div class="medical-contents" >
                             @foreach(Common::SEX_LIST as $sexKey => $sexName)
-                                <label class="sex-lavel" >
+                                <label class="sex-label" >
                                     <input type="radio" name="sex" value="{{ $sexKey }}" >{{ $sexName }}
                                 </label>
                             @endforeach

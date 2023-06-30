@@ -80,6 +80,17 @@
                             </div>
                         </div>
                         <div class="customer-edit-row" >
+                            <div class="customer-edit-title" >性別</div>
+                            <div class="customer-edit-content" >
+                                @foreach(Common::SEX_LIST as $sexKey => $sexName)
+                                    <label class="sex-label" >
+                                        <input type="radio" name="sex" value="{{ $sexKey }}" @if ($customer->sex == $sexKey)?? checked="checked"; @endif >{{ $sexName }}
+
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="customer-edit-row" >
                             <div class="customer-edit-title" >電話番号</div>
                             <div class="customer-edit-content" >
                                 <input type="text" name="tel" id="tel" class="form-control" value="{{ old('tel')? old('tel'): $customer->tel }}" placeholder="090-1234-5678" >
