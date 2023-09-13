@@ -59,7 +59,7 @@ class ShopSettingController extends UserAppController
         $businessHourType = $this->shopBusinessHourService->getBusinessHourType($this->shopId);
         $shopBusinessHours = $this->shopBusinessHourService->getMyShopBusinessHourList($this->shopId, $businessHourType);
 
-        $futureReserve = true; // TODO 未来の予約があるか取得
+        $futureReserve = false; // TODO 予約機能が出来たら未来の予約があるか取得しておく
 
         return view('shop_setting.business_hour_edit')->with([
             'closeDay' => $closeDay,
