@@ -6,4 +6,5 @@ class ConfirmMessage
 {
     public const CUSTOMER_DELETE = '\'この顧客を削除します。宜しいでしょうか？\nこの操作は取り消せません\'';
     public const VISIT_HISTORY_DELETE = '\'この来店履歴を削除します。宜しいでしょうか？\nこの操作は取り消せません\'';
+    public const SHOP_BUSINESS_FOUR_DELETE = '\'この設定を削除します。宜しいでしょうか？\nこの操作は取り消せません\'';
 }

@@ -40,7 +40,6 @@ class VisitHistoryService
             $data[$row['user_id']][] = $row;
         }
 
-        log::info(print_r($data, true));
         return $data;
     }
 

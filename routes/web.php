@@ -63,6 +63,14 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
     Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
     Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
+
+    // 店舗設定
+    Route::get('shop_setting/index', 'ShopSettingController@index')->name('shop_setting.index');
+    Route::get('shop_setting/business_hour_edit', 'ShopSettingController@businessHourEdit')->name('shop_setting.business_hour_edit');
+    Route::post('shop_setting/business_hour_register_everyday', 'ShopSettingController@businessHourRegisterWithEveryday')->name('shop_setting.business_hour_register_everyday');
+    Route::post('shop_setting/business_hour_edit_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourEditWithEveryday')->name('shop_setting.business_hour_edit_everyday');
+    Route::get('shop_setting/business_hour_delete_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourDeleteWithEveryday')->name('shop_setting.business_hour_delete_everyday');
+
 });
 
 // 過去日報

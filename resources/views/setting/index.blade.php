@@ -1,5 +1,5 @@
 @extends('layouts.setting')
-@section('pageTitle', '各種設定')
+@section('pageTitle', 'アカウント情報')
 
 @section('content')
     <div class="container">

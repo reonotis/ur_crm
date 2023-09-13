@@ -58,7 +58,7 @@
                             <p id="birthday_year_error_message" class="error-message" ></p>
                             <p id="birthday_month_error_message" class="error-message" ></p>
                             <p id="birthday_day_error_message" class="error-message" ></p>
-                            <div class="flex-center-middle" >
+                            <div class="flex-start-middle" >
                                 <div class="w-32" style="margin-right: 0.5rem;">
                                     <input type="number" class="form-control" id="birthday_year" name="birthday_year" value="{{ old('birthday_year') }}" placeholder="年" min="1900" max="2022" >
                                 </div>
@@ -93,7 +93,7 @@
                             <div class="w-full">
                                 <p id="zip21_error_message" class="error-message" ></p>
                                 <p id="zip22_error_message" class="error-message" ></p>
-                                <div class="w-full flex-center-middle" >
+                                <div class="w-full flex-start-middle" >
                                     <div class="w-20" style="padding-right: 0.5rem;">
                                         <input class="form-control" type="text" name="zip21" id="zip21" value="{{ old('zip21') }}" placeholder="150" onKeyUp="AjaxZip3.zip2addr('zip21','zip22','pref21','address21','street21');" >
                                     </div>

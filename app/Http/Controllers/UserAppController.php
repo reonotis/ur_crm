@@ -79,7 +79,8 @@ class UserAppController extends Controller
         if (empty($this->userShopAuthorization)) {
             Redirect::route('myPage')->send();
         }
-        Log::info($this->userShopAuthorization);
+
+        // ルーティングに対する権限があれば処理終了
         if ($this->userShopAuthorization->{$authName}) {
             return;
         }

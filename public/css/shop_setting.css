@@ -1,0 +1,117 @@
+:root {
+    --basic-report-area: 250px;
+}
+
+/*************************
+* 店舗設定画面
+*************************/
+.shop-setting-h4 {
+    margin-bottom: .25rem;
+    font-size: 1.1rem;
+    color: var(--mainColor);
+    font-weight: 700;
+}
+
+.setting-contents {
+    position: relative;
+    margin: 0 0 1rem;
+    padding: 0;
+    background-color: #fff;
+}
+
+.setting-title {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    background: var(--active-color);
+    color: white;
+    border: solid 1px var(--active-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.setting-title > .inline-anker {
+    position: absolute;
+    right: 0;
+    padding: 0.12rem 1rem;
+    margin-right: 3rem;
+    background: white;
+    border: solid 1px white;
+    border-radius: 1rem;
+    transition: var(--transition-hover);
+}
+
+.setting-title > .inline-anker:hover {
+    background: var(--mainColor);
+    color: white;
+}
+
+.setting-data {
+    padding: 1rem 0.5rem;
+    border: 1px solid var(--mainColor);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.setting-tbl {
+    width: 100%;
+    text-align: center;
+}
+
+.setting-tbl th {
+    background: var(--mainColor3);
+    color: var(--mainColor);
+}
+.setting-tbl.edit th {
+    background: var(--green-200);
+    color: var(--green-800);
+}
+
+.setting-tbl th,
+.setting-tbl td {
+    padding: 5px;
+}
+
+.setting-tbl .apply-type-1 {
+}
+
+.setting-tbl  tbody tr.apply-type-2 td {
+    border-top: solid 5px var(--mainColor);
+    border-bottom: solid 5px var(--mainColor);
+}
+
+.setting-tbl  tbody tr.apply-type-2 td:first-child {
+    border-left: solid 5px var(--mainColor);
+}
+
+.setting-tbl  tbody tr.apply-type-2 td:last-child {
+    border-right: solid 5px var(--mainColor);
+}
+
+.setting-tbl .apply-type-3 {
+    background: #aaa;
+}
+
+
+
+.content-area {
+    border: solid 1px var(--mainColor);
+    margin-bottom: 3rem;
+
+}
+
+.content-title {
+    padding: .25rem .5rem;
+    border-bottom: solid 1px var(--mainColor);
+}
+
+.content-data {
+    padding: .25rem .5rem;
+}
+
+
+
+
