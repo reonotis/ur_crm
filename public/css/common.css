@@ -683,6 +683,42 @@ input[type="submit"],
 
 
 /*************************
+* タブ関係
+*************************/
+.tab-navigation-area {
+    display: flex;
+}
+
+.tab-navigation-area label {
+    position: relative;
+    margin-right: .4em;
+    padding: .25em .7em;
+    border-top: 1px solid var(--mainColor);
+    border-right: 1px solid var(--mainColor);
+    border-left: 1px solid var(--mainColor);
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.tab-navigation-area label:has(:checked) {
+    background-color: var(--mainColor);
+    color: #fff;
+}
+
+.tab-navigation-area input {
+    display: none;
+}
+
+.tab-contents-area {
+
+    padding: 0.5rem;
+    border: 1px solid var(--mainColor);
+}
+
+
+/*************************
 * テーブル
 *************************/
 .list-tbl {
@@ -741,6 +777,12 @@ input[type="submit"],
 * その他共通系
 *************************/
 .flex-center-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-start-middle {
     display: flex;
     align-items: center;
     justify-content: flex-start;
