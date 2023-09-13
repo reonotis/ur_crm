@@ -1,8 +1,9 @@
 <?php
 
+use App\Consts\ShopSettingConst;
 use App\Models\Shop;
-use Carbon\Carbon;
 use App\Models\ShopBusinessHour;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -43,7 +44,7 @@ class CreateShopBusinessHourTable extends Migration
         foreach ($shops as $shop) {
             $records[] = [
                 'shop_id' => $shop->id,
-                'business_hour_type' => ShopBusinessHour::BUSINESS_HOUR_EVERYDAY,
+                'business_hour_type' => ShopSettingConst::BUSINESS_HOUR_EVERYDAY,
                 'business_open_time' => $shop->start_time,
                 'business_close_time' => $shop->end_time,
                 'last_reception_time' => $shop->last_reception_time,
