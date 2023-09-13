@@ -73,13 +73,14 @@
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum === 8) ? "active open": ""; ?>" id="parentMenu_7"><p class="">各種設定</p></div>
                     <ul class="childMenu" id="childMenu_7"  <?= ($routeNum <> 8) ? 'style="overflow: hidden; display: none;"': ""; ?>>
-                        <li><a href="{{ route('setting.index') }}" class="sidebarTitleIn <?= (request()->routeIs('setting.*')) ? 'active': ''; ?>" >アカウント情報</a></li>
+                        <?php $subRoute = request()->routeIs('setting.index') || request()->routeIs('setting.changeEmail') || request()->routeIs('setting.changePassword'); ?>
+                        <li><a href="{{ route('setting.index') }}" class="sidebarTitleIn <?= ($subRoute) ? 'active': ''; ?>" >アカウント情報</a></li>
                         @if ($myShop->userShopAuthorization->shop_setting_read)
                             <li><a href="{{ route('shop_setting.index') }}" class="sidebarTitleIn <?= (request()->routeIs('shop_setting.*')) ? 'active': ''; ?>" >ショップ基本情報</a></li>
                         @endif
                         {{-- <li><a href="" class="sidebarTitleIn" >税率設定</a></li> --}}
                         {{-- <li><a href="" class="sidebarTitleIn" >メール設定</a></li> --}}
-                        <li><a href="{{ route('setting.system_information') }}" class="sidebarTitleIn <?= (request()->routeIs('setting.*')) ? 'active': ''; ?>" >システム情報</a></li>
+                        <li><a href="{{ route('setting.system_information') }}" class="sidebarTitleIn <?= (request()->routeIs('setting.system_information')) ? 'active': ''; ?>" >システム情報</a></li>
                     </ul>
                 </li>
             @endif
