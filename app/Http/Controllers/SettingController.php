@@ -351,4 +351,13 @@ class SettingController extends Controller
         }
     }
 
+    /**
+     * システム情報画面
+     * @return View
+     */
+    public function systemInformation(): View
+    {
+        return view('setting.systemInformation');
+    }
+
 }

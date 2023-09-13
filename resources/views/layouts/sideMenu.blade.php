@@ -79,6 +79,7 @@
                         @endif
                         {{-- <li><a href="" class="sidebarTitleIn" >税率設定</a></li> --}}
                         {{-- <li><a href="" class="sidebarTitleIn" >メール設定</a></li> --}}
+                        <li><a href="{{ route('setting.system_information') }}" class="sidebarTitleIn <?= (request()->routeIs('setting.*')) ? 'active': ''; ?>" >システム情報</a></li>
                     </ul>
                 </li>
             @endif

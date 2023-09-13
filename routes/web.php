@@ -57,12 +57,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('setting/updateEmail', 'SettingController@updateEmail')->name('setting.updateEmail');
     Route::get('changePassword', 'SettingController@changePassword')->name('setting.changePassword');
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
-
-    // 来店履歴関係
-    Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
-    Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
-    Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
-    Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
+    Route::get('setting/system_information', 'SettingController@systemInformation')->name('setting.system_information');
 
     // 店舗設定
     Route::get('shop_setting/index', 'ShopSettingController@index')->name('shop_setting.index');
@@ -70,6 +65,12 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('shop_setting/business_hour_register_everyday', 'ShopSettingController@businessHourRegisterWithEveryday')->name('shop_setting.business_hour_register_everyday');
     Route::post('shop_setting/business_hour_edit_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourEditWithEveryday')->name('shop_setting.business_hour_edit_everyday');
     Route::get('shop_setting/business_hour_delete_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourDeleteWithEveryday')->name('shop_setting.business_hour_delete_everyday');
+
+    // 来店履歴関係
+    Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
+    Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
+    Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
+    Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
 
 });
 
