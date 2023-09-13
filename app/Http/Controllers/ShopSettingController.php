@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Consts\SessionConst;
 use App\Http\Requests\BusinessHourRequest;
-use App\Models\{ShopBusinessHour};
-use App\Services\{ShopBusinessHourService};
+use App\Models\ShopBusinessHour;
+use App\Services\ShopBusinessHourService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -21,7 +21,7 @@ class ShopSettingController extends UserAppController
     /**
      * @var ShopBusinessHourService $shopBusinessHourService
      */
-    public ShopBusinessHourService $shopBusinessHourService;
+    public $shopBusinessHourService;
 
     /**
      * コンストラクタ
@@ -34,7 +34,7 @@ class ShopSettingController extends UserAppController
 
     /**
      */
-    public function index(): View
+    public function index()
     {
         $closeDay = $this->shopBusinessHourService->getCloseDay($this->shopId);
         $businessHourType = $this->shopBusinessHourService->getBusinessHourType($this->shopId);
@@ -74,7 +74,7 @@ class ShopSettingController extends UserAppController
      * @param BusinessHourRequest $request
      * @return RedirectResponse
      */
-    public function businessHourRegisterWithEveryday(BusinessHourRequest $request): RedirectResponse
+    public function businessHourRegisterWithEveryday(BusinessHourRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -95,7 +95,7 @@ class ShopSettingController extends UserAppController
      * @param ShopBusinessHour $shopBusinessHour
      * @return RedirectResponse
      */
-    public function businessHourEditWithEveryday(BusinessHourRequest $request, ShopBusinessHour $shopBusinessHour): RedirectResponse
+    public function businessHourEditWithEveryday(BusinessHourRequest $request, ShopBusinessHour $shopBusinessHour)
     {
         try {
             DB::beginTransaction();
@@ -123,7 +123,7 @@ class ShopSettingController extends UserAppController
      * @param ShopBusinessHour $shopBusinessHour
      * @return RedirectResponse
      */
-    public function businessHourDeleteWithEveryday(ShopBusinessHour $shopBusinessHour): RedirectResponse
+    public function businessHourDeleteWithEveryday(ShopBusinessHour $shopBusinessHour)
     {
 
         if ($shopBusinessHour->shop_id != $this->shopId) {

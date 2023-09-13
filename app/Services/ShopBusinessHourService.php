@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Consts\ShopSettingConst;
 use App\Http\Requests\BusinessHourRequest;
-use App\Models\{ShopBusinessHour};
+use App\Models\ShopBusinessHour;
 use App\Repositories\ShopBusinessHourRepository;
 use App\Repositories\ShopConfigRepository;
 use Carbon\Carbon;
@@ -16,17 +16,17 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class ShopBusinessHourService
 {
-    private ShopBusinessHourRepository $shopBusinessHourRepository;
-    private ShopConfigRepository $shopConfigRepository;
-    public ?Carbon $closeDay;
+    private $shopBusinessHourRepository;
+    private $shopConfigRepository;
+    public $closeDay;
 
     /**
      * コンストラクタ
      */
     public function __construct()
     {
-        $this->shopBusinessHourRepository = app(ShopBusinessHourRepository::class);
-        $this->shopConfigRepository = app(ShopConfigRepository::class);
+        $this->shopBusinessHourRepository = new ShopBusinessHourRepository();
+        $this->shopConfigRepository = new ShopConfigRepository();
     }
 
     /**
@@ -34,7 +34,7 @@ class ShopBusinessHourService
      * @param int $shopId
      * @return Carbon|null
      */
-    public function getCloseDay(int $shopId): ?Carbon
+    public function getCloseDay(int $shopId)
     {
         $shopConfig = $this->shopConfigRepository->getByKey($shopId, 'close_day');
         $this->closeDay = null;
@@ -50,7 +50,7 @@ class ShopBusinessHourService
      * @param int $shopId
      * @return int
      */
-    public function getBusinessHourType(int $shopId): int
+    public function getBusinessHourType(int $shopId)
     {
         $shopConfig = $this->shopConfigRepository->getByKey($shopId, 'business_hour_type');
         return $shopConfig->value;
@@ -62,7 +62,7 @@ class ShopBusinessHourService
      * @param int $business_hour_type
      * @return Collection
      */
-    public function getMyShopBusinessHourList(int $shopId, int $business_hour_type = 1): Collection
+    public function getMyShopBusinessHourList(int $shopId, int $business_hour_type = 1)
     {
         $shopBusinessHours = $this->shopBusinessHourRepository->getMyShopBusinessHours($shopId, $business_hour_type);
 
@@ -75,7 +75,7 @@ class ShopBusinessHourService
      * @param Collection $shopBusinessHours
      * @return Collection
      */
-    private function addDetermineApplicable(Collection $shopBusinessHours): Collection
+    private function addDetermineApplicable(Collection $shopBusinessHours)
     {
         if ($shopBusinessHours->isEmpty()) {
             return $shopBusinessHours;
@@ -119,7 +119,7 @@ class ShopBusinessHourService
      * @param int|null $shopBusinessHourId
      * @return string エラーメッセージ
      */
-    public function confirmWhetherRegisterDate(int $shopId, string $value, int $shopBusinessHourId = null): string
+    public function confirmWhetherRegisterDate(int $shopId, string $value, int $shopBusinessHourId = null)
     {
         $checkSettingStartDate = new Carbon($value);
         if ($checkSettingStartDate->isPast()) {
@@ -133,7 +133,7 @@ class ShopBusinessHourService
         if ($checkSettingStartDate > $shopBusinessHours->first()->setting_start_date) {
             // 閉店日が設定されている場合は閉店日以降の適用はさせない
             $closeDay = $this->getCloseDay($shopId);
-            if($closeDay && $checkSettingStartDate >= $closeDay) {
+            if ($closeDay && $checkSettingStartDate >= $closeDay) {
                 return '閉店日以降の設定は出来ません';
             }
             return '';
@@ -162,7 +162,7 @@ class ShopBusinessHourService
      * @param int $userId
      * @return void
      */
-    public function registerWithEveryday(BusinessHourRequest $request, int $shopId, int $userId): void
+    public function registerWithEveryday(BusinessHourRequest $request, int $shopId, int $userId)
     {
         // 既存で登録されているデータを取得
         $shopBusinessHours = $this->getMyShopBusinessHourList($shopId);
@@ -171,7 +171,7 @@ class ShopBusinessHourService
         $registerStartData = new Carbon($request->setting_start_date);
 
         // 適用させる前後のデータを取得
-        [$beforeShopBusinessHour, $afterShopBusinessHour] = $this->getBeforeAndAfterData($registerStartData, $shopBusinessHours);
+        list($beforeShopBusinessHour, $afterShopBusinessHour) = $this->getBeforeAndAfterData($registerStartData, $shopBusinessHours);
         if (empty($afterShopBusinessHour)) {
             // 一番未来に適用されるデータよりも、更に未来に適用させる場合
             $settingEndDate = $this->getCloseDay($shopId); // 閉店日が設定されて無ければnullになります
@@ -204,7 +204,7 @@ class ShopBusinessHourService
      * @param array $updateParam
      * @return void
      */
-    public function updateShopBusinessHourById(int $shopBusinessHourId, array $updateParam): void
+    public function updateShopBusinessHourById(int $shopBusinessHourId, array $updateParam)
     {
         $this->shopBusinessHourRepository->updateById($shopBusinessHourId, $updateParam);
     }
@@ -215,7 +215,7 @@ class ShopBusinessHourService
      * @return void
      * @throws Exception
      */
-    public function deleteShopBusinessHour(ShopBusinessHour $shopBusinessHour): void
+    public function deleteShopBusinessHour(ShopBusinessHour $shopBusinessHour)
     {
         $this->shopBusinessHourRepository->delete($shopBusinessHour);
     }
@@ -225,7 +225,7 @@ class ShopBusinessHourService
      * @param int $shopId
      * @return void
      */
-    public function resetSettingEndDate(int $shopId): void
+    public function resetSettingEndDate(int $shopId)
     {
         // 適用中以降のデータを取得
         $businessHourType = $this->getBusinessHourType($shopId);
@@ -254,7 +254,7 @@ class ShopBusinessHourService
      * @param Collection $shopBusinessHours
      * @return array [Carbon, Carbon|null]
      */
-    private function getBeforeAndAfterData(Carbon $farthestFutureDate, Collection $shopBusinessHours): array
+    private function getBeforeAndAfterData(Carbon $farthestFutureDate, Collection $shopBusinessHours)
     {
         foreach ($shopBusinessHours as $key => $shopBusinessHour) {
 

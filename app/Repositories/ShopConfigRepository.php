@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\{ShopConfig};
+use App\Models\ShopConfig;
 
 class ShopConfigRepository implements ShopConfigRepositoryInterface
 {
