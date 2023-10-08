@@ -112,7 +112,6 @@
     </thead>
     <tbody>
     @foreach($shopBusinessHours as $key => $shopBusinessHour)
-        {{ dd($shopBusinessHour) }}
         <tr class="apply-type-{{ $shopBusinessHour->applyType }}" style="position: relative;">
             <td>{{ $key + 1 }}</td>
             <td>{{ App\Consts\ShopSettingConst::WEEK_LABEL_LIST[$shopBusinessHour->week_no] }}</td>
