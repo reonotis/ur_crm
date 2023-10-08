@@ -59,12 +59,18 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('updatePassword', 'SettingController@updatePassword')->name('setting.updatePassword');
     Route::get('setting/system_information', 'SettingController@systemInformation')->name('setting.system_information');
 
-    // 店舗設定
+    // 店舗設定関連
     Route::get('shop_setting/index', 'ShopSettingController@index')->name('shop_setting.index');
     Route::get('shop_setting/business_hour_edit', 'ShopSettingController@businessHourEdit')->name('shop_setting.business_hour_edit');
-    Route::post('shop_setting/business_hour_register_everyday', 'ShopSettingController@businessHourRegisterWithEveryday')->name('shop_setting.business_hour_register_everyday');
-    Route::post('shop_setting/business_hour_edit_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourEditWithEveryday')->name('shop_setting.business_hour_edit_everyday');
-    Route::get('shop_setting/business_hour_delete_everyday/{shopBusinessHour}', 'ShopSettingController@businessHourDeleteWithEveryday')->name('shop_setting.business_hour_delete_everyday');
+    Route::post('shop_setting/business_hour_register', 'ShopSettingController@businessHourRegister')->name('shop_setting.business_hour_register');
+    Route::get('shop_setting/business_hour_delete/{shopBusinessHour}', 'ShopSettingController@businessHourDelete')->name('shop_setting.business_hour_delete');
+    Route::get('shop_setting/temporary_business_hour_edit/', 'ShopSettingController@temporaryBusinessHourEdit')->name('shop_setting.temporary_business_hour_edit');
+    Route::post('shop_setting/temporary_business_hour_register/', 'ShopSettingController@temporaryBusinessHourRegister')->name('shop_setting.temporary_business_hour_register');
+    Route::get('shop_setting/temporary_business_hour_delete/{shopBusinessHourTemporary}', 'ShopSettingController@temporaryBusinessHourDelete')->name('shop_setting.temporary_business_hour_delete');
+    Route::get('shop_setting/close_day_edit/', 'ShopSettingController@closeDayEdit')->name('shop_setting.close_day_edit');
+    Route::post('shop_setting/update_close_day/', 'ShopSettingController@closeDayUpdate')->name('shop_setting.update_close_day');
+    Route::get('shop_setting/start_week_edit/', 'ShopSettingController@startWeekEdit')->name('shop_setting.start_week_edit');
+    Route::post('shop_setting/update_start_week/', 'ShopSettingController@startWeekUpdate')->name('shop_setting.update_start_week');
 
     // 来店履歴関係
     Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');

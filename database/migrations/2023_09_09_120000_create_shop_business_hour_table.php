@@ -44,7 +44,6 @@ class CreateShopBusinessHourTable extends Migration
         foreach ($shops as $shop) {
             $records[] = [
                 'shop_id' => $shop->id,
-                'business_hour_type' => ShopSettingConst::BUSINESS_HOUR_EVERYDAY,
                 'business_open_time' => $shop->start_time,
                 'business_close_time' => $shop->end_time,
                 'last_reception_time' => $shop->last_reception_time,

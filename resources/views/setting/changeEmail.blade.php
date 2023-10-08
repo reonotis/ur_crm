@@ -1,4 +1,10 @@
 @extends('layouts.setting')
+@section('breadcrumb')
+    <ol>
+        <li><a href="{{ route('myPage') }}">ホーム</a></li>
+        <li><a href="{{ route('setting.changeEmail') }}">アカウント情報</a></li>
+    </ol>
+@endsection
 @section('pageTitle', 'メールアドレス変更')
 
 @section('content')

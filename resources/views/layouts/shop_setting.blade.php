@@ -49,6 +49,11 @@
                     <div class="header" >
                         @include('layouts.header')
                     </div>
+                    @if (View::hasSection('breadcrumb'))
+                        <div class="breadcrumb" >
+                            @yield('breadcrumb')
+                        </div>
+                    @endif
                     <div class="pageTitle" >
                         @yield('pageTitle')
                     </div>
@@ -61,7 +66,6 @@
                 </div>
             </main>
             <script src="{{ asset('js/common.js') }}?<?= date('Ymdhi') ?>"></script>
-            <script src="{{ asset('js/data.js') }}?<?= date('Ymdhi') ?>"></script>
 
         @endguest
 

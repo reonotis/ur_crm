@@ -2,41 +2,41 @@
 
 namespace App\Repositories;
 
-use App\Models\{ShopBusinessHour, ShopConfig};
+use App\Models\ShopBusinessHour;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * 営業時間テーブルに対するレポジトリクラスです
+ */
 class ShopBusinessHourRepository implements ShopBusinessHourRepositoryInterface
 {
     /**
      * @param int $shopId
-     * @param int $businessHourType
      * @return Collection
      * @see ShopBusinessHourRepositoryInterface::getMyShopBusinessHours
      */
-    public function getMyShopBusinessHours(int $shopId, int $businessHourType): Collection
+    public function getMyShopBusinessHours(int $shopId): Collection
     {
-        $shopBusinessHours = ShopBusinessHour::where('shop_id', $shopId)
-            ->where('business_hour_type', $businessHourType)
-            ->get();
+        $shopBusinessHours = ShopBusinessHour::where('shop_id', $shopId)->get();
 
         return $shopBusinessHours->sortByDesc('setting_start_date');
     }
 
     /**
      * @param int $shopId
-     * @param int $businessHourType
      * @return Collection [ShopBusinessHour]
+     * @see ShopBusinessHourRepositoryInterface::getApplyingOrLater
      */
-    public function getApplyingOrLater(int $shopId, int $businessHourType): Collection
+    public function getApplyingOrLater(int $shopId): Collection
     {
-        $tomorrow = Carbon::tomorrow();
+        $today = Carbon::today();
 
         $shopBusinessHours = ShopBusinessHour::where('shop_id', $shopId)
-            ->where('business_hour_type', $businessHourType)
-            ->where(function ($query) use ($tomorrow) {
+            ->where(function ($query) use ($today) {
                 $query->whereNull('setting_end_date')
-                    ->orWhere('setting_end_date', '>', $tomorrow);
+                    ->orWhere('setting_end_date', '>=', $today);
             })
             ->get();
 
@@ -76,9 +76,9 @@ class ShopBusinessHourRepository implements ShopBusinessHourRepositoryInterface
      * 論理削除を行う
      * @param ShopBusinessHour $shopBusinessHour
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function delete(ShopBusinessHour $shopBusinessHour)
+    public function delete(ShopBusinessHour $shopBusinessHour): void
     {
         $shopBusinessHour->delete();
     }

@@ -10,38 +10,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property integer id
  * @property integer shop_id
- * @property integer week_no
- * @property integer regular_holiday
+ * @property integer holiday
+ * @property integer target_date
  * @property Time business_open_time
  * @property Time business_close_time
  * @property Time last_reception_time
- * @property Carbon setting_start_date
- * @property Carbon setting_end_date
  * @property integer created_by
  * @property Carbon created_at
  * @property Carbon updated_at
  */
-class ShopBusinessHour extends Model
+class ShopBusinessHourTemporary extends Model
 {
     use SoftDeletes; // 論理削除を有効化
 
-    protected $table = 'shop_business_hour';
+    protected $table = 'shop_business_hour_temporary';
 
     protected $fillable = [
         'shop_id',
-        'week_no',
-        'regular_holiday',
+        'holiday',
+        'target_date',
         'business_open_time',
         'business_close_time',
         'last_reception_time',
-        'setting_start_date',
-        'setting_end_date',
         'created_by',
     ];
 
     protected $dates = [
-        'setting_start_date',
-        'setting_end_date',
         'created_at',
     ];
 

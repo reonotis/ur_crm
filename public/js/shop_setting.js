@@ -1,22 +1,3 @@
-$(function () {
-    displayBusinessHourTypeEditView();
-    $('[name="business_hour_type"]:radio').change(function () {
-        displayBusinessHourTypeEditView();
-    });
-});
-
-
-function displayBusinessHourTypeEditView() {
-    let radio_value = $('[name="business_hour_type"]:radio:checked').val();
-    $(".business-hour-edit-content").each(function () {
-        if ($(this).hasClass('type-' + radio_value)) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
-}
-
 function check(id) {
     // 設定値を取得
     let input_business_open_time = $('#business_open_time_' + id);
@@ -32,4 +13,23 @@ function check(id) {
     $(formId + ' [name=setting_start_date_' + id + ']').val(input_setting_start_date.val()); // 適用開始日
 
     return true;
+}
+
+$(function () {
+    checkRegularHoliday();
+    $('[name="regular_holiday"]').change(function () {
+        checkRegularHoliday();
+    });
+});
+
+function checkRegularHoliday() {
+    if ($("#regular_holiday").prop("checked")) {
+        $("#business_open_time").prop('disabled', true)
+        $("#last_reception_time").prop('disabled', true)
+        $("#business_close_time").prop('disabled', true)
+    } else {
+        $("#business_open_time").prop('disabled', false)
+        $("#last_reception_time").prop('disabled', false)
+        $("#business_close_time").prop('disabled', false)
+    }
 }
