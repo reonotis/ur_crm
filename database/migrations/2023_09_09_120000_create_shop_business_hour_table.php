@@ -32,7 +32,7 @@ class CreateShopBusinessHourTable extends Migration
             $table->date('setting_start_date')->nullable()->comment('適用開始日');
             $table->date('setting_end_date')->nullable()->comment('適用終了日');
 
-            $table->date('created_by')->comment('作成者');
+            $table->unsignedInteger('created_by')->comment('作成者');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('作成日時');
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'))->comment('更新日時');
             $table->softDeletes();

@@ -236,7 +236,9 @@ class ShopBusinessHourService
 
         // 既存で登録されているデータを取得
         $shopBusinessHours = $this->getMyShopBusinessHourList($shopId);
-        $shopBusinessHours = $shopBusinessHours->where('week_no', $settingStartDate->dayOfWeekIso);
+
+        // 対象曜日の設定を抽出する
+        $shopBusinessHours = $shopBusinessHours->where('week_no', $request->day_of_week);
 
         // 適用させる前後のデータを取得
         list($beforeShopBusinessHour, $afterShopBusinessHour) = $this->getBeforeAndAfterData($settingStartDate, $shopBusinessHours);

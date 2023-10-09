@@ -141,7 +141,7 @@
                 @if($shopBusinessHour->regular_holiday)
                     -
                 @else
-                    {{ Carbon\Carbon::createFromTimeString($shopBusinessHour->last_reception_time)->format('H:i') }}
+                    {{ Carbon\Carbon::createFromTimeString($shopBusinessHour->business_close_time)->format('H:i') }}
                 @endif
             </td>
             @if (session()->get(SessionConst::SELECTED_SHOP)->userShopAuthorization->shop_setting_delete)
