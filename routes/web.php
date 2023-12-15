@@ -24,7 +24,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/error/forbidden/{code?}', 'ErrorController@forbiddenError')->name('forbiddenError');
 
     // TOPページ
-    Route::get('/', 'HomeController@index')->name('myPage');
+    Route::get('/', 'HomeController@index')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/myPage', 'HomeController@index')->name('myPage');
 

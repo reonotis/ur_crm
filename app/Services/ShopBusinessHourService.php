@@ -412,6 +412,7 @@ class ShopBusinessHourService
      * 渡された日付の月の営業時間calendarを作成
      * @param Carbon $targetDay
      * @param Collection $shopBusinessHours
+     * @param Collection $temporaryBusinessHours
      * @return array
      * @throws ReflectionException
      */
@@ -438,9 +439,9 @@ class ShopBusinessHourService
      * @return array
      * @throws ReflectionException
      */
-    private function makeBusinessCalenderByDate(Carbon $targetDay, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
+    public function makeBusinessCalenderByDate(Carbon $targetDay, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
     {
-        $businessData['date'] = new Carbon($targetDay->format('Y-m-d')); // カレンダーに入れる日付
+        $businessData['date'] = $targetDay; // カレンダーに入れる日付
         $holidayNumber = $this->checkHoliday($targetDay); // 祝日、祝前日であるかを判定
         $businessData['holiday'] = $holidayNumber;
         $businessData['temporary'] = $this->checkTemporaryDay($targetDay, $temporaryBusinessHours); // 臨時定休/臨時営業ではない場合はNULL

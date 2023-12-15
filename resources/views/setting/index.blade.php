@@ -1,7 +1,7 @@
 @extends('layouts.setting')
 @section('breadcrumb')
     <ol>
-        <li><a href="{{ route('myPage') }}">ホーム</a></li>
+        <li><a href="{{ route('home') }}">ホーム</a></li>
     </ol>
 @endsection
 @section('pageTitle', 'アカウント情報')

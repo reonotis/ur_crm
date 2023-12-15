@@ -37,7 +37,7 @@ class ShopSelectController extends Controller
         }
 
         if(count($selectableShops) == 1){
-            return redirect()->route('myPage')->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できる店舗は1店舗しかありません']);
+            return redirect()->route('home')->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できる店舗は1店舗しかありません']);
         }
 
         return view('shopSelect.index', compact('selectableShops'));
@@ -54,7 +54,7 @@ class ShopSelectController extends Controller
         if(!$this->_checkMyShop($shop)){
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['操作できない店舗を指定しています'])->withInput();
         }
-        return redirect()->route('myPage')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['操作店舗を選択しました'])->withInput();
+        return redirect()->route('home')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['操作店舗を選択しました'])->withInput();
     }
 
     /**

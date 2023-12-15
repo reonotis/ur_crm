@@ -74,13 +74,13 @@ class UserAppController extends Controller
             return;
         }
 
-        // ルーティングに対する権限があればチェック完了
-        $authName = Common::ROUTE_AUTH_LIST[$routeName];
+        // 権限レコードを取得できなければ一度ホーム画面に遷移させる
         if (empty($this->userShopAuthorization)) {
-            Redirect::route('myPage')->send();
+            Redirect::route('home')->send();
         }
 
         // ルーティングに対する権限があれば処理終了
+        $authName = Common::ROUTE_AUTH_LIST[$routeName];
         if ($this->userShopAuthorization->{$authName}) {
             return;
         }

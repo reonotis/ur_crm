@@ -429,7 +429,7 @@ class UserController extends UserAppController
                 "name" => $user->name,
                 "email" => $user->email,
                 "password" => $password,
-                "url" => url('') . '/myPage'
+                "url" => url('') . '/home'
             ];
             Mail::send('emails.userRegister', $data, function ($message) {
                 $message->to($this->_toUserEmail)

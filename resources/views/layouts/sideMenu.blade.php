@@ -2,7 +2,7 @@
     $routeNum = 0;
     $routeName = Route::currentRouteName();
     switch($routeName){
-        case 'myPage':
+        case 'home':
             $routeNum = 1;
             break;
         case str_starts_with($routeName, 'report'):
@@ -38,7 +38,7 @@
     <div class="menuOpenButton" >>></div>
     <div class="menuContents" >
         <ul class="sideMenuUl" >
-            <li><a href="{{ route('myPage') }}" class="sidebarTitle <?= ($routeNum === 1) ? "active": ""; ?>" >ホーム</a></li>
+            <li><a href="{{ route('home') }}" class="sidebarTitle <?= ($routeNum === 1) ? "active": ""; ?>" >ホーム</a></li>
             @if (session()->get(SessionConst::SELECTED_SHOP))
                 <li><a href="{{ route('report.index') }}" class="sidebarTitle <?= ($routeNum === 2) ? "active": ""; ?>" >日報</a></li>
                 <li><a href="{{ route('data', ['date'=>date('Ymd')]) }}" class="sidebarTitle <?= ($routeNum === 3) ? "active": ""; ?>" >データ分析</a></li>
