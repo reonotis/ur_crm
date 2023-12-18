@@ -157,7 +157,7 @@
                             <td>
                                 {{-- 本日の履歴なら編集可能にする --}}
                                 @if(\Carbon\Carbon::parse($visitHistory->vis_date)->isToday())
-                                    <a href="{{ route('visitHistory.edit', ['visitHistory'=>$visitHistory->id]) }}" >編集</a>
+                                    <a href="{{ route('visitHistory.edit', ['reserve_info'=>$visitHistory->id]) }}" >編集</a>
                                 @else
                                     -
                                 @endif

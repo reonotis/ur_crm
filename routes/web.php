@@ -73,10 +73,12 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('shop_setting/update_start_week/', 'ShopSettingController@startWeekUpdate')->name('shop_setting.update_start_week');
 
     // 来店履歴関係
-    Route::get('visitHistory/register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
-    Route::get('visitHistory/edit/{visitHistory}', 'VisitHistoryController@edit')->name('visitHistory.edit');
-    Route::post('visitHistory/update/{visitHistory}', 'VisitHistoryController@update')->name('visitHistory.update');
-    Route::post('destroy/update/{visitHistory}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
+    Route::group(['prefix'=>'visitHistory'], function(){
+        Route::get('register/{customer}', 'VisitHistoryController@register')->name('visitHistory.register');
+        Route::get('edit/{reserve_info}', 'VisitHistoryController@edit')->name('visitHistory.edit');
+        Route::post('/update/{reserve_info}', 'VisitHistoryController@update')->name('visitHistory.update');
+        Route::post('/destroy/{reserve_info}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
+    });
 
 });
 
@@ -88,17 +90,6 @@ Route::group(['prefix'=>'oldReport', 'middleware'=>'auth'], function(){
     Route::get('getMonthRecord', 'OldReportController@getMonthRecord')->name('oldReport.getMonthRecord');
     Route::get('weekly', 'OldReportController@weekly')->name('oldReport.weekly');
     Route::get('monthly', 'OldReportController@monthly')->name('oldReport.monthly');
-});
-
-
-// 来店履歴関係
-Route::group(['prefix'=>'visitHistory', 'middleware'=>'auth'], function(){
-    Route::get('edit', 'VisitHistoryController@edit')->name('VisitHistory.edit');
-    Route::get('update/{id}', 'VisitHistoryController@update')->name('VisitHistory.update');
-    Route::get('single_edit/{id}', 'VisitHistoryController@single_edit')->name('VisitHistory.single_edit');
-    Route::get('destroy/{id}', 'VisitHistoryController@destroy')->name('VisitHistory.destroy');
-    Route::get('delete/{id}/angle/{angle}', 'VisitHistoryController@delete')->name('VisitHistory.delete');
-    Route::post('single_update/{id}', 'VisitHistoryController@single_update')->name('VisitHistory.single_update');
 });
 
 

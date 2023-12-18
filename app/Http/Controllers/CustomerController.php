@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Common\CustomerCheck;
 use App\Exceptions\ExclusionException;
+use App\Services\ReserveInfoService;
 use App\Consts\{Common, ErrorCode, SessionConst};
 use App\Models\{Customer, CustomerNoCounter, User, UserShopAuthorization, VisitHistory};
 use App\Models\Shop;
@@ -21,11 +22,17 @@ class CustomerController extends UserAppController
     public $errMsg = [];
 
     /**
+     * @var ReserveInfoService $reserveInfoService
+     */
+    public $reserveInfoService;
+
+    /**
      * コンストラクタ
      */
     public function __construct()
     {
         parent::__construct();
+        $this->reserveInfoService = new ReserveInfoService();
     }
 
     /**
@@ -234,9 +241,9 @@ class CustomerController extends UserAppController
         }
 
         // 来店履歴
-        $visitHistories = VisitHistory::getByCustomerId($customer->id)->get();
+        $visitHistories = $this->reserveInfoService->getByCustomerId($customer->id);
         // 来店履歴から最初の画像を取得する
-        $customerImgPass = $this->_getCustomerImg($visitHistories);
+        $customerImgPass = $this->getCustomerImg($visitHistories);
 
         return view('customer.show', compact('customer', 'visitHistories', 'customerImgPass'));
     }
@@ -281,7 +288,7 @@ class CustomerController extends UserAppController
 
     /**
      * Update the specified resource in storage.
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Customer $customer
      * @return RedirectResponse
      * @throws ExclusionException
@@ -350,8 +357,9 @@ class CustomerController extends UserAppController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Customer $customer
      * @return RedirectResponse
+     * @throws ExclusionException
      */
     public function destroy(Customer $customer): RedirectResponse
     {
@@ -376,10 +384,9 @@ class CustomerController extends UserAppController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
+     * @param Customer $customer
      * @return RedirectResponse
+     * @throws ExclusionException
      */
     public function destroyReport(Customer $customer): RedirectResponse
     {
@@ -393,7 +400,8 @@ class CustomerController extends UserAppController
         }
 
         //来店履歴がある場合はエラー処理
-        if(count(VisitHistory::getByCustomerId($customer->id)->get())){
+        $visitHistories = $this->reserveInfoService->getByCustomerId($customer->id);
+        if ($visitHistories->isNotEmpty()) {
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['来店データがあるため削除出来ません。先に来店履歴を削除してください'])->withInput();
         }
 
@@ -409,9 +417,10 @@ class CustomerController extends UserAppController
     }
 
     /**
-     * @param Customer $customer
-     * @param int $customerId
+     * @param string $customerNo
+     * @param int|null $customerId
      * @return string
+     * @throws Exception
      */
     private function _checkCustomerNo(string $customerNo, int $customerId = null): string
     {
@@ -492,7 +501,7 @@ class CustomerController extends UserAppController
      * @param object $visitHistories
      * @return string
      */
-    private function _getCustomerImg(object $visitHistories): string
+    private function getCustomerImg(object $visitHistories): string
     {
         foreach($visitHistories AS $visitHistory){
             if(count($visitHistory->VisitHistoryImages)){

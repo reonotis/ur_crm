@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Consts\{ErrorCode, DataAnalyze, SessionConst};
 use App\Exceptions\ExclusionException;
-use App\Models\{Customer, UserShopAuthorization, VisitHistory};
-use App\Services\{DateCheckService, VisitHistoryService};
+use App\Services\{DateCheckService, ReserveInfoService};
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Log;
  */
 class DataController extends UserAppController
 {
-    /**
-     * @var DateCheckService $DateCheckService
-     * @var VisitHistoryService $VisitHistoryService
-     */
-    public $DateCheckService, $VisitHistoryService;
+    /** @var DateCheckService $DateCheckService */
+    public $DateCheckService;
+
+    /** @var ReserveInfoService $reserveInfoService */
+    public $reserveInfoService;
 
     /**
      * コンストラクタ
@@ -29,7 +29,7 @@ class DataController extends UserAppController
     {
         parent::__construct();
         $this->DateCheckService = new DateCheckService();
-        $this->VisitHistoryService = new VisitHistoryService();
+        $this->reserveInfoService = new ReserveInfoService();
     }
 
     /**
@@ -60,7 +60,6 @@ class DataController extends UserAppController
             ];
         }
 
-
         return view('data.index', compact('dataSearch'));
     }
 
@@ -70,8 +69,8 @@ class DataController extends UserAppController
      */
     public function getAnalyzed(Request $request)
     {
-        $fromDate = $request->fromDate;
-        $endDate = $request->endDate;
+        $fromDate = new Carbon($request->fromDate);
+        $endDate = new Carbon($request->endDate);
         $type = $request->type;
         if (isset(DataAnalyze::ANALYZE_TYPE_LIST[$type])) {
             $analyzeType = DataAnalyze::ANALYZE_TYPE_LIST[$type];
@@ -86,7 +85,7 @@ class DataController extends UserAppController
             'endDate' => $endDate,
             'type' => $type,
         ];
-        Cache::put('data_search', $search);
+        Cache::put('data_search', $search, 1000);
 
         $shop = session(SessionConst::SELECTED_SHOP)->toArray();
         $shopId = $shop['id'];
@@ -98,17 +97,14 @@ class DataController extends UserAppController
 
         Log::info('ajaxにより、' . $analyzeType . 'で' . $fromDate . '～' . $endDate . 'の' . $shop['shop_name'] . 'のデータを取得');
 
-        $data = '';
         switch ($type) {
             case DataAnalyze::ANALYZE_TYPE_VISIT_HISTORY:
-                return $this->VisitHistoryService->getByTargetPeriod($fromDate, $endDate, $shopId);
+                return $this->reserveInfoService->getByTargetPeriod($fromDate, $endDate, $shopId);
             case DataAnalyze::ANALYZE_TYPE_STYLIST:
-                $tmlHistoryList = $this->VisitHistoryService->getByTargetPeriod($fromDate, $endDate, $shopId);
-                return $this->VisitHistoryService->convert($tmlHistoryList);
-            case DataAnalyze::ANALYZE_TYPE_MENU:
-                break;
+                return $this->reserveInfoService->getByTargetPeriodGroupByUser($fromDate, $endDate, $shopId);
+            default:
+                return '';
         }
-        return $data;
     }
 
 }

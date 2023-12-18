@@ -71,7 +71,7 @@
                                     <td>{{ $visitHistory->name }}</td>
                                     <td>
                                         <div class="">
-                                            <form action="{{ route('visitHistory.destroy', ['visitHistory'=>$visitHistory->id]) }}" method="POST" onsubmit="return confirmDialog({{ ConfirmMessage::VISIT_HISTORY_DELETE }});" >
+                                            <form action="{{ route('visitHistory.destroy', ['reserve_info'=>$visitHistory->id]) }}" method="POST" onsubmit="return confirmDialog({{ ConfirmMessage::VISIT_HISTORY_DELETE }});" >
                                                 @method('POST')
                                                 @csrf
                                                 <input type="submit" name="" value="削除" class="delete-btn min-btn" >

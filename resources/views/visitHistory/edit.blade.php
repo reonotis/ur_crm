@@ -6,21 +6,21 @@
         <div class="col-md-10">
             <div class="visit-history-contents">
                 <div class="card-body">
-                    <form action="{{route('visitHistory.update', ['visitHistory' => $visitHistory->id ])}}" enctype="multipart/form-data" method="post">
+                    <form action="{{route('visitHistory.update', ['reserve_info' => $reserve_info->id ])}}" enctype="multipart/form-data" method="post">
                         @method('post')
                         @csrf
                         <div class="visit-history-row" >
                             <div class="visit-history-title" >顧客名</div>
-                            <div class="visit-history-content" >{{ $visitHistory->customer->f_name . " " . $visitHistory->customer->l_name }}&nbsp;様</div>
+                            <div class="visit-history-content" >{{ $reserve_info->customer->f_name . " " . $reserve_info->customer->l_name }}&nbsp;様</div>
                         </div>
                         <div class="visit-history-row" >
                             <div class="visit-history-title" >日付</div>
-                            <div class="visit-history-content" >{{ $visitHistory->vis_date->format('Y 年 m 月 d 日') }}</div>
+                            <div class="visit-history-content" >{{ $reserve_info->vis_date->format('Y 年 m 月 d 日') }}</div>
                         </div>
                         <div class="visit-history-row" >
                             <div class="visit-history-title" ><label for="vis_time">時間</label></div>
                             <div class="visit-history-content" >
-                                <input type="time" name="vis_time" class="form-control" id="vis_time" value="{{ substr($visitHistory->vis_time, 0, 5) }}" >
+                                <input type="time" name="vis_time" class="form-control" id="vis_time" value="{{ substr($reserve_info->vis_time, 0, 5) }}" >
                             </div>
                         </div>
                         <div class="visit-history-row" >
@@ -29,7 +29,7 @@
                                 <select name="menu_id" id="menu_id" class="form-control" >
                                     <option value="0" >選択してください</option>
                                     @foreach ($menus AS $menu)
-                                        <option value="{{ $menu->id }}" {{ ($visitHistory->menu_id == $menu->id)? "selected": "" }}   >{{ $menu->menu_name }}</option>
+                                        <option value="{{ $menu->id }}" {{ ($reserve_info->menu_id == $menu->id)? "selected": "" }}   >{{ $menu->menu_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -39,7 +39,7 @@
                             <div class="visit-history-content" >
                                 <select name="user_id" id="user_id" class="form-control" >
                                     @foreach ($users AS $user)
-                                        <option value="{{ $user->id }}" {{ ($visitHistory->user_id == $user->id)? "selected": "" }}   >{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}" {{ ($reserve_info->user_id == $user->id)? "selected": "" }}   >{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -47,7 +47,7 @@
                         <div class="visit-history-row" >
                             <div class="visit-history-title" ><label for="memo">メモ</label></div>
                             <div class="visit-history-content" >
-                                <textarea name="memo" id="memo" class="form-control" >{{ $visitHistory->memo }}</textarea>
+                                <textarea name="memo" id="memo" class="form-control" >{{ $reserve_info->memo }}</textarea>
                             </div>
                         </div>
                         <div class="visit-history-row">

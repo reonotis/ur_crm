@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Consts\{ErrorCode, SessionConst};
 use App\Exceptions\ExclusionException;
-use App\Models\{Customer, UserShopAuthorization, VisitHistory};
-use App\Services\DateCheckService;
-use Carbon\Carbon;
+use App\Models\{Customer, UserShopAuthorization};
+use App\Services\ReserveInfoService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,9 +16,9 @@ use Illuminate\Support\Facades\Log;
 class ReportController extends UserAppController
 {
     /**
-     * @var DateCheckService $DateCheckService
+     * @var ReserveInfoService $reserveInfoService
      */
-    public $DateCheckService;
+    public $reserveInfoService;
 
     /**
      * コンストラクタ
@@ -27,7 +26,7 @@ class ReportController extends UserAppController
     public function __construct()
     {
         parent::__construct();
-        $this->DateCheckService = new DateCheckService();
+        $this->reserveInfoService = new ReserveInfoService();
     }
 
     /**
@@ -41,7 +40,7 @@ class ReportController extends UserAppController
         $shopAuthorizationFlg = $this->userShopAuthorization;
 
         // 来店者情報を取得
-        $visitHistories = VisitHistory::getTodayVisitHistory($shopId)->get();
+        $visitHistories = $this->reserveInfoService->getTodayVisitHistory($shopId);
 
         // 本日来店時に登録された顧客を取得
         $todayCustomers = Customer::getTodayCustomers($shopId)->get();
@@ -82,8 +81,8 @@ class ReportController extends UserAppController
         }
 
         // 既に本日の来店履歴が登録されているか確認する
-        $his = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
-        $historyFlg = count($his) ? true : false;
+        $todayHistory = $this->reserveInfoService->getTodayVisitHistoryByCustomerId($customer->id);
+        $historyFlg = (bool)$todayHistory;  // レコードが取得できていたら true
 
         // 選択可能なスタイリストを取得
         $users = UserShopAuthorization::getSelectableUsers($shopId)->get();
@@ -119,8 +118,8 @@ class ReportController extends UserAppController
 
         // 既に本日の来店履歴が登録されているのに、新しく登録しようとした場合のエラー
         if ($request->vis_history) {
-            $todayHistory = VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get();
-            if (count($todayHistory)) {
+            $todayHistory = $this->reserveInfoService->getTodayVisitHistoryByCustomerId($customer->id);
+            if ($todayHistory) {
                 $this->goToExclusionErrorPage(ErrorCode::CL_030015, [
                     $customer->shop_id,
                     $customer->id,
@@ -137,13 +136,12 @@ class ReportController extends UserAppController
 
             // 来店履歴を登録する
             if ($request->vis_history) {
-                VisitHistory::insert([[
-                    'vis_date' => Carbon::now()->format('Y-m-d'),
-                    'vis_time' => Carbon::now()->format('H:i'),
+                $condition = [
                     'customer_id' => $customer->id,
                     'shop_id' => $shopId,
                     'user_id' => $request->staff_id,
-                ]]);
+                ];
+                $this->reserveInfoService->createRecord($condition);
             }
 
             DB::commit();
@@ -165,7 +163,7 @@ class ReportController extends UserAppController
     {
         $basicReport = [];
         $basicReport['todayCount'] = $todayCount;
-        $basicReport['opeMembers'] = VisitHistory::getTodayOpeMemberByShopId($shopId)->get();
+        $basicReport['opeMembers'] = $this->reserveInfoService->getTodayOpeMemberByShopId($shopId);
         return $basicReport;
     }
 

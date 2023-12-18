@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ReserveInfoService;
 use App\Consts\{Common,
     ErrorCode,
     SessionConst
@@ -9,7 +10,7 @@ use App\Consts\{Common,
 use App\Exceptions\ExclusionException;
 use App\Models\{Customer,
     UserShopAuthorization,
-    VisitHistory,
+    ReserveInfo,
     VisitHistoryImage,
     Menu
 };
@@ -30,10 +31,11 @@ use Illuminate\Support\Facades\{DB,
  */
 class VisitHistoryController extends UserAppController
 {
-    /**
-     * @var ImageService $ImageService 画像処理をするためのインスタンス
-     */
+    /** @var ImageService $ImageService 画像処理をするためのインスタンス */
     private $ImageService;
+
+    /** @var ReserveInfoService $reserveInfoService */
+    private $reserveInfoService;
 
     /**
      * コンストラクタ
@@ -42,6 +44,7 @@ class VisitHistoryController extends UserAppController
     {
         parent::__construct();
         $this->ImageService = new ImageService();
+        $this->reserveInfoService = new ReserveInfoService();
     }
 
     /**
@@ -51,20 +54,19 @@ class VisitHistoryController extends UserAppController
      */
     public function register(Customer $customer): RedirectResponse
     {
-        if (count(VisitHistory::getTodayVisitHistoryByCustomerId($customer->id)->get())) {
+        if ($this->reserveInfoService->getTodayVisitHistoryByCustomerId($customer->id)) {
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_ERROR, ['既に本日の来店履歴が登録されています']);
         }
 
         try {
             DB::beginTransaction();
             // 来店履歴を登録する
-            VisitHistory::insert([[
-                'vis_date' => Carbon::now()->format('Y-m-d'),
-                'vis_time' => Carbon::now()->format('H:i:s'),
+            $condition = [
                 'customer_id' => $customer->id,
                 'shop_id' => $this->shopId,
                 'user_id' => $this->loginUser->id,
-            ]]);
+            ];
+            $this->reserveInfoService->createRecord($condition);
             DB::commit();
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['本日の来店履歴を登録しました']);
         } catch (Exception $e) {
@@ -76,33 +78,33 @@ class VisitHistoryController extends UserAppController
 
     /**
      * 編集画面を表示する
-     * @param VisitHistory $visitHistory
+     * @param ReserveInfo $reserve_info
      * @return View
      * @throws ExclusionException
      */
-    public function edit(VisitHistory $visitHistory): View
+    public function edit(ReserveInfo $reserve_info): View
     {
         // 編集して良いかチェック
-        $this->_checkEditing($visitHistory);
+        $this->_checkEditing($reserve_info);
 
         $menus = Menu::where('hidden_flag', 0)->orderBy('rank')->get();
         $users = UserShopAuthorization::getSelectableUsers($this->shopId)->get();
-        $images = VisitHistoryImage::where('visit_history_id', $visitHistory->id)->get()->toArray();
+        $images = VisitHistoryImage::where('reserve_info_id', $reserve_info->id)->get()->toArray();
 
-        return View('visitHistory.edit', compact('visitHistory', 'users', 'menus', 'images'));
+        return View('visitHistory.edit', compact('reserve_info', 'users', 'menus', 'images'));
     }
 
     /**
      * 来店履歴を更新する
      * @param Request $request
-     * @param VisitHistory $visitHistory
+     * @param ReserveInfo $reserve_info
      * @return RedirectResponse
      * @throws ExclusionException
      */
-    public function update(Request $request, VisitHistory $visitHistory): RedirectResponse
+    public function update(Request $request, ReserveInfo $reserve_info): RedirectResponse
     {
         // 編集して良いかチェック
-        $this->_checkEditing($visitHistory);
+        $this->_checkEditing($reserve_info);
 
         try {
             // ここからDB更新
@@ -113,20 +115,20 @@ class VisitHistoryController extends UserAppController
                 // 削除ボタンがチェックされていたら
                 if (!empty($request->imgDelete[$angleKey])) {
                     // 論理削除
-                    $this->deleteVisitHistoryImage($visitHistory->id, $angleKey);
+                    $this->deleteVisitHistoryImage($reserve_info->id, $angleKey);
                 } else {
                     // 対象のアングル画像が送信されていたら登録する
                     if (!empty($request->image[$angleKey])) {
-                        $this->_fileUpload($request->image[$angleKey], $visitHistory->customer_id, $visitHistory->id, $angleKey);
+                        $this->_fileUpload($request->image[$angleKey], $reserve_info->customer_id, $reserve_info->id, $angleKey);
                     }
                 }
             }
 
-            $visitHistory->vis_time = $request->vis_time;
-            $visitHistory->user_id = $request->user_id;
-            $visitHistory->menu_id = $request->menu_id;
-            $visitHistory->memo = $request->memo;
-            $visitHistory->save();
+            $reserve_info->vis_time = $request->vis_time;
+            $reserve_info->user_id = $request->user_id;
+            $reserve_info->menu_id = $request->menu_id;
+            $reserve_info->memo = $request->memo;
+            $reserve_info->save();
 
             DB::commit();
             return redirect()->back()->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['来店履歴を更新しました']);
@@ -138,14 +140,14 @@ class VisitHistoryController extends UserAppController
     }
 
     /**
-     * @param VisitHistory $visitHistory
+     * @param ReserveInfo $reserve_info
      * @return RedirectResponse
      */
-    public function destroy(visitHistory $visitHistory): RedirectResponse
+    public function destroy(ReserveInfo $reserve_info): RedirectResponse
     {
         try {
             DB::beginTransaction();
-            $visitHistory->delete();
+            $reserve_info->delete();
             DB::commit();
             return redirect()->route('report.index')->with(SessionConst::FLASH_MESSAGE_SUCCESS, ['来店履歴を削除しました']);
         } catch (Exception $e) {
@@ -156,16 +158,16 @@ class VisitHistoryController extends UserAppController
 
     /**
      * 編集して良いかチェックする
-     * @param VisitHistory $visitHistory
+     * @param ReserveInfo $reserve_info
      * @return void
      * @throws ExclusionException
      */
-    private function _checkEditing(VisitHistory $visitHistory): void
+    private function _checkEditing(ReserveInfo $reserve_info): void
     {
         // 本日の履歴ではない場合
-        if (!Carbon::parse($visitHistory->vis_date)->isToday()) {
+        if (!Carbon::parse($reserve_info->vis_date)->isToday()) {
             $this->goToExclusionErrorPage(ErrorCode::CL_040004, [
-                $visitHistory->id,
+                $reserve_info->id,
                 $this->loginUser->id,
             ]);
         }
@@ -194,7 +196,7 @@ class VisitHistoryController extends UserAppController
         VisitHistoryImage::updateOrInsert(
             [
                 'customer_id' => $customer_id,
-                'visit_history_id' => $visitHistoryId,
+                'reserve_info_id' => $visitHistoryId,
                 'angle' => $angle,
                 'deleted_at' => null,
             ], [
@@ -211,6 +213,6 @@ class VisitHistoryController extends UserAppController
      */
     private function deleteVisitHistoryImage(int $visitHistoryId, int $angle)
     {
-        VisitHistoryImage::where('visit_history_id', $visitHistoryId)->where('angle', $angle)->delete();
+        VisitHistoryImage::where('reserve_info_id', $visitHistoryId)->where('angle', $angle)->delete();
     }
 }
