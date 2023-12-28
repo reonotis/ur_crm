@@ -436,19 +436,21 @@ class ShopBusinessHourService
     /**
      * @param Carbon $targetDay
      * @param Collection $shopBusinessHours
+     * @param Collection $temporaryBusinessHours
      * @return array
      * @throws ReflectionException
      */
     public function makeBusinessCalenderByDate(Carbon $targetDay, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
     {
-        $businessData['date'] = $targetDay; // カレンダーに入れる日付
+        $businessData['date'] = new Carbon($targetDay->format('Y-m-d')); // カレンダーに入れる日付
+        $businessData['date_string'] = \Illuminate\Support\Facades\Date::parse($targetDay)->tz(config('app.timezone'))->format('Y年m月d日');
         $holidayNumber = $this->checkHoliday($targetDay); // 祝日、祝前日であるかを判定
         $businessData['holiday'] = $holidayNumber;
         $businessData['temporary'] = $this->checkTemporaryDay($targetDay, $temporaryBusinessHours); // 臨時定休/臨時営業ではない場合はNULL
         $shopBusinessHour = $this->getBusinessHourByDate($targetDay, $shopBusinessHours, $holidayNumber); // 対象日の営業時間を取得
         $businessData['business_hour'] = $shopBusinessHour;
         $businessData['regular_holiday'] = $this->checkRegularHoliday($shopBusinessHour);
-        $businessData['close'] = $this->checkShopClose($targetDay);
+        $businessData['close'] = $this->checkShopClose($targetDay); // 閉店日確認
 
         return $businessData;
     }
@@ -510,7 +512,7 @@ class ShopBusinessHourService
     private function checkTemporaryDay(Carbon $targetDay, Collection $temporaryBusinessHours): ?ShopBusinessHourTemporary
     {
         $filtered = $temporaryBusinessHours->where('target_date', $targetDay->format('Y-m-d'));
-        if($filtered->count()) {
+        if ($filtered->count()) {
             return $filtered->first();
         }
         return null;
