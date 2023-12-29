@@ -34,13 +34,13 @@
 
         @guest
             <main id="main">
-                    <div id="header">
-                        <div class="welcomeSpace">
-                        </div>
+                <div id="header">
+                    <div class="welcomeSpace">
                     </div>
-                    <div id="contents">
-                        @yield('content')
-                    </div>
+                </div>
+                <div id="contents">
+                    @yield('content')
+                </div>
             </main>
             <script src="{{ asset('js/main.js') }}"></script>
         @else

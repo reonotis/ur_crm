@@ -146,11 +146,14 @@ class ShopBusinessHourService
      */
     public function getBusinessCalendars(Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
     {
-        $today = Carbon::today();
+        $targetDay = Carbon::today();
+        $targetDay->setDay(1); // 月初に設定
 
         $calendars = [];
+        $targetMonthDay = $targetDay->copy();
         for ($num = 0; $num < 6; $num++) {
-            $calendars[] = $this->makeBusinessCalender($today, $shopBusinessHours, $temporaryBusinessHours);
+            $calendars[] = $this->makeBusinessCalender($targetMonthDay, $shopBusinessHours, $temporaryBusinessHours);
+            $targetMonthDay->addmonth();
         }
 
         return $calendars;
@@ -416,10 +419,10 @@ class ShopBusinessHourService
      * @return array
      * @throws ReflectionException
      */
-    private function makeBusinessCalender(Carbon $targetDay, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
+    private function makeBusinessCalender(Carbon $targetMonth, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
     {
-        $targetDay = $targetDay->setDay(1);// 対象日の月初
-        $endOfMonth = $targetDay->copy()->endOfMonth();// 月末
+        $targetDay = $targetMonth->copy()->setDay(1); // 対象月の月初を設定
+        $endOfMonth = $targetDay->copy()->endOfMonth(); // 月末
 
         // 対象月の配列を作成する
         $monthData = [];
@@ -442,15 +445,48 @@ class ShopBusinessHourService
      */
     public function makeBusinessCalenderByDate(Carbon $targetDay, Collection $shopBusinessHours, Collection $temporaryBusinessHours): array
     {
-        $businessData['date'] = new Carbon($targetDay->format('Y-m-d')); // カレンダーに入れる日付
+        $date = $targetDay->copy();
+        $businessData['date'] = $date; // カレンダーに入れる日付
         $businessData['date_string'] = \Illuminate\Support\Facades\Date::parse($targetDay)->tz(config('app.timezone'))->format('Y年m月d日');
-        $holidayNumber = $this->checkHoliday($targetDay); // 祝日、祝前日であるかを判定
-        $businessData['holiday'] = $holidayNumber;
-        $businessData['temporary'] = $this->checkTemporaryDay($targetDay, $temporaryBusinessHours); // 臨時定休/臨時営業ではない場合はNULL
-        $shopBusinessHour = $this->getBusinessHourByDate($targetDay, $shopBusinessHours, $holidayNumber); // 対象日の営業時間を取得
-        $businessData['business_hour'] = $shopBusinessHour;
+        $businessData['holiday'] = $this->checkHoliday($date); // 祝日、祝前日であるかを判定
+        $businessData['temporary'] = null;
+        $businessData['business_hours'] = null;
+        $businessData['regular_holiday'] = null;
+        $businessData['close'] = null;
+
+        // 1. 臨時定休/臨時営業であるかを確認
+        $temporary = $this->checkTemporaryDay($date, $temporaryBusinessHours); // 臨時定休/臨時営業ではない場合はNULL
+        if (!is_null($temporary)) {
+            $businessData['temporary'] = $temporary;
+            $businessData['business_hours'] = [
+                "business_open_time" => $temporary->business_open_time,
+                "business_close_time" => $temporary->business_close_time,
+                "last_reception_time" => $temporary->last_reception_time,
+            ];
+            return $businessData;
+        }
+
+        // 2. 閉店日でないか確認
+        $businessData['close'] = $this->checkShopClose($date);
+        if ($businessData['close']) {
+            return $businessData;
+        }
+
+        // 祝日・祝前日・対象曜日の営業時間を取得
+        $shopBusinessHour = $this->getBusinessHourByDate($date, $shopBusinessHours, $businessData['holiday']); // 対象日の営業時間を取得
+
+        // 4. 定休日の判定
         $businessData['regular_holiday'] = $this->checkRegularHoliday($shopBusinessHour);
-        $businessData['close'] = $this->checkShopClose($targetDay); // 閉店日確認
+        if ($businessData['regular_holiday']) {
+            return $businessData;
+        }
+
+        // 5. 定休日の判定
+        $businessData['business_hours'] = [
+            "business_open_time" => $shopBusinessHour->business_open_time,
+            "business_close_time" => $shopBusinessHour->business_close_time,
+            "last_reception_time" => $shopBusinessHour->last_reception_time,
+        ];
 
         return $businessData;
     }
@@ -555,7 +591,7 @@ class ShopBusinessHourService
     }
 
     /**
-     * 引数で渡られた日付の曜日や祝日なのか等をを判断して、適用されている営業時間を返却する
+     * 引数で渡られた日付の曜日や祝日なのか等を判断して、適用されている営業時間を返却する
      * 祝日機能が出来たら改修
      * @param Carbon $targetDay
      * @param Collection $shopBusinessHours
@@ -564,15 +600,18 @@ class ShopBusinessHourService
      */
     private function getBusinessHourByDate(Carbon $targetDay, Collection $shopBusinessHours, int $holidayNumber = 0): ?ShopBusinessHour
     {
-        // 祝日か判定して、営業時間を取得してreturnする処理
+        // 祝日の場合、祝日設定があれば取得して返却
         if ($holidayNumber == ShopSettingConst::HOLIDAY) {
             // 祝日に絞り込んだ営業時間の設定
             $shopBusinessHoursOnlyHoliday = $shopBusinessHours->where('week_no', ShopSettingConst::HOLIDAY);
-            // 祝日が設定されていない場合は、その曜日の設定を抽出する
-            if ($shopBusinessHoursOnlyHoliday->isEmpty()) {
-                $shopBusinessHoursOnlyHoliday = $shopBusinessHours->where('week_no', $targetDay->dayOfWeekIso);
+
+            // 適用前後のレコードを除外
+            $applyingShopBusinessHoursOnlyHoliday = $shopBusinessHoursOnlyHoliday->where('setting_start_date', '<=', $targetDay->format('Y-m-d'))
+                                                                                 ->where('setting_end_date', '>=', $targetDay->format('Y-m-d'));
+            // 祝日の設定がある場合は、その曜日の設定を抽出する
+            if (!$applyingShopBusinessHoursOnlyHoliday->isEmpty()) {
+                return $applyingShopBusinessHoursOnlyHoliday->first();
             }
-            return $this->getBusinessHourByTargetData($targetDay, $shopBusinessHoursOnlyHoliday);
         }
 
         // 祝前日か判定して、営業時間を取得してreturnする処理
@@ -580,16 +619,18 @@ class ShopBusinessHourService
             // 祝前日に絞り込んだ営業時間の設定
             $shopBusinessHoursOnlyBeforeHoliday = $shopBusinessHours->where('week_no', ShopSettingConst::BEFORE_HOLIDAY);
 
-            // 祝前日が設定されていない場合は、その曜日の設定を抽出する
-            if ($shopBusinessHoursOnlyBeforeHoliday->isEmpty()) {
-                $shopBusinessHoursOnlyBeforeHoliday = $shopBusinessHours->where('week_no', $targetDay->dayOfWeekIso);
+
+            // 適用前後のレコードを除外
+            $applyingShopBusinessHoursOnlyBeforeHoliday = $shopBusinessHoursOnlyBeforeHoliday->where('setting_start_date', '>=', $targetDay->format('Y-m-d'))
+                                                                                             ->where('setting_end_date', '<=', $targetDay->format('Y-m-d'));
+            // 祝前日の設定がある場合は、その曜日の設定を抽出する
+            if (!$applyingShopBusinessHoursOnlyBeforeHoliday->isEmpty()) {
+                return $applyingShopBusinessHoursOnlyBeforeHoliday->first();
             }
-            return $this->getBusinessHourByTargetData($targetDay, $shopBusinessHoursOnlyBeforeHoliday);
         }
 
         // 対象曜日に絞り込んだ営業時間の設定
-        $targetDayOfWeek = $targetDay->dayOfWeekIso; // 対象日の曜日を取得
-        $shopBusinessHoursOnlyDayOfWeek = $shopBusinessHours->where('week_no', $targetDayOfWeek);
+        $shopBusinessHoursOnlyDayOfWeek = $shopBusinessHours->where('week_no',  $targetDay->dayOfWeekIso);
         return $this->getBusinessHourByTargetData($targetDay, $shopBusinessHoursOnlyDayOfWeek);
     }
 

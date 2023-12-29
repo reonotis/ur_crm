@@ -35,29 +35,28 @@
                                             </span>
                                         @endif
                                     </p>
-                                    @if($calendar[$key]['close'])
-                                        閉店
-                                    @else
+                                        {{-- 臨時定休/臨時営業の場合 --}}
                                         @if($calendar[$key]['temporary'])
                                             @if($calendar[$key]['temporary']->holiday)
                                                 <p>臨時定休</p>
                                             @else
-                                                <p>O : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['temporary']->business_open_time)->format('H:i') }}</p>
-                                                <p>L : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['temporary']->last_reception_time)->format('H:i') }}</p>
-                                                <p>C : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['temporary']->business_close_time)->format('H:i') }}</p>
+                                                <p>O : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['business_open_time'])->format('H:i') }}</p>
+                                                <p>L : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['business_close_time'])->format('H:i') }}</p>
+                                                <p>C : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['last_reception_time'])->format('H:i') }}</p>
                                             @endif
-                                        @elseif(empty($calendar[$key]['business_hour']))
+                                        @elseif($calendar[$key]['close'])
+                                            {{-- 閉店している場合 --}}
+                                            閉店
+                                        @elseif($calendar[$key]['regular_holiday'])
+                                            <p>定休日</p>
+                                        @elseif(empty($calendar[$key]['business_hours']))
                                             <p>未設定</p>
                                         @else
-                                            @if($calendar[$key]['regular_holiday'])
-                                                <p>定休日</p>
-                                            @else
-                                                <p>O : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hour']->business_open_time)->format('H:i') }}</p>
-                                                <p>L : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hour']->last_reception_time)->format('H:i') }}</p>
-                                                <p>C : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hour']->business_close_time)->format('H:i') }}</p>
-                                            @endif
+                                            {{-- 通常営業 --}}
+                                            <p>O : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['business_open_time'])->format('H:i') }}</p>
+                                            <p>L : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['last_reception_time'])->format('H:i') }}</p>
+                                            <p>C : {{ Carbon\Carbon::createFromTimeString($calendar[$key]['business_hours']['business_close_time'])->format('H:i') }}</p>
                                         @endif
-                                    @endif
                                 </td>
 
                                 @php

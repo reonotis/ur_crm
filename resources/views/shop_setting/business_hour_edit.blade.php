@@ -16,7 +16,7 @@
                         <p>現在＿＿＿までの予約があります<br>予約に影響が無いように営業時間を変更して下さい</p><br>
                     @endif
                     @if($closeDay)
-                        <p>閉店日:{{ $closeDay->format('Y年m月d日') }}&nbsp;を超えた設定は出来ません</p>
+                        <p>閉店日&nbsp;:&nbsp;{{ $closeDay->format('Y年m月d日') }}&nbsp;を超えた設定は出来ません</p>
                     @endif
                 </div>
             @endif
