@@ -61,7 +61,12 @@ class ReserveInfoService
         if(!isset($condition['vis_time'])) {
             $condition['vis_time']= Carbon::now()->format('H:i');
         }
-
+        if(!isset($condition['status'])) {
+            $condition['status']= ReserveInfo::STATUS['GUIDED'];
+        }
+        if(!isset($condition['reserve_type'])) {
+            $condition['reserve_type']= ReserveInfo::RESERVE_TYPE['CAME_SHOP'];
+        }
         return $this->reserveInfoRepository->createRecord($condition);
     }
 

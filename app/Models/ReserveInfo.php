@@ -45,7 +45,19 @@ class ReserveInfo extends Model
         'customer_id',
         'shop_id',
         'user_id',
+        'status',
+        'reserve_type',
         'memo',
+    ];
+
+    /**
+     * 取得しないカラム
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     /**
