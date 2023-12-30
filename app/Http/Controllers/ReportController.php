@@ -99,8 +99,10 @@ class ReportController extends UserAppController
     public function settingStylist(Request $request, Customer $customer): RedirectResponse
     {
         $request->session()->regenerateToken(); // 二重クリック防止
-        // 更新して良いかチェック
         $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
+
+        // 更新して良いかチェックしていく
+        // 他の店舗の顧客の場合はエラー
         if ($customer->shop_id <> $shopId) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030013, [
                 $customer->shop_id,
@@ -108,6 +110,8 @@ class ReportController extends UserAppController
                 $this->loginUser->id,
             ]);
         }
+
+        // 既にスタイリストが紐づいている場合はエラー
         if ($customer->staff_id) {
             $this->goToExclusionErrorPage(ErrorCode::CL_030014, [
                 $customer->shop_id,
@@ -117,7 +121,7 @@ class ReportController extends UserAppController
         }
 
         // 既に本日の来店履歴が登録されているのに、新しく登録しようとした場合のエラー
-        if ($request->vis_history) {
+        if ($request->register_reserve_info) {
             $todayHistory = $this->reserveInfoService->getTodayVisitHistoryByCustomerId($customer->id);
             if ($todayHistory) {
                 $this->goToExclusionErrorPage(ErrorCode::CL_030015, [
@@ -134,8 +138,8 @@ class ReportController extends UserAppController
             $customer->staff_id = $request->staff_id;
             $customer->save();
 
-            // 来店履歴を登録する
-            if ($request->vis_history) {
+            // 来店履歴を登録する場合の処理
+            if ($request->register_reserve_info) {
                 $condition = [
                     'customer_id' => $customer->id,
                     'shop_id' => $shopId,

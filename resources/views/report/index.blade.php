@@ -1,4 +1,9 @@
 @extends('layouts.report')
+@section('breadcrumb')
+    <ol>
+        <li><a href="{{ route('home') }}">ホーム</a></li>
+    </ol>
+@endsection
 @section('pageTitle', '日報')
 
 @section('content')
