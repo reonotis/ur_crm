@@ -75,4 +75,28 @@ class ReserveInfo extends Model
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
+
+    /**
+     * 案内状態
+     * 0: 未案内
+     * 1: キャンセル
+     * 5: 案内済み
+     */
+    public const STATUS = [
+        'UNGUIDE' => 1,
+        'CANCEL' => 4,
+        'GUIDED' => 5,
+    ];
+
+    /**
+     * 予約タイプ
+     * 0: 不明
+     * 1: 来店時
+     * 5: 予約
+     */
+    const RESERVE_TYPE = [
+        'UNKNOWN' => 0,
+        'CAME_SHOP' => 1,
+        'RESERVATION' => 5,
+    ];
 }
