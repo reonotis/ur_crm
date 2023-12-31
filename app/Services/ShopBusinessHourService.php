@@ -496,6 +496,9 @@ class ShopBusinessHourService
 
         // 祝日・祝前日・対象曜日の営業時間を取得
         $shopBusinessHour = $this->getBusinessHourByDate($date, $shopBusinessHours, $businessData['holiday']); // 対象日の営業時間を取得
+        if (is_null($shopBusinessHour)) {
+            return $businessData;
+        }
 
         // 4. 定休日の判定
         $businessData['regular_holiday'] = $this->checkRegularHoliday($shopBusinessHour);
@@ -629,7 +632,7 @@ class ShopBusinessHourService
 
             // 適用前後のレコードを除外
             $applyingShopBusinessHoursOnlyHoliday = $shopBusinessHoursOnlyHoliday->where('setting_start_date', '<=', $targetDay->format('Y-m-d'))
-                                                                                 ->where('setting_end_date', '>=', $targetDay->format('Y-m-d'));
+                ->where('setting_end_date', '>=', $targetDay->format('Y-m-d'));
             // 祝日の設定がある場合は、その曜日の設定を抽出する
             if (!$applyingShopBusinessHoursOnlyHoliday->isEmpty()) {
                 return $applyingShopBusinessHoursOnlyHoliday->first();
@@ -644,7 +647,7 @@ class ShopBusinessHourService
 
             // 適用前後のレコードを除外
             $applyingShopBusinessHoursOnlyBeforeHoliday = $shopBusinessHoursOnlyBeforeHoliday->where('setting_start_date', '>=', $targetDay->format('Y-m-d'))
-                                                                                             ->where('setting_end_date', '<=', $targetDay->format('Y-m-d'));
+                ->where('setting_end_date', '<=', $targetDay->format('Y-m-d'));
             // 祝前日の設定がある場合は、その曜日の設定を抽出する
             if (!$applyingShopBusinessHoursOnlyBeforeHoliday->isEmpty()) {
                 return $applyingShopBusinessHoursOnlyBeforeHoliday->first();
@@ -652,7 +655,7 @@ class ShopBusinessHourService
         }
 
         // 対象曜日に絞り込んだ営業時間の設定
-        $shopBusinessHoursOnlyDayOfWeek = $shopBusinessHours->where('week_no',  $targetDay->dayOfWeekIso);
+        $shopBusinessHoursOnlyDayOfWeek = $shopBusinessHours->where('week_no', $targetDay->dayOfWeekIso);
         return $this->getBusinessHourByTargetData($targetDay, $shopBusinessHoursOnlyDayOfWeek);
     }
 
