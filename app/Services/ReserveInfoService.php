@@ -34,6 +34,17 @@ class ReserveInfoService
     }
 
     /**
+     * 該当日のキャンセル以外の受付を取得
+     * @param int $shopId
+     * @param Carbon $date
+     * @return Collection
+     */
+    public function getByDayAndShopId(int $shopId, Carbon $date): Collection
+    {
+        return $this->reserveInfoRepository->getByDayAndShopId($shopId, $date);
+    }
+
+    /**
      * 本日の来店者をスタイリスト別にカウントする
      * @param int $shop_id
      * @return object

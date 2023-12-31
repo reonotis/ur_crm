@@ -77,20 +77,4 @@ class DateCheckService
 
         return false;
     }
-
-    /**
-     * 過去日かどうか確認し、過去日の場合はエラーを吐き出す
-     * @param Carbon $date
-     * @return bool
-     * @throws ExclusionException
-     */
-    public function checkPastAndError(Carbon $date)
-    {
-        $second = Carbon::today();
-        if ($date < $second) {
-            $errLogFmt = ErrorCode::ERROR_LOG_LIST[ErrorCode::INVALID_DATE_PAST];
-            Log::error(vsprintf($errLogFmt, [$date->format('Y-m-d')]));
-            throw new ExclusionException(ErrorCode::INVALID_DATE_PAST);
-        }
-    }
 }

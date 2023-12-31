@@ -42,4 +42,12 @@ interface ReserveInfoRepositoryInterface
      */
     public function getByTargetPeriod(Carbon $fromDate,Carbon $endDate, int $shopId);
 
+    /**
+     * 該当日のキャンセル以外の受付を取得
+     * @param int $shopId
+     * @param Carbon $date
+     * @return Collection
+     */
+    public function getByDayAndShopId(int $shopId, Carbon $date): Collection;
+
 }

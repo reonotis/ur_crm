@@ -111,6 +111,7 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
     }
 
     /**
+     * 来店済みの受付を取得
      * @see ReserveInfoRepositoryInterface::getByTargetPeriod
      */
     public function getByTargetPeriod(Carbon $fromDate,Carbon $endDate, int $shopId): Collection
@@ -128,7 +129,7 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
             ->where('reserve_info.vis_date', '>=', $fromDate)
             ->where('reserve_info.vis_date', '<=', $endDate)
             ->where('reserve_info.shop_id', $shopId)
-            ->where('reserve_info.status', DatabaseConst::VISIT_HISTORY_STATUS_VISITED)
+            ->where('reserve_info.status', ReserveInfo::STATUS['GUIDED'])
             ->join('customers', function ($join) {
                 $join->on('reserve_info.customer_id', '=', 'customers.id')
                     ->whereNull('customers.deleted_at');
@@ -142,7 +143,36 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
 
     }
 
+    /**
+     * 該当日のキャンセル以外の受付を取得
+     * @param int $shopId
+     * @param Carbon $date
+     * @return Collection
+     * @see ReserveInfoRepositoryInterface::getByDayAndShopId
+     */
+    public function getByDayAndShopId(int $shopId, Carbon $date): Collection
+    {
+        $select = [
+            'reserve_info.*',
+            'customers.f_name',
+            'customers.l_name',
+            'users.name',
+        ];
 
-
+        return ReserveInfo::select($select)
+            ->where('reserve_info.vis_date',$date)
+            ->where('reserve_info.shop_id', $shopId)
+            ->whereNotIn('reserve_info.status', [ReserveInfo::STATUS['CANCEL']])
+            ->join('customers', function ($join) {
+                $join->on('reserve_info.customer_id', '=', 'customers.id')
+                    ->whereNull('customers.deleted_at');
+            })
+            ->leftJoin('users', 'users.id', 'reserve_info.user_id')
+            ->leftJoin('menus', 'menus.id', 'reserve_info.menu_id')
+            ->leftJoin('shops', 'shops.id', 'reserve_info.shop_id')
+            ->orderBy('reserve_info.vis_date', 'ASC')
+            ->orderBy('reserve_info.vis_time', 'ASC')
+            ->get();
+    }
 
 }

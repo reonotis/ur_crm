@@ -21,6 +21,9 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+        @if (View::hasSection('js'))
+            @yield('js')
+        @endif
 
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
@@ -30,7 +33,6 @@
     </head>
 
     <body>
-
         @guest
             <main id="main">
                 <div id="header">
@@ -66,6 +68,9 @@
                 </div>
             </main>
 
+            <script>
+                const date = @json(date('Y-m-d'));
+            </script>
             <script src="{{ asset('js/common.js') }}?<?= date('Ymdhi') ?>"></script>
         @endguest
 

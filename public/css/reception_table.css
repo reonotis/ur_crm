@@ -1,0 +1,149 @@
+
+.row-one-line {
+    margin-bottom: 0.25rem;
+    border-bottom: solid 1px var(--active-color);
+    display: flex;
+}
+
+.row-one-line-title {
+    width: 170px;;
+    min-height: 40px;
+    padding: 0.5rem 0.5rem;
+    background: var(--active-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row-one-line-content {
+    padding: 0.25rem 0.5rem;
+    width: calc(100% - 170px);
+    display: flex;
+    align-items: center;
+}
+
+
+.warning-msg {
+    display: inline-block;
+    margin: 1rem;
+    padding: .5rem;
+    background: var(--red-100);
+    color: var(--red-600);
+    border: solid 1px var(--red-600);
+}
+
+/**********************
+ * 予約表関連
+ **********************/
+.reserve-area {
+    display: flex;
+    overflow-x: scroll;
+    margin: 1rem 0 ;
+}
+
+.reserve-tbl-box {
+    max-width: 100%;
+    display: inline-block;
+    border-left: solid 1px var(--mainColor);
+}
+
+.reserve-tbl-header {
+    display: inline-flex;
+    background: var(--blue-100);
+    font-weight: 800;
+    height: 50px;
+}
+
+.reserve-tbl-header > div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: solid 1px var(--mainColor);
+}
+
+.time-box {
+    flex-shrink: 0;
+    width: 2px;
+    height: 25px;
+    position: relative;
+    border-bottom: solid 1px var(--mainColor);
+}
+
+.time-box.bl-gray-1 {
+    border-left: solid 1px #ddd;
+}
+
+.time-box.close-time {
+    background: #aaa;
+}
+
+.time-box.lo-time {
+    background: #ccc;
+}
+
+.reserve-tbl-header > .time-box:last-child,
+.reserve-row > .time-box:last-child {
+    border-right: solid 1px var(--mainColor);
+}
+
+.reserve-tbl-header > .time-box > div {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 14px;
+    left: -10px;
+    height: calc(100% - 30px);
+    background: var(--blue-100);
+    z-index: 100;
+}
+
+.reserve-tbl-body {
+    display: flex;
+    flex-flow: column;
+}
+
+.user-name {
+    flex-shrink: 0;
+    width: 180px;
+    background: var(--blue-100);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-bottom: solid 1px var(--mainColor);
+
+    justify-content: center;
+}
+
+.user-row {
+    display: flex;
+}
+
+.reserve-row {
+    display: flex;
+}
+
+.reserve-row > .time-box {
+    height: 50px;
+}
+
+.reserve-content {
+    position: absolute;
+    align-items: center;
+    top: 5px;
+    left: 0;
+    height: calc(100% - 10px);
+    font-size: .7rem;
+    z-index: 100;
+    background: var(--green-50);
+    overflow: hidden;
+    border: solid 1px var(--green-600);
+    min-width: calc(60px - 2px);
+}
+
+
+
+.reserve-content .check-data{
+    background: red;
+}

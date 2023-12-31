@@ -838,6 +838,8 @@ div:has(>#loading) {
 
 #loading {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     margin: 0 auto;
@@ -855,7 +857,7 @@ div:has(>#loading) {
     border-left: solid 3px #333;
     border-bottom: solid 3px #333;
     border-radius: 50%;
-    top: 50%;
+    top: calc(50% - 25px);
     left: 50%;
     animation: load-spin .8s linear 0s infinite;
 }

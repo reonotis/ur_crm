@@ -80,6 +80,10 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('/destroy/{reserve_info}', 'VisitHistoryController@destroy')->name('visitHistory.destroy');
     });
 
+    // 予約関係
+    Route::group(['prefix'=>'reserve'], function(){
+        Route::post('getReceptionTable', 'reserveController@getReserveTable')->name('reserve.getReserveTable');
+    });
 });
 
 // 過去日報

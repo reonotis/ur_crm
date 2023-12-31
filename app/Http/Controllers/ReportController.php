@@ -6,6 +6,8 @@ use App\Consts\{ErrorCode, SessionConst};
 use App\Exceptions\ExclusionException;
 use App\Models\{Customer, UserShopAuthorization};
 use App\Services\ReserveInfoService;
+use App\Services\ShopBusinessHourService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +22,9 @@ class ReportController extends UserAppController
      */
     public $reserveInfoService;
 
+    /** @var ShopBusinessHourService $shopBusinessHourService */
+    public $shopBusinessHourService;
+
     /**
      * コンストラクタ
      */
@@ -27,17 +32,22 @@ class ReportController extends UserAppController
     {
         parent::__construct();
         $this->reserveInfoService = new ReserveInfoService();
+        $this->shopBusinessHourService = app(ShopBusinessHourService::class);
     }
 
     /**
      * Display a listing of the resource.
      *
      * @return View
+     * @throws \ReflectionException
      */
     public function index(): View
     {
         $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
         $shopAuthorizationFlg = $this->userShopAuthorization;
+
+        // 営業時間を取得
+        $businessTime = $this->shopBusinessHourService->getBusinessTimeByDate($this->shopId, new Carbon());
 
         // 来店者情報を取得
         $visitHistories = $this->reserveInfoService->getTodayVisitHistory($shopId);
@@ -49,6 +59,7 @@ class ReportController extends UserAppController
         $basicReport = $this->makeBasicReport(count($visitHistories), $shopId);
 
         return view('report.index', compact(
+            'businessTime',
             'todayCustomers',
             'visitHistories',
             'basicReport',

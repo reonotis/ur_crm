@@ -118,6 +118,28 @@ class ShopBusinessHourService
     }
 
     /**
+     * 対象日の営業時間を取得する
+     * @param int $shopId
+     * @param Carbon $date
+     * @return array
+     * @throws ReflectionException
+     */
+    public function getBusinessTimeByDate(int $shopId, Carbon $date): array
+    {
+        // 登録されている営業時間設定のデータを取得
+        $shopBusinessHours = $this->getMyShopBusinessHourList($shopId);
+
+        // 臨時営業・臨時定休を取得
+        $temporaryBusinessHours = $this->getTemporaryBusinessHour($shopId);
+
+        // 閉店時間
+        $this->getCloseDay($shopId);
+
+        // 該当日の営業時間を取得
+        return $this->makeBusinessCalenderByDate($date, $shopBusinessHours, $temporaryBusinessHours);
+    }
+
+    /**
      * 対象店舗の営業時間設定リストを返却する
      * @param int $shopId
      * @return Collection
@@ -413,7 +435,7 @@ class ShopBusinessHourService
 
     /**
      * 渡された日付の月の営業時間calendarを作成
-     * @param Carbon $targetDay
+     * @param Carbon $targetMonth
      * @param Collection $shopBusinessHours
      * @param Collection $temporaryBusinessHours
      * @return array

@@ -94,6 +94,20 @@ class User extends Authenticatable
     }
 
     /**
+     * 権限
+     * 1: 入社予定
+     * 2: 在籍
+     * 5: 長期休暇
+     * 9: 退職
+     */
+    public const AUTHORITY_LEVEL = [
+        'FUTURE_JOIN' => 1,
+        'ENROLLMENT' => 2,
+        'VACATION' => 5,
+        'RETIRE' => 9,
+    ];
+
+    /**
      * @param array $condition
      * @return mixed
      */
