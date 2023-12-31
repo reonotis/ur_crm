@@ -35,7 +35,8 @@
                                 @endif
                             @elseif($businessTime['close'])
                                 閉店しています
-
+                            @elseif(is_null($businessTime['business_hours']))
+                                未設定
                             @else
                                 <p>O : {{ Carbon\Carbon::createFromTimeString($businessTime['business_hours']['business_open_time'])->format('H:i') }}</p>
                                 <p>L : {{ Carbon\Carbon::createFromTimeString($businessTime['business_hours']['business_close_time'])->format('H:i') }}</p>
