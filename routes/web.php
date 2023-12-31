@@ -82,7 +82,7 @@ Route::group(['middleware'=>'auth'], function(){
 
     // 予約関係
     Route::group(['prefix'=>'reserve'], function(){
-        Route::post('getReceptionTable', 'reserveController@getReserveTable')->name('reserve.getReserveTable');
+        Route::post('getReceptionTable', 'ReserveController@getReserveTable')->name('reserve.getReserveTable');
     });
 });
 
