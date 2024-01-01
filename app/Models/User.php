@@ -39,6 +39,7 @@ class User extends Authenticatable
     ];
 
     /**
+     * 取得しないカラム
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -46,6 +47,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**

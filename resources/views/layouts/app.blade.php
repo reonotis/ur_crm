@@ -50,6 +50,11 @@
                     <div class="header" >
                         @include('layouts.header')
                     </div>
+                    @if (View::hasSection('breadcrumb'))
+                        <div class="breadcrumb" >
+                            @yield('breadcrumb')
+                        </div>
+                    @endif
                     <div class="pageTitle" >
                         @yield('pageTitle')
                     </div>

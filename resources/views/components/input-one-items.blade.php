@@ -26,6 +26,7 @@
                     'name' => $inputName,
                     'id' => $id,
                     'value' => $value,
+                    'class' => $class,
                 ])
             @endcomponent
             @break

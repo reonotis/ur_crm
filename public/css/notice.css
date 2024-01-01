@@ -1,0 +1,75 @@
+/* お知らせ一覧 */
+.noticeBlock {
+    margin: 10px;
+    width: calc(100% - 20px);
+}
+
+.noticeBlock > a:hover {
+    text-decoration: none;
+}
+
+.noticeRow {
+    width: 100%;
+    padding: 8px 10px;
+    margin: 0 0 8px;
+    border-bottom: solid 1px var(--mainColor);
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.noticeRow.unread {
+    font-weight: 900;
+    position: relative;
+}
+
+.unread::before {
+    position: relative;
+    padding: 2px 8px;
+    content: "未読";
+    background: var(--mainColor);
+    color: #fff;
+}
+
+.noticeRow:hover {
+    padding-left: 15px;
+    background: #dbefff;
+}
+
+.noticeRow_date {
+    position: relative;
+    width: 180px;
+    float: left;
+}
+
+.noticeRow_date.noticeNew::after {
+    position: relative;
+    content: "NEW";
+    height: 100%;
+    padding: 2px 8px;
+    margin-left: 8px;
+    color: #fff;
+    font-size: 0.7em;
+    background: red;
+    border: solid 1px red;
+    border-radius: 7px;
+}
+
+
+/* お知らせ詳細 */
+.notice-contents {
+    padding: 1rem;
+}
+
+.notice-title {
+    padding: .5rem 1rem 0;
+    margin-bottom: 1rem;
+    color: var(--mainColor);
+    border-bottom: solid 4px var(--mainColor);
+    font-weight: 800;
+    font-size: 1.4rem;
+}
+
+.notice-comment {
+    padding: .5rem 1rem;
+}
+

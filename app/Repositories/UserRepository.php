@@ -2,9 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Consts\DatabaseConst;
 use App\Models\User;
-use App\Consts\ShopSettingConst;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -13,11 +11,28 @@ use Illuminate\Database\Eloquent\Collection;
 class UserRepository implements UserRepositoryInterface
 {
     /**
-     * @param array $user_ids
+     * 対象IDのユーザーを取得する
+     * @param array $userIds
      * @see UserRepositoryInterface::getByIds
      */
-    public function getByIds(array $user_ids): Collection
+    public function getByIds(array $userIds): Collection
     {
-        return User::select('*')->whereIn('id', $user_ids)->get();
+        return User::select('*')->whereIn('id', $userIds)->get();
+    }
+
+    /**
+     * お知らせ発信先のユーザーを取得する
+     * @return Collection
+     */
+    public function getNotifyUsers(): Collection
+    {
+        $authorityLevel = [
+            User::AUTHORITY_LEVEL['FUTURE_JOIN'],
+            User::AUTHORITY_LEVEL['ENROLLMENT'],
+            User::AUTHORITY_LEVEL['VACATION'],
+        ];
+
+        return User::whereIn('authority_level', $authorityLevel)
+            ->get();
     }
 }

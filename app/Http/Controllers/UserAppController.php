@@ -44,6 +44,7 @@ class UserAppController extends Controller
             }
 
             // 操作できるショップがあるかチェックする
+            /** @var \App\Providers\ShopService\ShopService $shopService */
             $shopService = app()->make('ShopService');
             if (!$shopService->shopCheck($this->loginUser->id)) {
                 Redirect::route('shop.deselect')->send();

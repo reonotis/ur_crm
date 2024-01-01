@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Consts\SessionConst;
 use App\Models\Notice;
-use App\Models\NoticesStatus;
+use App\Models\NoticeStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -217,7 +217,7 @@ class SettingController extends Controller
 
             // 各ユーザー用に未読状態で登録する
             foreach($users as $user){
-                NoticesStatus::insert([[
+                NoticeStatus::insert([[
                     'notice_id' => $notices_id,
                     'user_id' => $user->id,
                     'notice_status' => 0,
@@ -299,7 +299,7 @@ class SettingController extends Controller
             $notice->save();
 
             $dateTime = new \DateTime();
-            NoticesStatus::where('notice_id', $id)
+            NoticeStatus::where('notice_id', $id)
             ->update([
                 'notice_status' => 9,
                 'del_user_id' => Auth::user()->id,
@@ -324,7 +324,7 @@ class SettingController extends Controller
     {
         try {
             \DB::beginTransaction();
-            $notice = NoticesStatus::select()
+            $notice = NoticeStatus::select()
             ->join('notices', 'notices.id', '=', 'notices_statuses.notice_id')
             ->where('notices_statuses.delete_flag', 0)
             ->where('notices_statuses.user_id', Auth::user()->id)
@@ -335,7 +335,7 @@ class SettingController extends Controller
             }
 
             // 未読だった場合は既読にする
-            $noticesStatus = NoticesStatus::find($id);
+            $noticesStatus = NoticeStatus::find($id);
             if($noticesStatus->notice_status == 0){
                 $noticesStatus->notice_status = 1;
                 $noticesStatus->read_at = date('Y-m-d H:i:s');

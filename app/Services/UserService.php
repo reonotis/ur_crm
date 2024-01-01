@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\{ReserveInfo};
 use App\Repositories\UserRepository;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -24,11 +25,21 @@ class UserService
     }
 
     /**
-     * @param object $list
+     * 対象IDのユーザーを取得する
+     * @param array $user_ids
      * @return Collection
      */
-    public function getByIds(array $user_ids): Collection
+    public function getByIds(array $userIds): Collection
     {
-        return $this->userRepository->getByIds($user_ids);
+        return $this->userRepository->getByIds($userIds);
+    }
+
+    /**
+     * お知らせ発信先のユーザーを取得する
+     * @return Collection
+     */
+    public function getNotifyUsers(): Collection
+    {
+        return $this->userRepository->getNotifyUsers();
     }
 }

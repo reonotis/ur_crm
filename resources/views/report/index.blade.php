@@ -41,9 +41,7 @@
                                 <p>O : {{ Carbon\Carbon::createFromTimeString($businessTime['business_hours']['business_open_time'])->format('H:i') }}</p>
                                 <p>L : {{ Carbon\Carbon::createFromTimeString($businessTime['business_hours']['business_close_time'])->format('H:i') }}</p>
                                 <p>C : {{ Carbon\Carbon::createFromTimeString($businessTime['business_hours']['last_reception_time'])->format('H:i') }}</p>
-
                             @endif
-
                         </td>
                     </tr>
                     <tr>

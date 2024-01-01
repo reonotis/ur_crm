@@ -38,6 +38,13 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('user/deleteBelongShop/{user}', 'UserController@deleteBelongShop')->name('user.deleteBelongShop');
     Route::resource('user', 'UserController');
 
+    // お知らせ関係
+    Route::group(['prefix'=>'notice'], function(){
+        Route::get('/create', 'NoticeController@create')->name('notice.create');
+        Route::post('/register', 'NoticeController@register')->name('notice.register');
+        Route::get('/{notice}', 'NoticeController@show')->name('notice.show');
+    });
+
     // 日報
     Route::get('report', 'ReportController@index')->name('report.index');
     Route::get('report/setStylist/{customer}', 'ReportController@setStylist')->name('report.setStylist');

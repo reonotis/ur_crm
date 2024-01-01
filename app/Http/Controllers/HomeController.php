@@ -1,36 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Consts\SessionConst;
-use App\Models\Notice;
-use App\Models\NoticesStatus;
-use Illuminate\Http\Request;
-use App\Models\Customer;
-use App\Services\CheckData;
+use App\Helpers\AuthHelpers;
+use App\Services\NoticeService;
 
 class HomeController extends UserAppController
 {
+    /** @var NoticeService $noticeService */
+    private $noticeService;
+
     /**
      * コンストラクタ
      */
     public function __construct()
     {
         parent::__construct();
+        $this->noticeService = app(NoticeService::class);
     }
 
     /**
+     * ホーム画面を表示する
      */
     public function index()
     {
+        // お知らせを取得
+        $noticeStatuses = $this->noticeService->getNoticesByUserId($this->loginUser->id);
 
-        $notices = NoticesStatus::select('notices.title', 'notices_statuses.id', 'notices_statuses.notice_status', 'notices_statuses.created_at')
-        ->join('notices', 'notices.id', 'notices_statuses.notice_id')
-        ->where('notices_statuses.user_id', $this->loginUser->id)
-        ->orderBy('notices.created_at', 'desc')
-        ->get();
-
-        return view('home', compact('notices'));
+        // お知らせを作成する権限があるか確認する
+        $noticeCreateAuth = AuthHelpers::checkHavePermissions('notice');
+        return view('home', compact('noticeStatuses', 'noticeCreateAuth'));
     }
-
 }
