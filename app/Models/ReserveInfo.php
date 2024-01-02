@@ -44,6 +44,7 @@ class ReserveInfo extends Model
     protected $fillable = [
         'vis_date',
         'vis_time',
+        'vis_end_time',
         'customer_id',
         'shop_id',
         'user_id',

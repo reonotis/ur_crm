@@ -62,22 +62,29 @@ class ReserveInfoService
     }
 
     /**
+     * reserve_infoテーブルへの登録処理を行う
+     * @param array $condition
+     * @return ReserveInfo
      */
-    public function createRecord(array $condition)
+    public function createRecord(array $condition): ReserveInfo
     {
         // 値が渡されなかった場合のdefault値を設定
-        if(!isset($condition['vis_date'])) {
-            $condition['vis_date']=  Carbon::now()->format('Y-m-d');
+        if (!isset($condition['vis_date'])) {
+            $condition['vis_date'] = Carbon::now();
         }
-        if(!isset($condition['vis_time'])) {
-            $condition['vis_time']= Carbon::now()->format('H:i');
+        if (!isset($condition['vis_time'])) {
+            $condition['vis_time'] = Carbon::now()->format('H:i');
         }
-        if(!isset($condition['status'])) {
-            $condition['status']= ReserveInfo::STATUS['GUIDED'];
+        if (!isset($condition['status'])) {
+            $condition['status'] = ReserveInfo::STATUS['GUIDED'];
         }
-        if(!isset($condition['reserve_type'])) {
-            $condition['reserve_type']= ReserveInfo::RESERVE_TYPE['CAME_SHOP'];
+        if (!isset($condition['reserve_type'])) {
+            $condition['reserve_type'] = ReserveInfo::RESERVE_TYPE['CAME_SHOP'];
         }
+        if (!isset($condition['vis_end_time'])) {
+            $condition['vis_end_time'] = $this->createEndTimeFromSection($condition['vis_date'], $condition['vis_time']);
+        }
+
         return $this->reserveInfoRepository->createRecord($condition);
     }
 
@@ -99,7 +106,7 @@ class ReserveInfoService
      * @param int $shopId
      * @return mixed
      */
-    public function getByTargetPeriod(Carbon $fromDate,Carbon $endDate, int $shopId)
+    public function getByTargetPeriod(Carbon $fromDate, Carbon $endDate, int $shopId)
     {
         return $this->reserveInfoRepository->getByTargetPeriod($fromDate, $endDate, $shopId);
     }
@@ -109,7 +116,7 @@ class ReserveInfoService
      * @param object $list
      * @return array
      */
-    public function getByTargetPeriodGroupByUser(Carbon $fromDate,Carbon $endDate, int $shopId): array
+    public function getByTargetPeriodGroupByUser(Carbon $fromDate, Carbon $endDate, int $shopId): array
     {
         $list = $this->getByTargetPeriod($fromDate, $endDate, $shopId);
         if (empty($list)) {
@@ -125,19 +132,23 @@ class ReserveInfoService
 
     /**
      * 施術終了時間を求める
-     * @param $vis_date
-     * @param $vis_time
-     * @param $section
+     * @param Carbon $vis_date
+     * @param string $vis_time
+     * @param int|null $section
      * @return Carbon
      */
-    public function createEndTimeFromSection($vis_date, $vis_time, $section): Carbon
+    public function createEndTimeFromSection(Carbon $vis_date, string $vis_time, int $section = null): Carbon
     {
         $startTime = $vis_date->createFromFormat(
             'H:i',
             $vis_time
         );
 
-        return $startTime->addMinute($section);
+        if (is_null($section)) {
+            $section = ReserveInfo::DEFAULT_TREATMENT_TIME;
+        }
+
+        return $startTime->addMinutes($section);
     }
 
     /**

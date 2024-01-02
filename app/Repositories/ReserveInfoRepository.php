@@ -84,7 +84,7 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
     /**
      * @see ReserveInfoRepositoryInterface::createRecord
      */
-    public function createRecord(array $condition)
+    public function createRecord(array $condition): ReserveInfo
     {
         return ReserveInfo::create($condition);
     }
