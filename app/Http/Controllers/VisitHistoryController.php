@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ReserveInfoService;
 use App\Consts\{Common,
     ErrorCode,
     SessionConst
 };
 use App\Exceptions\ExclusionException;
+use App\Http\Requests\ReserveInfoRequest;
 use App\Models\{Customer,
     UserShopAuthorization,
     ReserveInfo,
@@ -15,6 +15,8 @@ use App\Models\{Customer,
     Menu
 };
 use App\Services\ImageService;
+use App\Services\ReserveInfoService;
+use App\Services\ReserveService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -37,6 +39,9 @@ class VisitHistoryController extends UserAppController
     /** @var ReserveInfoService $reserveInfoService */
     private $reserveInfoService;
 
+    /** @var ReserveService $reserveService */
+    private $reserveService;
+
     /**
      * コンストラクタ
      */
@@ -45,6 +50,7 @@ class VisitHistoryController extends UserAppController
         parent::__construct();
         $this->ImageService = new ImageService();
         $this->reserveInfoService = new ReserveInfoService();
+        $this->reserveService = app(ReserveService::class);
     }
 
     /**
@@ -82,16 +88,26 @@ class VisitHistoryController extends UserAppController
      * @return View
      * @throws ExclusionException
      */
-    public function edit(ReserveInfo $reserve_info): View
+    public function edit(ReserveInfo $reserveInfo): View
     {
         // 編集して良いかチェック
-        $this->_checkEditing($reserve_info);
+        $this->_checkEditing($reserveInfo);
 
         $menus = Menu::where('hidden_flag', 0)->orderBy('rank')->get();
         $users = UserShopAuthorization::getSelectableUsers($this->shopId)->get();
-        $images = VisitHistoryImage::where('reserve_info_id', $reserve_info->id)->get()->toArray();
+        $images = VisitHistoryImage::where('reserve_info_id', $reserveInfo->id)->get()->toArray();
+        $sections = $this->reserveService->makeReserveSection(10, 30, 2);
 
-        return View('visitHistory.edit', compact('reserve_info', 'users', 'menus', 'images'));
+        $sectionSelected = $this->reserveInfoService->getSectionValue($reserveInfo, $sections);
+
+        return View('visitHistory.edit')->with([
+            'reserve_info' => $reserveInfo,
+            'users' => $users,
+            'menus' => $menus,
+            'images' => $images,
+            'sections' => $sections,
+            'selected' => $sectionSelected,
+        ]);
     }
 
     /**
@@ -101,7 +117,7 @@ class VisitHistoryController extends UserAppController
      * @return RedirectResponse
      * @throws ExclusionException
      */
-    public function update(Request $request, ReserveInfo $reserve_info): RedirectResponse
+    public function update(ReserveInfoRequest $request, ReserveInfo $reserve_info): RedirectResponse
     {
         // 編集して良いかチェック
         $this->_checkEditing($reserve_info);
@@ -123,8 +139,8 @@ class VisitHistoryController extends UserAppController
                     }
                 }
             }
-
             $reserve_info->vis_time = $request->vis_time;
+            $reserve_info->vis_end_time = $this->reserveInfoService->createEndTimeFromSection($reserve_info->vis_date, $request->vis_time, $request->section);
             $reserve_info->user_id = $request->user_id;
             $reserve_info->menu_id = $request->menu_id;
             $reserve_info->memo = $request->memo;

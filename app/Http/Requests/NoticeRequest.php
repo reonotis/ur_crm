@@ -28,7 +28,7 @@ class NoticeRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'max:10'],
+            'title' => ['required', 'max:80'],
             'comment' => ['required', 'max:500'],
         ];
     }

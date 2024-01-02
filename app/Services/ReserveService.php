@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\ReserveInfo;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class ReserveService
 {
-    const DEFAULT_TREATMENT_TIME = 60; // 設定がない場合の施術時間
-
     /**
      * @param array $users
      * @param Collection $reserve_group_users
@@ -40,7 +38,7 @@ class ReserveService
 
             if (empty($reserve['vis_end_time'])) {
                 $vis_time = new Carbon($reserve['vis_time']);
-                $reserve['vis_end_time'] = $vis_time->addMinutes(self::DEFAULT_TREATMENT_TIME)->format('H:i:s');
+                $reserve['vis_end_time'] = $vis_time->addMinutes(ReserveInfo::DEFAULT_TREATMENT_TIME)->format('H:i:s');
             }
 
             $reserveStoreFlg = false;

@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int id
- * @property string vis_date
- * @property string vis_time
- * @property int customer_id
- * @property int shop_id
- * @property int user_id
- * @property int menu_id
- * @property string memo
+ * @property int $id
+ * @property Carbon $vis_date
+ * @property string $vis_time
+ * @property string $vis_end_time
+ * @property int $customer_id
+ * @property int $shop_id
+ * @property int $user_id
+ * @property int $menu_id
+ * @property string $memo
  */
 class ReserveInfo extends Model
 {
@@ -99,4 +101,9 @@ class ReserveInfo extends Model
         'CAME_SHOP' => 1,
         'RESERVATION' => 5,
     ];
+
+    /**
+     * 施術時間のデフォルト値
+     */
+    const DEFAULT_TREATMENT_TIME = 60;
 }

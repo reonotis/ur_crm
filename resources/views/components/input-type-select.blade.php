@@ -5,10 +5,14 @@
  --}}
 
 @php
-    if($errors->get($name)){
-        $class = 'input-error ' . $class;
-    }
+    $class = isset($class) ? $class : '';
 @endphp
+
+@if($errors->get($name))
+    @php
+        $class = 'input-error ' . $class;
+    @endphp
+@endif
 
 <select name="{{ $name }}" id="{{ $id }}" class="{{ $class }}">
     <option value="">選択してください</option>

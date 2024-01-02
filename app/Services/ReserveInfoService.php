@@ -122,4 +122,57 @@ class ReserveInfoService
         }
         return $data;
     }
+
+    /**
+     * 施術終了時間を求める
+     * @param $vis_date
+     * @param $vis_time
+     * @param $section
+     * @return Carbon
+     */
+    public function createEndTimeFromSection($vis_date, $vis_time, $section): Carbon
+    {
+        $startTime = $vis_date->createFromFormat(
+            'H:i',
+            $vis_time
+        );
+
+        return $startTime->addMinute($section);
+    }
+
+    /**
+     * 施術開始時間と施術終了時間の差分からセクションの値を求める
+     * @param ReserveInfo $reserveInfo
+     * @param array $sections
+     * @return int
+     */
+    public function getSectionValue(ReserveInfo $reserveInfo, array $sections): int
+    {
+        // 設定されていなければデフォルト値を返却
+        if (is_null($reserveInfo->vis_end_time)) {
+            return ReserveInfo::DEFAULT_TREATMENT_TIME;
+        }
+
+        // 開始時間と終了時間のインスタンスを作成
+        $startTime = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $reserveInfo->vis_date->format('Y-m-d ') . $reserveInfo->vis_time
+        );
+        $endTime = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $reserveInfo->vis_date->format('Y-m-d ') . $reserveInfo->vis_end_time
+        );
+
+        // [分]単位の差分
+        $diff = $startTime->diffInMinutes($endTime);
+
+        // 差分以上の最小値を返却する
+        foreach ($sections as $section) {
+            if ($section['value'] >= $diff) {
+                return $section['value'];
+            }
+        }
+
+        return 0;
+    }
 }
