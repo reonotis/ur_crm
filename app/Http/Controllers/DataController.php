@@ -48,8 +48,8 @@ class DataController extends UserAppController
 
         if($request->back){
             $dataSearch = [
-                'fromDate'=> Cache::get('data_search')['fromDate'],
-                'endDate'=> Cache::get('data_search')['endDate'],
+                'fromDate'=> Cache::get('data_search')['fromDate']->format('Y-m-d'),
+                'endDate'=> Cache::get('data_search')['endDate']->format('Y-m-d'),
                 'type'=> Cache::get('data_search')['type'],
             ];
         }else{
