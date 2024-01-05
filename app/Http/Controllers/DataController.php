@@ -46,7 +46,7 @@ class DataController extends UserAppController
             $this->goToExclusionErrorPage(ErrorCode::INVALID_DATE, [$Ymd]);
         }
 
-        if($request->back){
+        if($request->back && Cache::has('data_search')){
             $dataSearch = [
                 'fromDate'=> Cache::get('data_search')['fromDate']->format('Y-m-d'),
                 'endDate'=> Cache::get('data_search')['endDate']->format('Y-m-d'),
