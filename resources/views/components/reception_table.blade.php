@@ -1,6 +1,16 @@
-<link href="{{ asset('css/reception_table.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
 
 @if($reserve_list)
+    @if($dateDisplay === true)
+        <div class="date-display">
+            <span class="emphasize-y">{{ $businessTime['date']->format('Y') }}</span>
+            <span class="emphasize-y-s">年</span>
+            <span class="emphasize-m">{{ $businessTime['date']->format('n') }}</span>
+            <span class="emphasize-m-s">月</span>
+            <span class="emphasize-d">{{ $businessTime['date']->format('j') }}</span>
+            <span class="emphasize-d-s">日</span>
+            <span class="emphasize-w">{{ App\Consts\ShopSettingConst::WEEK_LABEL_OMITTED[$businessTime['date']->dayOfWeekIso] }}</span>
+        </div>
+    @endif
     <div class="reserve-area">
         <div class="reserve-tbl-box">
             <div class="reserve-tbl-header">
@@ -47,17 +57,47 @@
                                             @foreach($line_reserves as $reserve_key => $reserve)
                                                 {{-- 予約時間だったら--}}
                                                 @if($time->format('H:i:s') >= $reserve['vis_time'])
+                                                    @php $reserve_content = 'reserve-content reserve-status'; @endphp
+
+                                                    @if($reserve['status'] == 5)
+                                                        @php $reserve_content = $reserve_content . ' guided'; @endphp
+                                                    @endif
                                                     <div
-                                                        class="reserve-content @if(isset($reserve['check_data'])) check-data @endif"
+                                                        class="{{ $reserve_content }}"
                                                         data-vis-time="{{ Carbon\Carbon::parse($reserve['vis_time'])->format('Y-m-d H:i:s') }}"
                                                         data-end-time="{{ Carbon\Carbon::parse($reserve['vis_end_time'])->format('Y-m-d H:i:s') }}"
                                                     >
-                                                        <p>
-                                                            {{ Carbon\Carbon::parse($reserve['vis_time'])->format('H:i') }}
-                                                            ～
-                                                            {{ Carbon\Carbon::parse($reserve['vis_end_time'])->format('H:i') }}
-                                                        </p>
-                                                        <p>{{ $reserve['f_name'] }}&nbsp{{ $reserve['l_name'] }}&nbsp様</p>
+                                                        <div class="reserve-type">
+                                                            @switch($reserve['reserve_type'])
+                                                                @case(0)
+                                                                    <span>不</span>
+                                                                    @break
+                                                                @case(1)
+                                                                    <span>来</span>
+                                                                    @break
+                                                                @case(5)
+                                                                    <span>予</span>
+                                                                    @break
+                                                            @endswitch
+                                                        </div>
+                                                        <div>
+                                                            <div>
+                                                                @if($reserve['treatment_time'] <= 60)
+                                                                    {{ Carbon\Carbon::parse($reserve['vis_time'])->format('H:i') }}
+                                                                @else
+                                                                    {{ Carbon\Carbon::parse($reserve['vis_time'])->format('H:i') }}
+                                                                    ～
+                                                                    {{ Carbon\Carbon::parse($reserve['vis_end_time'])->format('H:i') }}
+                                                                @endif
+                                                            </div>
+                                                            <div>
+                                                                @if($reserve['treatment_time'] <= 30)
+                                                                    {{ $reserve['f_name'] }}様
+                                                                @else
+                                                                    {{ $reserve['f_name'] }}&nbsp;{{ $reserve['l_name'] }}&nbsp;様
+                                                                @endif
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     @php
                                                         unset($line_reserves[$reserve_key]);
@@ -74,7 +114,38 @@
             </div>
         </div>
     </div>
-
+    <div class="reception-table-support">
+        <div class="reception-support-contents">
+            <div class="reception-support-header">受付方法</div>
+            <div class="reception-support-body">
+                <div class="flex-start-middle">
+                    <div class="reserve-type"><span>不</span></div>
+                    不明
+                </div>
+                <div class="flex-start-middle">
+                    <div class="reserve-type"><span>来</span></div>
+                    来店時
+                </div>
+                <div class="flex-start-middle">
+                    <div class="reserve-type"><span>予</span></div>
+                    予約
+                </div>
+            </div>
+        </div>
+        <div class="reception-support-contents">
+            <div class="reception-support-header">ステータス</div>
+            <div class="reception-support-body">
+                <div class="flex-start-middle">
+                    <div class="reserve-status" style="width:30px;">　</div>
+                    未案内
+                </div>
+                <div class="flex-start-middle">
+                    <div class="reserve-status guided" style="width:30px;">　</div>
+                    案内済み
+                </div>
+            </div>
+        </div>
+    </div>
 @else
     受付表を作成するための来店データがありません
 @endif

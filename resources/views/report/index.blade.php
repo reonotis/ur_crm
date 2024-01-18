@@ -4,6 +4,8 @@
     <script src="{{ asset('js/reception_table.js') }}?<?= date('Ymdhi') ?>"></script>
 @endsection
 
+<link href="{{ asset('css/reception_table.css') }}?<?= date('Ymdhi') ?>" rel="stylesheet">
+
 @section('breadcrumb')
     <ol>
         <li><a href="{{ route('home') }}">ホーム</a></li>
@@ -61,8 +63,8 @@
                 <table class="basic-report-tbl">
                     @foreach($basicReport['opeMembers'] AS $opeMember)
                         <tr>
-                            <th>{{ $opeMember->name }}</th>
-                            <td>{{ $opeMember->count }}人</td>
+                            <th>{{ $opeMember[0]->name }}</th>
+                            <td>{{ count($opeMember) }}人</td>
                         </tr>
                     @endforeach
                 </table>
@@ -195,11 +197,14 @@
         <div class="report-title">受付表</div>
         <div class="report-contents" style="min-height: 80px">
             <div id="loading" style="display: none"></div>
-            <div id="reserve_list"></div>
+            <div id="reception_table_area"></div>
         </div>
     </div>
 
     <script>
+        const date = @json(date('Y-m-d'));
+        const date_display = @json(0); // 受付表に日付を表示しない
+
         $(".report-title").click(function () {
             if ($(this).hasClass('report-title-close')) {
                 $(this).removeClass('report-title-close')

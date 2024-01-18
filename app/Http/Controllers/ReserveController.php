@@ -51,6 +51,7 @@ class ReserveController extends UserAppController
     public function getReserveTable(Request $request): JsonResponse
     {
         $date = $request->date;
+        $dateDisplay = (bool)$request->date_display;
 
         // 予約日の確認
         $reserve_date = new Carbon($date);
@@ -81,6 +82,7 @@ class ReserveController extends UserAppController
 
         return response()->json(['view' => view('components.reception_table')
             ->with([
+                'dateDisplay' => $dateDisplay,
                 'time_array' => $time_array,
                 'businessTime' => $businessTime,
                 'reserve_list' => $reserve_list,

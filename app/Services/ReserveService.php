@@ -35,11 +35,8 @@ class ReserveService
 
         $lineList = [];
         foreach ($staffReserve as $reserve) {
-
-            if (empty($reserve['vis_end_time'])) {
-                $vis_time = new Carbon($reserve['vis_time']);
-                $reserve['vis_end_time'] = $vis_time->addMinutes(ReserveInfo::DEFAULT_TREATMENT_TIME)->format('H:i:s');
-            }
+            // 滞在時間と終了時間を計算する
+            $this->setCalculationTreatmentTime($reserve);
 
             $reserveStoreFlg = false;
             // 最初の予約だけは $lineList がまだ出来てないので1本目に格納する
@@ -103,4 +100,23 @@ class ReserveService
         return $section;
     }
 
+    /**
+     * @param $reserve
+     * @return void
+     */
+    private function setCalculationTreatmentTime(&$reserve): void
+    {
+        $vis_time = new Carbon($reserve['vis_time']);
+
+        // 終了時間がセットされていなければ、デフォルトの滞在時間を基に終了時間をセットする
+        if (empty($reserve['vis_end_time'])) {
+            $treatment_time = ReserveInfo::DEFAULT_TREATMENT_TIME;
+            $reserve['treatment_time'] = $treatment_time;
+            $reserve['vis_end_time'] = $vis_time->addMinutes($treatment_time)->format('H:i:s');
+        } else {
+            // 終了時間がセットされているので滞在時間を計算する
+            $vis_end_time = new Carbon($reserve['vis_end_time']);
+            $reserve['treatment_time'] =  $vis_time->diffInMinutes($vis_end_time); // 差分を求める
+        }
+    }
 }

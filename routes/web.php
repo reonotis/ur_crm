@@ -32,12 +32,6 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('shop/deselect', 'ShopSelectController@deselect')->name('shop.deselect');
     Route::get('shop/selected/{shop}', 'ShopSelectController@selected')->name('shop.selected');
 
-    // ユーザー関係
-    Route::get('user/belongSelect', 'UserController@belongSelect')->name('user.belongSelect');
-    Route::get('user/belongSelected/{user}', 'UserController@belongSelected')->name('user.belongSelected');
-    Route::get('user/deleteBelongShop/{user}', 'UserController@deleteBelongShop')->name('user.deleteBelongShop');
-    Route::resource('user', 'UserController');
-
     // お知らせ関係
     Route::group(['prefix'=>'notice'], function(){
         Route::get('/create', 'NoticeController@create')->name('notice.create');
@@ -54,9 +48,18 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('data/getAnalyzed', 'DataController@getAnalyzed')->name('data.getAnalyzed');
     Route::get('data/{date?}', 'DataController@data')->name('data');
 
+    // 受付表
+    Route::get('reception', 'ReceptionController@index')->name('reception');
+
     // 顧客関係
     Route::resource('customer', 'CustomerController');
     Route::post('customer/destroyReport/{customer}', 'CustomerController@destroyReport')->name('customer.destroyReport');
+
+    // ユーザー関係
+    Route::get('user/belongSelect', 'UserController@belongSelect')->name('user.belongSelect');
+    Route::get('user/belongSelected/{user}', 'UserController@belongSelected')->name('user.belongSelected');
+    Route::get('user/deleteBelongShop/{user}', 'UserController@deleteBelongShop')->name('user.deleteBelongShop');
+    Route::resource('user', 'UserController');
 
     // 設定関連
     Route::get('setting/index', 'SettingController@index')->name('setting.index');

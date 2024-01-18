@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $shop_id
  * @property int $user_id
  * @property int $menu_id
+ * @property int $visit_type_id // 不要なので削除したい
+ * @property int $visit_reserve_id // 不要なので削除したい
+ * @property int $status
+ * @property int $reserve_type
  * @property string $memo
  */
 class ReserveInfo extends Model
@@ -86,8 +90,8 @@ class ReserveInfo extends Model
      * 5: 案内済み
      */
     public const STATUS = [
-        'UNGUIDE' => 1,
-        'CANCEL' => 4,
+        'UNGUIDE' => 0,
+        'CANCEL' => 1,
         'GUIDED' => 5,
     ];
 

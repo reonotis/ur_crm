@@ -23,8 +23,8 @@ $factory->define(ReserveInfo::class, function (Faker $faker) {
         'menu_id' => 0,
         'visit_type_id' => 0,
         'visit_reserve_id' => NULL,
-        'status' => 0,
-        'reserve_type' => 5,
+        'status' => $faker->randomElement([0, 1, 5]),
+        'reserve_type' => $faker->randomElement([0, 1, 5]),
         'memo' => '',
     ];
 });

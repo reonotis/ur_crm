@@ -1,7 +1,7 @@
 /**
  * ajaxを実行し、データを予約表を更新する
  */
-function reloadReserveList() {
+function reloadReserveList(date) {
     startRoadContent();
 
     $.ajax({
@@ -11,9 +11,9 @@ function reloadReserveList() {
         dataType: 'json',
         data: {
             date: date,
+            date_display: date_display,
         }
     }).done(function (data) {
-        console.log(data)
         if (typeof data.error == 'undefined') {
             updateReserveList(data);
             resetWith();
@@ -23,7 +23,6 @@ function reloadReserveList() {
         endRoadContent();
 
     }).fail(function (error) { // ajax失敗時の処理
-        console.log(error)
         alert(error.statusText + ' : データの取得に失敗しました')
         if (error.status === 419) {
             alert('CSRF : 画面をリロードしてから再度操作を行って下さい')
@@ -33,11 +32,11 @@ function reloadReserveList() {
 }
 
 function updateReserveList(data) {
-    $('#reserve_list').html(data['view']);
+    $('#reception_table_area').html(data['view']);
 }
 
 $(window).on('load', function () {
-    reloadReserveList();
+    reloadReserveList(date);
 });
 
 
@@ -54,3 +53,4 @@ function resetWith() {
         $(e).width(diffMinutes * 2 - 2); // (1分 × 2px) - borderの2px
     });
 }
+

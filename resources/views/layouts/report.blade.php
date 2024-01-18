@@ -68,9 +68,6 @@
                 </div>
             </main>
 
-            <script>
-                const date = @json(date('Y-m-d'));
-            </script>
             <script src="{{ asset('js/common.js') }}?<?= date('Ymdhi') ?>"></script>
         @endguest
 

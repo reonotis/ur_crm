@@ -28,6 +28,19 @@ class ShopSettingConst
         self::BEFORE_HOLIDAY => '祝前日',
     ];
 
+    // 曜日のラベル
+    public const WEEK_LABEL_OMITTED = [
+        self::MONDAY => '月',
+        self::TUESDAY => '火',
+        self::WEDNESDAY => '水',
+        self::THURSDAY => '木',
+        self::FRIDAY => '金',
+        self::SATURDAY => '土',
+        self::SUNDAY => '日',
+        self::HOLIDAY => '祝',
+        self::BEFORE_HOLIDAY => '祝前',
+    ];
+
     // 週の始まりが日曜か月曜か
     public const START_WEEK_SUNDAY = 1;
     public const START_WEEK_MONDAY = 2;

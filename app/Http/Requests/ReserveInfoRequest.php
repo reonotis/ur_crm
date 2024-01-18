@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Services\ReserveService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @property int $vis_time
@@ -35,7 +36,7 @@ class ReserveInfoRequest extends FormRequest
         $sections = $reserveService->makeReserveSection(10, 30, 2);
         return [
             'vis_time' => ['required', 'date_format:H:i'],
-            'section' => ['required', 'in:' . collect($sections)->pluck('value')],
+            'section' => ['required', 'numeric', Rule::in(collect($sections)->pluck('value'))],
             'menu_id' => ['nullable'],
             'user_id' => ['required'],
             'memo' => ['nullable', 'max:1000'],

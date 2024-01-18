@@ -33,6 +33,7 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
         return ReserveInfo::select($select)
             ->where('reserve_info.shop_id', $shop_id)
             ->where('vis_date', $date)
+            ->whereNotIn('status', [ReserveInfo::STATUS['CANCEL']])
             ->join('customers', function ($join) {
                 $join->on('reserve_info.customer_id', '=', 'customers.id')
                     ->whereNull('customers.deleted_at');
@@ -62,6 +63,7 @@ class ReserveInfoRepository implements ReserveInfoRepositoryInterface
             ->leftJoin('users', 'users.id', 'reserve_info.user_id')
             ->where('reserve_info.shop_id', $shop_id)
             ->where('reserve_info.vis_date', $date)
+            ->whereNotIn('reserve_info.status', [ReserveInfo::STATUS['CANCEL']])
             ->groupBy('reserve_info.user_id')
             ->get();
     }

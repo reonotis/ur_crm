@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class ReportController extends UserAppController
+class ReceptionController extends UserAppController
 {
     /**
      * @var ReserveInfoService $reserveInfoService
@@ -44,28 +44,10 @@ class ReportController extends UserAppController
      */
     public function index(): View
     {
-        $shopId = session()->get(SessionConst::SELECTED_SHOP)->id;
-        $shopAuthorizationFlg = $this->userShopAuthorization;
-
-        // 営業時間を取得
-        $businessTime = $this->shopBusinessHourService->getBusinessTimeByDate($this->shopId, new Carbon());
-
-        // 来店者情報を取得
-        $visitHistories = $this->reserveInfoService->getTodayVisitHistory($shopId);
-
-        // 本日来店時に登録された顧客を取得
-        $todayCustomers = Customer::getTodayCustomers($shopId)->get();
-
-        // 基本レポートを作成
-        $basicReport = $this->makeBasicReport($visitHistories);
-
-        return view('report.index', compact(
-            'businessTime',
-            'todayCustomers',
-            'visitHistories',
-            'basicReport',
-            'shopAuthorizationFlg'
-        ));
+        $date = Carbon::today()->format('Y-m-d');
+        return view('reception.index')->with([
+            'date' => $date,
+        ]);
     }
 
     /**

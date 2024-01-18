@@ -11,7 +11,7 @@
         case str_starts_with($routeName, 'data'):
             $routeNum = 3;
             break;
-        case str_starts_with($routeName, 'reserve'):
+        case str_starts_with($routeName, 'reception'):
             $routeNum = 4;
             break;
         case str_starts_with($routeName, 'customer'):
@@ -42,7 +42,7 @@
             @if (session()->get(SessionConst::SELECTED_SHOP))
                 <li><a href="{{ route('report.index') }}" class="sidebarTitle <?= ($routeNum === 2) ? "active": ""; ?>" >日報</a></li>
                 <li><a href="{{ route('data', ['date'=>date('Ymd')]) }}" class="sidebarTitle <?= ($routeNum === 3) ? "active": ""; ?>" >データ分析</a></li>
-                {{-- <li><a href=" route('reserve')" class="sidebarTitle" >予約</a></li> --}}
+                <li><a href="{{ route('reception') }}" class="sidebarTitle <?= ($routeNum === 4) ? "active": ""; ?>" >受付表</a></li>
                 <li>
                     <div class="sidebarTitle parentMenu <?= ($routeNum === 5) ? "active open": ""; ?>" id="parentMenu_4">顧客管理</div>
                     <ul class="childMenu" id="childMenu_4" <?= ($routeNum <> 5) ? 'style="overflow: hidden; display: none;"': ""; ?> >
